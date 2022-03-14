@@ -1,0 +1,33 @@
+html{
+  font-size: 14px;  
+}
+body{
+  line-height: 2.2rem;
+}
+
+a:hover{
+	text-decoration: none;	
+}
+
+/*去圆角*/
+.form-control, .form-control:focus{border-radius:unset;box-shadow: none;}
+.input-group-text, .nav-pills .nav-link{border-radius:unset;}
+.btn{border-radius:unset;}
+
+.card{border-radius:unset;}
+input{
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+/*modal设置*/
+.modal-footer{
+  justify-content:center;
+}
+
+.ck-content {
+   min-height: 300px;
+}
+.ck.ck-icon {
+    font-size: .6em !important;
+}
