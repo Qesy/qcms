@@ -60,7 +60,8 @@ class Code
             $x = (imagefontwidth($size) + 5) * ($i + 1);
             $y = ($height - imagefontheight($size)) / 2 + $size;
             $color = imagecolorallocate($m_image, mt_rand(0, 255), mt_rand(0, 255), mt_rand(0, 255));
-            $font = $font_files[mt_rand(0, count($font_files)-1)];
+            $font = realpath($font_files[mt_rand(0, count($font_files)-1)]);
+
             $text = substr($m_verify_code, $i, 1);
             imagettftext($m_image, $size, $angle, $x, $y, $color, $font, $text);
         }

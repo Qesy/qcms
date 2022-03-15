@@ -6,6 +6,15 @@ use Helper\CurlQ;
 use Helper\Veri;
 use Helper\Common;
 use Helper\Upload;
+
+use Model\QC_Log_login;
+use Model\QC_Sys;
+use Model\QC_Token;
+use Model\QC_User;
+use Model\QC_User_company;
+use Model\QC_User_model;
+use Model\QC_User_personal;
+use Helper\IdCreate;
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 
 /*
@@ -27,8 +36,18 @@ abstract class Base {
 	public $VeriObj;
 	public $UploadObj;
 	
+	public $Log_loginObj;
+	public $SysObj;
+	public $TokenObj;
+	public $UserObj;
+	public $User_companyObj;
+	public $User_modelObj;
+	public $User_personalObj;
+	
 	public $PageNum = 20;
 	public $TempArr = array();
+	public $LanguageArr = array();
+	public $BasicArr = array();
 	function __construct() {
 	    $this->CodeObj = Code::get_instance();
 	    $this->BuildObj = Build::get_instance();
@@ -37,6 +56,41 @@ abstract class Base {
 		$this->VeriObj = Veri::get_instance();
 		$this->CommonObj = Common::get_instance();		
 		$this->UploadObj = Upload::get_instance();
+		
+		$this->LanguageArr = require_once PATH_LIB .'Language/Cn/Error'.EXTEND;
+		
+		$this->Log_loginObj = QC_Log_login::get_instance();
+		$this->SysObj = QC_Sys::get_instance();
+		$this->TokenObj = QC_Token::get_instance();
+		$this->UserObj = QC_User::get_instance();
+		$this->User_companyObj = QC_User_company::get_instance();
+		$this->User_modelObj = QC_User_model::get_instance();
+		$this->User_personalObj = QC_User_personal::get_instance();
+		
+		$this->BasicArr = BasicArr();
+	}
+	
+	public function IdCreate(){ //创建ID	    
+	    return IdCreate::createOnlyId();
+	}
+	
+	public function ApiErr($ErrCode, $Desc = ''){
+	    $Str = ($ErrCode == 1000) ? $Desc : $this->LanguageArr [$ErrCode];
+	    $this->CommonObj->ApiErr($ErrCode, $Str);
+	}
+	
+	public function ApiSuccess($Data = array()){
+	    $this->CommonObj->ApiSuccess($Data);
+	}
+	
+	public function Err($ErrCode, $Desc = ''){
+	    $Str = ($ErrCode == 1000) ? $Desc : $this->LanguageArr [$ErrCode];
+	    $this->CommonObj->Err($Str);
+	}
+	
+	public function Jump($UrlArr, $ErrCode = 1000, $Desc = ''){
+	    $Str = ($ErrCode == 1000) ? $Desc : $this->LanguageArr [$ErrCode];
+	    $this->CommonObj->Success($this->CommonObj->Url($UrlArr), $Str);
 	}
 	
 	public function LoadView($Temp, $Data = array()) { // -- Name : 加载模版 --

@@ -29,7 +29,7 @@ abstract class Db {
 	 * Name : 构造函数
 	 */
 	public function __construct() {
-		$this->p_dbConfig = db_config ();
+	    $this->p_dbConfig = DbConfig ();
 		self::_get_db_config ();
 	}
 	/*
