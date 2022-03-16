@@ -23,5 +23,9 @@ class RedisKey {
 	public static function Sys_Arr_HM(){
 	    return self::$s_projectKey.'_Sys_Arr_HM';
 	}
+	
+	public static function Group_Admin_Arr_HM(){
+	    return self::$s_projectKey.'_Group_Admin_Arr_HM';
+	}
 
 }

@@ -8,6 +8,16 @@ $(function(){
 		}, 'json')
 	})
 
+    $('.tabBnt').click(function(){
+        let Index = $(this).attr('data-index');
+        console.log(Index);
+
+        $(this).parent().addClass('active');
+        $(this).parent().siblings().removeClass('active');
+        $('#Key_'+Index).removeClass('d-none');
+        $('#Key_'+Index).siblings().addClass('d-none');
+    })
+
 })
 
 

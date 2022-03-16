@@ -28,12 +28,14 @@ class Index extends Controllers {
                 }
                 $this->Log_loginObj->SetInsert(array('UserId' => $Rs['UserId'], 'Ip' => $Ip, 'Ts' => $Ts, 'Ua'=> $_SERVER['HTTP_USER_AGENT']))->ExecInsert();
                 $this->TokenObj->SetInsert(array('Token' => $Token, 'UserId' => $Rs['UserId'], 'Client' => self::CurrentClient, 'Ts' => $Ts))->ExecInsert();                
+                $this->UserObj->SetCond(array('UserId' => $Rs['UserId']))->SetUpdate(array('TsLast' => $Ts, 'IpLast' => $Ip))->ExecUpdate();
                 DB::$s_db_obj->commit();
             }catch(PDOException $e){
                 DB::$s_db_obj->rollBack();
                 $this->Err(1040);
             }
             $this->TokenObj->clean($OldToken['Token']);
+            $this->UserObj->clean($Rs['UserId']);
             $this->CookieObj->set(array('Token' => $Token, 'Key' => $Key), 'User', 24*14);	        
 	        /* if(isset($_GET['Refer'])){ //后台用户不需要
 	            $this->CommonObj->ExecScript('window.location.href="'.urldecode($_GET['Refer']).'"');
@@ -41,6 +43,16 @@ class Index extends Controllers {
 	        $this->CommonObj->Success($this->CommonObj->Url(array('admin', 'index')));
 	    }
 	    $this->LoadView('index/admin');
+	}
+	
+	public function adminLogout_Action(){
+	    $this->CookieObj->delBatch('User');
+	    $this->CommonObj->Success($this->CommonObj->Url(array('index', 'admin')), '退出成功');
+	}
+	
+	public function logout_Action(){
+	    $this->CookieObj->delBatch('User');
+	    $this->CommonObj->Success($this->CommonObj->Url(array('index', 'login')), '退出成功');
 	}
 	
 	public function code_Action(){

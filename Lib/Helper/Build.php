@@ -28,12 +28,18 @@ class Build {
     public $LinkAdd;
     public $LinkEdit;
     public $LinkDel;
+    public $NameAdd = '添加';
     public $NameEdit = '修改';
     public $NameDel = '删除';
     public $UploadUrl;
     public $UploadEditUrl;
     public $UploadEditFileUrl;
     public $FormStyle = 1; //1 是正常 2 inline
+    public $TableSelectIndex = -1; //选中的行
+    public $FormMultipleSelectIndex = 0; //选中的行
+    public $FormMultipleMerge = true; //是否合并提交
+    public $TableTopBtnArr = array(); //表格顶部按钮
+    public $TableFooterBtnArr = array(); //表格顶部按钮
     public static function get_instance() {
         if (! isset ( self::$s_instance )) {
             self::$s_instance = new self ();
@@ -45,7 +51,28 @@ class Build {
         $this->CommObj = Common::get_instance();
     }
     
-    public function Form($Method = 'POST', $Class = '', $ExtHtml = ''){
+    public function FormMultipleTitle(){
+        $NavArr = array();
+        foreach($this->Arr as $k => $v){
+            $Active = ($k == $this->FormMultipleSelectIndex) ? 'active' : '';
+            $NavArr[] = '<li class="'.$Active.'" ><a class="tabBnt" href="#" data-index="'.$k.'">'.$v['Title'].'</a></li>';
+        }
+        return '<div class="tab-struct custom-tab-1"><ul role="tablist" class="nav nav-tabs">'.implode(PHP_EOL, $NavArr).'</ul></div>';
+    }
+    
+    public function FormMultiple($Method = 'POST', $Class = '', $ExtHtml = ''){ //多页签表单
+        $Arr = $this->Arr;
+        $Html = '';
+        foreach($Arr as $k => $v){
+            $this->Arr = $v['Form'];
+            self::Form($Method, $Class, $ExtHtml, $k);
+            $Html .= $this->Html;
+        }
+        $this->Arr = $Arr;
+        $this->Html = !$this->FormMultipleMerge ? $Html : '<form method="'.$Method.'" class="BuildForm '.$Class.'">'.$Html.'</form>';
+    }
+    
+    public function Form($Method = 'POST', $Class = '', $ExtHtml = '', $MultipleKey = -1){
         if(!is_array($this->Arr)) return;
         $this->UploadUrl = !empty($this->UploadUrl) ? $this->UploadUrl : $this->CommObj->Url(array('backend', 'index', 'ajaxUpload'));
         $this->UploadEditUrl = !empty($this->UploadEditUrl) ? $this->UploadEditUrl : $this->CommObj->Url(array('backend', 'index', 'uploadEditor'));
@@ -53,7 +80,8 @@ class Build {
         $this->LinkExport = !empty($this->LinkExport) ? $this->LinkExport : $this->CommObj->Url(array($this->Module, \Router::$s_Controller, 'export'));
         self::_Clean();
         $this->FormStyle = ($Class == 'form-inline') ? 2 : 1;
-        $this->Html = '<form method="'.$Method.'" class="BuildForm '.$Class.'">';
+        $this->Html = ($MultipleKey == -1) ? '<form method="'.$Method.'" class="BuildForm '.$Class.'">' : '<div class="w-100 '.(($MultipleKey == $this->FormMultipleSelectIndex) ? '' : 'd-none').'" id="Key_'.$MultipleKey.'">';
+        if(!$this->FormMultipleMerge) $this->Html .= '<form method="'.$Method.'" class="BuildForm '.$Class.'">';
         foreach($this->Arr as $k => $v){
             if(empty($v['Col']) && $Class != 'form-inline') $v['Col'] = 12;
             $v['Required'] = empty($v['Required']) ? 0 : 1;
@@ -131,7 +159,9 @@ class Build {
         if($Class != 'form-inline') $Col = 12;
         if($this->IsSubmit) $this->Html .= self::_FromButton('submit', '提交', 'submit', $Col, 'primary');
         if($this->IsBack) $this->Html .= self::_FromButton('submit', '返回', 'back', $Col, 'secondary');
-        $this->Html .= $ExtHtml.'</form>';
+        $this->Html .= $ExtHtml;
+        if(!$this->FormMultipleMerge) $this->Html .= '</form>';
+        $this->Html .= ($MultipleKey == -1) ? '</form>' : '</div>';
         if(!empty($this->Js)){
             $this->Js =  '
 	               var URL_ROOT = "'.URL_ROOT.'";
@@ -230,10 +260,10 @@ class Build {
     
     private function _FormRadio($Name, $Desc, $Value, $DataArr = array(),  $Col, $IsDisabled = 0){
         $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
-        $Str = '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'"><label  class="mr-3">'.$Desc.'</label>';
+        $Str = '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'"><label  class="mr-3 mb-1 d-block">'.$Desc.'</label>';
         foreach($DataArr as $k => $v){
             $Checked = ($Value == $k) ? 'checked="checked"' : '';
-            $Str .= '<label class="radio-inline mr-3"><input type="radio" name="'.$Name.'"  value="'.$k.'" '.$Checked.'> '.$v.'</label>';
+            $Str .= '<label class="radio-inline mr-3 text-dark h6"><input type="radio" name="'.$Name.'"  value="'.$k.'" '.$Checked.'> '.$v.'</label>';
         }
         $Str .= '</div>';
         return $Str;
@@ -242,10 +272,10 @@ class Build {
     private function _FormCheckbox($Name, $Desc, $Value, $DataArr = array(),  $Col, $IsDisabled = 0){ //Checkbox
         $ValueArr = explode('|', $Value);
         $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
-        $Str = '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'"><label  class="mr-3 font-weight-bold">'.$Desc.'</label>';
+        $Str = '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'"><label  class="mr-3 mb-1 d-block">'.$Desc.'</label>';
         foreach($DataArr as $k => $v){
             $Checked = in_array($k, $ValueArr) ? 'checked="checked"' : '';
-            $Str .= '<div class="form-check form-check-inline mr-3"><label class="checkbox-inline "><input type="checkbox" name="'.$Name.'['.$k.']"  value="1" '.$Checked.' > '.$v.'</label></div>';
+            $Str .= '<div class="form-check form-check-inline mr-3 text-dark h6"><label class="checkbox-inline d-block"><input type="checkbox" name="'.$Name.'['.$k.']"  value="1" '.$Checked.' > '.$v.'</label></div>';
         }
         $Str .= '</div>';
         return $Str;
@@ -478,7 +508,7 @@ class Build {
         }
         $Class = ($this->FormStyle == 2) ? '' : 'col-'.$SubCol.'  col-lg-'.$Col;
         return '<div class="form-group '.$Class.'">
-                        <label for="Input_'.$Name.'" class="'.(($this->FormStyle == 2) ? 'mr-2' : '').'">'.$Desc.'</label>'.$RequiredViewStr.'
+                        <label for="Input_'.$Name.'" class="'.(($this->FormStyle == 2) ? 'mr-2' : '').' mb-1">'.$Desc.'</label>'.$RequiredViewStr.'
                         <input type="'.$Type.'" '.$Disabled.' class="form-control '.(($this->FormStyle == 2) ? 'form-control-sm' : '').'" name="'.$Name.'" id="Input_'.$Name.'" placeholder="'.$Placeholder.'" value="'.$Value.'" '.$RequiredStr.'>
                     </div>';
     }
@@ -519,7 +549,7 @@ class Build {
         }
         $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
         return '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'">
-                        <label for="Input_'.$Name.'">'.$Desc.'</label>'.$RequiredViewStr.'
+                        <label for="Input_'.$Name.'" class="mb-1">'.$Desc.'</label>'.$RequiredViewStr.'
                         <textarea class="form-control" name="'.$Name.'" '.$Disabled.' rows="4" id="Input_'.$Name.'" placeholder="'.$Placeholder.'" '.$RequiredStr.'>'.$Value.'</textarea>
                       </div>';
     }
@@ -564,15 +594,23 @@ class Build {
                         $str .= '<td>'.$Pre.$v[$sk].'</td>';break;
                 }
             }
-            if($this->IsEdit || $this->IsDel){
+            if($this->IsEdit || $this->IsDel || !empty($v['BtnArr'])){
                 $ActArr = array();
                 $_GET[$this->PrimaryKey] = $v[$this->PrimaryKey];
-                if($this->IsEdit) $ActArr[] = '<a href="'.$this->LinkEdit.'?'.http_build_query($_GET).'">'.$this->NameEdit.'</a>';
-                if($this->IsDel) $ActArr[] = '<a href="'.$this->LinkDel.'?'.http_build_query($_GET).'" onclick="return confirm(\'是否删除?\')">'.$this->NameDel.'</a>';
+                if($this->IsEdit) $ActArr[] = (isset($v['IsEdit']) && $v['IsEdit'] != 1) ? '<a class="btn btn-sm btn-primary mr-2 disabled" href="javascript:void(0);">'.$this->NameEdit.'</a>' : '<a class="btn btn-sm btn-primary mr-2" href="'.$this->LinkEdit.'?'.http_build_query($_GET).'">'.$this->NameEdit.'</a>';
+                if($this->IsDel) $ActArr[] = (isset($v['IsDel']) && $v['IsDel'] != 1) ? '<a class="btn btn-sm btn-danger mr-2 disabled" href="javascript:void(0);" >'.$this->NameDel.'</a>' : '<a class="btn btn-sm btn-danger mr-2" href="'.$this->LinkDel.'?'.http_build_query($_GET).'" onclick="return confirm(\'是否删除?\')">'.$this->NameDel.'</a>';
+                if(!empty($v['BtnArr'])){
+                    foreach($v['BtnArr'] as $Btn){
+                        $BtnColor = isset($Btn['Color']) ? $Btn['Color'] : 'primary';
+                        $ActArr[] = (isset($Btn['IsDel']) && $Btn['IsDel'] != 1) ? '<a class="btn btn-sm btn-'.$BtnColor.' mr-2 disabled" href="javascript:void(0);" >'.$Btn['Name'].'</a>' : '<a class="btn btn-sm mr-2 btn-'.$BtnColor.'" href="'.$Btn['Link'].'?'.http_build_query($_GET).'">'.$Btn['Name'].'</a>';
+                    }
+                }
+                
                 $str .= '<td>'.implode(' ', $ActArr).'</td>';
                 unset($_GET[$this->PrimaryKey]);
                 $num++;
             }
+            
             $str .= '</tr>';
         }
         if(!empty($Page)) $str .= '</tbody><tfoot><tr><td colspan="'.$num.'" class="page ">'.$Page.'</td></tr></tfoot>';

@@ -13,6 +13,7 @@
 error_reporting ( E_ALL ^ E_NOTICE );
 define ( 'PATH_DIRNAME', pathinfo ( __FILE__, PATHINFO_DIRNAME ) );
 define ( 'PATH_SYS', PATH_DIRNAME . '/System/' );
+define ( 'PATH_TEMPLATE', PATH_DIRNAME . '/Template/' );
 define ( 'PATH_LIB', PATH_DIRNAME . '/Lib/' );
 define ( 'PATH_STATIC', PATH_DIRNAME . '/Static/' );
 define ( 'EXTEND', '.php' );

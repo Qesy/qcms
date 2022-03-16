@@ -29,14 +29,14 @@ class Db_pdo extends Db {
 	
 	public function getOne($PrimaryId){
 	    $key = RedisKey::Table_HM($this->TableName, $PrimaryId);
-	    //if(Redis::$s_IsOpen == 1 && Redis::exists($key)) return Redis::hGetAll($key);
+	    if(Redis::$s_IsOpen == 1 && Redis::exists($key)) return Redis::hGetAll($key);
 	    $Rs = $this->SetCond(array($this->PrimaryKey => $PrimaryId))->ExecSelectOne();
 	    if(Redis::$s_IsOpen == 1 && !empty($Rs)) Redis::hMset($key, $Rs);
 	    return $Rs;
 	}
 	
 	public function clean($PrimaryId){
-	    //if(Redis::$s_IsOpen != 1) return;
+	    if(Redis::$s_IsOpen != 1) return;
 	    $key = RedisKey::Table_HM($this->TableName, $PrimaryId);
 	    Redis::del($key);
 	}

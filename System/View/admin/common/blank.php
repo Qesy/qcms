@@ -47,27 +47,17 @@
                 <div class="row" style="min-height: 600px;">
 <div class="col-sm-12">
                         <div class="panel panel-default card-view" >
-                            <div class="panel-heading mb-3 d-flex justify-content-between align-items-center">
+                            <div class="panel-heading mb-3 pb-2 d-flex justify-content-between align-items-center border-bottom">
 
-<h5 class="txt-dark"><?=$this->PageTitle2?></h5>
-                                    <?
-        if($this->BuildObj->IsAdd){
-        ?>
-        <span ><a href="<?=$this->BuildObj->LinkAdd?>" class="btn btn-primary btn-sm"><?=$this->BuildObj->NameAdd?></a></span>
-      <? } ?>
+<h5 class="txt-dark"><?=$this->PageTitle?></h5>
+
 
 
                             </div>
                             <div class="panel-wrapper ">
                                 <div class="panel-body">
-                                    <div class="table-wrap">
-                                        <div class="table-responsive">
-                                            <div id="myTable_wrapper" class="table table-hover  mb-0 no-footer"><div id="myTable_filter" class="dataTables_filter"></div>
-                                                <?=$this->HeadHtml?>
-                                                <?=$Table?>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    <?=$Desc?>
+
                                 </div>
                             </div>
                         </div>

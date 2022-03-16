@@ -34,4 +34,12 @@ class Cookie {
 			setcookie ( $pre.'_'.$k, '', time () - ($this->expire * 60 * 60), '/', '' );
 		}
 	}
+	
+	public function delBatch($pre = ''){
+	    foreach($_COOKIE as $k => $v){
+	        if(strpos($k, $pre) !== false){
+	            setcookie ( $k, '', time () - ($this->expire * 60 * 60), '/', $this->Domain );
+	        }
+	    }
+	}
 }

@@ -1,12 +1,12 @@
 <?php
 namespace Model;
-use Helper\RedisKey;
 use Helper\Redis;
+use Helper\RedisKey;
 
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 /*
- * Name 	: QC_Sys
- * Date 	: 2022-03-15
+ * Name 	: QC_Group_admin
+ * Date 	: 2022-03-16
  * Author 	: Qesy
  * QQ 		: 762264
  * Mail 	: 762264@qq.com
@@ -15,34 +15,18 @@ defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
  * (̅_̅_̅(̲̅(̅_̅_̅_̅_̅_̅_̅_̅()ڪے
  *
  */
-class QC_Sys extends \Db_pdo {
-	public $TableName = 'sys';
-	public $PrimaryKey = 'Name';
-	
-	
-	public function getKv(){
-	    $DataArr = self::getList();
-	    return array_column($DataArr, 'AttrValue', 'Name');
-	}
-	
-	public function getGroupList($GroupId){
-	    $DataArr = self::getList();
-	    $Arr = array();
-	    foreach($DataArr as $v){
-	        if($v['GroupId'] != $GroupId) continue;
-	        $Arr[] = $v;
-	    }
-	    return $Arr;
-	}
+class QC_Group_admin extends \Db_pdo {
+	public $TableName = 'group_admin';
+	public $PrimaryKey = 'GroupAdminId';
 	
 	public function getList(){
-	    $key = RedisKey::Sys_Arr_HM();
+	    $key = RedisKey::Group_Admin_Arr_HM();
 	    $FieldArr = array();
 	    if(Redis::$s_IsOpen == 1 && Redis::exists($key)) {
 	        $FieldArr = Redis::hGetAll($key);
 	    }else{
-	        $Arr = $this->SetField('Name')->SetSort(array('Sort' => 'ASC'))->ExecSelect();
-	        $FieldArr = array_column($Arr, 'Name');
+	        $Arr = $this->SetField('GroupAdminId')->SetSort(array('GroupAdminId' => 'ASC'))->ExecSelect();
+	        $FieldArr = array_column($Arr, 'GroupAdminId');
 	        if(Redis::$s_IsOpen == 1 && !empty($Arr)) Redis::hMset($key, $FieldArr);
 	    }
 	    $DataArr = array();
@@ -54,13 +38,13 @@ class QC_Sys extends \Db_pdo {
 	
 	public function cleanList(){
 	    if(Redis::$s_IsOpen != 1) return;
-	    $key = RedisKey::Sys_Arr_HM();
+	    $key = RedisKey::Group_Admin_Arr_HM();
 	    $FieldArr = array();
 	    if(Redis::exists($key)) {
 	        $FieldArr = Redis::hGetAll($key);
 	    }else{
-	        $Arr = $this->SetField('Name')->ExecSelect();
-	        $FieldArr = array_column($Arr, 'Name');
+	        $Arr = $this->SetField('GroupAdminId')->ExecSelect();
+	        $FieldArr = array_column($Arr, 'GroupAdminId');
 	        if(!empty($Arr)) Redis::hMset($key, $FieldArr);
 	    }
 	    foreach($FieldArr as $v){
@@ -68,4 +52,5 @@ class QC_Sys extends \Db_pdo {
 	    }
 	    Redis::del($key);
 	}
+	
 }

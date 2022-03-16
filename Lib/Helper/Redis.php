@@ -15,6 +15,7 @@ defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
  */
 class Redis {
 	private static $_redis = null;
+	public static $s_IsOpen = 1;
 	const CACHETIME = 1209600; // 缓存2周
 	private static function __getRedis() {
 		if (! isset ( self::$_redis )) {
@@ -22,8 +23,8 @@ class Redis {
 				self::$_redis = new \Redis();
 				self::$_redis->connect ( '127.0.0.1', 6379 );
 				self::$_redis->auth ( "Yu7#iH8*2gtE5ew3bp6" );
-				$configArr = db_config ();
-				$dbKey = ! isset ( $configArr [SERVER_ID] ['redis_db'] ) ? 0 : $configArr [SERVER_ID] ['redis_db'];
+				/* $configArr = db_config ();
+				$dbKey = ! isset ( $configArr [SERVER_ID] ['redis_db'] ) ? 0 : $configArr [SERVER_ID] ['redis_db']; */
 				// self::$_redis->select($dbKey);
 			} catch ( \Exception $e ) {
 				throw new \Exception( '连接Redis失败！' . $e->getMessage () );
