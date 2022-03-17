@@ -565,48 +565,49 @@ class Build {
         if(empty($this->LinkDel)) $this->LinkDel = $this->CommObj->Url(array($this->Module, \Router::$s_Controller, 'del'));
         $str = '<table class="table '.$Class.'"><thead><tr>';
         foreach($keyArr as $k => $v) $str .= '<th  scope="col">'.$v['Name'].'</th>';
-        if($this->IsEdit || $this->IsDel) $str .= '<th  scope="col">操作</th>';
+        if($this->IsEdit || $this->IsDel || !empty($v['BtnArr'])) $str .= '<th scope="col">操作</th>';
         $str .= '</tr></thead><tbody>';
         foreach($arr as $k => $v){
-            $str .= '<tr>';
+            $str .= '<tr class="'.$v['TrClass'].'">';
             foreach($keyArr as $sk => $sv){
                 $Pre = isset($sv['Pre']) ? $sv['Pre'] : '';
                 //var_dump($sv);
                 switch ($sv['Type']){
                     case 'Date':
-                        $str .= '<td>'.date('Y-m-d', $v[$sk]).'</td>';break;
+                        $str .= '<td style="'.$sv['Style'].'">'.date('Y-m-d', $v[$sk]).'</td>';break;
                     case 'Time':
-                        $str .= '<td>'.date('Y-m-d H:i:s', $v[$sk]).'</td>';break;
+                        $str .= '<td style="'.$sv['Style'].'">'.date('Y-m-d H:i:s', $v[$sk]).'</td>';break;
                     case 'True':
                         $IsTrue = ($v[$sk]) ? 'success' : 'danger';
                         $Text = ($v[$sk]) ? '是' : '否';
-                        $str .= '<td><span class="text-'.$IsTrue.'">'.$Text.'</span></td>';break;
+                        $str .= '<td style="'.$sv['Style'].'"><span class="text-'.$IsTrue.'">'.$Text.'</span></td>';break;
                     case 'Key':
-                        $str .= '<td>'.$Pre.$keyArr[$sk]['Data'][$v[$sk]].'</td>';break;
+                        $str .= '<td style="'.$sv['Style'].'">'.$Pre.$keyArr[$sk]['Data'][$v[$sk]].'</td>';break;
                         break;
                     case 'Switch':
-                        $str .= '<td><span class="switch switch-sm">
+                        $str .= '<td style="'.$sv['Style'].'"><span class="switch switch-sm">
                                 <input type="checkbox" class="StateBtn switch" id="switch-'.$sk.'-'.$v[$this->PrimaryKey].'" data="'.$v[$this->PrimaryKey].'" dataState="'.(($v[$sk] == 1) ? 2 : 1).'" dataField="'.$sk.'" '.(($v[$sk] == 1) ? 'checked' : '').'>
                                 <label for="switch-'.$sk.'-'.$v[$this->PrimaryKey].'"></label>
-                              </span></td>';break;
+                              </span></td>';
                         break;
                     default:
-                        $str .= '<td>'.$Pre.$v[$sk].'</td>';break;
+                        $str .= '<td style="'.$sv['Style'].'">'.$Pre.$v[$sk].'</td>';break;
                 }
             }
             if($this->IsEdit || $this->IsDel || !empty($v['BtnArr'])){
                 $ActArr = array();
                 $_GET[$this->PrimaryKey] = $v[$this->PrimaryKey];
-                if($this->IsEdit) $ActArr[] = (isset($v['IsEdit']) && $v['IsEdit'] != 1) ? '<a class="btn btn-sm btn-primary mr-2 disabled" href="javascript:void(0);">'.$this->NameEdit.'</a>' : '<a class="btn btn-sm btn-primary mr-2" href="'.$this->LinkEdit.'?'.http_build_query($_GET).'">'.$this->NameEdit.'</a>';
-                if($this->IsDel) $ActArr[] = (isset($v['IsDel']) && $v['IsDel'] != 1) ? '<a class="btn btn-sm btn-danger mr-2 disabled" href="javascript:void(0);" >'.$this->NameDel.'</a>' : '<a class="btn btn-sm btn-danger mr-2" href="'.$this->LinkDel.'?'.http_build_query($_GET).'" onclick="return confirm(\'是否删除?\')">'.$this->NameDel.'</a>';
                 if(!empty($v['BtnArr'])){
                     foreach($v['BtnArr'] as $Btn){
                         $BtnColor = isset($Btn['Color']) ? $Btn['Color'] : 'primary';
                         $ActArr[] = (isset($Btn['IsDel']) && $Btn['IsDel'] != 1) ? '<a class="btn btn-sm btn-'.$BtnColor.' mr-2 disabled" href="javascript:void(0);" >'.$Btn['Name'].'</a>' : '<a class="btn btn-sm mr-2 btn-'.$BtnColor.'" href="'.$Btn['Link'].'?'.http_build_query($_GET).'">'.$Btn['Name'].'</a>';
                     }
                 }
+                if($this->IsEdit) $ActArr[] = (isset($v['IsEdit']) && $v['IsEdit'] != 1) ? '<a class="btn btn-sm btn-primary mr-2 disabled" href="javascript:void(0);">'.$this->NameEdit.'</a>' : '<a class="btn btn-sm btn-primary mr-2" href="'.$this->LinkEdit.'?'.http_build_query($_GET).'">'.$this->NameEdit.'</a>';
+                if($this->IsDel) $ActArr[] = (isset($v['IsDel']) && $v['IsDel'] != 1) ? '<a class="btn btn-sm btn-danger mr-2 disabled" href="javascript:void(0);" >'.$this->NameDel.'</a>' : '<a class="btn btn-sm btn-danger mr-2" href="'.$this->LinkDel.'?'.http_build_query($_GET).'" onclick="return confirm(\'是否删除?\')">'.$this->NameDel.'</a>';
                 
-                $str .= '<td>'.implode(' ', $ActArr).'</td>';
+                
+                $str .= '<td >'.implode(' ', $ActArr).'</td>';
                 unset($_GET[$this->PrimaryKey]);
                 $num++;
             }
