@@ -69,7 +69,7 @@ class Build {
             $Html .= $this->Html;
         }
         $this->Arr = $Arr;
-        $this->Html = !$this->FormMultipleMerge ? $Html : '<form method="'.$Method.'" class="BuildForm '.$Class.'">'.$Html.'</form>';
+        $this->Html = !$this->FormMultipleMerge ? $Html : '<form method="'.$Method.'" class="BuildForm ">'.$Html.'</form>';
     }
     
     public function Form($Method = 'POST', $Class = '', $ExtHtml = '', $MultipleKey = -1){
@@ -80,7 +80,7 @@ class Build {
         $this->LinkExport = !empty($this->LinkExport) ? $this->LinkExport : $this->CommObj->Url(array($this->Module, \Router::$s_Controller, 'export'));
         self::_Clean();
         $this->FormStyle = ($Class == 'form-inline') ? 2 : 1;
-        $this->Html = ($MultipleKey == -1) ? '<form method="'.$Method.'" class="BuildForm '.$Class.'">' : '<div class="w-100 '.(($MultipleKey == $this->FormMultipleSelectIndex) ? '' : 'd-none').'" id="Key_'.$MultipleKey.'">';
+        $this->Html = ($MultipleKey == -1) ? '<form method="'.$Method.'" class="BuildForm  ">' : '<div class="w-100 '.$Class.' '.(($MultipleKey == $this->FormMultipleSelectIndex) ? '' : 'd-none').'" id="Key_'.$MultipleKey.'">';
         if(!$this->FormMultipleMerge) $this->Html .= '<form method="'.$Method.'" class="BuildForm '.$Class.'">';
         foreach($this->Arr as $k => $v){
             if(empty($v['Col']) && $Class != 'form-inline') $v['Col'] = 12;
@@ -246,7 +246,7 @@ class Build {
         $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
         return '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.' d-none">
                         <label for="Input_'.$Name.'">'.$Desc.'</label>
-                        <input type="hidden" class="form-control" name="'.$Name.'" id="Input_'.$Name.'" value="'.$Value.'">
+                        <input type="input" class="form-control" name="'.$Name.'" id="Input_'.$Name.'" value="'.$Value.'">
                     </div>';
     }
     
@@ -263,7 +263,7 @@ class Build {
         $Str = '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'"><label  class="mr-3 mb-1 d-block">'.$Desc.'</label>';
         foreach($DataArr as $k => $v){
             $Checked = ($Value == $k) ? 'checked="checked"' : '';
-            $Str .= '<label class="radio-inline mr-3 text-dark h6"><input type="radio" name="'.$Name.'"  value="'.$k.'" '.$Checked.'> '.$v.'</label>';
+            $Str .= '<label class="radio-inline mr-3 text-dark py-2 h6"><input type="radio" name="'.$Name.'"  value="'.$k.'" '.$Checked.'> '.$v.'</label>';
         }
         $Str .= '</div>';
         return $Str;
@@ -275,7 +275,7 @@ class Build {
         $Str = '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'"><label  class="mr-3 mb-1 d-block">'.$Desc.'</label>';
         foreach($DataArr as $k => $v){
             $Checked = in_array($k, $ValueArr) ? 'checked="checked"' : '';
-            $Str .= '<div class="form-check form-check-inline mr-3 text-dark h6"><label class="checkbox-inline d-block"><input type="checkbox" name="'.$Name.'['.$k.']"  value="1" '.$Checked.' > '.$v.'</label></div>';
+            $Str .= '<div class="checkbox checkbox-primary float-left pl-1 pr-4 py-2"><input type="checkbox" name="'.$Name.'['.$k.']"  value="1" '.$Checked.' id="'.$Name.'_'.$k.'" > <label class="text-dark" for="'.$Name.'_'.$k.'" >'.$v.'</label></div>';
         }
         $Str .= '</div>';
         return $Str;
@@ -307,7 +307,7 @@ class Build {
             $RequiredViewStr = '<span class="text-danger ml-2" style="font-weight: 900;">*</span>';
         }
         $Class = ($this->FormStyle == 2) ? '' : 'col-'.$SubCol.'  col-lg-'.$Col;
-        $Str = '<div class="form-group '.$Class.'"><label for="Input_'.$Name.'" class="'.(($this->FormStyle == 2) ? 'mr-2' : '').'">'.$Desc.$RequiredViewStr.'</label><select class="form-control '.(($this->FormStyle == 2) ? 'form-control-sm' : '').'" name="'.$Name.'" id="Input_'.$Name.'" '.$Disabled.' '.$RequiredStr.'>';
+        $Str = '<div class="form-group '.$Class.'"><label for="Input_'.$Name.'" class="mb-1 '.(($this->FormStyle == 2) ? 'mr-2' : '').'">'.$Desc.$RequiredViewStr.'</label><select class="form-control '.(($this->FormStyle == 2) ? 'form-control-sm' : '').'" name="'.$Name.'" id="Input_'.$Name.'" '.$Disabled.' '.$RequiredStr.'>';
         $Str .= '<option value="" >请选择'.$Desc.'</option>';
         foreach($DataArr as $sk => $sv){
             $selected = ($sk == $Value) ? 'selected' : '';
@@ -389,15 +389,14 @@ class Build {
                                 this.disable();
                               },
                               onComplete: function(file, response){
-                                var jsonArr = JSON.parse(response);
-                                console.log("aaa", jsonArr.code)
-                                if(jsonArr.code != 0){
+                                var jsonArr = JSON.parse(response); 
+                                if(jsonArr.Code != 0){
                                   this.enable();
-                                  alert(jsonArr.msg);return;
+                                  alert(jsonArr.Msg);return;
                                 }
                                 window.clearInterval(interval);
                                 this.enable();
-                                $("#Img_'.$Name.'").val(jsonArr.data.url)
+                                $("#Img_'.$Name.'").val(jsonArr.Data)
                               }
                           });
 	                       ';
@@ -510,6 +509,7 @@ class Build {
         return '<div class="form-group '.$Class.'">
                         <label for="Input_'.$Name.'" class="'.(($this->FormStyle == 2) ? 'mr-2' : '').' mb-1">'.$Desc.'</label>'.$RequiredViewStr.'
                         <input type="'.$Type.'" '.$Disabled.' class="form-control '.(($this->FormStyle == 2) ? 'form-control-sm' : '').'" name="'.$Name.'" id="Input_'.$Name.'" placeholder="'.$Placeholder.'" value="'.$Value.'" '.$RequiredStr.'>
+                        
                     </div>';
     }
     
@@ -600,7 +600,7 @@ class Build {
                 if(!empty($v['BtnArr'])){
                     foreach($v['BtnArr'] as $Btn){
                         $BtnColor = isset($Btn['Color']) ? $Btn['Color'] : 'primary';
-                        $ActArr[] = (isset($Btn['IsDel']) && $Btn['IsDel'] != 1) ? '<a class="btn btn-sm btn-'.$BtnColor.' mr-2 disabled" href="javascript:void(0);" >'.$Btn['Name'].'</a>' : '<a class="btn btn-sm mr-2 btn-'.$BtnColor.'" href="'.$Btn['Link'].'?'.http_build_query($_GET).'">'.$Btn['Name'].'</a>';
+                        $ActArr[] = (isset($Btn['IsDisabled']) && $Btn['IsDisabled'] == 1) ? '<a class="btn btn-sm btn-'.$BtnColor.' mr-2 disabled" href="javascript:void(0);" >'.$Btn['Name'].'</a>' : '<a class="btn btn-sm mr-2 btn-'.$BtnColor.'" href="'.$Btn['Link'].'?'.http_build_query($_GET).'">'.$Btn['Name'].'</a>';
                     }
                 }
                 if($this->IsEdit) $ActArr[] = (isset($v['IsEdit']) && $v['IsEdit'] != 1) ? '<a class="btn btn-sm btn-primary mr-2 disabled" href="javascript:void(0);">'.$this->NameEdit.'</a>' : '<a class="btn btn-sm btn-primary mr-2" href="'.$this->LinkEdit.'?'.http_build_query($_GET).'">'.$this->NameEdit.'</a>';

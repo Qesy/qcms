@@ -45,7 +45,7 @@ class QC_Group_admin extends \Db_pdo {
 	    }else{
 	        $Arr = $this->SetField('GroupAdminId')->ExecSelect();
 	        $FieldArr = array_column($Arr, 'GroupAdminId');
-	        if(!empty($Arr)) Redis::hMset($key, $FieldArr);
+	        //if(!empty($Arr)) Redis::hMset($key, $FieldArr);
 	    }
 	    foreach($FieldArr as $v){
 	        $this->clean($v);

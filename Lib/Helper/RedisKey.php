@@ -28,6 +28,14 @@ class RedisKey {
 	    return self::$s_projectKey.'_Group_Admin_Arr_HM';
 	}
 	
+	public static function Group_User_Arr_HM(){
+	    return self::$s_projectKey.'_Group_User_Arr_HM';
+	}
+	
+	public static function Sys_Model_Arr_HM(){
+	    return self::$s_projectKey.'Sys_Model_Arr_HM';
+	}
+	
 	public static function Category_String(){
 	    return self::$s_projectKey.'_Category_String';
 	}

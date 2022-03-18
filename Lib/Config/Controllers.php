@@ -11,7 +11,9 @@ defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
  *
  */
 class Controllers extends Base {
+    public $IsArr = array('1' => '是', 2 => '否');
     public $OpenArr = array('1' => '开启', 2 => '关闭');
+    public $IsShowArr = array('1' => '显示', 2 => '隐藏');
     public $EditorArr = array('ckeditor' => 'ckeditor');
 }
 class ControllersAdmin extends Controllers {
@@ -54,6 +56,15 @@ class ControllersAdmin extends Controllers {
             
             // 内容管理
             'admin/category/index' => array('Name' => '分类管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'index'))),
+            'admin/category/add' => array('Name' => '添加分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'add'))),
+            'admin/category/edit' => array('Name' => '修改分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'edit'))),
+            'admin/category/del' => array('Name' => '删除分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'del'))),
+            'admin/category/move' => array('Name' => '移动分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'move'))),
+            
+            // API
+            'admin/api/ajaxUpload' => array('Name' => 'AJAX上传', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'ajaxUpload'))),
+            'admin/api/ckUpload' => array('Name' => 'CkEditor上传', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'ckUpload'))),
+            
             
             'admin/approve' => array('Name' => '审核管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'approve'))),
 
@@ -72,8 +83,7 @@ class ControllersAdmin extends Controllers {
             'admin/website/add' => array('Name' => '网站添加', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'website', 'add'))),
             'admin/website/edit' => array('Name' => '网站修改', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'website', 'edit'))),
             'admin/website/del' => array('Name' => '网站删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'website', 'del'))),
-            // API
-            'admin/api/ajaxUpload' => array('Name' => 'AJAX上传', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'ajaxUpload'))),
+            
             'admin/api/userState' => array('Name' => '设置用户状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'userState'))),
             'admin/api/cmsState' => array('Name' => '设置CMS状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'cmsState'))),
             'admin/api/plugState' => array('Name' => '设置插件状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'plugState'))),
@@ -174,6 +184,18 @@ class ControllersAdmin extends Controllers {
             }
         }
         
+    }
+    
+    public function getTemplate($Prefix){
+        $Files = scandir(PATH_TEMPLATE.$this->SysRs['TmpPath'].'/');
+        $Template = array();
+        foreach($Files as $v){
+            if(in_array($v, array('.', '..'))) continue;
+            if(is_dir(PATH_TEMPLATE.$v)) continue;
+            if(strpos($v, $Prefix) !== 0 || substr($v, -5) != '.html') continue;
+            $Template[$v] = $v;
+        }
+        return $Template;
     }
     
     function __destruct(){       

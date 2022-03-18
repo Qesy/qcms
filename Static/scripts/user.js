@@ -10,13 +10,47 @@ $(function(){
 
     $('.tabBnt').click(function(){
         let Index = $(this).attr('data-index');
-        console.log(Index);
-
         $(this).parent().addClass('active');
         $(this).parent().siblings().removeClass('active');
         $('#Key_'+Index).removeClass('d-none');
         $('#Key_'+Index).siblings().addClass('d-none');
     })
+    ClassicEditor.create( document.querySelector( '.Input_Editor' ), {
+    toolbar: {
+      items: [
+        'heading',
+        '|',
+        'Alignment',
+        'fontColor',
+        'Highlight',
+        'fontSize',
+        'bold',
+        'italic',
+        'link',
+        'removeFormat',
+        'bulletedList',
+        'numberedList',
+        'imageUpload',
+        'blockQuote',
+        'insertTable',
+        'mediaEmbed',
+        'undo',
+        'redo',
+        'Image toolbar',
+      ]
+    },
+     ckfinder: {
+      uploadUrl: '/admin/api/ckUpload.html',
+      height:'300',
+     }
+    })
+  .then( editor => {
+    window.editor = editor;
+  } )
+  .catch( err => {
+    console.log('no editor');
+    //console.error( err.stack );
+  });
 
 })
 

@@ -7,23 +7,26 @@ class Category extends ControllersAdmin {
         $Arr = $this->CategoryObj->CateTreeDetail;
         $Level = 0;
         $TrClass = '';
+        $ModelArr = $this->Sys_modelObj->getList();
+        $ModelKV = array_column($ModelArr, 'Name', 'ModelId');
+        $ModelKV[-1] = '单页';
         foreach($Arr as $k => $v){
-            $IsPost = ($v['IsPost'] == 1) ? '<span class="text-danger mr-2">投稿</span>': '<span class="text-secondary mr-2">投稿</span>';
+            $IsPost = ($v['IsPost'] == 1 && $v['IsLink'] != 1) ? '<span class="text-danger mr-2">发布</span>': '<span class="text-secondary mr-2">发布</span>';
             $IsLink = ($v['IsLink'] == 1) ? '<span class="text-danger mr-2">外链</span>': '<span class="text-secondary mr-2">外链</span>';
             $IsShow = ($v['IsShow'] == 1) ? '<span class="text-danger mr-2">显示</span>': '<span class="text-secondary mr-2">显示</span>';
             $IsHasSub = ($v['HasSub']) ? '<i class="ml-2 bi bi-chevron-down ShowBtn" data-cateid="'.$v['CateId'].'"></i>' : '';
             $NameView = ($v['Level'] == 0) ? $v['Name'] : '<span style="padding-left:'.(30*$v['Level']).'px;"><span class="pr-2">├─</span>'.$v['Name'].'</span>';
             $Arr[$k]['NameView'] = $NameView .$IsHasSub;
-            $Arr[$k]['AttrView'] = $IsPost.$IsLink.$IsShow;
-            $Model = '文章模型';
+            $Arr[$k]['AttrView'] = $IsShow.$IsPost.$IsLink;
+            $Model = $ModelKV[$v['ModelId']];
             $Arr[$k]['ModelView'] = '<span class="text-secondary">'.$Model.'</span>';
             $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
             $Arr[$k]['UserLevel'] = '<span class="text-secondary">开放浏览</span>';
             $Arr[$k]['BtnArr'] = array(
                 array('Name' => '预览', 'Color' => 'success'),
-                array('Name' => '内容', 'Color' => 'success'),
-                array('Name' => '加子类'),
-                array('Name' => '移动'),                
+                array('Name' => '内容', 'Color' => 'success', 'IsDisabled' => ($v['IsLink'] == 1 || $v['IsPost'] != 1) ? '1' : '2'),
+                array('Name' => '加子类', 'Link' => $this->CommonObj->Url(array('admin', 'category', 'add'))),
+                array('Name' => '移动', 'Link' => $this->CommonObj->Url(array('admin', 'category', 'move'))),                
             );
             if($Level < $v['Level']){
                 $Level = $v['Level'];
@@ -42,29 +45,240 @@ class Category extends ControllersAdmin {
             'UserLevel' => array('Name' => '浏览权限', 'Td' => 'th'), 
             'SortView' => array('Name' => '排序', 'Td' => 'th', 'Style' => 'width:100px'),
         );
+        $this->BuildObj->NameAdd = '添加顶级分类';
         $this->BuildObj->PrimaryKey = 'CateId';        
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, '', 'table-sm');
         $this->LoadView('admin/category/index', $tmp);
     }
     
     public function add_Action(){
-        
+        $PCateId = intval($_GET['CateId']);        
+        if(!empty($PCateId)){
+            $Rs = $this->CategoryObj->getOne($PCateId);
+            if(empty($Rs)) $this->Err(1001);
+        }        
+        if(!empty($_POST)){
+            if(!$this->VeriObj->VeriPara($_POST, array('Name', 'ModelId'))) $this->Err(1001);
+            $IsPost = isset($_POST['Attr']['IsPost']) ? 1 : 2;
+            $IsShow = isset($_POST['Attr']['IsShow']) ? 1 : 2;
+            $IsLink = isset($_POST['Attr']['IsLink']) ? 1 : 2;
+            $InsertArr = array(
+                'PCateId' => $PCateId,
+                'Name' =>trim($_POST['Name']),
+                'ModelId' => intval($_POST['ModelId']),
+                'IsPost' => $IsPost,
+                'IsShow' => $IsShow,
+                'IsLink' => $IsLink,
+                'UserLevel' => intval($_POST['UserLevel']),
+                'LinkUrl' => trim($_POST['LinkUrl']),
+                'TempList' => trim($_POST['TempList']),
+                'TempDetail' => trim($_POST['TempDetail']),
+                'UrlList' => trim($_POST['UrlList']),
+                'UrlDetail' => trim($_POST['UrlDetail']),                
+                'SeoTitle' => trim($_POST['SeoTitle']),
+                'Keywords' => trim($_POST['Keywords']),
+                'Description' => trim($_POST['Description']),
+                'Content' => trim($_POST['Content']),
+                'IsCross' => trim($_POST['IsCross']),
+                'Sort' => 99,
+            );
+            $Ret = $this->CategoryObj->SetInsert($InsertArr)->ExecInsert();
+            if($Ret === false) $this->Err(1002);
+            $this->CategoryObj->cleanList();
+            $this->Jump(array('admin', 'category', 'index'));
+        }
+        $ModelArr = $this->Sys_modelObj->getList();
+        $ModelKV = array_column($ModelArr, 'Name', 'ModelId');
+        $ModelKV[-1] = '单页';
+        $ModelTempKV = array_column($ModelArr, 'NameKey', 'ModelId');
+        $ModelTempKV[-1] = 'page';
+ 
+        $GroupUserArr = $this->Group_userObj->getList();
+        $GroupUserKv = array(0 => '开放浏览'); 
+        foreach(array_column($GroupUserArr, 'Name', 'GroupUserId') as $k => $v) $GroupUserKv[$k] = $v;
+        $AttrArr = array('IsShow' => '显示', 'IsPost' => '发布', 'IsLink' => '外链');
+        $AttrValArr = array('IsShow', 'IsPost');
+        $TempList = $this->getTemplate('list_');
+        $TempDetail = $this->getTemplate('detail_');
+        $UrlList = 'list_{CateId}_{Page}.html';
+        $UrlDetail = '{Id}.html';
+        $UrlListDesc = '<span class="text-dark">
+            <span class="mr-3 font-weight-bold">{CateId}</span>分类ID<br>
+            <span class="mr-3 font-weight-bold">{PinYin}</span>拼音+分类ID<br>
+            <span class="mr-3 font-weight-bold">{PY}</span>拼音部首+分类ID<br>
+            <span class="mr-3 font-weight-bold">{Page}</span>页码<br>
+        </span>
+        ';
+        $UrlDetailDesc = '<span class="text-dark">
+        	<span class="mr-3 font-weight-bold">{Y}、{M}、{D}</span>年月日<br>
+            <span class="mr-3 font-weight-bold">{Ts}</span>INT类型的UNIX时间戳<br>
+            <span class="mr-3 font-weight-bold">{Id}</span>文章ID<br>
+            <span class="mr-3 font-weight-bold">{PinYin}</span>拼音+文章ID<br>
+            <span class="mr-3 font-weight-bold">{PY}</span>拼音部首+文章ID<br>
+        </span>
+        ';
+        $this->BuildObj->Arr = array(
+            array(
+            'Title' => '核心设置',
+            'Form' => array(                
+                array('Name' =>'Name', 'Desc' => '分类名称',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
+                array('Name' =>'ModelId', 'Desc' => '内容模型',  'Type' => 'select', 'Data' => $ModelKV, 'Value' => '1', 'Required' => 1, 'Col' => 3),
+                array('Name' =>'Attr', 'Desc' => '属性',  'Type' => 'checkbox', 'Data' => $AttrArr, 'Value' => implode('|', $AttrValArr), 'Required' => 1, 'Col' => 3),
+                //array('Name' =>'IsLink', 'Desc' => '是否外链',  'Type' => 'radio', 'Data' => $this->IsArr, 'Value' => 2, 'Required' => 1, 'Col' => 2),
+                array('Name' =>'SeoTitle', 'Desc' => 'SEO标题',  'Type' => 'input', 'Value' => '', 'Required' => 0, 'Col' => 12),
+                array('Name' =>'Keywords', 'Desc' => '关键字',  'Type' => 'input', 'Value' => '', 'Required' => 0, 'Col' => 12),
+                array('Name' =>'Description', 'Desc' => '分类描述',  'Type' => 'textarea', 'Value' => '', 'Required' => 0, 'Col' => 12), 
+                array('Name' =>'UserLevel', 'Desc' => '浏览权限',  'Type' => 'select', 'Data' => $GroupUserKv, 'Value' => 0, 'Required' => 1, 'Col' => 12),
+                array('Name' =>'LinkUrl', 'Desc' => '外链地址',  'Type' => 'hidden', 'Value' => '', 'Required' => 0, 'Col' => 12),
+            )),  
+            array(
+                'Title' => '高级设置',
+                'Form' => array(                    
+                    array('Name' =>'TempList', 'Desc' => '列表模板',  'Type' => 'select', 'Data' => $TempList, 'Value' => '', 'Required' => 0, 'Col' => 6),
+                    array('Name' =>'TempDetail', 'Desc' => '详情模板',  'Type' => 'select', 'Data' => $TempDetail, 'Value' => '', 'Required' => 0, 'Col' => 6),
+                    array('Name' =>'UrlList', 'Desc' => '列表命名规则',  'Type' => 'input', 'Value' => $UrlList, 'Required' => 0, 'Col' => 6, 'Help' => '撒旦法安防'),
+                    array('Name' =>'UrlDetail', 'Desc' => '详情命名规则',  'Type' => 'input', 'Value' => $UrlDetail, 'Required' => 0, 'Col' => 6),
+                    array('Desc' => '规则说明',  'Type' => 'html', 'Value' => $UrlListDesc, 'Required' => 1, 'Col' => 6),
+                    array('Desc' => '规则说明',  'Type' => 'html', 'Value' => $UrlDetailDesc, 'Required' => 1, 'Col' => 6),
+                )),
+            array(
+                'Title' => '分类内容',
+                'Form' => array(
+                    array('Name' =>'Content', 'Desc' => '分类内容',  'Type' => 'editor', 'Value' => '', 'Required' => 0, 'Col' => 12),                    
+                )),
+        );
+        $this->PageTitle2 = $this->BuildObj->FormMultipleTitle();
+        $this->BuildObj->FormMultiple('post', 'form-row');
+        $tmp['ModelTempKV'] = $ModelTempKV;
+        $this->LoadView('admin/category/edit', $tmp);
     }
     
     public function edit_Action(){
+        if(!$this->VeriObj->VeriPara($_GET, array('CateId'))) $this->Err(1001);
+        $CateRs = $this->CategoryObj->getOne($_GET['CateId']);
+        if(empty($CateRs)) $this->Err(1003);
         
+        if(!empty($_POST)){
+            if(!$this->VeriObj->VeriPara($_POST, array('Name'))) $this->Err(1001);
+            $IsPost = isset($_POST['Attr']['IsPost']) ? 1 : 2;
+            $IsShow = isset($_POST['Attr']['IsShow']) ? 1 : 2;
+            $IsLink = isset($_POST['Attr']['IsLink']) ? 1 : 2;
+            $UpdateArr = array(
+                //'PCateId' => $PCateId,
+                'Name' =>trim($_POST['Name']),
+                //'ModelId' => intval($_POST['ModelId']),
+                'IsPost' => $IsPost,
+                'IsShow' => $IsShow,
+                'IsLink' => $IsLink,
+                'UserLevel' => intval($_POST['UserLevel']),
+                'LinkUrl' => trim($_POST['LinkUrl']),
+                'TempList' => trim($_POST['TempList']),
+                'TempDetail' => trim($_POST['TempDetail']),
+                'UrlList' => trim($_POST['UrlList']),
+                'UrlDetail' => trim($_POST['UrlDetail']),
+                'SeoTitle' => trim($_POST['SeoTitle']),
+                'Keywords' => trim($_POST['Keywords']),
+                'Description' => trim($_POST['Description']),
+                'Content' => trim($_POST['Content']),
+                'IsCross' => trim($_POST['IsCross']),
+            );
+            $Ret = $this->CategoryObj->SetCond(array('CateId' => $CateRs['CateId']))->SetUpdate($UpdateArr)->ExecUpdate();
+            if($Ret === false) $this->Err(1002);
+            $this->CategoryObj->cleanList();
+            $this->CategoryObj->clean($CateRs['CateId']);
+            $this->Jump(array('admin', 'category', 'index'));
+        }
+        
+        $ModelArr = $this->Sys_modelObj->getList();
+        $ModelKV = array_column($ModelArr, 'Name', 'ModelId');
+        $ModelKV[-1] = '单页';
+        $ModelTempKV = array_column($ModelArr, 'NameKey', 'ModelId');
+        $ModelTempKV[-1] = 'page';
+        
+        $GroupUserArr = $this->Group_userObj->getList();
+        $GroupUserKv = array(0 => '开放浏览');
+        foreach(array_column($GroupUserArr, 'Name', 'GroupUserId') as $k => $v) $GroupUserKv[$k] = $v;
+        $AttrArr = array('IsShow' => '显示', 'IsPost' => '发布', 'IsLink' => '外链');
+        $AttrValArr = array();
+        if($CateRs['IsShow'] == 1) $AttrValArr[] = 'IsShow';
+        if($CateRs['IsPost'] == 1) $AttrValArr[] = 'IsPost';
+        if($CateRs['IsLink'] == 1) $AttrValArr[] = 'IsLink';
+        $TempList = $this->getTemplate('list_');
+        $TempDetail = $this->getTemplate('detail_');
+
+        $UrlListDesc = '<span class="text-dark">
+            <span class="mr-3 font-weight-bold">{CateId}</span>分类ID<br>
+            <span class="mr-3 font-weight-bold">{PinYin}</span>拼音+分类ID<br>
+            <span class="mr-3 font-weight-bold">{PY}</span>拼音部首+分类ID<br>
+            <span class="mr-3 font-weight-bold">{Page}</span>页码<br>
+        </span>
+        ';
+        $UrlDetailDesc = '<span class="text-dark">
+        	<span class="mr-3 font-weight-bold">{Y}、{M}、{D}</span>年月日<br>
+            <span class="mr-3 font-weight-bold">{Ts}</span>INT类型的UNIX时间戳<br>
+            <span class="mr-3 font-weight-bold">{Id}</span>文章ID<br>
+            <span class="mr-3 font-weight-bold">{PinYin}</span>拼音+文章ID<br>
+            <span class="mr-3 font-weight-bold">{PY}</span>拼音部首+文章ID<br>
+        </span>
+        ';
+        $this->BuildObj->Arr = array(
+            array(
+                'Title' => '核心设置',
+                'Form' => array(
+                    array('Name' =>'Name', 'Desc' => '分类名称',  'Type' => 'input', 'Value' => $CateRs['Name'], 'Required' => 1, 'Col' => 6),
+                    array('Name' =>'ModelId', 'Desc' => '内容模型',  'Type' => 'select', 'Data' => $ModelKV, 'Value' => $CateRs['ModelId'], 'Disabled' => 1, 'Col' => 3),
+                    array('Name' =>'Attr', 'Desc' => '属性',  'Type' => 'checkbox', 'Data' => $AttrArr, 'Value' => implode('|', $AttrValArr), 'Required' => 1, 'Col' => 3),
+                    array('Name' =>'SeoTitle', 'Desc' => 'SEO标题',  'Type' => 'input', 'Value' => $CateRs['SeoTitle'], 'Required' => 0, 'Col' => 12),
+                    array('Name' =>'Keywords', 'Desc' => '关键字',  'Type' => 'input', 'Value' => $CateRs['Keywords'], 'Required' => 0, 'Col' => 12),
+                    array('Name' =>'Description', 'Desc' => '分类描述',  'Type' => 'textarea', 'Value' => $CateRs['Description'], 'Required' => 0, 'Col' => 12),
+                    array('Name' =>'UserLevel', 'Desc' => '浏览权限',  'Type' => 'select', 'Data' => $GroupUserKv, 'Value' => $CateRs['UserLevel'], 'Required' => 1, 'Col' => 12),
+                    array('Name' =>'LinkUrl', 'Desc' => '外链地址',  'Type' => 'hidden', 'Value' => $CateRs['LinkUrl'], 'Required' => 0, 'Col' => 12),
+                )),
+            array(
+                'Title' => '高级设置',
+                'Form' => array(
+                    array('Name' =>'TempList', 'Desc' => '列表模板',  'Type' => 'select', 'Data' => $TempList, 'Value' => $CateRs['TempList'], 'Required' => 0, 'Col' => 6),
+                    array('Name' =>'TempDetail', 'Desc' => '详情模板',  'Type' => 'select', 'Data' => $TempDetail, 'Value' => $CateRs['TempDetail'], 'Required' => 0, 'Col' => 6),
+                    array('Name' =>'UrlList', 'Desc' => '列表命名规则',  'Type' => 'input', 'Value' => $CateRs['UrlList'], 'Required' => 0, 'Col' => 6, 'Help' => '撒旦法安防'),
+                    array('Name' =>'UrlDetail', 'Desc' => '详情命名规则',  'Type' => 'input', 'Value' => $CateRs['UrlDetail'], 'Required' => 0, 'Col' => 6),
+                    array('Desc' => '规则说明',  'Type' => 'html', 'Value' => $UrlListDesc, 'Required' => 1, 'Col' => 6),
+                    array('Desc' => '规则说明',  'Type' => 'html', 'Value' => $UrlDetailDesc, 'Required' => 1, 'Col' => 6),
+                )),
+            array(
+                'Title' => '分类内容',
+                'Form' => array(
+                    array('Name' =>'Content', 'Desc' => '分类内容',  'Type' => 'editor', 'Value' => $CateRs['Content'], 'Required' => 0, 'Col' => 12),
+                )),
+        );
+        $this->PageTitle2 = $this->BuildObj->FormMultipleTitle();
+        $this->BuildObj->FormMultiple('post', 'form-row');
+        $tmp['ModelTempKV'] = $ModelTempKV;
+        $this->LoadView('admin/category/edit', $tmp);
     }
     
     public function del_Action(){
-        
+        if(!$this->VeriObj->VeriPara($_GET, array('CateId'))) $this->Err(1001);
+        $CateRs = $this->CategoryObj->getOne($_GET['CateId']);
+        if(empty($CateRs)) $this->Err(1003);
+        $HaveSub = $this->CategoryObj->SetCond(array('PCateId' => $CateRs['CateId']))->SetField('COUNT(*) AS c')->ExecSelectOne();
+        if($HaveSub['c'] > 0) $this->Err(1044);
+        $HaveDetail = $this->TableObj->SetCond(array('CateId' => $CateRs['CateId']))->SetField('COUNT(*) AS c')->ExecSelectOne();
+        if($HaveDetail['c'] > 0) $this->Err(1045);
+        $Ret = $this->CategoryObj->SetCond(array('CateId' => $CateRs['CateId']))->ExecDelete();
+        if($Ret === false) $this->Err(1002);
+        $this->CategoryObj->cleanList();
+        $this->CategoryObj->clean($CateRs['CateId']);
+        $this->Jump(array('admin', 'category', 'index'));
     }
     
-    private function _getTreeHtml($Arr, $Tree){
-        foreach($Tree as $k => $v){
-            //$CateRs = $this->CategoryObj->getOne($k);
-            $Arr[] = $this->CategoryObj->getOne($k);
-        }
-        return $Arr;
+    public function move_Action(){ //移动
+        if(!$this->VeriObj->VeriPara($_GET, array('CateId'))) $this->Err(1001);
+        $CateRs = $this->CategoryObj->getOne($_GET['CateId']);
+        if(empty($CateRs)) $this->Err(1003);
+        $this->CategoryObj->getTreeDetal();
+        $Arr = $this->CategoryObj->CateTreeDetail;
+        var_dump($Arr);
     }
+    
     
 }
