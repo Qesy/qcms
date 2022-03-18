@@ -24,6 +24,7 @@ class QC_Category extends \Db_pdo {
 	public $CateTreeSelectArr = array();
 	public $CateTreeModelSelectHtml = '';
 	public $CateTreeModelSelectArr = array();
+	public $AllSubCateIdArr = array();
 	public $CateTreeIndex = 0;
 	
 	public function getList(){
@@ -60,7 +61,7 @@ class QC_Category extends \Db_pdo {
 	
 	public function getTreeSelectArr($SelectCateId){ //用于判断转移分类	
 	    $this->CateArr = $this->getList();
-	    return self::_TreeSelectArr(0, 0, $SelectCateId);
+	    return self::_TreeSelectArr(0, $SelectCateId);
 	}
 	
 	public function getTreeModelSelectHtml($ModelId){ //发布某模型的select
@@ -70,10 +71,16 @@ class QC_Category extends \Db_pdo {
 	
 	public function getTreeModelSelectArr($ModelId){ //判断某模型的select
 	    $this->CateArr = $this->getList();
-	    return self::_TreeModelSelectArr(0, 0, $ModelId);
+	    return self::_TreeModelSelectArr(0, $ModelId);
 	}
 	
-	private function _Tree($Node, $PCateId){
+	public function getAllCateId($CateId, $ModelId){ //获取所有子分类ID，方便获取子分类文章
+	    $this->CateArr = $this->getList();
+	    $this->AllSubCateIdArr[] = $CateId;
+	    return self::_getAllCateId($CateId, $ModelId);
+	}
+	
+	private function _Tree($Node, $PCateId){ //树结构
 	    foreach($this->CateArr as $v){
 	        if($v['PCateId'] == $PCateId){
 	            $Node[$v['CateId']] = array();
@@ -84,7 +91,7 @@ class QC_Category extends \Db_pdo {
 	    return $Node;
 	}
 	
-	private function _TreeDetail($PCateId, $Level, $PIndex = 0){ 
+	private function _TreeDetail($PCateId, $Level, $PIndex = 0){ // 后台分类列表页展示
 	    foreach($this->CateArr as $k => $v){
 	        if($v['PCateId'] == $PCateId){
 	            $this->CateTreeDetail[$PIndex]['HasSub'] = true; //设置父分类有子分类
@@ -101,8 +108,8 @@ class QC_Category extends \Db_pdo {
 	    }
 	}
 	
-	private function _TreeSelectHtml($PCateId, $Level, $SelectCateId){
-	    foreach($this->CateArr as $v){
+	private function _TreeSelectHtml($PCateId, $Level, $SelectCateId){ 
+	    foreach($this->CateArr as $k => $v){
 	        if($v['PCateId'] == $PCateId){
 	            $CateRs = $this->getOne($v['CateId']);
 	            $Step = '';
@@ -116,19 +123,16 @@ class QC_Category extends \Db_pdo {
 	            }
 	            $this->CateTreeSelectHtml .= '<option '.$Disabled.' value="'.$CateRs['CateId'].'">'.$Step.'├─'.$CateRs['Name'].'</option>'.PHP_EOL;
 	            unset($this->CateArr[$k]);
-	            $this->CateTreeIndex++;
 	            $NewLevel = $Level+1;	 
 	            self::_TreeSelectHtml($v['CateId'], $NewLevel, $SCId);
 	        }
 	    }
 	}
 	
-	private function _TreeSelectArr($PCateId, $Level, $SelectCateId){
-	    foreach($this->CateArr as $v){
+	private function _TreeSelectArr($PCateId, $SelectCateId){
+	    foreach($this->CateArr as $k => $v){
 	        if($v['PCateId'] == $PCateId){
-	            $CateRs = $this->getOne($v['CateId']);
-	            $Step = '';
-	            for($i=0; $i<$Level;$i++) $Step .= '&nbsp;';
+	            $CateRs = $this->getOne($v['CateId']);	            
 	            $SCId = -1;
 	            if($SelectCateId == $CateRs['CateId'] || $SelectCateId == $CateRs['PCateId']){
 	                $Disabled = 'disabled="disabled"';
@@ -137,15 +141,13 @@ class QC_Category extends \Db_pdo {
 	            }	            
 	            //$this->CateTreeSelect .= '<option '.$Disabled.' value="'.$CateRs['CateId'].'">'.$Step.'├─'.$CateRs['Name'].'</option>'.PHP_EOL;
 	            unset($this->CateArr[$k]);
-	            $this->CateTreeIndex++;
-	            $NewLevel = $Level+1;
-	            self::_TreeSelectArr($v['CateId'], $NewLevel, $SCId);
+	            self::_TreeSelectArr($v['CateId'], $SCId);
 	        }
 	    }
 	}
 	
 	private function _TreeModelSelectHtml($PCateId, $Level, $ModelId){
-	    foreach($this->CateArr as $v){
+	    foreach($this->CateArr as $k => $v){
 	        if($v['PCateId'] == $PCateId){
 	            $CateRs = $this->getOne($v['CateId']);
 	            $Step = '';
@@ -157,27 +159,35 @@ class QC_Category extends \Db_pdo {
 	            }
 	            $this->CateTreeModelSelectHtml .= '<option '.$Disabled.' value="'.$CateRs['CateId'].'">'.$Step.'├─'.$CateRs['Name'].'</option>'.PHP_EOL;
 	            unset($this->CateArr[$k]);
-	            $this->CateTreeIndex++;
 	            $NewLevel = $Level+1;
 	            self::_TreeModelSelectHtml($v['CateId'], $NewLevel, $ModelId);
 	        }
 	    }
 	}
 	
-	private function _TreeModelSelectArr($PCateId, $Level, $ModelId){
-	    foreach($this->CateArr as $v){
+	private function _TreeModelSelectArr($PCateId, $ModelId){
+	    foreach($this->CateArr as $k => $v){
 	        if($v['PCateId'] == $PCateId){
 	            $CateRs = $this->getOne($v['CateId']);
-	            $Step = '';
-	            for($i=0; $i<$Level;$i++) $Step .= '&nbsp;';
 	            if($ModelId == $CateRs['ModelId']){
 	                $this->CateTreeModelSelectArr[] = $CateRs['CateId'];
 	            }
 	            //$this->CateTreeModelSelectHtml .= '<option '.$Disabled.' value="'.$CateRs['CateId'].'">'.$Step.'├─'.$CateRs['Name'].'</option>'.PHP_EOL;
 	            unset($this->CateArr[$k]);
-	            $this->CateTreeIndex++;
-	            $NewLevel = $Level+1;
-	            self::_TreeModelSelectArr($v['CateId'], $NewLevel, $ModelId);
+	            self::_TreeModelSelectArr($v['CateId'], $ModelId);
+	        }
+	    }
+	}
+	
+	private function _getAllCateId($PCateId, $ModelId){
+	    foreach($this->CateArr as $k => $v){
+	        if($v['PCateId'] == $PCateId){
+	            $CateRs = $this->getOne($v['CateId']);	            
+	            if($ModelId == $CateRs['ModelId']){
+	                $this->AllSubCateIdArr[] = $CateRs['CateId'];
+	            }	            
+	            unset($this->CateArr[$k]);
+	            self::_getAllCateId($v['CateId'], $ModelId);
 	        }
 	    }
 	}

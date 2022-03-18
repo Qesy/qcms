@@ -6,15 +6,19 @@ class Debug extends Controllers {
         /* $this->SysRs = $this->SysObj->getKv();
         $Template = self::_getTemplate('list_');
         var_dump($Template); */
-        $this->CategoryObj->getTreeModelSelectArr(1);
+        // 分类各种测试
+        $this->CategoryObj->getAllCateId('3', 1);
+        var_dump($this->CategoryObj->AllSubCateIdArr);
+        return;
+        /* $this->CategoryObj->getTreeModelSelectArr(1);
         var_dump($this->CategoryObj->CateTreeModelSelectArr);
-        return;
-        $this->CategoryObj->getTreeModelSelectHtml(1);
+        return; */
+        /* $this->CategoryObj->getTreeModelSelectHtml(1);
         var_dump($this->CategoryObj->CateTreeModelSelectHtml);
-        return;
+        return; */
         /* $this->CategoryObj->getTreeSelectArr(1);
         var_dump($this->CategoryObj->CateTreeSelectArr);
-        return; */
+        return;  */
         $this->CategoryObj->getTreeSelectHtml(1);
         var_dump($this->CategoryObj->CateTreeSelectHtml);
     }
