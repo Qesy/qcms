@@ -275,9 +275,20 @@ class Category extends ControllersAdmin {
         if(!$this->VeriObj->VeriPara($_GET, array('CateId'))) $this->Err(1001);
         $CateRs = $this->CategoryObj->getOne($_GET['CateId']);
         if(empty($CateRs)) $this->Err(1003);
-        $this->CategoryObj->getTreeDetal();
-        $Arr = $this->CategoryObj->CateTreeDetail;
-        var_dump($Arr);
+        if(!empty($_POST)){
+            $_POST['PCateId'] = intval($_POST['PCateId']);
+            //if(!$this->VeriObj->VeriPara($_POST, array('CateId'))) $this->Err(1001);
+            $this->CategoryObj->getTreeSelectArr($CateRs['CateId']);
+            if(in_array($_POST['PCateId'], $this->CategoryObj->CateTreeSelectArr)) $this->Err(1046);
+            $Ret = $this->CategoryObj->SetCond(array('CateId' => $CateRs['CateId']))->SetUpdate(array('PCateId' => $_POST['PCateId']))->ExecUpdate();
+            if($Ret === false) $this->Err(1002);
+            $this->CategoryObj->cleanList();
+            $this->CategoryObj->clean($CateRs['CateId']);
+            $this->Jump(array('admin', 'category', 'index'));
+        }
+        $this->CategoryObj->getTreeSelectHtml($CateRs['CateId']);       
+        $tmp['CateRs'] = $CateRs;        
+        $this->LoadView('admin/category/move', $tmp);
     }
     
     

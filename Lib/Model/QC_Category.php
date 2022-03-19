@@ -113,7 +113,7 @@ class QC_Category extends \Db_pdo {
 	        if($v['PCateId'] == $PCateId){
 	            $CateRs = $this->getOne($v['CateId']);
 	            $Step = '';
-	            for($i=0; $i<$Level;$i++) $Step .= '&nbsp;';
+	            for($i=0; $i<$Level;$i++) $Step .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
 	            if($SelectCateId == $CateRs['CateId'] || $SelectCateId == $CateRs['PCateId']){
 	                $Disabled = 'disabled="disabled"';
 	                $SCId = $CateRs['CateId'];
@@ -121,7 +121,7 @@ class QC_Category extends \Db_pdo {
 	                $Disabled = '';
 	                $SCId = -1;
 	            }
-	            $this->CateTreeSelectHtml .= '<option '.$Disabled.' value="'.$CateRs['CateId'].'">'.$Step.'├─'.$CateRs['Name'].'</option>'.PHP_EOL;
+	            $this->CateTreeSelectHtml .= '<option '.$Disabled.' value="'.$CateRs['CateId'].'">'.$Step.'&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;├─'.$CateRs['Name'].'</option>'.PHP_EOL;
 	            unset($this->CateArr[$k]);
 	            $NewLevel = $Level+1;	 
 	            self::_TreeSelectHtml($v['CateId'], $NewLevel, $SCId);
