@@ -35,6 +35,7 @@ class ControllersAdmin extends Controllers {
         $this->LoginUserRs = $UserRs;
         $this->SysRs = $this->SysObj->getKv();
         $this->BuildObj->UploadUrl = $this->CommonObj->Url(array('admin', 'api', 'ajaxUpload'));
+        
         $this->MenuArr = array(
             /***一级***/
             'admin/index' => array('Name' => '系统管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'index'))),
@@ -54,19 +55,36 @@ class ControllersAdmin extends Controllers {
             'admin/log/operate' => array('Name' => '操作日志', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'log', 'operate'))),
             'admin/log/login' => array('Name' => '登录日志', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'log', 'login'))),
             
-            // 内容管理
+            // 分类管理
             'admin/category/index' => array('Name' => '分类管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'index'))),
             'admin/category/add' => array('Name' => '添加分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'add'))),
             'admin/category/edit' => array('Name' => '修改分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'edit'))),
             'admin/category/del' => array('Name' => '删除分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'del'))),
             'admin/category/move' => array('Name' => '移动分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'move'))),
+            // 内容管理
+            /* 'admin/article/index' => array('Name' => '文章管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'article', 'index'))),
+            'admin/article/add' => array('Name' => '添加文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'article', 'add'))),
+            'admin/article/edit' => array('Name' => '修改文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'article', 'edit'))),
+            'admin/article/del' => array('Name' => '删除文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'article', 'del'))),
+            'admin/product/index' => array('Name' => '产品管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'product', 'index'))),
+            'admin/product/add' => array('Name' => '添加产品', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'product', 'add'))),
+            'admin/product/edit' => array('Name' => '修改产品', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'product', 'edit'))),
+            'admin/product/del' => array('Name' => '删除产品', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'product', 'del'))),
+            'admin/album/index' => array('Name' => '相册管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'album', 'index'))),
+            'admin/album/add' => array('Name' => '添加相册', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'album', 'add'))),
+            'admin/album/edit' => array('Name' => '修改相册', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'album', 'edit'))),
+            'admin/album/del' => array('Name' => '删除相册', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'album', 'del'))),
+            'admin/down/index' => array('Name' => '下载管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'down', 'index'))),
+            'admin/down/add' => array('Name' => '添加下载', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'down', 'add'))),
+            'admin/down/edit' => array('Name' => '修改下载', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'down', 'edit'))),
+            'admin/down/del' => array('Name' => '删除下载', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'down', 'del'))), */
             
             // API
             'admin/api/ajaxUpload' => array('Name' => 'AJAX上传', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'ajaxUpload'))),
             'admin/api/ckUpload' => array('Name' => 'CkEditor上传', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'ckUpload'))),
             
             
-            'admin/approve' => array('Name' => '审核管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'approve'))),
+            /* 'admin/approve' => array('Name' => '审核管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'approve'))),
 
             
             'admin/index/qrCode' => array('Name' => '获取二维码', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'index', 'qrCode'))),
@@ -123,10 +141,21 @@ class ControllersAdmin extends Controllers {
             // 订单
             'admin/order/index' => array('Name' => '订单中心', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'order', 'index'))),
 
-            'admin/sys/index' => array('Name' => '系统设置', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sys', 'index'))),
+            'admin/sys/index' => array('Name' => '系统设置', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sys', 'index'))), */
             'index/signout' => array('Name' => '安全退出', 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(array('index', 'signout'))),
 
         );
+        $ModelArr = $this->Sys_modelObj->getList();
+        $RoleMenuArr = array(array('Key' => 'admin/category/index'),);
+        foreach($ModelArr as $v) {
+            $Para = array('ModelId' => $v['ModelId']);
+            foreach(array('index', 'add', 'edit', 'del') as $mv){
+                $Key = 'admin/content/'.$mv.'?'.http_build_query($Para);
+                if($mv == 'index') $RoleMenuArr[] = array('Key' => $Key);                
+                $this->MenuArr[$Key] = array('Name' => $v['Name'].'管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', $mv)), 'Para' => array('ModelId' => $v['ModelId']));
+            }            
+        }
+        //var_dump($this->MenuArr);exit;
         $this->RoleMenuArr = array(
             array('Key' => 'admin/index/index', 'subCont' => array('index'), 'Icon' => 'bi bi-house'),
             array('Key' => 'admin/index', 'subCont' => array('sys', 'admin', 'groupAdmin', 'log'), 'Icon' => 'bi bi-gear', 'Sub' => array(
@@ -136,16 +165,9 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/log/operate'),
                 array('Key' => 'admin/log/login'),
             )),
-            array('Key' => 'admin/content', 'subCont' => array('category'), 'Icon' => 'bi bi-layout-text-sidebar-reverse', 'Sub' => array(
-                array('Key' => 'admin/category/index'),
-            )),
-            array('Key' => 'admin/website/index', 'subCont' => array('website'), 'Icon' => 'bi bi-columns-gap'),
-            /* array('Key' => 'admin/plug', 'subCont' => array('plug', 'plugver'), 'Icon' => 'bi bi-puzzle', 'Sub' => array(
-                array('Key' => 'admin/plug/index'),
-                array('Key' => 'admin/plug/used'),
-                array('Key' => 'admin/plug/myplug'),
-
-            )), */
+            array('Key' => 'admin/content', 'subCont' => array('category', 'content'), 'Icon' => 'bi bi-layout-text-sidebar-reverse', 'Sub' => $RoleMenuArr),
+            /* array('Key' => 'admin/website/index', 'subCont' => array('website'), 'Icon' => 'bi bi-columns-gap'),
+            
             array('Key' => 'admin/order/index', 'subCont' => array('order'), 'Icon' => 'bi bi-layout-text-sidebar-reverse'),
             //array('Key' => 'admin/profile/index', 'subCont' => array('profile')),
             array('Key' => 'admin/apply/index', 'subCont' => array('apply'), 'Icon' => 'bi bi-journal-medical'),
@@ -158,14 +180,24 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/approve/plugver'),
             )),
             array('Key' => 'admin/cms', 'subCont' => array('cms'), 'Icon' => 'bi bi-gem'),
-            array('Key' => 'admin/sys/index', 'subCont' => array('sys'), 'Icon' => 'bi bi-gear'),
+            array('Key' => 'admin/sys/index', 'subCont' => array('sys'), 'Icon' => 'bi bi-gear'), */
             array('Key' => 'index/signout', 'subCont' => array('signout'), 'Icon' => 'bi bi-box-arrow-right'),
         );
         $Url = implode('/', array($this->Module, Router::$s_Controller, Router::$s_Method));
-
-        if(!isset($this->MenuArr[$Url])) $this->CommonObj->Err('没有此页面');
-        $MenuRs = $this->MenuArr[$Url];
-
+        $Key = '';
+        foreach($this->MenuArr as $k => $v){
+            if(strpos($k, $Url) === 0){
+                if(isset($v['Para'])){
+                    $GetPara = array();
+                    foreach($v['Para'] as $pk => $pv) $GetPara[$pk] = $_GET[$pk];
+                    $Key = $Url.'?'.http_build_query($GetPara);
+                }else{
+                    $Key = $k;
+                }
+            }
+        }
+        if(!isset($this->MenuArr[$Key])) $this->CommonObj->Err('没有此页面');
+        $MenuRs = $this->MenuArr[$Key];
         if(!in_array($UserRs['GroupAdminId'], $MenuRs['Permission'])) $this->CommonObj->Err('没有权限');
         $this->PageTitle = $MenuRs['Name'];
         $this->PageTitle2 = '<div class="tab-struct custom-tab-1">
@@ -178,7 +210,7 @@ class ControllersAdmin extends Controllers {
                 $this->MenuArr[$v['Key']]['IsActive'] = true;
                 $this->BreadCrumb[] = $this->MenuArr[$v['Key']];
                 if(!empty($v['Sub'])){
-                    $this->BreadCrumb[] = $this->MenuArr[$Url];
+                    $this->BreadCrumb[] = $this->MenuArr[$Key];
                 }
                 break;
             }

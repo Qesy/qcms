@@ -1,4 +1,5 @@
 $(function(){
+    $('.colorpicker').colorpicker();
 	$('.StateBtn').click(function(){
 		$.get(ChangeStateUrl, {'Id':$(this).attr('data'), 'Status':$(this).attr('dataState'), 'Field':$(this).attr('dataField')}, function(Res){
 			if(Res.Code != 0) {

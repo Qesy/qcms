@@ -22,6 +22,8 @@
                     if(!in_array($this->LoginUserRs['GroupAdminId'], $sCateRs['Permission'])) continue;
                     $PathIsOk = ($this->CommonObj->url(array($this->Module, Router::$s_Controller, Router::$s_Method)) == $sCateRs['Url']) ? 1 : 0;
                     $Active = '';
+                    $ParaStr = '';
+                    //var_dump($sCateRs);
                     if(isset($sCateRs['Para'])){
                         foreach($sCateRs['Para'] as $pkey => $pval){
                             if(isset($_GET[$pkey]) && $_GET[$pkey] == $pval && $PathIsOk){
@@ -30,12 +32,14 @@
                                 $Active = '11';
                             }
                         }
+
+                        $ParaStr = '?'.http_build_query($sCateRs['Para']);
                     }elseif($PathIsOk){
                         $Active = 'active';
                     }
                 ?>
                 <li>
-                    <a class="<?=$Active?>" href="<?=$sCateRs['Url']?>"><?=$sCateRs['Name']?></a>
+                    <a class="<?=$Active?>" href="<?=$sCateRs['Url'].$ParaStr?>"><?=$sCateRs['Name']?></a>
                 </li>
             <? } ?>
 

@@ -152,6 +152,11 @@ class Build {
                 case 'buttonGroup':
                     $this->Html .= self::_ButtonGroup($v['Name'], $v['Desc'], $v['Value'], $v['Data'], $v['Col'], $v['Disabled']);
                     break;
+                case 'diy':
+                    $this->Html .= self::_diy($v['Name'], $v['Desc'],$v['Col']);
+                    break;
+                case 'color':
+                    $this->Html .= self::_ColorInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], 'text', $v['Disabled'], $v['Placeholder'], $v['Required']); break;
                 default:
                     $this->Html .= self::_FromInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], 'text', $v['Disabled'], $v['Placeholder'], $v['Required']); break;
             }
@@ -216,6 +221,9 @@ class Build {
             case 'hidden':
                 if(empty($v['Class'])) $v['Class'] = 'primary';
                 $Html = self::_Hidden($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Data'], $v['Class']);break;
+            case 'color':
+                if(empty($v['Class'])) $v['Class'] = 'primary';
+                $Html = self::_ColorInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Data'], $v['Class']);break;
             default:
                 $Html= self::_FromInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], 'text', $v['Disabled'], $v['Placeholder']); break;
         }
@@ -496,6 +504,12 @@ class Build {
                     </div>';
     }
     
+    private function _diy($Name, $Desc, $Col ){ //输入框
+        $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);        
+        $Class = ($this->FormStyle == 2) ? '' : 'col-'.$SubCol.'  col-lg-'.$Col;
+        return '<div class="form-group '.$Class.'">'.$Desc.'</div>';
+    }
+    
     private function _FromInput($Name, $Desc, $Value, $Col, $Type = 'text', $IsDisabled = 0, $Placeholder = '', $Required = 0){ //输入框
         $Disabled = ($IsDisabled) ? 'disabled="disabled"' : '';
         if(empty($Placeholder)) $Placeholder =  '请输入'.$Desc  ;
@@ -510,6 +524,26 @@ class Build {
                         <label for="Input_'.$Name.'" class="'.(($this->FormStyle == 2) ? 'mr-2' : '').' mb-1">'.$Desc.'</label>'.$RequiredViewStr.'
                         <input type="'.$Type.'" '.$Disabled.' class="form-control '.(($this->FormStyle == 2) ? 'form-control-sm' : '').'" name="'.$Name.'" id="Input_'.$Name.'" placeholder="'.$Placeholder.'" value="'.$Value.'" '.$RequiredStr.'>
                         
+                    </div>';
+    }
+    
+    private function _ColorInput($Name, $Desc, $Value, $Col, $Type = 'text', $IsDisabled = 0, $Placeholder = '', $Required = 0){ //输入框
+        $Disabled = ($IsDisabled) ? 'disabled="disabled"' : '';
+        if(empty($Placeholder)) $Placeholder =  '请输入'.$Desc  ;
+        $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
+        $RequiredViewStr = $RequiredStr = '';
+        if(!empty($Required)){
+            $RequiredStr = 'required="required"';
+            $RequiredViewStr = '<span class="text-danger ml-2" style="font-weight: 900;">*</span>';
+        }
+        $Class = ($this->FormStyle == 2) ? '' : 'col-'.$SubCol.'  col-lg-'.$Col;
+        return '<div class="form-group '.$Class.'">
+                        <label for="Input_'.$Name.'" class="'.(($this->FormStyle == 2) ? 'mr-2' : '').' mb-1">'.$Desc.'</label>'.$RequiredViewStr.'
+                        <div class="colorpicker input-group colorpicker-component colorpicker-element">
+							<input type="text" value="#00AABB" class="form-control">
+							<span class="input-group-addon border border-left-0" style="padding: 6px 12px;"><i style="background-color: rgb(219, 56, 46);"></i></span>
+						</div>
+                            
                     </div>';
     }
     

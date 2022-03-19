@@ -9,7 +9,7 @@ $this->CommonObj->loadScripts(array(
 <script src="<?=URL_BOOT?>js/jasny-bootstrap.min.js"></script>
 <script src="<?=URL_BOOT?>js/jquery.slimscroll.js"></script>
 <script src="<?=URL_BOOT?>ckeditor5/ckeditor.js"></script>
-
+<script src="<?=URL_BOOT?>js/bootstrap-colorpicker.min.js"></script>
 <script src="<?=URL_BOOT?>js/moment.min.js"></script>
 <script src="<?=URL_BOOT?>js/jquery.dataTables.min.js"></script>
 <script src="<?=URL_BOOT?>js/jquery.sparkline.min.js"></script>

@@ -16,4 +16,5 @@ class QC_Sys_attr extends \Db_pdo {
 	public $TableName = 'sys_attr';
 	public $PrimaryKey = 'Key';
 	
+	
 }
