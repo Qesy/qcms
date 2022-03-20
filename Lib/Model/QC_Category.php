@@ -26,6 +26,7 @@ class QC_Category extends \Db_pdo {
 	public $CateTreeModelSelectArr = array();
 	public $AllSubCateIdArr = array();
 	public $CateTreeIndex = 0;
+	public $CateSelectId = 0; // 选中的select
 	
 	public function getList(){
 	    $key = RedisKey::Category_String();
@@ -157,7 +158,8 @@ class QC_Category extends \Db_pdo {
 	            }else{
 	                $Disabled = 'disabled="disabled"';
 	            }
-	            $this->CateTreeModelSelectHtml .= '<option '.$Disabled.' value="'.$CateRs['CateId'].'">'.$Step.'├─'.$CateRs['Name'].'</option>'.PHP_EOL;
+	            $Selected = ($CateRs['CateId'] == $this->CateSelectId) ? 'selected' : '';
+	            $this->CateTreeModelSelectHtml .= '<option '.$Disabled.' '.$Selected.' value="'.$CateRs['CateId'].'">'.$Step.'├─'.$CateRs['Name'].'</option>'.PHP_EOL;
 	            unset($this->CateArr[$k]);
 	            $NewLevel = $Level+1;
 	            self::_TreeModelSelectHtml($v['CateId'], $NewLevel, $ModelId);

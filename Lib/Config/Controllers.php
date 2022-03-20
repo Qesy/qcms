@@ -14,6 +14,7 @@ class Controllers extends Base {
     public $IsArr = array('1' => '是', 2 => '否');
     public $OpenArr = array('1' => '开启', 2 => '关闭');
     public $IsShowArr = array('1' => '显示', 2 => '隐藏');
+    public $StateArr = array('1' => '已发布', 2 => '未发布');
     public $EditorArr = array('ckeditor' => 'ckeditor');
 }
 class ControllersAdmin extends Controllers {
@@ -61,7 +62,12 @@ class ControllersAdmin extends Controllers {
             'admin/category/edit' => array('Name' => '修改分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'edit'))),
             'admin/category/del' => array('Name' => '删除分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'del'))),
             'admin/category/move' => array('Name' => '移动分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'move'))),
+            
             // 内容管理
+            'admin/content/recovery' => array('Name' => '回收站', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'recovery'))),
+            'admin/content/view' => array('Name' => '查看文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'view'))),
+            'admin/content/restore' => array('Name' => '恢复文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'restore'))),
+            'admin/content/tDelete' => array('Name' => '彻底删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'tDelete'))),
             /* 'admin/article/index' => array('Name' => '文章管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'article', 'index'))),
             'admin/article/add' => array('Name' => '添加文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'article', 'add'))),
             'admin/article/edit' => array('Name' => '修改文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'article', 'edit'))),
@@ -155,6 +161,7 @@ class ControllersAdmin extends Controllers {
                 $this->MenuArr[$Key] = array('Name' => $v['Name'].'管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', $mv)), 'Para' => array('ModelId' => $v['ModelId']));
             }            
         }
+        $RoleMenuArr[] = array('Key' => 'admin/content/recovery');
         //var_dump($this->MenuArr);exit;
         $this->RoleMenuArr = array(
             array('Key' => 'admin/index/index', 'subCont' => array('index'), 'Icon' => 'bi bi-house'),
@@ -196,8 +203,9 @@ class ControllersAdmin extends Controllers {
                 }
             }
         }
+        //var_dump($Key);exit;
         if(!isset($this->MenuArr[$Key])) $this->CommonObj->Err('没有此页面');
-        $MenuRs = $this->MenuArr[$Key];
+        $MenuRs = $this->MenuArr[$Key];        
         if(!in_array($UserRs['GroupAdminId'], $MenuRs['Permission'])) $this->CommonObj->Err('没有权限');
         $this->PageTitle = $MenuRs['Name'];
         $this->PageTitle2 = '<div class="tab-struct custom-tab-1">
