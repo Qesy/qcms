@@ -24,9 +24,6 @@ use Model\QC_Table_down;
 use Model\QC_Table_product;
 use Model\QC_Token;
 use Model\QC_User;
-use Model\QC_User_company;
-use Model\QC_User_model;
-use Model\QC_User_personal;
 
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 
@@ -65,9 +62,6 @@ abstract class Base {
 	public $Table_productObj;
 	public $TokenObj;
 	public $UserObj;
-	public $User_companyObj;
-	public $User_modelObj;
-	public $User_personalObj;
 	
 	public $PageNum = 20;
 	public $TempArr = array();
@@ -102,9 +96,6 @@ abstract class Base {
 		$this->Table_productObj = QC_Table_product::get_instance();
 		$this->TokenObj = QC_Token::get_instance();
 		$this->UserObj = QC_User::get_instance();
-		$this->User_companyObj = QC_User_company::get_instance();
-		$this->User_modelObj = QC_User_model::get_instance();
-		$this->User_personalObj = QC_User_personal::get_instance();
 		
 		$this->BasicArr = BasicArr();
 	}

@@ -41,6 +41,7 @@ class ControllersAdmin extends Controllers {
             /***一级***/
             'admin/index' => array('Name' => '系统管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'index'))),
             'admin/content' => array('Name' => '内容管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'index'))),
+            'admin/user' => array('Name' => '会员中心', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'user'))),
             // 用户首页
             'admin/index/index' => array('Name' => '用户首页', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'index', 'index'))),
             // 系统管理
@@ -68,6 +69,12 @@ class ControllersAdmin extends Controllers {
             'admin/content/view' => array('Name' => '查看文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'view'))),
             'admin/content/restore' => array('Name' => '恢复文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'restore'))),
             'admin/content/tDelete' => array('Name' => '彻底删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'tDelete'))),
+            
+            // 会员管理
+            'admin/user/index' => array('Name' => '会员管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'user', 'index'))),
+            'admin/user/add' => array('Name' => '会员管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'user', 'add'))),
+            'admin/user/edit' => array('Name' => '会员管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'user', 'edit'))),
+            'admin/user/del' => array('Name' => '会员管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'user', 'del'))),
             /* 'admin/article/index' => array('Name' => '文章管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'article', 'index'))),
             'admin/article/add' => array('Name' => '添加文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'article', 'add'))),
             'admin/article/edit' => array('Name' => '修改文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'article', 'edit'))),
@@ -173,6 +180,9 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/log/login'),
             )),
             array('Key' => 'admin/content', 'subCont' => array('category', 'content'), 'Icon' => 'bi bi-layout-text-sidebar-reverse', 'Sub' => $RoleMenuArr),
+            array('Key' => 'admin/user', 'subCont' => array('user'), 'Icon' => 'bi bi-person', 'Sub' => array(
+                array('Key' => 'admin/user/index'),
+            )),
             /* array('Key' => 'admin/website/index', 'subCont' => array('website'), 'Icon' => 'bi bi-columns-gap'),
             
             array('Key' => 'admin/order/index', 'subCont' => array('order'), 'Icon' => 'bi bi-layout-text-sidebar-reverse'),
