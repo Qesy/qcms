@@ -15,7 +15,7 @@ class Admin extends ControllersAdmin {
         $GroupAdminKV = array_column($GroupAdminArr, 'Name', 'GroupAdminId');
         foreach($Arr as $k => $v){
             $Arr[$k]['AdminGroupView'] = $GroupAdminKV[$v['GroupAdminId']];
-            $Arr[$k]['IsEdit'] = $Arr[$k]['IsDel'] = ($v['GroupAdminId'] == 1 || $v['UserId'] == $this->LoginUserRs['UserId']) ? 2 : 1;
+            $Arr[$k]['IsDel'] = ($v['GroupAdminId'] == 1 || $v['UserId'] == $this->LoginUserRs['UserId']) ? 2 : 1;
             $Arr[$k]['TsLastView'] = empty($v['TsLast']) ? '未登录' : date('Y-m-d H:i', $v['TsLast']);
             $Arr[$k]['IpLastView'] = empty($v['IpLast']) ? '未登录' : $v['IpLast'];
             $Arr[$k]['BtnArr'] = array(
@@ -32,6 +32,7 @@ class Admin extends ControllersAdmin {
 
         );
         $this->BuildObj->PrimaryKey = 'UserId';
+        $this->BuildObj->NameDel = '降级';
         //$this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar);
@@ -107,7 +108,7 @@ class Admin extends ControllersAdmin {
         $UserRs = $this->UserObj->getOne($_GET['UserId']);
         if(empty($UserRs)) $this->Err(1003);
         if($UserRs['GroupAdminId'] == 1 || $UserRs['UserId'] == $this->LoginUserRs['UserId']) $this->Err(1042);
-        $Ret = $this->UserObj->SetCond(array('UserId' => $UserRs['UserId']))->ExecDelete();
+        $Ret = $this->UserObj->SetCond(array('UserId' => $UserRs['UserId']))->SetUpdate(array('IsAdmin' => 2, 'GroupAdminId' => 0))->ExecUpdate();
         if($Ret === false) $this->Err(1002);
         $this->UserObj->clean($UserRs['UserId']);
         $this->Jump(array('admin', 'admin', 'index'), 1888);

@@ -1,10 +1,14 @@
 $(function(){
     $('.colorpicker').colorpicker();
 	$('.StateBtn').click(function(){
+        let _this = this;
+        let ErrState = $(this).prop("checked") ? false : true; // 回滚结果
 		$.get(ChangeStateUrl, {'Id':$(this).attr('data'), 'Status':$(this).attr('dataState'), 'Field':$(this).attr('dataField')}, function(Res){
 			if(Res.Code != 0) {
-				alert(Res.Msg);return;
-			}
+                alert(Res.Msg);
+                $(_this).prop("checked", ErrState);
+                return;
+            }
 			location.reload();
 		}, 'json')
 	})

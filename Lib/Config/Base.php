@@ -12,6 +12,8 @@ use Model\QC_Category;
 use Model\QC_File;
 use Model\QC_Group_admin;
 use Model\QC_Group_user;
+use Model\QC_Link;
+use Model\QC_Link_cate;
 use Model\QC_Log_login;
 use Model\QC_Log_operate;
 use Model\QC_Sys;
@@ -50,6 +52,8 @@ abstract class Base {
 	public $FileObj;
 	public $Group_adminObj;
 	public $Group_userObj;
+	public $LinkObj;
+	public $Link_cateObj;
 	public $Log_loginObj;
 	public $Log_operateObj;
 	public $SysObj;
@@ -84,6 +88,8 @@ abstract class Base {
 		$this->FileObj = QC_File::get_instance();
 		$this->Group_adminObj = QC_Group_admin::get_instance();
 		$this->Group_userObj = QC_Group_user::get_instance();
+		$this->LinkObj = QC_Link::get_instance();
+		$this->Link_cateObj = QC_Link_cate::get_instance();
 		$this->Log_loginObj = QC_Log_login::get_instance();
 		$this->Log_operateObj = QC_Log_operate::get_instance();
 		$this->SysObj = QC_Sys::get_instance();

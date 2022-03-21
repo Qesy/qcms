@@ -15,6 +15,7 @@ class Controllers extends Base {
     public $OpenArr = array('1' => '开启', 2 => '关闭');
     public $IsShowArr = array('1' => '显示', 2 => '隐藏');
     public $StateArr = array('1' => '已发布', 2 => '未发布');
+    public $SexArr = array('1' => '男', 2 => '女');
     public $EditorArr = array('ckeditor' => 'ckeditor');
 }
 class ControllersAdmin extends Controllers {
@@ -42,6 +43,7 @@ class ControllersAdmin extends Controllers {
             'admin/index' => array('Name' => '系统管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'index'))),
             'admin/content' => array('Name' => '内容管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'index'))),
             'admin/user' => array('Name' => '会员中心', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'user'))),
+            'admin/assist' => array('Name' => '辅助插件', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'other'))),
             // 用户首页
             'admin/index/index' => array('Name' => '用户首页', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'index', 'index'))),
             // 系统管理
@@ -53,7 +55,7 @@ class ControllersAdmin extends Controllers {
             'admin/groupAdmin/index' => array('Name' => '管理组管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'groupAdmin', 'index'))),
             'admin/groupAdmin/add' => array('Name' => '添加管理组', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'groupAdmin', 'add'))),
             'admin/groupAdmin/edit' => array('Name' => '修改管理组', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'groupAdmin', 'edit'))),
-            'admin/groupAdmin/del' => array('Name' => '删除管理组管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'groupAdmin', 'del'))),
+            'admin/groupAdmin/del' => array('Name' => '删除管理组', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'groupAdmin', 'del'))),
             'admin/log/operate' => array('Name' => '操作日志', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'log', 'operate'))),
             'admin/log/login' => array('Name' => '登录日志', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'log', 'login'))),
             
@@ -72,90 +74,29 @@ class ControllersAdmin extends Controllers {
             
             // 会员管理
             'admin/user/index' => array('Name' => '会员管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'user', 'index'))),
-            'admin/user/add' => array('Name' => '会员管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'user', 'add'))),
-            'admin/user/edit' => array('Name' => '会员管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'user', 'edit'))),
-            'admin/user/del' => array('Name' => '会员管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'user', 'del'))),
-            /* 'admin/article/index' => array('Name' => '文章管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'article', 'index'))),
-            'admin/article/add' => array('Name' => '添加文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'article', 'add'))),
-            'admin/article/edit' => array('Name' => '修改文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'article', 'edit'))),
-            'admin/article/del' => array('Name' => '删除文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'article', 'del'))),
-            'admin/product/index' => array('Name' => '产品管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'product', 'index'))),
-            'admin/product/add' => array('Name' => '添加产品', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'product', 'add'))),
-            'admin/product/edit' => array('Name' => '修改产品', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'product', 'edit'))),
-            'admin/product/del' => array('Name' => '删除产品', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'product', 'del'))),
-            'admin/album/index' => array('Name' => '相册管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'album', 'index'))),
-            'admin/album/add' => array('Name' => '添加相册', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'album', 'add'))),
-            'admin/album/edit' => array('Name' => '修改相册', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'album', 'edit'))),
-            'admin/album/del' => array('Name' => '删除相册', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'album', 'del'))),
-            'admin/down/index' => array('Name' => '下载管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'down', 'index'))),
-            'admin/down/add' => array('Name' => '添加下载', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'down', 'add'))),
-            'admin/down/edit' => array('Name' => '修改下载', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'down', 'edit'))),
-            'admin/down/del' => array('Name' => '删除下载', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'down', 'del'))), */
+            'admin/user/add' => array('Name' => '添加会员', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'user', 'add'))),
+            'admin/user/edit' => array('Name' => '修改会员', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'user', 'edit'))),
+            'admin/user/upgrade' => array('Name' => '提升会员', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'user', 'upgrade'))),
+            'admin/groupUser/index' => array('Name' => '会员组管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'groupUser', 'index'))),
+            'admin/groupUser/add' => array('Name' => '添加会员组', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'groupUser', 'add'))),
+            'admin/groupUser/edit' => array('Name' => '修改会员组', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'groupUser', 'edit'))),
+            'admin/groupUser/del' => array('Name' => '删除会员组', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'groupUser', 'del'))),
+            //辅助插件
+            'admin/linkCate/index' => array('Name' => '友情链接分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'linkCate', 'index'))),
+            'admin/linkCate/add' => array('Name' => '增加友情链接分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'linkCate', 'add'))),
+            'admin/linkCate/edit' => array('Name' => '修改友情链接分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'linkCate', 'edit'))),
+            'admin/linkCate/del' => array('Name' => '删除友情链接分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'linkCate', 'del'))),
+            'admin/link/index' => array('Name' => '友情链接管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'link', 'index'))),
+            'admin/link/add' => array('Name' => '添加友情链接', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'link', 'add'))),
+            'admin/link/edit' => array('Name' => '修改友情链接', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'link', 'edit'))),
+            'admin/link/del' => array('Name' => '删除友情链接', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'link', 'del'))),
             
             // API
             'admin/api/ajaxUpload' => array('Name' => 'AJAX上传', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'ajaxUpload'))),
             'admin/api/ckUpload' => array('Name' => 'CkEditor上传', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'ckUpload'))),
-            
-            
-            /* 'admin/approve' => array('Name' => '审核管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'approve'))),
-
-            
-            'admin/index/qrCode' => array('Name' => '获取二维码', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'index', 'qrCode'))),
-            
-
-            //CMS系统管理
-            'admin/cms' => array('Name' => 'CMS系统', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'cms'))),
-            'admin/cms/index' => array('Name' => '版本管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'cms', 'index'))),
-            'admin/cms/add' => array('Name' => '发布版本', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'cms', 'add'))),
-            'admin/cms/edit' => array('Name' => '修改版本', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'cms', 'edit'))),
-            'admin/cms/del' => array('Name' => '删除版本', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'cms', 'del'))),
-            // 网站
-            'admin/website/index' => array('Name' => '网站列表', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'website', 'index'))),
-            'admin/website/add' => array('Name' => '网站添加', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'website', 'add'))),
-            'admin/website/edit' => array('Name' => '网站修改', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'website', 'edit'))),
-            'admin/website/del' => array('Name' => '网站删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'website', 'del'))),
-            
             'admin/api/userState' => array('Name' => '设置用户状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'userState'))),
-            'admin/api/cmsState' => array('Name' => '设置CMS状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'cmsState'))),
-            'admin/api/plugState' => array('Name' => '设置插件状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'plugState'))),
-            'admin/api/verState' => array('Name' => '设置版本状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'verState'))),
-            'admin/api/verIsShow' => array('Name' => '设置版本上下线', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'verIsShow'))),
-            'admin/api/check' => array('Name' => '检测是否购买过', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'check'))),
-            'admin/api/orderSubmit' => array('Name' => '提交订单', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'orderSubmit'))),
-            'admin/api/getOrder' => array('Name' => '获取订单信息', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'getOrder'))),
-            'admin/api/orderPay' => array('Name' => '订单支付', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'orderPay'))),
-            // DEV
-            'admin/dev/index' => array('Name' => '开发者管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'dev', 'index'))),
-            'admin/dev/edit' => array('Name' => '开发者修改', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'dev', 'edit'))),
-            'admin/dev/del' => array('Name' => '开发者删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'dev', 'del'))),
-            'admin/apply/index' => array('Name' => '开发者资料', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'apply', 'index'))),
-            // 插件
-            'admin/plug/index' => array('Name' => '插件市场', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'plug', 'index'))),
-            'admin/plug/used' => array('Name' => '已购插件', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'plug', 'used'))),
-            'admin/plug/myplug' => array('Name' => '插件发布', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'plug', 'myplug'))),
-            'admin/plug/add' => array('Name' => '插件添加', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'plug', 'add'))),
-            'admin/plug/edit' => array('Name' => '插件修改', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'plug', 'edit'))),
-            'admin/plugver/index' => array('Name' => '插件版本管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'plugver', 'index'))),
-            'admin/plugver/add' => array('Name' => '插件版本添加', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'plugver', 'add'))),
-            'admin/plugver/edit' => array('Name' => '插件版本修改', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'plugver', 'edit'))),
-
-            // 订单
-            'admin/order/index' => array('Name' => '订单中心', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'order', 'userMonth'))),
-
-            // 审核管理
-            'admin/approve/plug' => array('Name' => '插件审核', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'approve', 'plug'))),
-            'admin/approve/plugver' => array('Name' => '插件版本审核', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'approve', 'plugver'))),
-            // 用户
-            'admin/user' => array('Name' => '用户管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'admin'))),
-            'admin/profile/index' => array('Name' => '个人资料', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'profile', 'index'))),
-            
-            'admin/admin/edit' => array('Name' => '用户修改', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'admin', 'edit'))),
-            'admin/admin/del' => array('Name' => '用户删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'admin', 'del'))),
-            // 订单
-            'admin/order/index' => array('Name' => '订单中心', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'order', 'index'))),
-
-            'admin/sys/index' => array('Name' => '系统设置', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sys', 'index'))), */
-            'index/signout' => array('Name' => '安全退出', 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(array('index', 'signout'))),
+            'admin/api/linkState' => array('Name' => '设置链接状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'linkState'))),
+            'index/adminLogout' => array('Name' => '安全退出', 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(array('index', 'adminLogout'))),
 
         );
         $ModelArr = $this->Sys_modelObj->getList();
@@ -180,25 +121,15 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/log/login'),
             )),
             array('Key' => 'admin/content', 'subCont' => array('category', 'content'), 'Icon' => 'bi bi-layout-text-sidebar-reverse', 'Sub' => $RoleMenuArr),
-            array('Key' => 'admin/user', 'subCont' => array('user'), 'Icon' => 'bi bi-person', 'Sub' => array(
+            array('Key' => 'admin/user', 'subCont' => array('user', 'groupUser'), 'Icon' => 'bi bi-person', 'Sub' => array(
                 array('Key' => 'admin/user/index'),
+                array('Key' => 'admin/groupUser/index'),
             )),
-            /* array('Key' => 'admin/website/index', 'subCont' => array('website'), 'Icon' => 'bi bi-columns-gap'),
-            
-            array('Key' => 'admin/order/index', 'subCont' => array('order'), 'Icon' => 'bi bi-layout-text-sidebar-reverse'),
-            //array('Key' => 'admin/profile/index', 'subCont' => array('profile')),
-            array('Key' => 'admin/apply/index', 'subCont' => array('apply'), 'Icon' => 'bi bi-journal-medical'),
-            array('Key' => 'admin/user', 'subCont' => array('admin', 'dev'), 'Icon' => 'bi bi-people', 'Sub' => array(
-                array('Key' => 'admin/admin/index'),
-                array('Key' => 'admin/dev/index'),
+            array('Key' => 'admin/assist', 'subCont' => array('linkCate', 'link'), 'Icon' => 'bi bi-columns-gap', 'Sub' => array(
+                array('Key' => 'admin/linkCate/index'),
+                array('Key' => 'admin/link/index'),
             )),
-            array('Key' => 'admin/approve', 'subCont' => array('approve'), 'Icon' => 'bi bi-list-check', 'Sub' => array(
-                array('Key' => 'admin/approve/plug'),
-                array('Key' => 'admin/approve/plugver'),
-            )),
-            array('Key' => 'admin/cms', 'subCont' => array('cms'), 'Icon' => 'bi bi-gem'),
-            array('Key' => 'admin/sys/index', 'subCont' => array('sys'), 'Icon' => 'bi bi-gear'), */
-            array('Key' => 'index/signout', 'subCont' => array('signout'), 'Icon' => 'bi bi-box-arrow-right'),
+            array('Key' => 'index/adminLogout', 'subCont' => array('signout'), 'Icon' => 'bi bi-box-arrow-right'),
         );
         $Url = implode('/', array($this->Module, Router::$s_Controller, Router::$s_Method));
         $Key = '';

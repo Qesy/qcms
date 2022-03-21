@@ -39,5 +39,9 @@ class RedisKey {
 	public static function Category_String(){
 	    return self::$s_projectKey.'_Category_String';
 	}
+	
+	public static function Link_Cate_String(){
+	    return self::$s_projectKey.'_Link_Cate_String';
+	}
 
 }

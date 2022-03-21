@@ -80,7 +80,7 @@ class Build {
         $this->LinkExport = !empty($this->LinkExport) ? $this->LinkExport : $this->CommObj->Url(array($this->Module, \Router::$s_Controller, 'export'));
         self::_Clean();
         $this->FormStyle = ($Class == 'form-inline') ? 2 : 1;
-        $this->Html = ($MultipleKey == -1) ? '<form method="'.$Method.'" class="BuildForm  ">' : '<div class="w-100 '.$Class.' '.(($MultipleKey == $this->FormMultipleSelectIndex) ? '' : 'd-none').'" id="Key_'.$MultipleKey.'">';
+        $this->Html = ($MultipleKey == -1) ? '<form method="'.$Method.'" class="BuildForm '.$Class.'">' : '<div class="w-100 '.$Class.' '.(($MultipleKey == $this->FormMultipleSelectIndex) ? '' : 'd-none').'" id="Key_'.$MultipleKey.'">';
         if(!$this->FormMultipleMerge) $this->Html .= '<form method="'.$Method.'" class="BuildForm '.$Class.'">';
         foreach($this->Arr as $k => $v){
             if(empty($v['Col']) && $Class != 'form-inline') $v['Col'] = 12;
@@ -89,9 +89,9 @@ class Build {
                 case 'formgroup':
                     $this->Html .= self::_FromGroup($v['Col'], $v['Desc']); break;
                 case 'radio':
-                    $this->Html .= self::_FormRadio($v['Name'], $v['Desc'], $v['Value'], $v['Data'], $v['Col'], $v['Disabled']); break;
+                    $this->Html .= self::_FormRadio($v['Name'], $v['Desc'], $v['Value'], $v['Data'], $v['Col'], $v['Disabled'], $v['Required']); break;
                 case 'checkbox':
-                    $this->Html .= self::_FormCheckbox($v['Name'], $v['Desc'], $v['Value'], $v['Data'], $v['Col'], $v['Disabled']); break;
+                    $this->Html .= self::_FormCheckbox($v['Name'], $v['Desc'], $v['Value'], $v['Data'], $v['Col'], $v['Disabled'], $v['Required']); break;
                 case 'select':
                     $this->Html .= self::_FromSelect($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Data'], $v['Disabled'], $v['Required']); break;
                 case 'upload':
@@ -266,9 +266,14 @@ class Build {
         return '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'"><button type="'.$Type.'" class="btn btn-'.$Class.' '.(($this->FormStyle == 2) ? 'btn-xs' : '').'" id="Button_'.$Name.'">'.$Desc.'</button></div>';
     }
     
-    private function _FormRadio($Name, $Desc, $Value, $DataArr = array(),  $Col, $IsDisabled = 0){
+    private function _FormRadio($Name, $Desc, $Value, $DataArr = array(),  $Col, $IsDisabled = 0, $Required = 0){
         $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
-        $Str = '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'"><label  class="mr-3 mb-1 d-block">'.$Desc.'</label>';
+        $RequiredViewStr = $RequiredStr = '';
+        if(!empty($Required)){
+            $RequiredStr = 'required="required"';
+            $RequiredViewStr = '<span class="text-danger ml-2" style="font-weight: 900;">*</span>';
+        }
+        $Str = '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'"><label  class="mr-3 mb-1 d-block">'.$Desc.$RequiredViewStr.'</label>';
         foreach($DataArr as $k => $v){
             $Checked = ($Value == $k) ? 'checked="checked"' : '';
             $Str .= '<label class="radio-inline mr-3 text-dark py-2 h6"><input type="radio" name="'.$Name.'"  value="'.$k.'" '.$Checked.'> '.$v.'</label>';
@@ -277,10 +282,15 @@ class Build {
         return $Str;
     }
     
-    private function _FormCheckbox($Name, $Desc, $Value, $DataArr = array(),  $Col, $IsDisabled = 0){ //Checkbox
+    private function _FormCheckbox($Name, $Desc, $Value, $DataArr = array(),  $Col, $IsDisabled = 0, $Required = 0){ //Checkbox
         $ValueArr = explode('|', $Value);
         $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
-        $Str = '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'"><label  class="mr-3 mb-1 d-block">'.$Desc.'</label>';
+        $RequiredViewStr = $RequiredStr = '';
+        if(!empty($Required)){
+            $RequiredStr = 'required="required"';
+            $RequiredViewStr = '<span class="text-danger ml-2" style="font-weight: 900;">*</span>';
+        }
+        $Str = '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'"><label  class="mr-3 mb-1 d-block">'.$Desc.$RequiredViewStr.'</label>';
         foreach($DataArr as $k => $v){
             $Checked = in_array($k, $ValueArr) ? 'checked="checked"' : '';
             $Str .= '<div class="checkbox checkbox-primary float-left pl-1 pr-4 py-2"><input type="checkbox" name="'.$Name.'['.$k.']"  value="1" '.$Checked.' id="'.$Name.'_'.$k.'" > <label class="text-dark" for="'.$Name.'_'.$k.'" >'.$v.'</label></div>';
