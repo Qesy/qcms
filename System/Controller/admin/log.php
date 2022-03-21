@@ -17,6 +17,7 @@ class Log extends ControllersAdmin {
             $Arr[$k]['NickName'] = $AdminKV[$v['UserId']];
         }
         $KeyArr = array(
+            'LogOperateId' => array('Name' => 'ID', 'Td' => 'th'),
             'NickName' => array('Name' => '管理员', 'Td' => 'th'),
             'Url' => array('Name' => '访问路径', 'Td' => 'th'),
             'Method' => array('Name' => '访问方式', 'Td' => 'th'),
@@ -46,6 +47,7 @@ class Log extends ControllersAdmin {
             $Arr[$k]['NickName'] = $AdminKV[$v['UserId']];
         }
         $KeyArr = array(
+            'LogLoginId' => array('Name' => 'ID', 'Td' => 'th'),
             'NickName' => array('Name' => '管理员', 'Td' => 'th'),
             'Ua' => array('Name' => '用户代理', 'Td' => 'th'),
             'Ip' => array('Name' => '访问IP', 'Td' => 'th'),

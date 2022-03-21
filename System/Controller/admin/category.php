@@ -39,6 +39,7 @@ class Category extends ControllersAdmin {
             $Arr[$k]['TrClass'] = ($v['Level'] == 0) ? ' SubShowDiv_'.$v['PCateId'].' '.$TrClass : ' SubShowDiv_'.$v['PCateId'].' d-none'.$TrClass;
         }
         $KeyArr = array(
+            'CateId' => array('Name' => 'ID', 'Td' => 'th'),
             'NameView' => array('Name' => '分类名', 'Td' => 'th'),
             'ModelView' => array('Name' => '模型', 'Td' => 'th'),
             'AttrView' => array('Name' => '属性', 'Td' => 'th'), 

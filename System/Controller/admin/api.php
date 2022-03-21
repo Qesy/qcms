@@ -10,6 +10,7 @@ class Api extends ControllersAdmin {
         $ext = substr ( strrchr ( $_FILES['filedata'] ['name'], '.' ), 1 );
         $this->FileObj->SetInsert(array(
             'UserId' => $this->LoginUserRs['UserId'],
+            'Name' => $_FILES['filedata']['name'],
             'Img' => $Ret['Url'],
             'Size' => $_FILES['filedata']['size'],
             'Ext' => $ext,
@@ -30,6 +31,7 @@ class Api extends ControllersAdmin {
         $ext = substr ( strrchr ( $_FILES['upload'] ['name'], '.' ), 1 );
         $this->FileObj->SetInsert(array(
             'UserId' => $this->LoginUserRs['UserId'],
+            'Name' => $_FILES['filedata']['name'],
             'Img' => $Ret['Url'],
             'Size' => $_FILES['upload']['size'],
             'Ext' => $ext,

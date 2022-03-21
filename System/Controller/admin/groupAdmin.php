@@ -11,6 +11,7 @@ class GroupAdmin extends ControllersAdmin {
             );
         }
         $KeyArr = array(
+            'GroupAdminId' => array('Name' => 'ID', 'Td' => 'th'),         
             'Name' => array('Name' => '管理组', 'Td' => 'th'),            
         );
         $this->BuildObj->PrimaryKey = 'GroupAdminId';

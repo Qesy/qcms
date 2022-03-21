@@ -25,6 +25,7 @@ class User extends ControllersAdmin {
             );
         }
         $KeyArr = array(
+            'UserId' => array('Name' => 'ID', 'Td' => 'th'),
             'PhoneView' => array('Name' => '账号', 'Td' => 'th'),
             //'Sn_Out' => array('Name' => '第三方订单号', 'Td' => 'th'),
             'NickName' => array('Name' => '昵称', 'Td' => 'th'),

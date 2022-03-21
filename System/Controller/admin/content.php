@@ -39,6 +39,7 @@ class Content extends ControllersAdmin {
             );
         }
         $KeyArr = array(
+            'Id' => array('Name' => 'ID', 'Td' => 'th'),    
             'TitleView' => array('Name' => '标题', 'Td' => 'th'),            
             'CateName' => array('Name' => '分类名', 'Td' => 'th'),
             'ReadNum' => array('Name' => '浏览数', 'Td' => 'th'),
@@ -162,7 +163,7 @@ class Content extends ControllersAdmin {
                     
                     
                     array('Name' =>'Keywords', 'Desc' => '关键字',  'Type' => 'input', 'Value' => '', 'Required' => 0, 'Col' => 12),
-                    array('Name' =>'Description', 'Desc' => '分类描述',  'Type' => 'textarea', 'Value' => '', 'Required' => 0, 'Col' => 12),
+                    array('Name' =>'Description', 'Desc' => '描述',  'Type' => 'textarea', 'Value' => '', 'Required' => 0, 'Col' => 12),
                     
                 )
             ),
@@ -293,7 +294,7 @@ class Content extends ControllersAdmin {
                     
                     
                     array('Name' =>'Keywords', 'Desc' => '关键字',  'Type' => 'input', 'Value' => $Rs['Keywords'], 'Required' => 0, 'Col' => 12),
-                    array('Name' =>'Description', 'Desc' => '分类描述',  'Type' => 'textarea', 'Value' => $Rs['Description'], 'Required' => 0, 'Col' => 12),
+                    array('Name' =>'Description', 'Desc' => '描述',  'Type' => 'textarea', 'Value' => $Rs['Description'], 'Required' => 0, 'Col' => 12),
                     
                 )
             ),

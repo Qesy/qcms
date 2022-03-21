@@ -61,6 +61,16 @@ class Common {
 	    return WEB_PREFIX . '-' . uniqid ( rand ( 100, 999 ), false );
 	}
 	
+	public function Size($Size){
+	    if($Size < 1000) return ''.$Size.' <span class="">B</span>';
+	    $Size = round($Size/1000, 2);
+	    if($Size < 1000) return ''.$Size.' <span class="">KB</span>';
+	    $Size = round($Size/1000, 2);
+	    if($Size < 1000) return ''.$Size.' <span class="">MB</span>';
+	    $Size = round($Size/1000, 2);
+	    return ''.$Size.' <span class="">GB</span>';
+	}
+	
 	
 	public function  AZ26($n) { //导出excel有用
 	    $Letter = range('A', 'Z', 1);
