@@ -8,6 +8,14 @@ class Index extends Controllers {
 		echo '<br><br><br><h1><center>QFrame PHP Version 1.0.0 </center></h1><center><h2>Author : Qesy, Email : 762264@qq.com</h2><p>Your IP : ' . $this->CommonObj->ip () . '</p></center>';
 	}
 	
+	public function js_Action(){
+	    if(!$this->VeriObj->VeriPara($_GET, array('KeyName'))) die($this->LanguageArr [1001]);
+	    $Rs = $this->LabelObj->getOne($_GET['KeyName']);
+	    if(empty($Rs))  die($this->LanguageArr [1003]);
+	    if($Rs['State'] != 1) die($this->LanguageArr [1049]);
+	    $this->CommonObj->ExecScript('document.writeln("'.$this->CommonObj->Html2Js($Rs['Content']).'");');exit;
+	}
+	
 	public function admin_Action(){ //管理员登录
 	    if(!empty($_POST)){
 	        if(!$this->VeriObj->VeriPara($_POST, array('Phone', 'Password', 'VCode'))) $this->Err(1001);

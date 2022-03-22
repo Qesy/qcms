@@ -1,5 +1,8 @@
 <?php
 namespace Model;
+use Helper\RedisKey;
+use Helper\Redis;
+
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 /*
  * Name 	: QC_Label
@@ -16,4 +19,17 @@ class QC_Label extends \Db_pdo {
 	public $TableName = 'label';
 	public $PrimaryKey = 'LabelId';
 	
+	public function getOne($KeyName){	    
+	    $key = RedisKey::Label_RS_HM($KeyName);
+	    if(Redis::$s_IsOpen == 1 && Redis::exists($key)) return Redis::hGetAll($key);
+	    $Rs = $this->SetCond(array('KeyName' => $KeyName))->ExecSelectOne();
+	    if(Redis::$s_IsOpen == 1 && !empty($Rs)) Redis::hMset($key, $Rs);
+	    return $Rs;
+	}
+	
+	public function clean($KeyName){
+	    if(Redis::$s_IsOpen != 1) return;
+	    $key = RedisKey::Label_RS_HM($KeyName);
+	    Redis::del($key);
+	}
 }

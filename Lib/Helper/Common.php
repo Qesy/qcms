@@ -111,6 +111,11 @@ class Common {
 	    return htmlentities($cip);
 	}
 	
+	public function Html2Js($Str){
+	    $Str = str_replace(array('"', '/', PHP_EOL), array('\"', '\/', ''), $Str);
+	    return $Str;
+	}
+	
 	public function thumb($url, $width, $heiht, $noWaterMark = 0) { // -- 缩略图 --
 	    $url = str_replace ( 'source', 'thumb', $url );
 	    $ext = substr ( $url, - 4 );

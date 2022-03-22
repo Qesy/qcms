@@ -12,13 +12,18 @@ class Label extends ControllersAdmin {
         
         $labelCateArr = $this->Label_cateObj->getList();
         $labelCateKV = array_column($labelCateArr, 'Name', 'LabelCateId');
+
         foreach($Arr as $k => $v){            
             $Arr[$k]['LabelCateName'] = $labelCateKV[$v['LabelCateId']];
+            $Arr[$k]['KeyNameView'] = '<input class="form-control" disabled="disabled" type="text" value="{{Label:'.$v['KeyName'].'}}"/>';
+            $Arr[$k]['JsView'] = '<input class="form-control" disabled="disabled" type="text" value="<script language=JavaScript src=\''.$_SERVER['REQUEST_SCHEME'].'://'.URL_DOMAIN.'/index/js?KeyName='.$v['KeyName'].'\'></script>"/>';
             $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
         }
         $KeyArr = array(
             'LabelId' => array('Name' => 'ID', 'Td' => 'th'),
-            'Name' => array('Name' => '标签名', 'Td' => 'th'),            
+            'Name' => array('Name' => '标签名', 'Td' => 'th'),
+            'KeyNameView' => array('Name' => '调用标签名', 'Td' => 'th', 'Style' => 'width:200px;'), 
+            'JsView' => array('Name' => '外部JS调用', 'Td' => 'th', 'Style' => 'width:400px;'),         
             'LabelCateName' => array('Name' => '分类', 'Td' => 'th'),
             'State' => array('Name' => '状态', 'Td' => 'th', 'Type' => 'Switch'),
             'SortView' => array('Name' => '排序', 'Td' => 'th', 'Style' => 'width:100px;'),            
@@ -58,18 +63,18 @@ class Label extends ControllersAdmin {
             array('Name' =>'Name', 'Desc' => '标签名字',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
             array('Name' =>'KeyName', 'Desc' => '调用名字 (只能英文和数字)',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 3),
             array('Name' =>'LabelCateId', 'Desc' => '分类',  'Type' => 'select', 'Data' => $CateKV, 'Value' => $CateArr[0]['LabelCateId'], 'Required' => 1, 'Col' => 3),
-            array('Name' =>'Content', 'Desc' => '内容',  'Type' => 'textarea', 'Value' => '', 'Required' => 0, 'Col' => 12),
+            array('Name' =>'Content', 'Desc' => '内容',  'Type' => 'textarea', 'Value' => '', 'Required' => 0, 'Col' => 12, 'Row' => 22, 'Class' => 'Content'),
             array('Name' =>'IsEditor', 'Desc' => '加载编辑器',  'Type' => 'hidden', 'Value' => '2', 'Required' => 0, 'Col' => 12),
             
         );
-        
+        $this->BuildObj->FormFooterBtnArr[] = array('Name' => 'Editor', 'Desc' => '加载编辑器', 'Type' => 'button', 'Class' => 'success');
         $this->BuildObj->Form('post', 'form-row');
         $this->LoadView('admin/common/edit');
     }
     
     public function edit_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('LabelId'))) $this->Err(1001);
-        $Rs = $this->LabelObj->getOne($_GET['LabelId']);
+        $Rs = $this->LabelObj->SetCond(array('LabelId' => $_GET['LabelId']))->ExecSelectOne();
         if(empty($Rs)) $this->Err(1003);
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name', 'KeyName', 'LabelCateId', 'Content', 'IsEditor'))) $this->Err(1001);
@@ -82,7 +87,7 @@ class Label extends ControllersAdmin {
                 'IsEditor' => $_POST['IsEditor'],
             ))->ExecUpdate();
             if($Ret === false) $this->Err(1002);
-            $this->LabelObj->clean($Rs['LabelId']);
+            $this->LabelObj->clean($Rs['KeyName']);
             $this->Jump(array('admin', 'label', 'index'), 1888);
         }
         $CateArr = $this->Label_cateObj->getList();
@@ -92,22 +97,22 @@ class Label extends ControllersAdmin {
             array('Name' =>'Name', 'Desc' => '标签名字',  'Type' => 'input', 'Value' => $Rs['Name'], 'Required' => 1, 'Col' => 6),
             array('Name' =>'KeyName', 'Desc' => '调用名字 (只能英文和数字)',  'Type' => 'input', 'Value' => $Rs['KeyName'], 'Required' => 1, 'Col' => 3),
             array('Name' =>'LabelCateId', 'Desc' => '分类',  'Type' => 'select', 'Data' => $CateKV, 'Value' => $Rs['LabelCateId'], 'Required' => 1, 'Col' => 3),
-            array('Name' =>'Content', 'Desc' => '内容',  'Type' => 'textarea', 'Value' => $Rs['Content'], 'Required' => 0, 'Col' => 12),
+            array('Name' =>'Content', 'Desc' => '内容',  'Type' => 'textarea', 'Value' => $Rs['Content'], 'Required' => 0, 'Col' => 12, 'Row' => 22, 'Class' => 'Content'),
             array('Name' =>'IsEditor', 'Desc' => '加载编辑器',  'Type' => 'hidden', 'Value' => $Rs['IsEditor'], 'Required' => 0, 'Col' => 12),
             
         );
-        
+        $this->BuildObj->FormFooterBtnArr[] = array('Name' => 'Editor', 'Desc' => '加载编辑器', 'Type' => 'button', 'Class' => 'success');
         $this->BuildObj->Form('post', 'form-row');
         $this->LoadView('admin/common/edit');
     }
     
     public function del_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('LabelId'))) $this->Err(1001);
-        $Rs = $this->LabelObj->getOne($_GET['LabelId']);
+        $Rs = $this->LabelObj->SetCond(array('LabelId' => $_GET['LabelId']))->ExecSelectOne();
         if(empty($Rs)) $this->Err(1003);
         $Ret = $this->LabelObj->SetCond(array('LabelId' => $Rs['LabelId']))->ExecDelete();
         if($Ret === false) $this->Err(1002);
-        $this->LabelObj->clean($Rs['LabelId']);
+        $this->LabelObj->clean($Rs['KeyName']);
         $this->Jump(array('admin', 'label', 'index'), 1888);
     }
     

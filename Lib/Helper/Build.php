@@ -39,7 +39,8 @@ class Build {
     public $FormMultipleSelectIndex = 0; //选中的行
     public $FormMultipleMerge = true; //是否合并提交
     public $TableTopBtnArr = array(); //表格顶部按钮
-    public $TableFooterBtnArr = array(); //表格顶部按钮
+    public $TableFooterBtnArr = array(); //表格底部按钮
+    public $FormFooterBtnArr = array(); //表单底部按钮
     public static function get_instance() {
         if (! isset ( self::$s_instance )) {
             self::$s_instance = new self ();
@@ -110,7 +111,7 @@ class Build {
                     $this->Js .= $StrJs;
                     break;
                 case 'textarea':
-                    $this->Html .= self::_FormTextarea($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder'], $v['Required']); break;
+                    $this->Html .= self::_FormTextarea($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder'], $v['Required'], $v['Row']); break;
                 case 'editor':
                     list($StrHtml, $StrJs) = self::_FormEditor($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder'], $v['Required']);
                     $this->Html .= $StrHtml;
@@ -133,6 +134,9 @@ class Build {
                     if(empty($v['ButtonType'])) $v['ButtonType'] = 'submit';
                     if(empty($v['Class'])) $v['Class'] = 'primary';
                     $this->Html .= self::_FromButton($v['Name'], $v['Desc'], $v['ButtonType'], $v['Col'], $v['Class']);break;
+                case 'butonGroup':                    
+                    $this->Html .= self::_FromButtonGroup($v['ButtonArr'], $v['Col']);break;
+                    break;
                 case 'link':
                     if(empty($v['Class'])) $v['Class'] = 'primary';
                     $this->Html .= self::_FromLink($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Data'], $v['Class']);break;
@@ -162,8 +166,11 @@ class Build {
             }
         }
         if($Class != 'form-inline') $Col = 12;
-        if($this->IsSubmit) $this->Html .= self::_FromButton('submit', '提交', 'submit', $Col, 'primary');
-        if($this->IsBack) $this->Html .= self::_FromButton('submit', '返回', 'back', $Col, 'secondary');
+        $ButtonArr = array();
+        if($this->IsSubmit) $ButtonArr[] = array('Name' => 'submit', 'Type' => 'submit', 'Desc' => '提交');
+        if($this->IsBack) $ButtonArr[] = array('Name' => 'back', 'Type' => 'button', 'Desc' => '返回');
+        foreach($this->FormFooterBtnArr as $v) $ButtonArr[] = $v;
+        $this->Html .= self::_FromButtonGroup($ButtonArr);  
         $this->Html .= $ExtHtml;
         if(!$this->FormMultipleMerge) $this->Html .= '</form>';
         $this->Html .= ($MultipleKey == -1) ? '</form>' : '</div>';
@@ -196,7 +203,7 @@ class Build {
                 $Js = $StrJs;
                 break;
             case 'textarea':
-                $Html = self::_FormTextarea($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']); break;
+                $Html = self::_FormTextarea($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'],  $v['Placeholder'], $v['Required'], $v['Placeholder']); break;
             case 'editor':
                 list($StrHtml, $StrJs) = self::_FormEditor($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']);
                 $Html = $StrHtml;
@@ -264,6 +271,18 @@ class Build {
             return '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'"><button type="button" onclick="history.go(-1)" class="btn btn-'.$Class.' '.(($this->FormStyle == 2) ? 'btn-xs' : '').'" id="Button_'.$Name.'">'.$Desc.'</button></div>';
         }
         return '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'"><button type="'.$Type.'" class="btn btn-'.$Class.' '.(($this->FormStyle == 2) ? 'btn-xs' : '').'" id="Button_'.$Name.'">'.$Desc.'</button></div>';
+    }
+    
+    private function _FromButtonGroup($ButtonArr, $Col = 12){ //Button
+        $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
+        $Html = '';
+        foreach($ButtonArr as $v){
+            $Class = isset($v['Class']) ? $v['Class'] : 'primary';
+            $Type = isset($v['Type']) ? $v['Type'] : 'submit';
+            $IsBack = ($v['Name'] == 'back') ? 'onclick="history.go(-1)"' : '';
+            $Html .= '<button type="'.$Type.'" '.$IsBack.' class="mr-2 btn btn-'.$Class.' '.(($this->FormStyle == 2) ? 'btn-xs' : '').'" id="Button_'.$v['Name'].'">'.$v['Desc'].'</button>';
+        }
+        return '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'">'.$Html.'</div>';
     }
     
     private function _FormRadio($Name, $Desc, $Value, $DataArr = array(),  $Col, $IsDisabled = 0, $Required = 0){
@@ -583,7 +602,7 @@ class Build {
                     </div>';
     }
     
-    private function _FormTextarea($Name, $Desc, $Value, $Col, $IsDisabled = 0, $Placeholder = '', $Required = 0){ //输入框
+    private function _FormTextarea($Name, $Desc, $Value, $Col, $IsDisabled = 0, $Placeholder = '', $Required = 0, $Row = 4){ //输入框
         $Disabled = ($IsDisabled) ? 'disabled="disabled"' : '';
         if(empty($Placeholder)) $Placeholder =  '请输入'.$Desc  ;
         $RequiredViewStr = $RequiredStr = '';
@@ -594,7 +613,7 @@ class Build {
         $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
         return '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'">
                         <label for="Input_'.$Name.'" class="mb-1">'.$Desc.'</label>'.$RequiredViewStr.'
-                        <textarea class="form-control" name="'.$Name.'" '.$Disabled.' rows="4" id="Input_'.$Name.'" placeholder="'.$Placeholder.'" '.$RequiredStr.'>'.$Value.'</textarea>
+                        <textarea class="form-control" name="'.$Name.'" '.$Disabled.' rows="'.$Row.'" id="Input_'.$Name.'" placeholder="'.$Placeholder.'" '.$RequiredStr.'>'.$Value.'</textarea>
                       </div>';
     }
     

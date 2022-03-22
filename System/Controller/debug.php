@@ -3,6 +3,11 @@ defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class Debug extends Controllers {
     
     public function t_Action(){
+        $str = '<img src="https://www.baidu.com/img/flexible/logo/pc/result.png" class="rounded mx-auto d-block" alt="你好吗">
+
+
+<h1>是的撒             旦法</h1>';
+        $this->CommonObj->ExecScript('document.writeln("'.$this->CommonObj->Html2Js($str).'");');exit;
         /* $this->SysRs = $this->SysObj->getKv();
         $Template = self::_getTemplate('list_');
         var_dump($Template); */
