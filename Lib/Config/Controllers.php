@@ -76,7 +76,15 @@ class ControllersAdmin extends Controllers {
             'admin/page/add' => array('Name' => '添加单页', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'page', 'add'))),
             'admin/page/edit' => array('Name' => '修改单页', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'page', 'edit'))),
             'admin/page/del' => array('Name' => '删除单页', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'page', 'del'))),
-            
+            // 自定义标签
+            'admin/labelCate/index' => array('Name' => '标签分类管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'labelCate', 'index'))),
+            'admin/labelCate/add' => array('Name' => '添加标签分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'labelCate', 'add'))),
+            'admin/labelCate/edit' => array('Name' => '修改标签分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'labelCate', 'edit'))),
+            'admin/labelCate/del' => array('Name' => '删除标签分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'labelCate', 'del'))),
+            'admin/label/index' => array('Name' => '标签管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'label', 'index'))),
+            'admin/label/add' => array('Name' => '添加标签', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'label', 'add'))),
+            'admin/label/edit' => array('Name' => '修改标签', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'label', 'edit'))),
+            'admin/label/del' => array('Name' => '删除标签', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'label', 'del'))),
             // 内容管理
             'admin/content/recovery' => array('Name' => '回收站', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'recovery'))),
             'admin/content/view' => array('Name' => '查看文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'view'))),
@@ -113,6 +121,7 @@ class ControllersAdmin extends Controllers {
             'admin/api/userState' => array('Name' => '设置用户状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'userState'))),
             'admin/api/linkState' => array('Name' => '设置链接状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'linkState'))),
             'admin/api/pageState' => array('Name' => '设置单页状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'pageState'))),
+            'admin/api/labelState' => array('Name' => '设置标签状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'labelState'))),
             'admin/api/tableField' => array('Name' => '查询表字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'tableField'))),
             
             'index/adminLogout' => array('Name' => '安全退出', 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(array('index', 'adminLogout'))),
@@ -139,9 +148,10 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/log/operate'),
                 array('Key' => 'admin/log/login'),
             )),
-            array('Key' => 'admin/category', 'subCont' => array('category', 'page', 'pageCate'), 'Icon' => 'bi bi-list-ol', 'Sub' => array(
+            array('Key' => 'admin/category', 'subCont' => array('category', 'page', 'pageCate', 'labelCate', 'label'), 'Icon' => 'bi bi-list-ol', 'Sub' => array(
                 array('Key' => 'admin/category/index'),
                 array('Key' => 'admin/page/index'),
+                array('Key' => 'admin/label/index'),
             )),
             array('Key' => 'admin/content', 'subCont' => array('content'), 'Icon' => 'bi bi-layout-text-sidebar-reverse', 'Sub' => $RoleMenuArr),
             array('Key' => 'admin/user', 'subCont' => array('user', 'groupUser'), 'Icon' => 'bi bi-person', 'Sub' => array(

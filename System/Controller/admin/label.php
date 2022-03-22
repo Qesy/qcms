@@ -1,0 +1,114 @@
+<?php
+defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
+class Label extends ControllersAdmin {
+    
+    public function index_Action(){
+        $Page = intval($_GET['Page']);
+        if($Page < 1) $Page = 1;
+        $Count = 0;
+        $Limit = array(($Page-1)*$this->PageNum, $this->PageNum);
+        $CondArr = array();
+        $Arr = $this->LabelObj->SetCond($CondArr)->SetLimit($Limit)->SetSort(array('Sort' => 'ASC', 'LabelId' => 'ASC'))->ExecSelectAll($Count);
+        
+        $labelCateArr = $this->Label_cateObj->getList();
+        $labelCateKV = array_column($labelCateArr, 'Name', 'LabelCateId');
+        foreach($Arr as $k => $v){            
+            $Arr[$k]['LabelCateName'] = $labelCateKV[$v['LabelCateId']];
+            $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
+        }
+        $KeyArr = array(
+            'LabelId' => array('Name' => 'ID', 'Td' => 'th'),
+            'Name' => array('Name' => '标签名', 'Td' => 'th'),            
+            'LabelCateName' => array('Name' => '分类', 'Td' => 'th'),
+            'State' => array('Name' => '状态', 'Td' => 'th', 'Type' => 'Switch'),
+            'SortView' => array('Name' => '排序', 'Td' => 'th', 'Style' => 'width:100px;'),            
+        );
+        $this->BuildObj->PrimaryKey = 'LabelId';
+        $this->BuildObj->TableTopBtnArr = array(
+            array('Name' => '分类管理', 'Link' => $this->CommonObj->Url(array('admin', 'labelCate', 'index'))),
+        );
+        $this->BuildObj->NameAdd = '添加标签';
+        //$this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
+        $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
+        $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'labelState')).'";';
+        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar);
+        $this->LoadView('admin/common/list', $tmp);
+    }
+    
+    public function add_Action(){
+        if(!empty($_POST)){
+            if(!$this->VeriObj->VeriPara($_POST, array('Name', 'KeyName', 'LabelCateId', 'Content'))) $this->Err(1001);
+            if(!$this->VeriObj->IsPassword($_POST['KeyName'], 1, 30)) $this->Err(1048);
+            $Ret = $this->LabelObj->SetInsert(array(
+                'Name' => $_POST['Name'],
+                'LabelCateId' => $_POST['LabelCateId'],
+                'KeyName' => $_POST['KeyName'],
+                'Content' => $_POST['Content'],
+                'IsEditor' => $_POST['IsEditor'],
+                'State' => 1,
+                'Sort' => 99,
+            ))->ExecInsert();
+            if($Ret === false) $this->Err(1002);
+            $this->Jump(array('admin', 'label', 'index'), 1888);
+        }
+        $CateArr = $this->Label_cateObj->getList();
+        $CateKV = array_column($CateArr, 'Name', 'LabelCateId');
+        
+        $this->BuildObj->Arr = array(
+            array('Name' =>'Name', 'Desc' => '标签名字',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
+            array('Name' =>'KeyName', 'Desc' => '调用名字 (只能英文和数字)',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 3),
+            array('Name' =>'LabelCateId', 'Desc' => '分类',  'Type' => 'select', 'Data' => $CateKV, 'Value' => $CateArr[0]['LabelCateId'], 'Required' => 1, 'Col' => 3),
+            array('Name' =>'Content', 'Desc' => '内容',  'Type' => 'textarea', 'Value' => '', 'Required' => 0, 'Col' => 12),
+            array('Name' =>'IsEditor', 'Desc' => '加载编辑器',  'Type' => 'hidden', 'Value' => '2', 'Required' => 0, 'Col' => 12),
+            
+        );
+        
+        $this->BuildObj->Form('post', 'form-row');
+        $this->LoadView('admin/common/edit');
+    }
+    
+    public function edit_Action(){
+        if(!$this->VeriObj->VeriPara($_GET, array('LabelId'))) $this->Err(1001);
+        $Rs = $this->LabelObj->getOne($_GET['LabelId']);
+        if(empty($Rs)) $this->Err(1003);
+        if(!empty($_POST)){
+            if(!$this->VeriObj->VeriPara($_POST, array('Name', 'KeyName', 'LabelCateId', 'Content', 'IsEditor'))) $this->Err(1001);
+            if(!$this->VeriObj->IsPassword($_POST['KeyName'], 1, 30)) $this->Err(1048);
+            $Ret = $this->LabelObj->SetCond(array('LabelId' => $Rs['LabelId']))->SetUpdate(array(
+                'Name' => $_POST['Name'],
+                'LabelCateId' => $_POST['LabelCateId'],
+                'KeyName' => $_POST['KeyName'],
+                'Content' => $_POST['Content'],
+                'IsEditor' => $_POST['IsEditor'],
+            ))->ExecUpdate();
+            if($Ret === false) $this->Err(1002);
+            $this->LabelObj->clean($Rs['LabelId']);
+            $this->Jump(array('admin', 'label', 'index'), 1888);
+        }
+        $CateArr = $this->Label_cateObj->getList();
+        $CateKV = array_column($CateArr, 'Name', 'LabelCateId');
+        
+        $this->BuildObj->Arr = array(
+            array('Name' =>'Name', 'Desc' => '标签名字',  'Type' => 'input', 'Value' => $Rs['Name'], 'Required' => 1, 'Col' => 6),
+            array('Name' =>'KeyName', 'Desc' => '调用名字 (只能英文和数字)',  'Type' => 'input', 'Value' => $Rs['KeyName'], 'Required' => 1, 'Col' => 3),
+            array('Name' =>'LabelCateId', 'Desc' => '分类',  'Type' => 'select', 'Data' => $CateKV, 'Value' => $Rs['LabelCateId'], 'Required' => 1, 'Col' => 3),
+            array('Name' =>'Content', 'Desc' => '内容',  'Type' => 'textarea', 'Value' => $Rs['Content'], 'Required' => 0, 'Col' => 12),
+            array('Name' =>'IsEditor', 'Desc' => '加载编辑器',  'Type' => 'hidden', 'Value' => $Rs['IsEditor'], 'Required' => 0, 'Col' => 12),
+            
+        );
+        
+        $this->BuildObj->Form('post', 'form-row');
+        $this->LoadView('admin/common/edit');
+    }
+    
+    public function del_Action(){
+        if(!$this->VeriObj->VeriPara($_GET, array('LabelId'))) $this->Err(1001);
+        $Rs = $this->LabelObj->getOne($_GET['LabelId']);
+        if(empty($Rs)) $this->Err(1003);
+        $Ret = $this->LabelObj->SetCond(array('LabelId' => $Rs['LabelId']))->ExecDelete();
+        if($Ret === false) $this->Err(1002);
+        $this->LabelObj->clean($Rs['LabelId']);
+        $this->Jump(array('admin', 'label', 'index'), 1888);
+    }
+    
+}

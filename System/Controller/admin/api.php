@@ -72,6 +72,15 @@ class Api extends ControllersAdmin {
         $this->CommonObj->ApiSuccess();
     }
     
+    public function labelState_Action(){
+        if(!$this->VeriObj->VeriPara($_GET, array('Id', 'Status', 'Field'))) $this->ApiErr(1001);
+        $DataArr = array($_GET['Field'] => $_GET['Status']);
+        $Ret = $this->LabelObj->SetCond(array('LabelId' => $_GET['Id']))->SetUpdate($DataArr)->ExecUpdate();
+        if($Ret === false) $this->Err(1002);
+        $this->LabelObj->clean($_GET['Id']);
+        $this->CommonObj->ApiSuccess();
+    }
+    
     public function tableField_Action(){ //获取表字段
         if(!$this->VeriObj->VeriPara($_POST, array('TableName'))) $this->ApiErr(1001);
         $FieldArr = $this->TableObj->query('SHOW FULL COLUMNS FROM '.$_POST['TableName'], array());

@@ -9,7 +9,7 @@ class Category extends ControllersAdmin {
         $TrClass = '';
         $ModelArr = $this->Sys_modelObj->getList();
         $ModelKV = array_column($ModelArr, 'Name', 'ModelId');
-        $ModelKV[-1] = '单页';
+        $ModelKV[-1] = '封面';
         foreach($Arr as $k => $v){
             $IsPost = ($v['IsPost'] == 1 && $v['IsLink'] != 1) ? '<span class="text-danger mr-2">发布</span>': '<span class="text-secondary mr-2">发布</span>';
             $IsLink = ($v['IsLink'] == 1) ? '<span class="text-danger mr-2">外链</span>': '<span class="text-secondary mr-2">外链</span>';
@@ -90,7 +90,7 @@ class Category extends ControllersAdmin {
         }
         $ModelArr = $this->Sys_modelObj->getList();
         $ModelKV = array_column($ModelArr, 'Name', 'ModelId');
-        $ModelKV[-1] = '单页';
+        $ModelKV[-1] = '封面';
         $ModelTempKV = array_column($ModelArr, 'NameKey', 'ModelId');
         $ModelTempKV[-1] = 'page';
  
@@ -192,7 +192,7 @@ class Category extends ControllersAdmin {
         
         $ModelArr = $this->Sys_modelObj->getList();
         $ModelKV = array_column($ModelArr, 'Name', 'ModelId');
-        $ModelKV[-1] = '单页';
+        $ModelKV[-1] = '封面';
         $ModelTempKV = array_column($ModelArr, 'NameKey', 'ModelId');
         $ModelTempKV[-1] = 'page';
         

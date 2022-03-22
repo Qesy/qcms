@@ -45,6 +45,14 @@ class Veri {
 		return true;
 	}
 	
+	public function IsPassword($Str, $MinLen = 6, $MaxLen = 16) { //只能1-16为数字、字母、下划线
+	    if (preg_match('/^[_0-9a-z]{'.$MinLen.','.$MaxLen.'}$/i',$Str)){
+	        return true;
+	    }else {
+	        return false;
+	    }
+	}
+	
 	public function VeriMobile($Mobile){ //验证手机号码
 	    if(strlen($Mobile) != 11 || is_numeric($Mobile) === false || substr($Mobile,0,1) != '1') return false;
 	    return true;
