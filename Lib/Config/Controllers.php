@@ -41,6 +41,7 @@ class ControllersAdmin extends Controllers {
         $this->MenuArr = array(
             /***一级***/
             'admin/index' => array('Name' => '系统管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'index'))),
+            'admin/category' => array('Name' => '分类管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category'))),
             'admin/content' => array('Name' => '内容管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'index'))),
             'admin/user' => array('Name' => '会员中心', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'user'))),
             'admin/data' => array('Name' => '数据维护', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'data'))),
@@ -66,6 +67,15 @@ class ControllersAdmin extends Controllers {
             'admin/category/edit' => array('Name' => '修改分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'edit'))),
             'admin/category/del' => array('Name' => '删除分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'del'))),
             'admin/category/move' => array('Name' => '移动分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'move'))),
+            // 单页管理
+            'admin/pageCate/index' => array('Name' => '单页分类管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'pageCate', 'index'))),
+            'admin/pageCate/add' => array('Name' => '添加单页分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'pageCate', 'add'))),
+            'admin/pageCate/edit' => array('Name' => '修改单页分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'pageCate', 'edit'))),
+            'admin/pageCate/del' => array('Name' => '删除单页分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'pageCate', 'del'))),
+            'admin/page/index' => array('Name' => '单页管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'page', 'index'))),
+            'admin/page/add' => array('Name' => '添加单页', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'page', 'add'))),
+            'admin/page/edit' => array('Name' => '修改单页', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'page', 'edit'))),
+            'admin/page/del' => array('Name' => '删除单页', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'page', 'del'))),
             
             // 内容管理
             'admin/content/recovery' => array('Name' => '回收站', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'recovery'))),
@@ -102,11 +112,14 @@ class ControllersAdmin extends Controllers {
             'admin/api/ckUpload' => array('Name' => 'CkEditor上传', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'ckUpload'))),
             'admin/api/userState' => array('Name' => '设置用户状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'userState'))),
             'admin/api/linkState' => array('Name' => '设置链接状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'linkState'))),
+            'admin/api/pageState' => array('Name' => '设置单页状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'pageState'))),
+            'admin/api/tableField' => array('Name' => '查询表字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'tableField'))),
+            
             'index/adminLogout' => array('Name' => '安全退出', 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(array('index', 'adminLogout'))),
 
         );
         $ModelArr = $this->Sys_modelObj->getList();
-        $RoleMenuArr = array(array('Key' => 'admin/category/index'),);
+        $RoleMenuArr = array();
         foreach($ModelArr as $v) {
             $Para = array('ModelId' => $v['ModelId']);
             foreach(array('index', 'add', 'edit', 'del') as $mv){
@@ -126,7 +139,11 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/log/operate'),
                 array('Key' => 'admin/log/login'),
             )),
-            array('Key' => 'admin/content', 'subCont' => array('category', 'content'), 'Icon' => 'bi bi-layout-text-sidebar-reverse', 'Sub' => $RoleMenuArr),
+            array('Key' => 'admin/category', 'subCont' => array('category', 'page', 'pageCate'), 'Icon' => 'bi bi-list-ol', 'Sub' => array(
+                array('Key' => 'admin/category/index'),
+                array('Key' => 'admin/page/index'),
+            )),
+            array('Key' => 'admin/content', 'subCont' => array('content'), 'Icon' => 'bi bi-layout-text-sidebar-reverse', 'Sub' => $RoleMenuArr),
             array('Key' => 'admin/user', 'subCont' => array('user', 'groupUser'), 'Icon' => 'bi bi-person', 'Sub' => array(
                 array('Key' => 'admin/user/index'),
                 array('Key' => 'admin/groupUser/index'),
@@ -136,7 +153,7 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/data/highReplace'),
             )),
             array('Key' => 'admin/assist', 'subCont' => array('linkCate', 'link', 'file'), 'Icon' => 'bi bi-columns-gap', 'Sub' => array(
-                array('Key' => 'admin/linkCate/index'),
+                //array('Key' => 'admin/linkCate/index'),
                 array('Key' => 'admin/link/index'),
                 array('Key' => 'admin/file/index'),
             )),

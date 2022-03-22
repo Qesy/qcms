@@ -10,23 +10,30 @@ class Link extends ControllersAdmin {
         $CondArr = array();
         $Arr = $this->LinkObj->SetCond($CondArr)->SetLimit($Limit)->SetSort(array('Sort' => 'ASC', 'LinkId' => 'ASC'))->ExecSelectAll($Count);
         
-        $GroupAdminArr = $this->Group_adminObj->getList();
-        $GroupAdminKV = array_column($GroupAdminArr, 'Name', 'GroupAdminId');
+        $linkCateArr = $this->Link_cateObj->getList();
+        $linkCateKV = array_column($linkCateArr, 'Name', 'LinkCateId');
         foreach($Arr as $k => $v){
             $Arr[$k]['LogoView'] = empty($v['Logo']) ? '无Logo' : '<image src="'.$v['Logo'].'" style="height:33px;"/>';
             $Arr[$k]['TsAddView'] = date('Y-m-d', $v['TsAdd']);
+            $Arr[$k]['LinkCateName'] = $linkCateKV[$v['LinkCateId']];
+            $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
         }
         $KeyArr = array(
             'LinkId' => array('Name' => 'ID', 'Td' => 'th'),
             'Name' => array('Name' => '网站名称', 'Td' => 'th'),
             'LogoView' => array('Name' => 'LOGO', 'Td' => 'th'),
             'Link' => array('Name' => '网站地址', 'Td' => 'th'),
-            'LinkCateId' => array('Name' => '分类', 'Td' => 'th'),
+            'LinkCateName' => array('Name' => '分类', 'Td' => 'th'),
             'State' => array('Name' => '状态', 'Td' => 'th', 'Type' => 'Switch'),
+            'SortView' => array('Name' => '排序', 'Td' => 'th', 'Style' => 'width:100px;'),
             'TsAddView' => array('Name' => '时间', 'Td' => 'th'),
             
         );
         $this->BuildObj->PrimaryKey = 'LinkId';
+        $this->BuildObj->TableTopBtnArr = array(
+            array('Name' => '分类管理', 'Link' => $this->CommonObj->Url(array('admin', 'linkCate', 'index'))),
+        );
+        $this->BuildObj->NameAdd = '添加友情链接';
         //$this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
         $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'linkState')).'";';

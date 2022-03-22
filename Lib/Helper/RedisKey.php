@@ -43,5 +43,9 @@ class RedisKey {
 	public static function Link_Cate_String(){
 	    return self::$s_projectKey.'_Link_Cate_String';
 	}
+	
+	public static function Page_Cate_String(){
+	    return self::$s_projectKey.'_Page_Cate_String';
+	}
 
 }

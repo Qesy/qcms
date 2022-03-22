@@ -16,6 +16,8 @@ use Model\QC_Link;
 use Model\QC_Link_cate;
 use Model\QC_Log_login;
 use Model\QC_Log_operate;
+use Model\QC_Page;
+use Model\QC_Page_cate;
 use Model\QC_Sys;
 use Model\QC_Sys_attr;
 use Model\QC_Sys_model;
@@ -56,6 +58,8 @@ abstract class Base {
 	public $Link_cateObj;
 	public $Log_loginObj;
 	public $Log_operateObj;
+	public $PageObj;
+	public $Page_cateObj;
 	public $SysObj;
 	public $Sys_attrObj;
 	public $Sys_modelObj;
@@ -92,6 +96,8 @@ abstract class Base {
 		$this->Link_cateObj = QC_Link_cate::get_instance();
 		$this->Log_loginObj = QC_Log_login::get_instance();
 		$this->Log_operateObj = QC_Log_operate::get_instance();
+		$this->PageObj = QC_Page::get_instance();
+		$this->Page_cateObj = QC_Page_cate::get_instance();
 		$this->SysObj = QC_Sys::get_instance();
 		$this->Sys_attrObj = QC_Sys_attr::get_instance();
 		$this->Sys_modelObj = QC_Sys_model::get_instance();

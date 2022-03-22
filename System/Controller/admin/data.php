@@ -48,7 +48,28 @@ class Data extends ControllersAdmin {
     }
     
     public function highReplace_Action(){
-        $this->LoadView('admin/common/edit');
+        if(!empty($_POST)){
+            if(!$this->VeriObj->VeriPara($_POST, array('TableName', 'Field', 'Search', 'Replace'))) $this->Err(1001);
+            $DbCondfig = DbConfig();
+            $Ret = $this->Table_articleObj->SetTbName(substr(trim($_POST['TableName']), strlen($DbCondfig['Prefix'])))->SetUpdate('`'.$_POST['Field'].'` = replace (`'.$_POST['Field'].'`, \''.$_POST['Search'].'\', \''.$_POST['Replace'].'\')')->ExecUpdate();
+            if($Ret === false) $this->Err(1002);
+            $this->Jump(array('admin', 'data', 'highReplace'), 1888);
+        }
+        $TableArr = $this->TableObj->query('show tables', array());
+        $TableKv = array();
+        
+        foreach($TableArr as $v){            
+            $TableKv[$v['Tables_in_qcms']] = $v['Tables_in_qcms'];
+        }
+        $this->BuildObj->Arr = array(
+            array('Name' =>'TableName', 'Desc' => '选择数据表',  'Type' => 'select', 'Data' => $TableKv, 'Value' => $TableArr[0]['Tables_in_qcms'], 'Required' => 1, 'Col' => 6),
+            array('Name' =>'Field', 'Desc' => '字段选择', 'Type' => 'select', 'Data' => array(), 'Value' => '0', 'Required' => 1, 'Col' => 6),
+            array('Name' =>'Search', 'Desc' => '将字符',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 12, 'Placeholder' => '*请输入替换前的内容'),
+            array('Name' =>'Replace', 'Desc' => '替换成',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 12, 'Placeholder' => '*请输入替换后的内容'),
+            
+        );
+        $this->BuildObj->Form('post', 'form-row');
+        $this->LoadView('admin/data/highReplace');
     }
     
 }

@@ -612,10 +612,10 @@ class Build {
         if($this->IsEdit || $this->IsDel || !empty($v['BtnArr'])) $str .= '<th scope="col">操作</th>';
         $str .= '</tr></thead><tbody>';
         foreach($arr as $k => $v){
-            $str .= '<tr class="'.$v['TrClass'].'">';
+            $str .= '<tr class="'.$v['TrClass'].' '.(($this->TableSelectIndex == $k) ? 'table-success' : '').'">';
             foreach($keyArr as $sk => $sv){
                 $Pre = isset($sv['Pre']) ? $sv['Pre'] : '';
-                //var_dump($sv);
+                $Td = empty($sv['Td']) ? 'td' : $sv['Td'];
                 switch ($sv['Type']){
                     case 'Date':
                         $str .= '<td style="'.$sv['Style'].'">'.date('Y-m-d', $v[$sk]).'</td>';break;
@@ -635,7 +635,7 @@ class Build {
                               </span></td>';
                         break;
                     default:
-                        $str .= '<td style="'.$sv['Style'].'">'.$Pre.$v[$sk].'</td>';break;
+                        $str .= '<'.$Td.' style="'.$sv['Style'].'">'.$Pre.$v[$sk].'</'.$Td.'>';break;
                 }
             }
             if($this->IsEdit || $this->IsDel || !empty($v['BtnArr'])){
