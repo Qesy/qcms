@@ -44,6 +44,14 @@ class RedisKey {
 	    return self::$s_projectKey.'_Link_Cate_String';
 	}
 	
+	public static function Inlink_Cate_String(){
+	    return self::$s_projectKey.'_Inlink_Cate_String';
+	}
+	
+	public static function Inlink_All_String(){ //所有内链
+	    return self::$s_projectKey.'_Inlink_All_String';
+	}
+	
 	public static function Page_Cate_String(){
 	    return self::$s_projectKey.'_Page_Cate_String';
 	}

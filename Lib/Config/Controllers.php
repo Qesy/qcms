@@ -27,6 +27,19 @@ class ControllersAdmin extends Controllers {
     public $MenuArr = array();
     public $RoleMenuArr = array();
     public $BreadCrumb = array();
+    public $FieldArr = array(
+        'input' => '单行文本',
+        'textarea' => '多行文本',
+        'editor' => 'HTML富文本',
+        'number' => '整数类型',
+        'money' => '金额类型',
+        'date' => '日期类型',
+        'datetime' => '时间类型',
+        'upload' => '上传图片类型',
+        'select' => 'Option下拉框',
+        'radio' => '单选框',
+        'checkbox' => '多选框',
+    );
     function __construct(){
         parent::__construct();
         $Token = $this->CookieObj->get('Token', 'User');
@@ -105,13 +118,30 @@ class ControllersAdmin extends Controllers {
             'admin/linkCate/add' => array('Name' => '增加友情链接分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'linkCate', 'add'))),
             'admin/linkCate/edit' => array('Name' => '修改友情链接分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'linkCate', 'edit'))),
             'admin/linkCate/del' => array('Name' => '删除友情链接分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'linkCate', 'del'))),
-            'admin/link/index' => array('Name' => '友情链接管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'link', 'index'))),
+            'admin/link/index' => array('Name' => '友情链接', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'link', 'index'))),
             'admin/link/add' => array('Name' => '添加友情链接', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'link', 'add'))),
             'admin/link/edit' => array('Name' => '修改友情链接', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'link', 'edit'))),
             'admin/link/del' => array('Name' => '删除友情链接', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'link', 'del'))),
+            'admin/inlinkCate/index' => array('Name' => '内联分类管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'inlinkCate', 'index'))),
+            'admin/inlinkCate/add' => array('Name' => '添加内联分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'inlinkCate', 'add'))),
+            'admin/inlinkCate/edit' => array('Name' => '修改内联分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'inlinkCate', 'edit'))),
+            'admin/inlinkCate/del' => array('Name' => '删除内联分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'inlinkCate', 'del'))),
+            'admin/inlink/index' => array('Name' => '内联管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'inlink', 'index'))),
+            'admin/inlink/add' => array('Name' => '添加内联', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'inlink', 'add'))),
+            'admin/inlink/edit' => array('Name' => '修改内联', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'inlink', 'edit'))),
+            'admin/inlink/del' => array('Name' => '删除内联', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'inlink', 'del'))),
+            
             'admin/file/index' => array('Name' => '附件管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'file', 'index'))),
             
-            //辅助插件
+            //数据维护
+            'admin/form/index' => array('Name' => '自定义表单', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'form', 'index'))),
+            'admin/form/add' => array('Name' => '添加自定义表单', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'form', 'add'))),
+            'admin/form/edit' => array('Name' => '修改自定义表单', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'form', 'edit'))),
+            'admin/form/del' => array('Name' => '删除自定义表单', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'form', 'del'))),
+            'admin/formField/index' => array('Name' => '字段管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'formField', 'index'))),
+            'admin/formField/add' => array('Name' => '添加字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'formField', 'add'))),
+            'admin/formField/edit' => array('Name' => '修改字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'formField', 'edit'))),
+            'admin/formField/del' => array('Name' => '删除字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'formField', 'del'))),
             'admin/data/replace' => array('Name' => '批量替换', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'data', 'replace'))),
             'admin/data/highReplace' => array('Name' => '高级替换', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'data', 'highReplace'))),
             
@@ -158,13 +188,15 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/user/index'),
                 array('Key' => 'admin/groupUser/index'),
             )),
-            array('Key' => 'admin/data', 'subCont' => array(), 'Icon' => 'bi bi-tools', 'Sub' => array(
+            array('Key' => 'admin/data', 'subCont' => array('data', 'form'), 'Icon' => 'bi bi-tools', 'Sub' => array(
+                array('Key' => 'admin/form/index'),
                 array('Key' => 'admin/data/replace'),
                 array('Key' => 'admin/data/highReplace'),
             )),
-            array('Key' => 'admin/assist', 'subCont' => array('linkCate', 'link', 'file'), 'Icon' => 'bi bi-columns-gap', 'Sub' => array(
+            array('Key' => 'admin/assist', 'subCont' => array('linkCate', 'link', 'inlinkCate', 'inlink', 'file'), 'Icon' => 'bi bi-columns-gap', 'Sub' => array(
                 //array('Key' => 'admin/linkCate/index'),
                 array('Key' => 'admin/link/index'),
+                array('Key' => 'admin/inlink/index'),
                 array('Key' => 'admin/file/index'),
             )),
             array('Key' => 'index/adminLogout', 'subCont' => array('signout'), 'Icon' => 'bi bi-box-arrow-right'),
@@ -187,10 +219,7 @@ class ControllersAdmin extends Controllers {
         $MenuRs = $this->MenuArr[$Key];        
         if(!in_array($UserRs['GroupAdminId'], $MenuRs['Permission'])) $this->CommonObj->Err('没有权限');
         $this->PageTitle = $MenuRs['Name'];
-        $this->PageTitle2 = '<div class="tab-struct custom-tab-1">
-                <ul role="tablist" class="nav nav-tabs">
-                    <li class="active"><a class="tabBnt" href="#" data-index="0">'.$MenuRs['Name'].'</a></li>
-                </ul></div>';
+        $this->PageTitle2 = $this->BuildObj->FormTitle($MenuRs['Name']);
 
         foreach($this->RoleMenuArr as $v){
             if(in_array(Router::$s_Controller, $v['subCont'])){

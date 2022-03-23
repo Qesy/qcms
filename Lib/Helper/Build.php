@@ -61,6 +61,13 @@ class Build {
         return '<div class="tab-struct custom-tab-1"><ul role="tablist" class="nav nav-tabs">'.implode(PHP_EOL, $NavArr).'</ul></div>';
     }
     
+    public function FormTitle($Str){
+        return '<div class="tab-struct custom-tab-1">
+                <ul role="tablist" class="nav nav-tabs">
+                    <li class="active"><a class="tabBnt" href="#" data-index="0">'.$Str.'</a></li>
+                </ul></div>';
+    }
+    
     public function FormMultiple($Method = 'POST', $Class = '', $ExtHtml = ''){ //多页签表单
         $Arr = $this->Arr;
         $Html = '';
