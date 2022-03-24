@@ -20,8 +20,8 @@ class User extends ControllersAdmin {
             $Arr[$k]['TsLastView'] = empty($v['TsLast']) ? '未登录' : date('Y-m-d H:i', $v['TsLast']);
             $Arr[$k]['IpLastView'] = empty($v['IpLast']) ? '未登录' : $v['IpLast'];
             $Arr[$k]['BtnArr'] = array(
-                array('Name' => '文档', 'Link' => '#', 'Color' => 'success'),
-                array('Name' => '提升', 'Link' => $this->CommonObj->Url(array('admin', 'user', 'upgrade')), 'Color' => 'danger', 'IsDisabled' => $v['IsAdmin']),
+                array('Desc' => '文档', 'Link' => '#', 'Color' => 'success'),
+                array('Desc' => '提升', 'Link' => $this->CommonObj->Url(array('admin', 'user', 'upgrade')), 'Color' => 'danger', 'IsDisabled' => $v['IsAdmin']),
             );
         }
         $KeyArr = array(

@@ -7,7 +7,7 @@ class GroupUser extends ControllersAdmin {
         foreach($Arr as $k => $v){
             $Arr[$k]['IsEdit'] = $Arr[$k]['IsDel'] = ($v['IsSys'] == 1) ? 2 : 1;
             $Arr[$k]['BtnArr'] = array(
-                array('Name' => '组用户', 'Link' => $this->CommonObj->Url(array('admin', 'user', 'index')), 'Color' => 'success'),
+                array('Desc' => '组用户', 'Link' => $this->CommonObj->Url(array('admin', 'user', 'index')), 'Color' => 'success'),
             );
         }
         $KeyArr = array(

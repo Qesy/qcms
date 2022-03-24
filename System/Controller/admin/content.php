@@ -35,7 +35,7 @@ class Content extends ControllersAdmin {
             $Arr[$k]['StateView'] = $this->StateArr[$v['State']];
             $Arr[$k]['TitleView'] = '<span class="'.($v['IsBold'] == 2 ? '' : 'font-weight-bold').'">'.$v['Title'].'</span>'.$AttrStr;
             $Arr[$k]['BtnArr'] = array(
-                array('Name' => '预览', 'Color' => 'success'),                
+                array('Desc' => '预览', 'Color' => 'success'),                
             );
         }
         $KeyArr = array(
@@ -352,8 +352,8 @@ class Content extends ControllersAdmin {
             $Arr[$k]['StateView'] = $this->StateArr[$v['State']];
             $Arr[$k]['TitleView'] = '<span class="'.($v['IsBold'] == 2 ? '' : 'font-weight-bold').'">'.$v['Title'].'</span>'.$AttrStr;
             $Arr[$k]['BtnArr'] = array(
-                array('Name' => '查看', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'view')) ),
-                array('Name' => '还原', 'Color' => 'primary', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'restore')) ),
+                array('Desc' => '查看', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'view')) ),
+                array('Desc' => '还原', 'Color' => 'primary', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'restore')) ),
                 //array('Name' => '彻底删除', 'Color' => 'danger', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'view')) ),
             );
         }

@@ -23,10 +23,10 @@ class Category extends ControllersAdmin {
             $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
             $Arr[$k]['UserLevel'] = '<span class="text-secondary">开放浏览</span>';
             $Arr[$k]['BtnArr'] = array(
-                array('Name' => '预览', 'Color' => 'success'),
-                array('Name' => '内容', 'Color' => 'success', 'IsDisabled' => ($v['IsLink'] == 1 || $v['IsPost'] != 1) ? '1' : '2'),
-                array('Name' => '加子类', 'Link' => $this->CommonObj->Url(array('admin', 'category', 'add'))),
-                array('Name' => '移动', 'Link' => $this->CommonObj->Url(array('admin', 'category', 'move'))),                
+                array('Desc' => '预览', 'Color' => 'success'),
+                array('Desc' => '内容', 'Color' => 'success', 'IsDisabled' => ($v['IsLink'] == 1 || $v['IsPost'] != 1) ? '1' : '2'),
+                array('Desc' => '加子类', 'Link' => $this->CommonObj->Url(array('admin', 'category', 'add'))),
+                array('Desc' => '移动', 'Link' => $this->CommonObj->Url(array('admin', 'category', 'move'))),                
             );
             if($Level < $v['Level']){
                 $Level = $v['Level'];
