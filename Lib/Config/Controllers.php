@@ -138,6 +138,7 @@ class ControllersAdmin extends Controllers {
             'admin/form/add' => array('Name' => '添加自定义表单', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'form', 'add'))),
             'admin/form/edit' => array('Name' => '修改自定义表单', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'form', 'edit'))),
             'admin/form/del' => array('Name' => '删除自定义表单', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'form', 'del'))),
+            'admin/form/code' => array('Name' => '获取表单代码', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'form', 'code'))),
             'admin/formField/index' => array('Name' => '字段管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'formField', 'index'))),
             'admin/formField/add' => array('Name' => '添加字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'formField', 'add'))),
             'admin/formField/edit' => array('Name' => '修改字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'formField', 'edit'))),
@@ -188,7 +189,7 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/user/index'),
                 array('Key' => 'admin/groupUser/index'),
             )),
-            array('Key' => 'admin/data', 'subCont' => array('data', 'form'), 'Icon' => 'bi bi-tools', 'Sub' => array(
+            array('Key' => 'admin/data', 'subCont' => array('data', 'form', 'formField'), 'Icon' => 'bi bi-tools', 'Sub' => array(
                 array('Key' => 'admin/form/index'),
                 array('Key' => 'admin/data/replace'),
                 array('Key' => 'admin/data/highReplace'),

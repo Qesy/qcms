@@ -49,7 +49,7 @@
                         <div class="panel panel-default card-view" >
                             <div class="panel-heading mb-3 pb-2 d-flex justify-content-between align-items-center border-bottom">
 
-<h5 class="txt-dark"><?=$this->PageTitle?></h5>
+<h5 class="txt-dark"><?=$this->PageTitle2?></h5>
 
 
 

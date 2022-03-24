@@ -557,10 +557,8 @@ class Build {
         }
         $Class = ($this->FormStyle == 2) ? '' : 'col-'.$SubCol.'  col-lg-'.$Col;
         return '<div class="form-group '.$Class.'">
-                        <label for="Input_'.$Name.'" class="'.(($this->FormStyle == 2) ? 'mr-2' : '').' mb-1">'.$Desc.'</label>'.$RequiredViewStr.'
-                        <input type="'.$Type.'" '.$Disabled.' class="form-control '.(($this->FormStyle == 2) ? 'form-control-sm' : '').'" name="'.$Name.'" id="Input_'.$Name.'" placeholder="'.$Placeholder.'" value="'.$Value.'" '.$RequiredStr.'>
-                        
-                    </div>';
+        <label for="Input_'.$Name.'" class="'.(($this->FormStyle == 2) ? 'mr-2' : '').' mb-1">'.$Desc.'</label>'.$RequiredViewStr.'
+        <input type="'.$Type.'" '.$Disabled.' class="form-control '.(($this->FormStyle == 2) ? 'form-control-sm' : '').'" name="'.$Name.'" id="Input_'.$Name.'" placeholder="'.$Placeholder.'" value="'.$Value.'" '.$RequiredStr.'>'.PHP_EOL.'</div>';
     }
     
     private function _ColorInput($Name, $Desc, $Value, $Col, $Type = 'text', $IsDisabled = 0, $Placeholder = '', $Required = 0){ //输入框
@@ -670,7 +668,9 @@ class Build {
                 if(!empty($v['BtnArr'])){
                     foreach($v['BtnArr'] as $Btn){
                         $BtnColor = isset($Btn['Color']) ? $Btn['Color'] : 'primary';
-                        $ActArr[] = (isset($Btn['IsDisabled']) && $Btn['IsDisabled'] == 1) ? '<a class="btn btn-sm btn-'.$BtnColor.' mr-2 disabled" href="javascript:void(0);" >'.$Btn['Name'].'</a>' : '<a class="btn btn-sm mr-2 btn-'.$BtnColor.'" href="'.$Btn['Link'].'?'.http_build_query($_GET).'">'.$Btn['Name'].'</a>';
+                        $Link = (empty($Btn['Link']) || $Btn['Link'] == '#') ? 'javascript:void(0);' : $Btn['Link'].'?'.http_build_query($_GET);
+                        $Disabled = (isset($Btn['IsDisabled']) && $Btn['IsDisabled'] == 1) ? 'disabled' : '';
+                        $ActArr[] = '<a class="btn btn-sm mr-2 btn-'.$BtnColor.' '.$Disabled.' table_btn_'.$Btn['Name'].'" href="'.$Link.'">'.$Btn['Desc'].'</a>';
                     }
                 }
                 if($this->IsEdit) $ActArr[] = (isset($v['IsEdit']) && $v['IsEdit'] != 1) ? '<a class="btn btn-sm btn-primary mr-2 disabled" href="javascript:void(0);">'.$this->NameEdit.'</a>' : '<a class="btn btn-sm btn-primary mr-2" href="'.$this->LinkEdit.'?'.http_build_query($_GET).'">'.$this->NameEdit.'</a>';

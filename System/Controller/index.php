@@ -16,6 +16,32 @@ class Index extends Controllers {
 	    $this->CommonObj->ExecScript('document.writeln("'.$this->CommonObj->Html2Js($Rs['Content']).'");');exit;
 	}
 	
+	public function form_Action(){
+	    if(!$this->VeriObj->VeriPara($_GET, array('KeyName'))) $this->Err(1001);
+	    $Rs = $this->Sys_formObj->getOne(trim($_GET['KeyName']));
+	    if(empty($Rs)) $this->Err(1003);
+	    if($Rs['State'] != 1) $this->Err(1003);
+	    $DbConfig = DbConfig();
+	    if(!empty($_POST)){
+	        $InsertArr = array('TsAdd' =>time(), 'State' => $Rs['StateDefault']);
+	        if($Rs['IsLogin'] == 1){
+	            if(empty($_POST['Token'])) $this->Err(1007); 
+	            $TokenRs= $this->TokenObj->getOne(trim($_POST['Token']));
+	            if(empty($TokenRs)) $this->Err(1007); 
+	            $InsertArr['UserId'] = $TokenRs['UserId'];
+	        }
+	        $FieldArr = empty($Rs['FieldJson']) ? array() : json_decode($Rs['FieldJson'], true);	
+	        foreach($FieldArr as $v){
+	            $InsertArr[$v['Name']] = $_POST[$v['Name']];
+	        }
+	        $Ret = $this->Sys_formObj->SetTbName('form_'.$Rs['KeyName'])->SetInsert($InsertArr)->ExecInsert();
+	        if($Ret === false) $this->Err(1002);
+	        if(isset($_SERVER['HTTP_REFERER'])) $this->CommonObj->ExecScript('alert("提交成功");location.href="'.$_SERVER['HTTP_REFERER'].'";');
+	        $this->CommonObj->ExecScript('alert("提交成功"); history.back();');
+	    }
+	    $this->ApiErr(1001);
+	}
+	
 	public function admin_Action(){ //管理员登录
 	    if(!empty($_POST)){
 	        if(!$this->VeriObj->VeriPara($_POST, array('Phone', 'Password', 'VCode'))) $this->Err(1001);

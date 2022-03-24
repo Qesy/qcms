@@ -11,12 +11,13 @@ class Form extends ControllersAdmin {
         $Arr = $this->Sys_formObj->SetCond($CondArr)->SetLimit($Limit)->SetSort(array('Sort' => 'ASC', 'FormId' => 'ASC'))->ExecSelectAll($Count);
         foreach($Arr as $k => $v){
             $Arr[$k]['KeyNameView'] = '<input class="form-control" disabled="disabled" type="text" value="{{Label:'.$v['KeyName'].'}}"/>';
-            $Arr[$k]['Url'] = '<input class="form-control" disabled="disabled" type="text" value="'.$_SERVER['REQUEST_SCHEME'].'://'.URL_DOMAIN.'/index/form?KeyName='.$v['KeyName'].'"/>';
+            //$Arr[$k]['Url'] = '<input class="form-control" disabled="disabled" type="text" value="'.$_SERVER['REQUEST_SCHEME'].'://'.URL_DOMAIN.'/index/form?KeyName='.$v['KeyName'].'"/>';
             $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
             $Arr[$k]['IsLoginView'] = ($v['IsLogin'] == 1) ? '需登录' : '无需登录';
             $Arr[$k]['StateDefaultView'] = ($v['StateDefault'] == 1) ? '已审核' : '未审核';
             $Arr[$k]['BtnArr'] = array(
-                array('Name' => '字段管理', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'formField', 'index'))),
+                array('Desc' => '字段管理', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'formField', 'index'))),
+                array('Desc' => '获取代码', 'Color' => 'info', 'Link' => $this->CommonObj->Url(array('admin', 'form', 'code'))),
             );
         }
         $KeyArr = array(
@@ -24,7 +25,7 @@ class Form extends ControllersAdmin {
             'Name' => array('Name' => '标签名', 'Td' => 'th'),
             'IsLoginView' => array('Name' => '是否需登录', 'Td' => 'th'),
             'StateDefaultView' => array('Name' => '数据默认状态', 'Td' => 'th'),
-            'Url' => array('Name' => '访问地址', 'Td' => 'th', 'Style' => 'width:400px;'),
+            //'Url' => array('Name' => '访问地址', 'Td' => 'th', 'Style' => 'width:400px;'),
             'State' => array('Name' => '状态', 'Td' => 'th', 'Type' => 'Switch'),
             'SortView' => array('Name' => '排序', 'Td' => 'th', 'Style' => 'width:100px;'),
             
@@ -61,7 +62,7 @@ class Form extends ControllersAdmin {
                 $FieldArr[] = '`UserId` bigint(20) NOT NULL DEFAULT \'0\' COMMENT \'\','.PHP_EOL;
                 $FieldArr[] = '`State` tinyint(3) NOT NULL DEFAULT \'2\' COMMENT \'\','.PHP_EOL;
                 $FieldArr[] = '`TsAdd` bigint(20) NOT NULL DEFAULT \'0\' COMMENT \'\','.PHP_EOL;
-                $TableSql = 'CREATE TABLE `'.$DbConfig['Prefix'].'_form_'.$_POST['KeyName'].'` ( '.PHP_EOL.implode('', $FieldArr).' PRIMARY KEY (`FormId`)) ENGINE=InnoDB AUTO_INCREMENT=10000 DEFAULT CHARSET=utf8 COMMENT=\'\';';
+                $TableSql = 'CREATE TABLE `'.$DbConfig['Prefix'].'form_'.$_POST['KeyName'].'` ( '.PHP_EOL.implode('', $FieldArr).' PRIMARY KEY (`FormId`)) ENGINE=InnoDB AUTO_INCREMENT=10000 DEFAULT CHARSET=utf8 COMMENT=\'\';';
                 if ($this->SysObj->exec($TableSql, array()) === false) throw new PDOException(self::lang(1025));
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
@@ -85,9 +86,8 @@ class Form extends ControllersAdmin {
     
     public function edit_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('FormId'))) $this->Err(1001);
-        $Rs = $this->Sys_formObj->getOne($_GET['FormId']);
-        if(empty($Rs)) $this->Err(1003);
-        
+        $Rs = $this->Sys_formObj->SetCond(array('FormId' => $_GET['FormId']))->ExecSelectOne();
+        if(empty($Rs)) $this->Err(1003);        
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name', 'TempDetail', 'IsLogin', 'StateDefault'))) $this->Err(1001);
             $Ret = $this->Sys_formObj->SetCond(array('FormId' => $Rs['FormId']))->SetUpdate(array(
@@ -97,7 +97,8 @@ class Form extends ControllersAdmin {
                 'StateDefault' => $_POST['StateDefault'],
             ))->ExecUpdate();
             if($Ret === false) $this->Err(1002);
-            $this->Sys_formObj->clean($Rs['FormId']);
+            //$this->Sys_formObj->clean($Rs['FormId']);
+            $this->Sys_formObj->clean($Rs['KeyName']);
             $this->Jump(array('admin', 'form', 'index'), 1888);
         }
         $TempList = $this->getTemplate('form_');
@@ -115,24 +116,39 @@ class Form extends ControllersAdmin {
     
     public function del_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('FormId'))) $this->Err(1001);
-        $Rs = $this->Sys_formObj->getOne($_GET['FormId']);
+        $Rs = $this->Sys_formObj->SetCond(array('FormId' => $_GET['FormId']))->ExecSelectOne();
         if(empty($Rs)) $this->Err(1003);
         $DbConfig = DbConfig();
-        $Count = $this->Sys_formObj->SetTbName('form_'.$Rs['KeyName'])->SetField('COUNT(*) AS c')->ExecSelectOne();
-        if($Count['c'] > 0) $this->Err(1050);
+        $TableArr = $this->TableObj->query('show tables', array());
+        $TableNameArr = array_column($TableArr, 'Tables_in_'.$DbConfig['Name']);
+        if(in_array($DbConfig['Prefix'].'form_'.$Rs['KeyName'], $TableNameArr)){
+            $Count = $this->Sys_formObj->SetTbName('form_'.$Rs['KeyName'])->SetField('COUNT(*) AS c')->ExecSelectOne();
+            if($Count['c'] > 0) $this->Err(1050);
+        }        
         try{
-            DB::$s_db_obj->beginTransaction();            
-            $this->SysObj->exec('DROP TABLE IF EXISTS `'.$DbConfig['Prefix'].'form_'.$Rs['KeyName'].'`;', array()); //删除原有表
+            DB::$s_db_obj->beginTransaction();   
+            if(in_array($DbConfig['Prefix'].'form_'.$Rs['KeyName'], $TableNameArr)){
+                $this->SysObj->exec('DROP TABLE IF EXISTS `'.$DbConfig['Prefix'].'form_'.$Rs['KeyName'].'`;', array()); //删除原有表
+            }
             $this->Sys_formObj->SetCond(array('FormId' => $Rs['FormId']))->ExecDelete();
             DB::$s_db_obj->commit();
         }catch (PDOException $e){
             DB::$s_db_obj->rollBack();
             $this->Err(1002);
         }
-        $this->Sys_formObj->clean($Rs['FormId']);
+        //$this->Sys_formObj->clean($Rs['FormId']);
+        $this->Sys_formObj->clean($Rs['KeyName']);
         $this->Jump(array('admin', 'form', 'index'), 1888);
     }
     
+    public function code_Action(){
+        if(!$this->VeriObj->VeriPara($_GET, array('FormId'))) $this->Err(1001);
+        $Rs = $this->Sys_formObj->SetCond(array('FormId' => $_GET['FormId']))->ExecSelectOne();
+        if(empty($Rs)) $this->Err(1003);
+        $Rs['FieldJson'] = json_decode($Rs['FieldJson'], true);
+        $tmp['Rs'] = $Rs;        
+        $this->LoadView('admin/form/code', $tmp);
+    }
 
     
 }

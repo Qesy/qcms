@@ -47,32 +47,40 @@
                 <div class="row" style="min-height: 600px;">
 <div class="col-sm-12">
                         <div class="panel panel-default card-view" >
-                            <div class="panel-heading mb-3 d-flex justify-content-between align-items-center">
+                            <div class="panel-heading mb-3 pb-2 d-flex justify-content-between align-items-center border-bottom">
 
 <h5 class="txt-dark"><?=$this->PageTitle2?></h5>
-                                    <span ><?
-        if($this->BuildObj->IsAdd){
-        ?>
-        <a href="<?=$this->BuildObj->LinkAdd?>" class="btn btn-primary btn-sm"><?=$this->BuildObj->NameAdd?></a>
-      <? } ?>
-      <?
-      foreach($this->BuildObj->TableTopBtnArr as $v){
-        echo '<a href="'.$v['Link'].'" class="btn btn-'.$v['Class'].' btn-sm ml-2">'.$v['Name'].'</a>';
-      }
-      ?></span>
+<a href="<?=$this->CommonObj->url(array('admin', 'form', 'index'))?>" class="btn btn-primary btn-sm">返回</a>
 
+<?
+$Html = '<form method="post" action="'.$_SERVER['REQUEST_SCHEME'].'://'.URL_DOMAIN.'/index/form.html?KeyName='.$Rs['KeyName'].'">';
+
+foreach($Rs['FieldJson'] as $v){
+    $FormRs = array('Name' => $v['Name'], 'Desc' => $v['Comment'],  'Type' => $v['Type'], 'Value' => $v['Content'], 'Required' => $v['NotNull'], 'Col' => 12);
+    $Result = $this->BuildObj->FormOne($FormRs);
+$Html .= $Result['Html'].PHP_EOL;
+}
+$Result = $this->BuildObj->FormOne(array('Desc' => '提交', 'Type' => 'button', 'ButtonType' => 'submit', 'Col' => 12));
+$Html .= $Result['Html'];
+
+$Html .= '</form>'
+?>
 
                             </div>
                             <div class="panel-wrapper ">
                                 <div class="panel-body">
-                                    <div class="table-wrap">
-                                        <div class="table-responsive">
-                                            <div id="myTable_wrapper" class="table table-hover  mb-0 no-footer"><div id="myTable_filter" class="dataTables_filter"></div>
-                                                <?=$this->HeadHtml?>
-                                                <?=$Table?>
-                                            </div>
+                                    <div class="row">
+                                        <div class="col-6">
+                                            <h5 class="mb-2">获取代码</h5>
+                                            <div class="border p-3"><textarea class="form-control" rows="20"><?= htmlentities($Html)?></textarea></div>
+                                        </div>
+
+                                        <div class="col-6">
+                                            <h5 class="mb-2">表单演示</h5>
+                                            <div class="border p-3"><?=$Html?></div>
                                         </div>
                                     </div>
+
                                 </div>
                             </div>
                         </div>

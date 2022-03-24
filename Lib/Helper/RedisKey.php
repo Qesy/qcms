@@ -63,5 +63,9 @@ class RedisKey {
 	public static function Label_RS_HM($KeyName){
 	    return self::$s_projectKey.'_Label_RS_HM_'.$KeyName;
 	}
+	
+	public static function Sys_Form_RS_HM($KeyName){
+	    return self::$s_projectKey.'_Sys_Form_RS_HM_'.$KeyName;
+	}
 
 }
