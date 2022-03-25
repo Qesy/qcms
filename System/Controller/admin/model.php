@@ -94,9 +94,11 @@ class Model extends ControllersAdmin {
         $DbConfig = DbConfig();
         $TableArr = $this->TableObj->query('show tables', array());
         $TableNameArr = array_column($TableArr, 'Tables_in_'.$DbConfig['Name']);
-        if(in_array($DbConfig['Prefix'].'form_'.$Rs['KeyName'], $TableNameArr)){
-            $Count = $this->Sys_formObj->SetTbName('table_'.$Rs['KeyName'])->SetField('COUNT(*) AS c')->ExecSelectOne();
+        if(in_array($DbConfig['Prefix'].'table_'.$Rs['KeyName'], $TableNameArr)){
+            $Count = $this->Sys_modelObj->SetTbName('table_'.$Rs['KeyName'])->SetField('COUNT(*) AS c')->ExecSelectOne();
             if($Count['c'] > 0) $this->Err(1050);
+            $HaveCate = $this->CategoryObj->SetCond(array('ModelId' => $Rs['ModelId']))->SetField('COUNT(*) AS c')->ExecSelectOne();
+            if($HaveCate['c'] > 0) $this->Err(1050);
         }      
         
         try{

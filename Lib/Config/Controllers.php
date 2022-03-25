@@ -139,6 +139,11 @@ class ControllersAdmin extends Controllers {
             'admin/model/edit' => array('Name' => '修改模型', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'model', 'edit'))),
             'admin/model/del' => array('Name' => '删除模型', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'model', 'del'))),
             
+            'admin/modelField/index' => array('Name' => '字段管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'modelField', 'index'))),
+            'admin/modelField/add' => array('Name' => '添加字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'modelField', 'add'))),
+            'admin/modelField/edit' => array('Name' => '修改字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'modelField', 'edit'))),
+            'admin/modelField/del' => array('Name' => '删除字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'modelField', 'del'))),
+            
             'admin/form/index' => array('Name' => '自定义表单', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'form', 'index'))),
             'admin/form/add' => array('Name' => '添加自定义表单', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'form', 'add'))),
             'admin/form/edit' => array('Name' => '修改自定义表单', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'form', 'edit'))),
@@ -194,7 +199,7 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/user/index'),
                 array('Key' => 'admin/groupUser/index'),
             )),
-            array('Key' => 'admin/data', 'subCont' => array('data', 'form', 'formField', 'model'), 'Icon' => 'bi bi-tools', 'Sub' => array(
+            array('Key' => 'admin/data', 'subCont' => array('data', 'form', 'formField', 'model', 'modelField'), 'Icon' => 'bi bi-tools', 'Sub' => array(
                 array('Key' => 'admin/model/index'),
                 array('Key' => 'admin/form/index'),
                 array('Key' => 'admin/data/replace'),
