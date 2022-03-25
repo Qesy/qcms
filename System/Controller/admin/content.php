@@ -51,6 +51,9 @@ class Content extends ControllersAdmin {
             'TsUpdateView' => array('Name' => '更新时间', 'Td' => 'th'),
             'NickName' => array('Name' => '发布人', 'Td' => 'th'),
         );
+        $this->BuildObj->TableTopBtnArr = array(
+            array('Name' => 'Recycle', 'Desc' => '回收站', 'Class' => 'primary', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'recovery')).'?'.http_build_query($_GET))
+        );
         $this->BuildObj->PrimaryKey = 'Id';
         //$this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
@@ -61,6 +64,8 @@ class Content extends ControllersAdmin {
     public function add_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('ModelId'))) $this->Err(1001);
         $ModelRs = $this->Sys_modelObj->getOne($_GET['ModelId']);
+        $FieldArr = empty($ModelRs['FieldJson']) ? array() : json_decode($ModelRs['FieldJson'], true);
+        
         if(empty($ModelRs)) $this->Err(1001);
         $Ts = time();
         if(!empty($_POST)){
@@ -75,9 +80,10 @@ class Content extends ControllersAdmin {
                 $IsSpuerRec = isset($_POST['Attr2']['IsSpuerRec']) ? 1 : 2;
                 $IsHeadlines = isset($_POST['Attr2']['IsHeadlines']) ? 1 : 2;
                 $IsRec = isset($_POST['Attr2']['IsRec']) ? 1 : 2;
-
+                $this->TableObj->SetInsert(array('ModelId' => $ModelRs['ModelId']))->ExecInsert();
+                $InsertId = $this->TableObj->last_insert_id();
                 $InsetArr = array(
-                    'ModelId' => $ModelRs['ModelId'],
+                    'Id' => $InsertId,
                     'CateId' => intval($_POST['CateId']),
                     'Title' => trim($_POST['Title']),
                     'STitle' => trim($_POST['STitle']),
@@ -98,6 +104,7 @@ class Content extends ControllersAdmin {
                     'Color' => trim($_POST['Color']),
                     'UserId' => $this->LoginUserRs['UserId'],
                     'State' => $State,
+                    'Content' => trim($_POST['Content']),
                     'IsPost' => $IsPost,
                     'IsLink' => $IsLink,
                     'IsBold' => $IsBold,
@@ -106,11 +113,7 @@ class Content extends ControllersAdmin {
                     'IsHeadlines' => $IsHeadlines,
                     'IsRec' => $IsRec,
                 );
-                $this->TableObj->SetInsert($InsetArr)->ExecInsert();
-                $InsertId = $this->TableObj->last_insert_id();
-                $Insert2Arr = array('Id' => $InsertId, 'Content' => trim($_POST['Content']));
-                $this->Table_articleObj->SetTbName('table_'.$ModelRs['NameKey']) ->SetInsert($Insert2Arr)->ExecInsert();
-
+                $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetInsert($InsetArr)->ExecInsert();
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
                 DB::$s_db_obj->rollBack();
@@ -170,9 +173,13 @@ class Content extends ControllersAdmin {
 
                 )
             ),
-
         );
-
+        foreach($FieldArr as $v){
+            $Data = explode('|', $v['Data']);
+            $Row = in_array($v['Type'], array('editor', 'textarea')) ? 12 : 3;
+            $this->BuildObj->Arr[0]['Form'][] = array('Name' => $v['Name'], 'Desc' => $v['Comment'],  'Type' => $v['Type'], 'Data' => $Data, 'Value' => $v['Content'], 'Required' => $v['NotNull'], 'Col' => $Row);
+        }        
+        
         $this->PageTitle2 = $this->BuildObj->FormMultipleTitle();
         $this->BuildObj->FormMultiple('post', 'form-row');
         $this->LoadView('admin/common/edit');
@@ -180,10 +187,12 @@ class Content extends ControllersAdmin {
 
     public function edit_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Id'))) $this->Err(1001);
-        $Rs = $this->TableObj->SetCond(array('Id' => $_GET['Id']))->ExecSelectOne();
+        $TableRs = $this->TableObj->getOne($_GET['Id']);
+        $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
+
+        if(empty($ModelRs)) $this->Err(1001);
+        $Rs = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $_GET['Id']))->ExecSelectOne();
         if(empty($Rs)) $this->Err(1003);
-        $_GET['ModelId'] = $Rs['ModelId'];
-        $ModelRs = $this->Sys_modelObj->getOne($_GET['ModelId']);
         $Ts = time();
 
         if(!empty($_POST)){
@@ -220,6 +229,7 @@ class Content extends ControllersAdmin {
                     'Color' => trim($_POST['Color']),
                     'UserId' => $this->LoginUserRs['UserId'],
                     'State' => $State,
+                    'Content' => trim($_POST['Content']),
                     'IsPost' => $IsPost,
                     'IsLink' => $IsLink,
                     'IsBold' => $IsBold,
@@ -228,9 +238,7 @@ class Content extends ControllersAdmin {
                     'IsHeadlines' => $IsHeadlines,
                     'IsRec' => $IsRec,
                 );
-                $this->TableObj->SetCond(array('Id' => $Rs['Id']))->SetUpdate($InsetArr)->ExecUpdate();
-                $Insert2Arr = array('Content' => trim($_POST['Content']));
-                $this->Table_articleObj->SetTbName('table_'.$ModelRs['NameKey']) ->SetCond(array('Id' => $Rs['Id']))->SetUpdate($Insert2Arr)->ExecUpdate();
+                $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Rs['Id']))->SetUpdate($InsetArr)->ExecUpdate();                
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
                 DB::$s_db_obj->rollBack();
@@ -238,9 +246,6 @@ class Content extends ControllersAdmin {
             }
             $this->Jump(array('admin', 'content', 'index'));
         }
-
-
-        $ContentRs = $this->Table_articleObj->SetTbName('table_'.$ModelRs['NameKey'])->SetCond(array('Id' => $Rs['Id']))->ExecSelectOne();
 
         $this->CategoryObj->CateSelectId = $Rs['CateId'];
         $this->CategoryObj->getTreeModelSelectHtml($ModelRs['ModelId']);
@@ -273,7 +278,7 @@ class Content extends ControllersAdmin {
                     array('Name' =>'STitle', 'Desc' => '短标题',  'Type' => 'input', 'Value' => $Rs['STitle'], 'Required' => 0, 'Col' => 3),
                     array('Name' =>'Attr', 'Desc' => '属性',  'Type' => 'checkbox', 'Data' => $AttrArr, 'Value' => implode('|', $AttrValArr), 'Required' => 0, 'Col' => 3),
                     array('Name' =>'Pic', 'Desc' => '图片',  'Type' => 'upload', 'Value' => $Rs['Pic'], 'Required' => 0, 'Col' => 12),
-                    array('Name' =>'Content', 'Desc' => '内容详情',  'Type' => 'editor', 'Value' => $ContentRs['Content'], 'Required' => 0, 'Col' => 12),
+                    array('Name' =>'Content', 'Desc' => '内容详情',  'Type' => 'editor', 'Value' => $Rs['Content'], 'Required' => 0, 'Col' => 12),
                     array('Name' =>'LinkUrl', 'Desc' => '外链地址',  'Type' => 'hidden', 'Value' => $Rs['LinkUrl'], 'Required' => 0, 'Col' => 12),
                 )
             ),
@@ -310,26 +315,29 @@ class Content extends ControllersAdmin {
     }
 
     public function del_Action(){
-        if(!$this->VeriObj->VeriPara($_GET, array('ModelId', 'Id'))) $this->Err(1001);
-        $ModelRs = $this->Sys_modelObj->getOne($_GET['ModelId']);
+        if(!$this->VeriObj->VeriPara($_GET, array('Id'))) $this->Err(1001);
+        $TableRs = $this->TableObj->getOne($_GET['Id']);
+        $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
         if(empty($ModelRs)) $this->Err(1001);
         $Ts = time();
-        $Rs = $this->TableObj->SetCond(array('Id' => $_GET['Id']))->ExecSelectOne();
+        $Rs = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $_GET['Id']))->ExecSelectOne();
         if(empty($Rs)) $this->Err(1003);
-        $Ret = $this->TableObj->SetCond(array('Id' => $Rs['Id']))->SetUpdate(array('IsDelete' => 1))->ExecUpdate();
+        $Ret = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Rs['Id']))->SetUpdate(array('IsDelete' => 1))->ExecUpdate();
         if($Ret === false) $this->Err(1002);
         $this->Jump(array('admin', 'content', 'index'));
     }
 
     public function recovery_Action(){
-
+        if(!$this->VeriObj->VeriPara($_GET, array('ModelId'))) $this->Err(1001);
+        $ModelRs = $this->Sys_modelObj->getOne($_GET['ModelId']);
+        if(empty($ModelRs)) $this->Err(1052);
         $Page = intval($_GET['Page']);
         if($Page < 1) $Page = 1;
         $Count = 0;
         $Limit = array(($Page-1)*$this->PageNum, $this->PageNum);
         $CondArr = array('IsDelete' => 1);
 
-        $Arr = $this->TableObj->SetCond($CondArr)->SetLimit($Limit)->SetSort(array('Sort' => 'ASC', 'Id' => 'Desc'))->ExecSelectAll($Count);
+        $Arr = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond($CondArr)->SetLimit($Limit)->SetSort(array('Sort' => 'ASC', 'Id' => 'Desc'))->ExecSelectAll($Count);
         $CateArr = $this->CategoryObj->SetCond(array('CateId' => array_column($Arr, 'CateId')))->SetField('CateId, Name')->ExecSelect();
         $CateKV = array_column($CateArr, 'Name', 'CateId');
 
@@ -380,13 +388,12 @@ class Content extends ControllersAdmin {
 
     public function view_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Id'))) $this->Err(1001);
-        $Rs = $this->TableObj->SetCond(array('Id' => $_GET['Id']))->ExecSelectOne();
-        if(empty($Rs)) $this->Err(1003);
-        $_GET['ModelId'] = $Rs['ModelId'];
-        $ModelRs = $this->Sys_modelObj->getOne($_GET['ModelId']);
+        $TableRs = $this->TableObj->getOne($_GET['Id']);
+        $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);        
+        if(empty($ModelRs)) $this->Err(1001);
+        $Rs = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $_GET['Id']))->ExecSelectOne();
+        if(empty($Rs)) $this->Err(1003);        
         $Ts = time();
-
-        $ContentRs = $this->Table_articleObj->SetTbName('table_'.$ModelRs['NameKey'])->SetCond(array('Id' => $Rs['Id']))->ExecSelectOne();
 
         $this->CategoryObj->CateSelectId = $Rs['CateId'];
         $this->CategoryObj->getTreeModelSelectHtml($ModelRs['ModelId']);
@@ -419,7 +426,7 @@ class Content extends ControllersAdmin {
                     array('Name' =>'STitle', 'Desc' => '短标题',  'Type' => 'input', 'Value' => $Rs['STitle'], 'Required' => 0, 'Col' => 3),
                     array('Name' =>'Attr', 'Desc' => '属性',  'Type' => 'checkbox', 'Data' => $AttrArr, 'Value' => implode('|', $AttrValArr), 'Required' => 0, 'Col' => 3),
                     array('Name' =>'Pic', 'Desc' => '图片',  'Type' => 'upload', 'Value' => $Rs['Pic'], 'Required' => 0, 'Col' => 12),
-                    array('Name' =>'Content', 'Desc' => '内容详情',  'Type' => 'editor', 'Value' => $ContentRs['Content'], 'Required' => 0, 'Col' => 12),
+                    array('Name' =>'Content', 'Desc' => '内容详情',  'Type' => 'editor', 'Value' => $Rs['Content'], 'Required' => 0, 'Col' => 12),
                     array('Name' =>'LinkUrl', 'Desc' => '外链地址',  'Type' => 'hidden', 'Value' => $Rs['LinkUrl'], 'Required' => 0, 'Col' => 12),
                 )
             ),
@@ -459,22 +466,34 @@ class Content extends ControllersAdmin {
 
     public function restore_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Id'))) $this->Err(1001);
-
-        $Rs = $this->TableObj->SetCond(array('Id' => $_GET['Id']))->ExecSelectOne();
+        $TableRs = $this->TableObj->getOne($_GET['Id']);
+        $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
+        if(empty($ModelRs)) $this->Err(1001);
+        $Rs = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $_GET['Id']))->ExecSelectOne();
         if(empty($Rs)) $this->Err(1003);
-        $_GET['ModelId'] = $Rs['ModelId'];
-        $Ret = $this->TableObj->SetCond(array('Id' => $Rs['Id']))->SetUpdate(array('IsDelete' => 2))->ExecUpdate();
+        $_GET['ModelId'] = $ModelRs['ModelId'];
+        $Ret = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Rs['Id']))->SetUpdate(array('IsDelete' => 2))->ExecUpdate();
         if($Ret === false) $this->Err(1002);
         $this->Jump(array('admin', 'content', 'recovery'));
     }
 
     public function tDelete_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Id'))) $this->Err(1001);
-        $Rs = $this->TableObj->SetCond(array('Id' => $_GET['Id']))->ExecSelectOne();
+        $TableRs = $this->TableObj->getOne($_GET['Id']);
+        $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
+        $Rs = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $TableRs['Id']))->ExecSelectOne();
         if(empty($Rs)) $this->Err(1003);
-        $_GET['ModelId'] = $Rs['ModelId'];
-        $Ret = $this->TableObj->SetCond(array('Id' => $Rs['Id']))->ExecDelete();
-        if($Ret === false) $this->Err(1002);
+        $_GET['ModelId'] = $ModelRs['ModelId'];
+        try{
+            DB::$s_db_obj->beginTransaction();
+            $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Rs['Id']))->ExecDelete();
+            $this->TableObj->SetCond(array('Id' => $Rs['Id']))->ExecDelete();
+            DB::$s_db_obj->commit();
+        }catch (PDOException $e){
+            DB::$s_db_obj->rollBack();
+            $this->Err(1002);
+        }
+
         $this->Jump(array('admin', 'content', 'recovery'));
     }
 }

@@ -34,7 +34,7 @@ class Model extends ControllersAdmin {
                 DB::$s_db_obj->beginTransaction();
                 $this->Sys_modelObj->SetInsert(array('Name' => trim($_POST['Name']), 'KeyName' => trim($_POST['KeyName'])))->ExecInsert();
                 
-                $FieldStr = "`Id` bigint(20) NOT NULL AUTO_INCREMENT,  
+                $FieldStr = "`Id` bigint(20) NOT NULL DEFAULT '0',  
                   `CateId` int(11) NOT NULL DEFAULT '0',
                   `Title` varchar(100) NOT NULL DEFAULT '',
                   `STitle` varchar(60) NOT NULL DEFAULT '' COMMENT '短标题',

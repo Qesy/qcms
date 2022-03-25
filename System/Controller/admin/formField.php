@@ -39,7 +39,7 @@ class FormField extends ControllersAdmin {
             $NameArr = array_column($Arr, 'Name');
             if(in_array(trim($_POST['Name']), $NameArr)) $this->Err(1004);
             $DbConfig = DbConfig();
-            $AddField = array('Name' => trim($_POST['Name']), 'Comment' => trim($_POST['Comment']), 'Type' => trim($_POST['Type']), 'Content' => trim($_POST['Content']), 'NotNull' => $_POST['NotNull']);
+            $AddField = array('Name' => trim($_POST['Name']), 'Comment' => trim($_POST['Comment']), 'Type' => trim($_POST['Type']), 'Content' => trim($_POST['Content']), 'NotNull' => $_POST['NotNull'], 'Data' => trim($_POST['Data']));
             $Arr[] = $AddField;
             $FieldType = 'varchar(255)';
             $FieldDefault = "DEFAULT ''";
@@ -73,6 +73,7 @@ class FormField extends ControllersAdmin {
             array('Name' =>'Comment', 'Desc' => '字段说明',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
             array('Name' =>'Name', 'Desc' => '字段名 (只能英文和数字)',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 3),
             array('Name' =>'Type', 'Desc' => '字段类型',  'Type' => 'select', 'Data' => $this->FieldArr, 'Value' => 'input', 'Required' => 1, 'Col' => 3),
+            array('Name' =>'Data', 'Desc' => '选择值(数据类型为select、radio、checkbox 时填写)',  'Type' => 'input', 'Value' => '', 'Required' => 0, 'Col' => 12),
             array('Name' =>'Content', 'Desc' => '默认值',  'Type' => 'textarea', 'Value' => '', 'Required' => 0, 'Col' => 12, 'Row' => 4, 'Class' => 'Content'),
             array('Name' =>'NotNull', 'Desc' => '不能为空',  'Type' => 'radio', 'Data' => $this->IsArr, 'Value' => '1', 'Required' => 0, 'Col' => 12, 'Row' => 4, 'Class' => 'Content'),
         );
@@ -95,7 +96,7 @@ class FormField extends ControllersAdmin {
         $DbConfig = DbConfig();
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Comment', 'Type'))) $this->Err(1001);
-            $AddField = array('Name' => trim($FieldRs['Name']), 'Comment' => trim($_POST['Comment']), 'Type' => trim($_POST['Type']), 'Content' => trim($_POST['Content']), 'NotNull' => $_POST['NotNull']);
+            $AddField = array('Name' => trim($FieldRs['Name']), 'Comment' => trim($_POST['Comment']), 'Type' => trim($_POST['Type']), 'Content' => trim($_POST['Content']), 'NotNull' => $_POST['NotNull'], 'Data' => trim($_POST['Data']));
             $Arr[$Index] = $AddField;
             $FieldType = 'varchar(255)';
             $FieldDefault = "DEFAULT ''";
@@ -128,8 +129,8 @@ class FormField extends ControllersAdmin {
         $this->BuildObj->Arr = array(
             array('Name' =>'Comment', 'Desc' => '字段说明',  'Type' => 'input', 'Value' => $FieldRs['Comment'], 'Required' => 1, 'Col' => 6),
             array('Name' =>'Name', 'Desc' => '字段名 (只能英文和数字)',  'Type' => 'input', 'Value' => $FieldRs['Name'], 'Disabled' => 1, 'Col' => 3),
-
-            array('Name' =>'Type', 'Desc' => '字段类型',  'Type' => 'select', 'Data' => $this->FieldArr, 'Value' => $FieldRs['Type'], 'Required' => 1, 'Col' => 3),
+            array('Name' =>'Type', 'Desc' => '字段类型',  'Type' => 'select', 'Data' => $this->FieldArr, 'Value' => $FieldRs['Type'], 'Required' => 1, 'Col' => 3),            
+            array('Name' =>'Data', 'Desc' => '选择值(数据类型为select、radio、checkbox 时填写)',  'Type' => 'input', 'Value' => $FieldRs['Data'], 'Required' => 0, 'Col' => 12),array('Name' =>'Content', 'Desc' => '默认值',  'Type' => 'textarea', 'Value' => $FieldRs['Content'], 'Required' => 0, 'Col' => 12, 'Row' => 4, 'Class' => 'Content'),
             array('Name' =>'Content', 'Desc' => '默认值',  'Type' => 'textarea', 'Value' => $FieldRs['Content'], 'Required' => 0, 'Col' => 12, 'Row' => 4, 'Class' => 'Content'),
             array('Name' =>'NotNull', 'Desc' => '不能为空',  'Type' => 'radio', 'Data' => $this->IsArr, 'Value' => $FieldRs['NotNull'], 'Required' => 0, 'Col' => 12, 'Row' => 4, 'Class' => 'Content'),
 

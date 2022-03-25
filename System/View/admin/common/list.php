@@ -57,7 +57,7 @@
       <? } ?>
       <?
       foreach($this->BuildObj->TableTopBtnArr as $v){
-        echo '<a href="'.$v['Link'].'" class="btn btn-'.$v['Class'].' btn-sm ml-2">'.$v['Name'].'</a>';
+        echo '<a href="'.$v['Link'].'" class="btn btn-'.$v['Class'].' btn-sm ml-2 table_top_'.$v['Name'].'">'.$v['Desc'].'</a>';
       }
       ?></span>
 

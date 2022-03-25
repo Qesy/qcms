@@ -23,11 +23,13 @@ $(function(){
         $('#Key_'+Index).siblings().addClass('d-none');
     })
     if($('.Input_Editor').length >0 ){
-        EditorCreate('.Input_Editor');
+        $.each($('.Input_Editor'), function(k, v){
+            EditorCreate(this)
+        })
     }
     $('#Button_Editor').click(function(){
         if(!IsEditorCreat){
-            EditorCreate('#Input_Content');
+            EditorCreate(document.querySelector('#Input_Content'));
             $(this).removeClass('btn-success').addClass('btn-default').html('卸载编辑器')
         }else{
             EditorDestroy();
@@ -125,7 +127,8 @@ function EditorDestroy(){
 
 function EditorCreate(Dom){
     IsEditorCreat = true;
-    ClassicEditor.create( document.querySelector( Dom ), {
+    //ClassicEditor.create( document.querySelector( Dom ), {
+    ClassicEditor.create( Dom, {
     toolbar: {
       items: [
         'heading',

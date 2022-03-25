@@ -92,7 +92,7 @@ class Build {
         if(!$this->FormMultipleMerge) $this->Html .= '<form method="'.$Method.'" class="BuildForm '.$Class.'">';
         foreach($this->Arr as $k => $v){
             if(empty($v['Col']) && $Class != 'form-inline') $v['Col'] = 12;
-            $v['Required'] = empty($v['Required']) ? 0 : 1;
+            $v['Required'] = !isset($v['Required']) ? 2 : $v['Required'];
             switch ($v['Type']){
                 case 'formgroup':
                     $this->Html .= self::_FromGroup($v['Col'], $v['Desc']); break;
@@ -295,7 +295,7 @@ class Build {
     private function _FormRadio($Name, $Desc, $Value, $DataArr = array(),  $Col, $IsDisabled = 0, $Required = 0){
         $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
         $RequiredViewStr = $RequiredStr = '';
-        if(!empty($Required)){
+        if($Required == 1){
             $RequiredStr = 'required="required"';
             $RequiredViewStr = '<span class="text-danger ml-2" style="font-weight: 900;">*</span>';
         }
@@ -312,7 +312,7 @@ class Build {
         $ValueArr = explode('|', $Value);
         $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
         $RequiredViewStr = $RequiredStr = '';
-        if(!empty($Required)){
+        if($Required == 1){
             $RequiredStr = 'required="required"';
             $RequiredViewStr = '<span class="text-danger ml-2" style="font-weight: 900;">*</span>';
         }
@@ -346,7 +346,7 @@ class Build {
         if(empty($Placeholder)) $Placeholder =  '请输入'.$Name  ;
         $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
         $RequiredViewStr = $RequiredStr = '';
-        if(!empty($Required)){
+        if($Required == 1){
             $RequiredStr = 'required="required"';
             $RequiredViewStr = '<span class="text-danger ml-2" style="font-weight: 900;">*</span>';
         }
@@ -407,7 +407,7 @@ class Build {
         $Disabled = ($IsDisabled) ? 'disabled="disabled"' : '';
         if(empty($Placeholder)) $Placeholder =  '请输入'.$Desc  ;
         $RequiredViewStr = $RequiredStr = '';
-        if(!empty($Required)){
+        if($Required == 1){
             $RequiredStr = 'required="required"';
             $RequiredViewStr = '<span class="text-danger ml-2" style="font-weight: 900;">*</span>';
         }
@@ -491,7 +491,7 @@ class Build {
         $Disabled = ($IsDisabled) ? 'disabled="disabled"' : '';
         if(empty($Placeholder)) $Placeholder =  '请输入'.$Name  ;
         $RequiredViewStr = $RequiredStr = '';
-        if(!empty($Required)){
+        if($Required == 1){
             $RequiredStr = 'required="required"';
             $RequiredViewStr = '<span class="text-danger ml-2" style="font-weight: 900;">*</span>';
         }
@@ -546,12 +546,12 @@ class Build {
         return '<div class="form-group '.$Class.'">'.$Desc.'</div>';
     }
     
-    private function _FromInput($Name, $Desc, $Value, $Col, $Type = 'text', $IsDisabled = 0, $Placeholder = '', $Required = 0){ //输入框
+    private function _FromInput($Name, $Desc, $Value, $Col, $Type = 'text', $IsDisabled = 0, $Placeholder = '', $Required = 2){ //输入框
         $Disabled = ($IsDisabled) ? 'disabled="disabled"' : '';
         if(empty($Placeholder)) $Placeholder =  '请输入'.$Desc  ;
         $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
         $RequiredViewStr = $RequiredStr = '';
-        if(!empty($Required)){
+        if($Required == 1){
             $RequiredStr = 'required="required"';
             $RequiredViewStr = '<span class="text-danger ml-2" style="font-weight: 900;">*</span>';
         }
@@ -566,7 +566,7 @@ class Build {
         if(empty($Placeholder)) $Placeholder =  '请输入'.$Desc  ;
         $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
         $RequiredViewStr = $RequiredStr = '';
-        if(!empty($Required)){
+        if($Required == 1){
             $RequiredStr = 'required="required"';
             $RequiredViewStr = '<span class="text-danger ml-2" style="font-weight: 900;">*</span>';
         }
@@ -585,7 +585,7 @@ class Build {
         $Disabled = ($IsDisabled) ? 'disabled="disabled"' : '';
         if(empty($Placeholder)) $Placeholder =  '请输入'.$Desc  ;
         $RequiredViewStr = $RequiredStr = '';
-        if(!empty($Required)){
+        if($Required == 1){
             $RequiredStr = 'required="required"';
             $RequiredViewStr = '<span class="text-danger ml-2" style="font-weight: 900;">*</span>';
         }
@@ -611,7 +611,7 @@ class Build {
         $Disabled = ($IsDisabled) ? 'disabled="disabled"' : '';
         if(empty($Placeholder)) $Placeholder =  '请输入'.$Desc  ;
         $RequiredViewStr = $RequiredStr = '';
-        if(!empty($Required)){
+        if($Required == 1){
             $RequiredStr = 'required="required"';
             $RequiredViewStr = '<span class="text-danger ml-2" style="font-weight: 900;">*</span>';
         }
