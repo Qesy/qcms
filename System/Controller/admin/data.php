@@ -12,20 +12,13 @@ class Data extends ControllersAdmin {
 
             try{
                 DB::$s_db_obj->beginTransaction();
-                if($_POST['Field'] == 'Content'){ //附加表
-                    if($_POST['ModelId'] != -1){
-                        $this->Table_articleObj->SetTbName('table_'.$ModelKeyKv[$_POST['ModelId']])->SetUpdate('`Content` = replace (`Content`, \''.$_POST['Search'].'\', \''.$_POST['Replace'].'\')')->ExecUpdate();
-                    }else{
-                        foreach($ModelKeyKv as $k => $v){
-                            $this->Table_articleObj->SetTbName('table_'.$v)->SetUpdate('`Content` = replace (`Content`, \''.$_POST['Search'].'\', \''.$_POST['Replace'].'\')')->ExecUpdate();
-                        }
+                if($_POST['ModelId'] != -1){
+                    $this->Table_articleObj->SetTbName('table_'.$ModelKeyKv[$_POST['ModelId']])->SetUpdate('`'.$_POST['Field'].'` = replace (`'.$_POST['Field'].'`, \''.$_POST['Search'].'\', \''.$_POST['Replace'].'\')')->ExecUpdate();
+                }else{
+                    foreach($ModelKeyKv as $k => $v){
+                        $this->Table_articleObj->SetTbName('table_'.$v)->SetUpdate('`'.$_POST['Field'].'` = replace (`'.$_POST['Field'].'`, \''.$_POST['Search'].'\', \''.$_POST['Replace'].'\')')->ExecUpdate();
                     }
-                    
-                }else{ // 主表
-                    $CondArr = array();
-                    if($_POST['ModelId'] != -1) $CondArr['ModelId'] = $_POST['ModelId'];
-                    $this->TableObj->SetCond($CondArr)->SetUpdate('`'.$_POST['Field'].'` = replace (`'.$_POST['Field'].'`, \''.$_POST['Search'].'\', \''.$_POST['Replace'].'\')')->ExecUpdate();
-                }
+                }          
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
                 DB::$s_db_obj->rollBack();
@@ -55,7 +48,7 @@ class Data extends ControllersAdmin {
             if($Ret === false) $this->Err(1002);
             $this->Jump(array('admin', 'data', 'highReplace'), 1888);
         }
-        $TableArr = $this->TableObj->query('show tables', array());
+        $TableArr = $this->SysObj->query('show tables', array());
         $TableKv = array();
         
         foreach($TableArr as $v){            

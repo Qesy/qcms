@@ -1,7 +1,7 @@
 <?php
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class FormField extends ControllersAdmin {
-    
+
     public function index_Action(){ //字段管理
         if(!$this->VeriObj->VeriPara($_GET, array('FormId'))) $this->Err(1001);
         $Rs = $this->Sys_formObj->SetCond(array('FormId' => $_GET['FormId']))->ExecSelectOne();
@@ -25,7 +25,7 @@ class FormField extends ControllersAdmin {
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, '', 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }
-    
+
     public function add_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('FormId'))) $this->Err(1001);
         $Rs = $this->Sys_formObj->SetCond(array('FormId' => $_GET['FormId']))->ExecSelectOne();
@@ -55,7 +55,7 @@ class FormField extends ControllersAdmin {
             }elseif(in_array($AddField['Type'], array('money'))){
                 $FieldType = 'decimal(10,2)';
                 $FieldDefault = "DEFAULT '0.00'";
-            }            
+            }
             try{
                 DB::$s_db_obj->beginTransaction();
                 $this->Sys_formObj->SetCond(array('FormId' => $Rs['FormId']))->SetUpdate(array('FieldJson' => json_encode($Arr)))->ExecUpdate();
@@ -68,21 +68,21 @@ class FormField extends ControllersAdmin {
             $this->Sys_formObj->clean($Rs['KeyName']);
             $this->Jump(array('admin', 'formField', 'index'), 1888);
         }
-        
+
         $this->BuildObj->Arr = array(
             array('Name' =>'Comment', 'Desc' => '字段说明',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
-            array('Name' =>'Name', 'Desc' => '字段名 (只能英文和数字)',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 3),            
+            array('Name' =>'Name', 'Desc' => '字段名 (只能英文和数字)',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 3),
             array('Name' =>'Type', 'Desc' => '字段类型',  'Type' => 'select', 'Data' => $this->FieldArr, 'Value' => 'input', 'Required' => 1, 'Col' => 3),
             array('Name' =>'Content', 'Desc' => '默认值',  'Type' => 'textarea', 'Value' => '', 'Required' => 0, 'Col' => 12, 'Row' => 4, 'Class' => 'Content'),
             array('Name' =>'NotNull', 'Desc' => '不能为空',  'Type' => 'radio', 'Data' => $this->IsArr, 'Value' => '1', 'Required' => 0, 'Col' => 12, 'Row' => 4, 'Class' => 'Content'),
-        );        
+        );
         $this->BuildObj->FormFooterBtnArr = array(
             array('Name' => 'back', 'Desc' => '返回', 'Type' => 'button', 'Class' => 'default'),
         );
         $this->BuildObj->Form('post', 'form-row');
         $this->LoadView('admin/common/edit');
     }
-    
+
     public function edit_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('FormId'))) $this->Err(1001);
         if(!isset($_GET['Index'])) $this->Err(1001);
@@ -111,7 +111,7 @@ class FormField extends ControllersAdmin {
             }elseif(in_array($AddField['Type'], array('money'))){
                 $FieldType = 'decimal(10,2)';
                 $FieldDefault = "DEFAULT '0.00'";
-            }            
+            }
             try{
                 DB::$s_db_obj->beginTransaction();
                 $this->Sys_formObj->SetCond(array('FormId' => $Rs['FormId']))->SetUpdate(array('FieldJson' => json_encode($Arr)))->ExecUpdate();
@@ -124,15 +124,15 @@ class FormField extends ControllersAdmin {
             $this->Sys_formObj->clean($Rs['KeyName']);
             $this->Jump(array('admin', 'formField', 'index'), 1888);
         }
-        $FieldRs = $Arr[$Index];        
+        $FieldRs = $Arr[$Index];
         $this->BuildObj->Arr = array(
             array('Name' =>'Comment', 'Desc' => '字段说明',  'Type' => 'input', 'Value' => $FieldRs['Comment'], 'Required' => 1, 'Col' => 6),
             array('Name' =>'Name', 'Desc' => '字段名 (只能英文和数字)',  'Type' => 'input', 'Value' => $FieldRs['Name'], 'Disabled' => 1, 'Col' => 3),
-            
+
             array('Name' =>'Type', 'Desc' => '字段类型',  'Type' => 'select', 'Data' => $this->FieldArr, 'Value' => $FieldRs['Type'], 'Required' => 1, 'Col' => 3),
             array('Name' =>'Content', 'Desc' => '默认值',  'Type' => 'textarea', 'Value' => $FieldRs['Content'], 'Required' => 0, 'Col' => 12, 'Row' => 4, 'Class' => 'Content'),
             array('Name' =>'NotNull', 'Desc' => '不能为空',  'Type' => 'radio', 'Data' => $this->IsArr, 'Value' => $FieldRs['NotNull'], 'Required' => 0, 'Col' => 12, 'Row' => 4, 'Class' => 'Content'),
-            
+
         );
         $this->BuildObj->FormFooterBtnArr = array(
             array('Name' => 'back', 'Desc' => '返回', 'Type' => 'button', 'Class' => 'default'),
@@ -140,7 +140,7 @@ class FormField extends ControllersAdmin {
         $this->BuildObj->Form('post', 'form-row');
         $this->LoadView('admin/common/edit');
     }
-    
+
     public function del_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('FormId'))) $this->Err(1001);
         if(!isset($_GET['Index'])) $this->Err(1001);
@@ -152,14 +152,14 @@ class FormField extends ControllersAdmin {
         $DbConfig = DbConfig();
         $FieldRs = $Arr[$Index];
         array_splice($Arr, $Index, 1);
-        $FieldArr = $this->TableObj->query('SHOW FULL COLUMNS FROM `'.$DbConfig['Prefix'].'form_'.$Rs['KeyName'].'`', array());
+        $FieldArr = $this->SysObj->query('SHOW FULL COLUMNS FROM `'.$DbConfig['Prefix'].'form_'.$Rs['KeyName'].'`', array());
         $FieldNameArr = array_column($FieldArr, 'Field');
         try{
-            DB::$s_db_obj->beginTransaction();            
+            DB::$s_db_obj->beginTransaction();
             $this->Sys_formObj->SetCond(array('FormId' => $Rs['FormId']))->SetUpdate(array('FieldJson' => json_encode($Arr)))->ExecUpdate();
             if(in_array($FieldRs['Name'], $FieldNameArr)){
                 $this->Sys_formObj->exec('ALTER TABLE `'.$DbConfig['Prefix'].'form_'.$Rs['KeyName'].'` DROP '.$FieldRs['Name'].';', array());
-            }            
+            }
             DB::$s_db_obj->commit();
         }catch(PDOException $e){
             DB::$s_db_obj->rollBack();
@@ -168,5 +168,5 @@ class FormField extends ControllersAdmin {
         $this->Sys_formObj->clean($Rs['KeyName']);
         $this->Jump(array('admin', 'formField', 'index'), 1888);
     }
-    
+
 }

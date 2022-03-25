@@ -1,7 +1,7 @@
 <?php
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class Api extends ControllersAdmin {
-    
+
     public function ajaxUpload_Action(){
         $Ret = $this->UploadObj->upload_file($_FILES['filedata']);
         if($Ret['Code'] != 0) {
@@ -18,7 +18,7 @@ class Api extends ControllersAdmin {
         ))->ExecInsert();
         $this->CommonObj->ApiSuccess($Ret['Url']);
     }
-    
+
     public function ckUpload_Action(){
         $msg = array();
         $Ret = $this->UploadObj->upload_file($_FILES['upload']);
@@ -37,13 +37,13 @@ class Api extends ControllersAdmin {
             'Ext' => $ext,
             'Ts' => time(),
         ))->ExecInsert();
-        
+
         $msg['uploaded'] = true;
         $msg['error'] = array('message' => 'no error');
         $msg['url'] = $Ret['Url'];
         echo json_encode($msg);
     }
-    
+
     public function userState_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Id', 'Status', 'Field'))) $this->ApiErr(1001);
         $DataArr = array($_GET['Field'] => $_GET['Status']);
@@ -53,7 +53,7 @@ class Api extends ControllersAdmin {
         $this->UserObj->clean($_GET['Id']);
         $this->CommonObj->ApiSuccess();
     }
-    
+
     public function linkState_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Id', 'Status', 'Field'))) $this->ApiErr(1001);
         $DataArr = array($_GET['Field'] => $_GET['Status']);
@@ -62,7 +62,7 @@ class Api extends ControllersAdmin {
         $this->LinkObj->clean($_GET['Id']);
         $this->CommonObj->ApiSuccess();
     }
-    
+
     public function pageState_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Id', 'Status', 'Field'))) $this->ApiErr(1001);
         $DataArr = array($_GET['Field'] => $_GET['Status']);
@@ -71,7 +71,7 @@ class Api extends ControllersAdmin {
         $this->PageObj->clean($_GET['Id']);
         $this->CommonObj->ApiSuccess();
     }
-    
+
     public function labelState_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Id', 'Status', 'Field'))) $this->ApiErr(1001);
         $DataArr = array($_GET['Field'] => $_GET['Status']);
@@ -81,11 +81,11 @@ class Api extends ControllersAdmin {
         $this->LabelObj->clean($Rs['KeyName']);
         $this->CommonObj->ApiSuccess();
     }
-    
+
     public function tableField_Action(){ //获取表字段
         if(!$this->VeriObj->VeriPara($_POST, array('TableName'))) $this->ApiErr(1001);
-        $FieldArr = $this->TableObj->query('SHOW FULL COLUMNS FROM '.$_POST['TableName'], array());
+        $FieldArr = $this->SysObj->query('SHOW FULL COLUMNS FROM '.$_POST['TableName'], array());
         $this->ApiSuccess($FieldArr);
     }
-    
+
 }

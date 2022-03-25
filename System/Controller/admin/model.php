@@ -33,10 +33,39 @@ class Model extends ControllersAdmin {
             try{
                 DB::$s_db_obj->beginTransaction();
                 $this->Sys_modelObj->SetInsert(array('Name' => trim($_POST['Name']), 'KeyName' => trim($_POST['KeyName'])))->ExecInsert();
-                $FieldArr = array();
-                $FieldArr[] = '`Id` bigint(20) NOT NULL COMMENT \'\','.PHP_EOL;
-                $FieldArr[] = '`Content` text COMMENT \'\','.PHP_EOL;
-                $TableSql = 'CREATE TABLE `'.$DbConfig['Prefix'].'table_'.$_POST['KeyName'].'` ( '.PHP_EOL.implode('', $FieldArr).' PRIMARY KEY (`Id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=\'\';';
+                
+                $FieldStr = "`Id` bigint(20) NOT NULL AUTO_INCREMENT,  
+                  `CateId` int(11) NOT NULL DEFAULT '0',
+                  `Title` varchar(100) NOT NULL DEFAULT '',
+                  `STitle` varchar(60) NOT NULL DEFAULT '' COMMENT '短标题',
+                  `Pic` varchar(255) NOT NULL DEFAULT '' COMMENT '图片',
+                  `Source` varchar(50) NOT NULL DEFAULT '' COMMENT '来源',
+                  `Author` varchar(50) NOT NULL DEFAULT '' COMMENT '作者',
+                  `Sort` tinyint(3) NOT NULL DEFAULT '99',
+                  `Keywords` varchar(255) NOT NULL DEFAULT '',
+                  `Description` varchar(255) NOT NULL DEFAULT '',
+                  `TsAdd` bigint(20) NOT NULL DEFAULT '0',
+                  `TsUpdate` bigint(20) NOT NULL DEFAULT '0',
+                  `ReadNum` int(11) NOT NULL DEFAULT '0',
+                  `Coins` int(11) NOT NULL DEFAULT '0' COMMENT '需消费金币',
+                  `Money` int(11) NOT NULL DEFAULT '0' COMMENT '支付费用',
+                  `UserLevel` int(11) NOT NULL DEFAULT '0' COMMENT '浏览权限',
+                  `Color` varchar(10) NOT NULL DEFAULT '' COMMENT '颜色',
+                  `UserId` bigint(20) NOT NULL DEFAULT '0',
+                  `Good` int(11) NOT NULL DEFAULT '0',
+                  `Bad` int(11) NOT NULL DEFAULT '0',
+                  `State` tinyint(3) NOT NULL DEFAULT '1',
+                  `Content` text,
+                  `IsLink` tinyint(3) NOT NULL DEFAULT '2',
+                  `LinkUrl` varchar(255) NOT NULL DEFAULT '' COMMENT '外链地址',
+                  `IsBold` tinyint(3) NOT NULL DEFAULT '2',
+                  `IsPic` tinyint(3) NOT NULL DEFAULT '2' COMMENT '是否有缩略图',
+                  `IsSpuerRec` tinyint(3) NOT NULL DEFAULT '2' COMMENT '是否特推',
+                  `IsHeadlines` tinyint(3) NOT NULL DEFAULT '2' COMMENT '是否头条',
+                  `IsRec` tinyint(3) NOT NULL DEFAULT '2' COMMENT '是否推荐',
+                  `IsPost` tinyint(3) NOT NULL DEFAULT '1' COMMENT '允许评论',
+                  `IsDelete` tinyint(3) NOT NULL DEFAULT '2' COMMENT '是否删除',";
+                $TableSql = 'CREATE TABLE `'.$DbConfig['Prefix'].'table_'.$_POST['KeyName'].'` ( '.PHP_EOL.$FieldStr.' PRIMARY KEY (`Id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=\'\';';
                 $this->SysObj->exec($TableSql, array());
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
@@ -92,7 +121,7 @@ class Model extends ControllersAdmin {
         if(empty($Rs)) $this->Err(1003);
         if($Rs['IsSys'] == 1) $this->Err(1051);
         $DbConfig = DbConfig();
-        $TableArr = $this->TableObj->query('show tables', array());
+        $TableArr = $this->Sys_modelObj->query('show tables', array());
         $TableNameArr = array_column($TableArr, 'Tables_in_'.$DbConfig['Name']);
         if(in_array($DbConfig['Prefix'].'table_'.$Rs['KeyName'], $TableNameArr)){
             $Count = $this->Sys_modelObj->SetTbName('table_'.$Rs['KeyName'])->SetField('COUNT(*) AS c')->ExecSelectOne();

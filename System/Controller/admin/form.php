@@ -1,7 +1,7 @@
 <?php
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class Form extends ControllersAdmin {
-    
+
     public function index_Action(){
         $Page = intval($_GET['Page']);
         if($Page < 1) $Page = 1;
@@ -28,7 +28,7 @@ class Form extends ControllersAdmin {
             //'Url' => array('Name' => '访问地址', 'Td' => 'th', 'Style' => 'width:400px;'),
             'State' => array('Name' => '状态', 'Td' => 'th', 'Type' => 'Switch'),
             'SortView' => array('Name' => '排序', 'Td' => 'th', 'Style' => 'width:100px;'),
-            
+
         );
         $this->BuildObj->PrimaryKey = 'FormId';
 
@@ -38,7 +38,7 @@ class Form extends ControllersAdmin {
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar);
         $this->LoadView('admin/common/list', $tmp);
     }
-    
+
     public function add_Action(){
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name', 'KeyName', 'TempDetail', 'IsLogin', 'StateDefault'))) $this->Err(1001);
@@ -72,22 +72,22 @@ class Form extends ControllersAdmin {
 
             $this->Jump(array('admin', 'form', 'index'), 1888);
         }
-        $TempList = $this->getTemplate('form_');        
+        $TempList = $this->getTemplate('form_');
         $this->BuildObj->Arr = array(
             array('Name' =>'Name', 'Desc' => '表单名字',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
             array('Name' =>'KeyName', 'Desc' => '调用名字 (只能英文和数字)',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
             array('Name' =>'TempDetail', 'Desc' => '表单模板',  'Type' => 'select', 'Data' => $TempList, 'Value' => array_keys($TempList)[0], 'Required' => 1, 'Col' => 12),
             array('Name' =>'IsLogin', 'Desc' => '是否需要登录交',  'Type' => 'radio', 'Data' =>$this->IsArr, 'Value' => '2', 'Required' => 0, 'Col' => 3),
-            array('Name' =>'StateDefault', 'Desc' => '默认已审核',  'Type' => 'radio', 'Data' =>$this->IsArr, 'Value' => '1', 'Required' => 0, 'Col' => 3),      
-        );        
+            array('Name' =>'StateDefault', 'Desc' => '默认已审核',  'Type' => 'radio', 'Data' =>$this->IsArr, 'Value' => '1', 'Required' => 0, 'Col' => 3),
+        );
         $this->BuildObj->Form('post', 'form-row');
         $this->LoadView('admin/common/edit');
     }
-    
+
     public function edit_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('FormId'))) $this->Err(1001);
         $Rs = $this->Sys_formObj->SetCond(array('FormId' => $_GET['FormId']))->ExecSelectOne();
-        if(empty($Rs)) $this->Err(1003);        
+        if(empty($Rs)) $this->Err(1003);
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name', 'TempDetail', 'IsLogin', 'StateDefault'))) $this->Err(1001);
             $Ret = $this->Sys_formObj->SetCond(array('FormId' => $Rs['FormId']))->SetUpdate(array(
@@ -102,7 +102,7 @@ class Form extends ControllersAdmin {
             $this->Jump(array('admin', 'form', 'index'), 1888);
         }
         $TempList = $this->getTemplate('form_');
-        
+
         $this->BuildObj->Arr = array(
             array('Name' =>'Name', 'Desc' => '表单名字',  'Type' => 'input', 'Value' => $Rs['Name'], 'Required' => 1, 'Col' => 6),
             array('Name' =>'KeyName', 'Desc' => '调用名字 (只能英文和数字)',  'Disabled' => 1, 'Type' => 'input', 'Value' => $Rs['KeyName'], 'Required' => 1, 'Col' => 6),
@@ -113,20 +113,20 @@ class Form extends ControllersAdmin {
         $this->BuildObj->Form('post', 'form-row');
         $this->LoadView('admin/common/edit');
     }
-    
+
     public function del_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('FormId'))) $this->Err(1001);
         $Rs = $this->Sys_formObj->SetCond(array('FormId' => $_GET['FormId']))->ExecSelectOne();
         if(empty($Rs)) $this->Err(1003);
         $DbConfig = DbConfig();
-        $TableArr = $this->TableObj->query('show tables', array());
+        $TableArr = $this->SysObj->query('show tables', array());
         $TableNameArr = array_column($TableArr, 'Tables_in_'.$DbConfig['Name']);
         if(in_array($DbConfig['Prefix'].'form_'.$Rs['KeyName'], $TableNameArr)){
             $Count = $this->Sys_formObj->SetTbName('form_'.$Rs['KeyName'])->SetField('COUNT(*) AS c')->ExecSelectOne();
             if($Count['c'] > 0) $this->Err(1050);
-        }        
+        }
         try{
-            DB::$s_db_obj->beginTransaction();   
+            DB::$s_db_obj->beginTransaction();
             if(in_array($DbConfig['Prefix'].'form_'.$Rs['KeyName'], $TableNameArr)){
                 $this->SysObj->exec('DROP TABLE IF EXISTS `'.$DbConfig['Prefix'].'form_'.$Rs['KeyName'].'`;', array()); //删除原有表
             }
@@ -140,15 +140,15 @@ class Form extends ControllersAdmin {
         $this->Sys_formObj->clean($Rs['KeyName']);
         $this->Jump(array('admin', 'form', 'index'), 1888);
     }
-    
+
     public function code_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('FormId'))) $this->Err(1001);
         $Rs = $this->Sys_formObj->SetCond(array('FormId' => $_GET['FormId']))->ExecSelectOne();
         if(empty($Rs)) $this->Err(1003);
         $Rs['FieldJson'] = json_decode($Rs['FieldJson'], true);
-        $tmp['Rs'] = $Rs;        
+        $tmp['Rs'] = $Rs;
         $this->LoadView('admin/form/code', $tmp);
     }
 
-    
+
 }

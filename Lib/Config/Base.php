@@ -26,7 +26,6 @@ use Model\QC_Sys;
 use Model\QC_Sys_attr;
 use Model\QC_Sys_form;
 use Model\QC_Sys_model;
-use Model\QC_Table;
 use Model\QC_Table_album;
 use Model\QC_Table_article;
 use Model\QC_Table_down;
@@ -73,7 +72,6 @@ abstract class Base {
 	public $Sys_attrObj;
 	public $Sys_formObj;
 	public $Sys_modelObj;
-	public $TableObj;
 	public $Table_albumObj;
 	public $Table_articleObj;
 	public $Table_downObj;
@@ -116,7 +114,6 @@ abstract class Base {
 		$this->Sys_attrObj = QC_Sys_attr::get_instance();
 		$this->Sys_formObj = QC_Sys_form::get_instance();
 		$this->Sys_modelObj = QC_Sys_model::get_instance();
-		$this->TableObj = QC_Table::get_instance();
 		$this->Table_albumObj = QC_Table_album::get_instance();
 		$this->Table_articleObj = QC_Table_article::get_instance();
 		$this->Table_downObj = QC_Table_down::get_instance();
