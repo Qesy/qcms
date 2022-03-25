@@ -31,13 +31,13 @@ class Page extends ControllersAdmin {
         );
         $this->BuildObj->PrimaryKey = 'PageId';
         $this->BuildObj->TableTopBtnArr = array(
-            array('Name' => '分类管理', 'Link' => $this->CommonObj->Url(array('admin', 'pageCate', 'index'))),
+            array('Desc' => '分类管理', 'Class' => 'primary', 'Link' => $this->CommonObj->Url(array('admin', 'pageCate', 'index'))),
         );
         $this->BuildObj->NameAdd = '添加单页';
         //$this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
         $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'pageState')).'";';
-        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar);
+        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }
     

@@ -30,13 +30,13 @@ class Label extends ControllersAdmin {
         );
         $this->BuildObj->PrimaryKey = 'LabelId';
         $this->BuildObj->TableTopBtnArr = array(
-            array('Name' => '分类管理', 'Link' => $this->CommonObj->Url(array('admin', 'labelCate', 'index'))),
+            array('Desc' => '分类管理', 'Class' => 'primary', 'Link' => $this->CommonObj->Url(array('admin', 'labelCate', 'index'))),
         );
         $this->BuildObj->NameAdd = '添加标签';
         //$this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
         $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'labelState')).'";';
-        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar);
+        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }
     

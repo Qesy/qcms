@@ -178,7 +178,7 @@ class ControllersAdmin extends Controllers {
                 $this->MenuArr[$Key] = array('Name' => $v['Name'].'管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', $mv)), 'Para' => array('ModelId' => $v['ModelId']));
             }            
         }
-        $RoleMenuArr[] = array('Key' => 'admin/content/recovery');
+        //$RoleMenuArr[] = array('Key' => 'admin/content/recovery');
         //var_dump($this->MenuArr);exit;
         $this->RoleMenuArr = array(
             array('Key' => 'admin/index/index', 'subCont' => array('index'), 'Icon' => 'bi bi-house'),

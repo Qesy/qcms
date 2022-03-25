@@ -52,7 +52,7 @@ class Content extends ControllersAdmin {
             'NickName' => array('Name' => '发布人', 'Td' => 'th'),
         );
         $this->BuildObj->TableTopBtnArr = array(
-            array('Name' => 'Recycle', 'Desc' => '回收站', 'Class' => 'primary', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'recovery')).'?'.http_build_query($_GET))
+            array('Name' => 'Recycle', 'Desc' => '回收站', 'Class' => 'default', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'recovery')).'?'.http_build_query($_GET))
         );
         $this->BuildObj->PrimaryKey = 'Id';
         //$this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
@@ -113,10 +113,25 @@ class Content extends ControllersAdmin {
                     'IsHeadlines' => $IsHeadlines,
                     'IsRec' => $IsRec,
                 );
+
+                foreach($FieldArr as $v){
+                    if(is_array($_POST[$v['Name']])){
+                        $_POST[$v['Name']] = implode('|', array_keys($_POST[$v['Name']]));
+                    }elseif($v['Type'] == 'datetime'){
+                        $_POST[$v['Name']] = strtotime($_POST[$v['Name']]);
+                    }else{
+                        $_POST[$v['Name']] = trim($_POST[$v['Name']]);
+                    }
+                    //$_POST[$v['Name']] = is_array($_POST[$v['Name']]) ? implode('|', array_keys($_POST[$v['Name']])) : $_POST[$v['Name']];
+                    if($v['NotNull'] == 1 && empty($_POST[$v['Name']])) $this->Err(1001);
+                    $InsetArr[$v['Name']] = $_POST[$v['Name']];                                       
+                }     
+                
                 $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetInsert($InsetArr)->ExecInsert();
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
                 DB::$s_db_obj->rollBack();
+                
                 $this->Err(1002);
             }
             $this->Jump(array('admin', 'content', 'index'));
@@ -174,10 +189,14 @@ class Content extends ControllersAdmin {
                 )
             ),
         );
-        foreach($FieldArr as $v){
-            $Data = explode('|', $v['Data']);
+        foreach($FieldArr as $v){            
+            $DataArr = array();
+            if(!empty($v['Data'])){
+                $Data = explode('|', $v['Data']);
+                foreach($Data as $sv) $DataArr[$sv] = $sv;
+            }            
             $Row = in_array($v['Type'], array('editor', 'textarea')) ? 12 : 3;
-            $this->BuildObj->Arr[0]['Form'][] = array('Name' => $v['Name'], 'Desc' => $v['Comment'],  'Type' => $v['Type'], 'Data' => $Data, 'Value' => $v['Content'], 'Required' => $v['NotNull'], 'Col' => $Row);
+            $this->BuildObj->Arr[0]['Form'][] = array('Name' => $v['Name'], 'Desc' => $v['Comment'],  'Type' => $v['Type'], 'Data' => $DataArr, 'Value' => $v['Content'], 'Required' => $v['NotNull'], 'Col' => $Row);
         }        
         
         $this->PageTitle2 = $this->BuildObj->FormMultipleTitle();
@@ -189,7 +208,7 @@ class Content extends ControllersAdmin {
         if(!$this->VeriObj->VeriPara($_GET, array('Id'))) $this->Err(1001);
         $TableRs = $this->TableObj->getOne($_GET['Id']);
         $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
-
+        $FieldArr = empty($ModelRs['FieldJson']) ? array() : json_decode($ModelRs['FieldJson'], true);
         if(empty($ModelRs)) $this->Err(1001);
         $Rs = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $_GET['Id']))->ExecSelectOne();
         if(empty($Rs)) $this->Err(1003);
@@ -238,6 +257,21 @@ class Content extends ControllersAdmin {
                     'IsHeadlines' => $IsHeadlines,
                     'IsRec' => $IsRec,
                 );
+                foreach($FieldArr as $v){
+                    if(is_array($_POST[$v['Name']])){
+                        $_POST[$v['Name']] = implode('|', array_keys($_POST[$v['Name']]));
+                    }elseif($v['Type'] == 'datetime'){
+                        $_POST[$v['Name']] = strtotime($_POST[$v['Name']]);
+                    }else{
+                        $_POST[$v['Name']] = trim($_POST[$v['Name']]);
+                    }
+                    //$_POST[$v['Name']] = is_array($_POST[$v['Name']]) ? implode('|', array_keys($_POST[$v['Name']])) : $_POST[$v['Name']];                    
+                    if($v['NotNull'] == 1 && empty($_POST[$v['Name']])) {
+                        $this->Err(1001);
+                    }                    
+                    $InsetArr[$v['Name']] = $_POST[$v['Name']];
+                }   
+                
                 $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Rs['Id']))->SetUpdate($InsetArr)->ExecUpdate();                
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
@@ -308,6 +342,16 @@ class Content extends ControllersAdmin {
             ),
 
         );
+        foreach($FieldArr as $v){
+            $DataArr = array();
+            if(!empty($v['Data'])){
+                $Data = explode('|', $v['Data']);
+                foreach($Data as $sv) $DataArr[$sv] = $sv;
+            }
+            if($v['Type'] == 'datetime') $Rs[$v['Name']] = date('Y-m-d\TH:i');
+            $Row = in_array($v['Type'], array('editor', 'textarea')) ? 12 : 3;
+            $this->BuildObj->Arr[0]['Form'][] = array('Name' => $v['Name'], 'Desc' => $v['Comment'],  'Type' => $v['Type'], 'Data' => $DataArr, 'Value' => $Rs[$v['Name']], 'Required' => $v['NotNull'], 'Col' => $Row);
+        }
 
         $this->PageTitle2 = $this->BuildObj->FormMultipleTitle();
         $this->BuildObj->FormMultiple('post', 'form-row');
@@ -369,6 +413,7 @@ class Content extends ControllersAdmin {
             );
         }
         $KeyArr = array(
+            'Id' => array('Name' => 'ID', 'Td' => 'th'),
             'TitleView' => array('Name' => '标题', 'Td' => 'th'),
             'CateName' => array('Name' => '分类名', 'Td' => 'th'),
             'ReadNum' => array('Name' => '浏览数', 'Td' => 'th'),
@@ -391,6 +436,7 @@ class Content extends ControllersAdmin {
         $TableRs = $this->TableObj->getOne($_GET['Id']);
         $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);        
         if(empty($ModelRs)) $this->Err(1001);
+        $FieldArr = empty($ModelRs['FieldJson']) ? array() : json_decode($ModelRs['FieldJson'], true);
         $Rs = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $_GET['Id']))->ExecSelectOne();
         if(empty($Rs)) $this->Err(1003);        
         $Ts = time();
@@ -456,7 +502,16 @@ class Content extends ControllersAdmin {
             ),
 
         );
-
+        foreach($FieldArr as $v){
+            $DataArr = array();
+            if(!empty($v['Data'])){
+                $Data = explode('|', $v['Data']);
+                foreach($Data as $sv) $DataArr[$sv] = $sv;
+            }
+            if($v['Type'] == 'datetime') $Rs[$v['Name']] = date('Y-m-d\TH:i');
+            $Row = in_array($v['Type'], array('editor', 'textarea')) ? 12 : 3;
+            $this->BuildObj->Arr[0]['Form'][] = array('Name' => $v['Name'], 'Desc' => $v['Comment'],  'Type' => $v['Type'], 'Data' => $DataArr, 'Value' => $Rs[$v['Name']], 'Required' => $v['NotNull'], 'Col' => $Row);
+        }
         $this->PageTitle2 = $this->BuildObj->FormMultipleTitle();
         $this->BuildObj->IsSubmit = false;
         $this->BuildObj->IsBack = true;
