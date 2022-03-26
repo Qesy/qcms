@@ -103,26 +103,18 @@ class Build {
                 case 'select':
                     $this->Html .= self::_FromSelect($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Data'], $v['Disabled'], $v['Required']); break;
                 case 'upload':
-                    list($StrHtml, $StrJs) = self::_FormUpload($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder'], $v['Required']);
-                    $this->Html .= $StrHtml;
-                    $this->Js .= $StrJs;
+                    $this->Html .= self::_FormUpload($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder'], $v['Required']);
                     break;
                 case 'uploadBatch':
-                    list($StrHtml, $StrJs) = self::_FormUploadBatch($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']);
-                    $this->Html .= $StrHtml;
-                    $this->Js .= $StrJs;
+                    $this->Html .= self::_FormUploadBatch($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']);
                     break;
                 case 'slide':
-                    list($StrHtml, $StrJs) = self::_FormSlide($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']);
-                    $this->Html .= $StrHtml;
-                    $this->Js .= $StrJs;
+                    $this->Html .= self::_FormSlide($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']);
                     break;
                 case 'textarea':
                     $this->Html .= self::_FormTextarea($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder'], $v['Required'], $v['Row']); break;
                 case 'editor':
-                    list($StrHtml, $StrJs) = self::_FormEditor($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder'], $v['Required']);
-                    $this->Html .= $StrHtml;
-                    $this->Js .= $StrJs;
+                    $this->Html .= self::_FormEditor($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder'], $v['Required']);
                     break;
                 case 'money':
                     $this->Html .= self::_FromMoney($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']); break;
@@ -189,59 +181,67 @@ class Build {
     }
     
     public function FormOne($v){
-        $Html = $Js = '';
+        $Html = '';
         switch ($v['Type']){
             case 'formgroup':
-                $Html = self::_FromGroup($v['Col'], $v['Desc']); break;
+                $Html = self::_FromGroup($v['Col'], $v['Desc']); 
+                break;
             case 'radio':
-                $Html = self::_FormRadio($v['Name'], $v['Desc'], $v['Value'], $v['Data'], $v['Col'], $v['Disabled']); break;
+                $Html = self::_FormRadio($v['Name'], $v['Desc'], $v['Value'], $v['Data'], $v['Col'], $v['Disabled']); 
+                break;
             case 'checkbox':
-                $Html = self::_FormCheckbox($v['Name'], $v['Desc'], $v['Value'], $v['Data'], $v['Col'], $v['Disabled']); break;
+                $Html = self::_FormCheckbox($v['Name'], $v['Desc'], $v['Value'], $v['Data'], $v['Col'], $v['Disabled']); 
+                break;
             case 'select':
-                $Html = self::_FromSelect($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Data'], $v['Disabled']); break;
+                $Html = self::_FromSelect($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Data'], $v['Disabled']); 
+                break;
             case 'upload':
-                list($StrHtml, $StrJs) = self::_FormUpload($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']);
-                $Html = $StrHtml;
-                $Js = $StrJs;
+                $Html = self::_FormUpload($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']);
                 break;
             case 'slide':
-                list($StrHtml, $StrJs) = self::_FormSlide($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']);
-                $Html = $StrHtml;
-                $Js = $StrJs;
+                $Html = self::_FormSlide($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']);
                 break;
             case 'textarea':
-                $Html = self::_FormTextarea($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'],  $v['Placeholder'], $v['Required'], $v['Placeholder']); break;
+                $Html = self::_FormTextarea($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'],  $v['Placeholder'], $v['Required'], $v['Placeholder']); 
+                break;
             case 'editor':
-                list($StrHtml, $StrJs) = self::_FormEditor($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']);
-                $Html = $StrHtml;
-                $Js = $StrJs;
+                $Html = self::_FormEditor($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']);
                 break;
             case 'money':
-                $Html = self::_FromMoney($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']); break;
+                $Html = self::_FromMoney($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']); 
+                break;
             case 'date':
-                $Html = self::_FromInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], 'date', $v['Disabled'], $v['Placeholder']); break;
+                $Html = self::_FromInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], 'date', $v['Disabled'], $v['Placeholder']); 
+                break;
             case 'password':
-                $Html = self::_FromInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], 'password', $v['Disabled'], $v['Placeholder']); break;
+                $Html = self::_FromInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], 'password', $v['Disabled'], $v['Placeholder']); 
+                break;
             case 'button':
                 if(empty($v['ButtonType'])) $v['ButtonType'] = 'submit';
                 if(empty($v['Class'])) $v['Class'] = 'primary';
-                $Html = self::_FromButton($v['Name'], $v['Desc'], $v['ButtonType'], $v['Col'], $v['Class']);break;
+                $Html = self::_FromButton($v['Name'], $v['Desc'], $v['ButtonType'], $v['Col'], $v['Class']);
+                break;
             case 'link':
                 if(empty($v['Class'])) $v['Class'] = 'primary';
-                $Html = self::_FromLink($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Data'], $v['Class']);break;
+                $Html = self::_FromLink($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Data'], $v['Class']);
+                break;
             case 'html':
                 if(empty($v['Class'])) $v['Class'] = 'primary';
-                $Html = self::_html($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Data'], $v['Class']);break;
+                $Html = self::_html($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Data'], $v['Class']);
+                break;
             case 'hidden':
                 if(empty($v['Class'])) $v['Class'] = 'primary';
-                $Html = self::_Hidden($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Data'], $v['Class']);break;
+                $Html = self::_Hidden($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Data'], $v['Class']);
+                break;
             case 'color':
                 if(empty($v['Class'])) $v['Class'] = 'primary';
-                $Html = self::_ColorInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Data'], $v['Class']);break;
+                $Html = self::_ColorInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Data'], $v['Class']);
+                break;
             default:
-                $Html= self::_FromInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], 'text', $v['Disabled'], $v['Placeholder']); break;
+                $Html= self::_FromInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], 'text', $v['Disabled'], $v['Placeholder']); 
+                break;
         }
-        return array('Html' => $Html, 'Js' => $Js);
+        return $Html;
     }
     
     private function _FromLink($Name, $Desc, $Value, $Col = 12, $Data = '_blank', $Class = 'btn-success ml-2'){ //链接
@@ -364,7 +364,7 @@ class Build {
     private function _FormUploadBatch($Name, $Desc, $Value, $Col, $IsDisabled = 0, $Placeholder = ''){
         $Disabled = ($IsDisabled) ? 'disabled="disabled"' : '';
         if(empty($Placeholder)) $Placeholder =  '请输入'.$Desc  ;
-        $StrHtml = $StrJs = '';
+        $StrHtml = '';
         $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
         $StrHtml .= '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'">
                                     <label for="Input_'.$Name.'"><button type="button" Id="Img_'.$Name.'" class="btn btn-primary btn-sm">上传图片</button>  </label>
@@ -374,33 +374,7 @@ class Build {
                                       </div>
                                     </div>
                                   </div> ';
-        $StrJs .=
-        'UploadBtn["'.$Name.'"] = $("#Img_'.$Name.'");
-	        var valStr = "'.$Value.'";
-	        var SlideArr = (valStr == "") ? [] : valStr.split("|");
-	            SlideListFunc();
-	            console.log(SlideArr);
-            new AjaxUpload(UploadBtn["'.$Name.'"], {
-                action: "'.$this->UploadUrl.'",
-                name: "filedata",
-                onSubmit : function(file, ext){
-                  this.disable();
-                },
-                onComplete: function(file, response){
-                  var jsonArr = JSON.parse(response);
-                  console.log(jsonArr.code)
-                  if(jsonArr.code != 0){
-                    this.enable();
-                    alert(jsonArr.msg);return;
-                  }
-                  window.clearInterval(interval);
-                  this.enable();
-                  SlideArr.push(jsonArr.data.url)
-                  SlideListFunc()
-                  $("#'.$Name.'Input").val(SlideArr.join("|"))
-                }
-            });';
-        return array($StrHtml, $StrJs);
+        return $StrHtml;
     }
     
     private function _FormUpload($Name, $Desc, $Value, $Col, $IsDisabled = 0, $Placeholder = '', $Required = 0){
@@ -411,9 +385,9 @@ class Build {
             $RequiredStr = 'required="required"';
             $RequiredViewStr = '<span class="text-danger ml-2" style="font-weight: 900;">*</span>';
         }
-        $StrHtml = $StrJs = '';
+        $StrHtml = '';
         $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
-        $StrHtml .= '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'">
+        $StrHtml .= '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.' uploadDiv" data="'.$Name.'">
                                     <label for="Input_'.$Name.'">'.$Desc.'</label>'.$RequiredViewStr.'
                                     <div class="input-group">
                                       <input type="text" class="form-control" '.$Disabled.' placeholder="'.$Placeholder.'" name="'.$Name.'" Id="Img_'.$Name.'" value="'.$Value.'" '.$RequiredStr.'>
@@ -425,27 +399,7 @@ class Build {
                                       </span>
                                     </div>
                                   </div> ';
-        $StrJs .= ($IsDisabled) ? '' : 'UploadBtn["'.$Name.'"] = $("#uploadImg_'.$Name.'");
-                            new AjaxUpload(UploadBtn["'.$Name.'"], {
-                              action: "'.$this->UploadUrl.'",
-                              name: "filedata",
-                              onSubmit : function(file, ext){
-                                this.disable();
-                              },
-                              onComplete: function(file, response){
-                                var jsonArr = JSON.parse(response); 
-                                if(jsonArr.Code != 0){
-                                  this.enable();
-                                  alert(jsonArr.Msg);return;
-                                }
-                                window.clearInterval(interval);
-                                this.enable();
-                                $("#Img_'.$Name.'").val(jsonArr.Data)
-                              }
-                          });
-	                       ';
-        $StrJs .= '$("#ViewImg_'.$Name.'").click(function(){ window.open($("#Img_'.$Name.'").val()); });';
-        return array($StrHtml, $StrJs);
+        return $StrHtml;
     }
     
     
@@ -463,28 +417,9 @@ class Build {
                                 <span class="input-group-btn"><button class="btn btn-success" id="uploadImg_'.$Name.'_'.$sk.'" type="button">上传图片</button></span>
                             </div>
                         </div> ';
-            $StrJs .= 'UploadBtn["'.$Name.'_'.$sk.'"] = $("#uploadImg_'.$Name.'_'.$sk.'");
-                new AjaxUpload(UploadBtn["'.$Name.'_'.$sk.'"], {
-                      action: "'.$this->UploadUrl.'",
-                      name: "filedata",
-                      onSubmit : function(file, ext){
-                        this.disable();
-                      },
-                      onComplete: function(file, response){
-                        var jsonArr = JSON.parse(response);
-                        console.log(jsonArr.code)
-                        if(jsonArr.code != 0){
-                          this.enable();
-                          alert(jsonArr.msg);return;
-                        }
-                        window.clearInterval(interval);
-                        this.enable();
-                        $("#Img_'.$Name.'_'.$sk.'").val(jsonArr.data.url)
-                      }
-              });';
         }
         $StrHtml .= '</div>';
-        return array($StrHtml, $StrJs);
+        return $StrHtml;
     }
     
     private function _FormEditor($Name, $Desc, $Value, $Col, $IsDisabled = 0, $Placeholder = '', $Required = 0){ //编辑器
@@ -500,7 +435,7 @@ class Build {
                         <label for="Input_'.$Name.'">'.$Desc.'</label>'.$RequiredViewStr.'
                         <textarea class="form-control Input_Editor" name="'.$Name.'" '.$IsDisabled.' rows="16" id="Input_'.$Name.'" placeholder="'.$Placeholder.'" >'.$Value.'</textarea>
                     </div>';
-        return array($StrHtml);
+        return $StrHtml;
     }
     
     /* 	private function _FormEditor($Name, $Desc, $Value, $Col, $IsDisabled = 0, $Placeholder = ''){ //编辑器

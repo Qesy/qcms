@@ -1,5 +1,7 @@
 
 var IsEditorCreat = false;
+var URL_ROOT = "/";
+var UploadBtn = {}, interval;
 $(function(){
     $('.colorpicker').colorpicker();
 	$('.StateBtn').click(function(){
@@ -37,6 +39,12 @@ $(function(){
 
         }
     })
+    if($('.uploadDiv').length > 0){
+
+        $.each($('.uploadDiv'), function(k, v){
+            CreatUpload($(this).attr('data'))
+        })
+    }
 
 
 })
@@ -48,6 +56,29 @@ var IsSuccess = function(Res){
         return false;
     }
     return true;
+}
+
+function CreatUpload(DomId){
+    console.log("AAA", DomId)
+    UploadBtn[DomId] = $("#uploadImg_"+DomId);
+    new AjaxUpload(UploadBtn[DomId], {
+        action: "/admin/api/ajaxUpload.html",
+        name: "filedata",
+        onSubmit : function(file, ext){
+            this.disable();
+        },
+        onComplete: function(file, response){
+            var jsonArr = JSON.parse(response);
+            if(jsonArr.Code != 0){
+                this.enable();
+                alert(jsonArr.Msg);return;
+            }
+            window.clearInterval(interval);
+            this.enable();
+            $("#Img_"+DomId).val(jsonArr.Data)
+        }
+    });
+    $("#ViewImg_"+DomId).click(function(){ window.open($("#Img_"+DomId).val()); });
 }
 
 function ChartsFull(Title, DomIdStr, Categories, Series){
