@@ -57,11 +57,11 @@ $Html = '<form method="post" action="'.$_SERVER['REQUEST_SCHEME'].'://'.URL_DOMA
 
 foreach($Rs['FieldJson'] as $v){
     $FormRs = array('Name' => $v['Name'], 'Desc' => $v['Comment'],  'Type' => $v['Type'], 'Value' => $v['Content'], 'Required' => $v['NotNull'], 'Col' => 12);
-    $Result = $this->BuildObj->FormOne($FormRs);
-$Html .= $Result['Html'].PHP_EOL;
+    $Html .= $this->BuildObj->FormOne($FormRs).PHP_EOL;
+
 }
-$Result = $this->BuildObj->FormOne(array('Desc' => '提交', 'Type' => 'button', 'ButtonType' => 'submit', 'Col' => 12));
-$Html .= $Result['Html'];
+$Html .= $this->BuildObj->FormOne(array('Desc' => '提交', 'Type' => 'button', 'ButtonType' => 'submit', 'Col' => 12));
+
 
 $Html .= '</form>'
 ?>

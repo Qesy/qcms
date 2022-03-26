@@ -22,6 +22,8 @@ use Model\QC_Log_login;
 use Model\QC_Log_operate;
 use Model\QC_Page;
 use Model\QC_Page_cate;
+use Model\QC_Swiper;
+use Model\QC_Swiper_cate;
 use Model\QC_Sys;
 use Model\QC_Sys_attr;
 use Model\QC_Sys_form;
@@ -69,6 +71,8 @@ abstract class Base {
 	public $Log_operateObj;
 	public $PageObj;
 	public $Page_cateObj;
+	public $SwiperObj;
+	public $Swiper_cateObj;
 	public $SysObj;
 	public $Sys_attrObj;
 	public $Sys_formObj;
@@ -112,6 +116,8 @@ abstract class Base {
 		$this->Log_operateObj = QC_Log_operate::get_instance();
 		$this->PageObj = QC_Page::get_instance();
 		$this->Page_cateObj = QC_Page_cate::get_instance();
+		$this->SwiperObj = QC_Swiper::get_instance();
+		$this->Swiper_cateObj = QC_Swiper_cate::get_instance();
 		$this->SysObj = QC_Sys::get_instance();
 		$this->Sys_attrObj = QC_Sys_attr::get_instance();
 		$this->Sys_formObj = QC_Sys_form::get_instance();

@@ -131,6 +131,15 @@ class ControllersAdmin extends Controllers {
             'admin/inlink/edit' => array('Name' => '修改内联', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'inlink', 'edit'))),
             'admin/inlink/del' => array('Name' => '删除内联', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'inlink', 'del'))),
             
+            'admin/swiperCate/index' => array('Name' => '幻灯片', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiperCate', 'index'))),
+            'admin/swiperCate/add' => array('Name' => '添加幻灯片', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiperCate', 'add'))),
+            'admin/swiperCate/edit' => array('Name' => '修改幻灯片', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiperCate', 'edit'))),
+            'admin/swiperCate/del' => array('Name' => '删除幻灯片', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiperCate', 'del'))),
+            'admin/swiper/index' => array('Name' => '图片管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiper', 'index'))),
+            'admin/swiper/add' => array('Name' => '添加图片', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiper', 'add'))),
+            'admin/swiper/edit' => array('Name' => '修改图片', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiper', 'edit'))),
+            'admin/swiper/del' => array('Name' => '删除图片', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiper', 'del'))),
+            
             'admin/file/index' => array('Name' => '附件管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'file', 'index'))),
             
             //数据维护
@@ -189,9 +198,10 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/log/operate'),
                 array('Key' => 'admin/log/login'),
             )),
-            array('Key' => 'admin/category', 'subCont' => array('category', 'page', 'pageCate', 'labelCate', 'label'), 'Icon' => 'bi bi-list-ol', 'Sub' => array(
+            array('Key' => 'admin/category', 'subCont' => array('category', 'page', 'pageCate', 'labelCate', 'label', 'form', 'formField', ), 'Icon' => 'bi bi-list-ol', 'Sub' => array(
                 array('Key' => 'admin/category/index'),
                 array('Key' => 'admin/page/index'),
+                array('Key' => 'admin/form/index'),
                 array('Key' => 'admin/label/index'),
             )),
             array('Key' => 'admin/content', 'subCont' => array('content'), 'Icon' => 'bi bi-layout-text-sidebar-reverse', 'Sub' => $RoleMenuArr),
@@ -199,9 +209,9 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/user/index'),
                 array('Key' => 'admin/groupUser/index'),
             )),
-            array('Key' => 'admin/data', 'subCont' => array('data', 'form', 'formField', 'model', 'modelField'), 'Icon' => 'bi bi-tools', 'Sub' => array(
+            array('Key' => 'admin/data', 'subCont' => array('data', 'model', 'modelField'), 'Icon' => 'bi bi-tools', 'Sub' => array(
                 array('Key' => 'admin/model/index'),
-                array('Key' => 'admin/form/index'),
+                
                 array('Key' => 'admin/data/replace'),
                 array('Key' => 'admin/data/highReplace'),
             )),
@@ -209,6 +219,7 @@ class ControllersAdmin extends Controllers {
                 //array('Key' => 'admin/linkCate/index'),
                 array('Key' => 'admin/link/index'),
                 array('Key' => 'admin/inlink/index'),
+                array('Key' => 'admin/swiperCate/index'),
                 array('Key' => 'admin/file/index'),
             )),
             array('Key' => 'index/adminLogout', 'subCont' => array('signout'), 'Icon' => 'bi bi-box-arrow-right'),
