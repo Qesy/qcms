@@ -38,6 +38,7 @@ class Model extends ControllersAdmin {
                   `CateId` int(11) NOT NULL DEFAULT '0',
                   `Title` varchar(100) NOT NULL DEFAULT '',
                   `STitle` varchar(60) NOT NULL DEFAULT '' COMMENT '短标题',
+                  `Tag` varchar(100) NOT NULL DEFAULT '' COMMENT 'Tag',
                   `Pic` varchar(255) NOT NULL DEFAULT '' COMMENT '图片',
                   `Source` varchar(50) NOT NULL DEFAULT '' COMMENT '来源',
                   `Author` varchar(50) NOT NULL DEFAULT '' COMMENT '作者',

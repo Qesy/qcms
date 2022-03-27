@@ -33,6 +33,8 @@ use Model\QC_Table_album;
 use Model\QC_Table_article;
 use Model\QC_Table_down;
 use Model\QC_Table_product;
+use Model\QC_Tag;
+use Model\QC_Tag_map;
 use Model\QC_Token;
 use Model\QC_User;
 
@@ -82,6 +84,8 @@ abstract class Base {
 	public $Table_articleObj;
 	public $Table_downObj;
 	public $Table_productObj;
+	public $TagObj;
+	public $Tag_mapObj;
 	public $TokenObj;
 	public $UserObj;
 	
@@ -127,6 +131,8 @@ abstract class Base {
 		$this->Table_articleObj = QC_Table_article::get_instance();
 		$this->Table_downObj = QC_Table_down::get_instance();
 		$this->Table_productObj = QC_Table_product::get_instance();
+		$this->TagObj = QC_Tag::get_instance();
+		$this->Tag_mapObj = QC_Tag_map::get_instance();
 		$this->TokenObj = QC_Token::get_instance();
 		$this->UserObj = QC_User::get_instance();
 		

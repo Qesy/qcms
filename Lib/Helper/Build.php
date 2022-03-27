@@ -388,7 +388,7 @@ class Build {
         $StrHtml = '';
         $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
         $StrHtml .= '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.' uploadDiv" data="'.$Name.'">
-                                    <label for="Input_'.$Name.'">'.$Desc.'</label>'.$RequiredViewStr.'
+                                    <label class="mb-1" for="Input_'.$Name.'">'.$Desc.'</label>'.$RequiredViewStr.'
                                     <div class="input-group">
                                       <input type="text" class="form-control" '.$Disabled.' placeholder="'.$Placeholder.'" name="'.$Name.'" Id="Img_'.$Name.'" value="'.$Value.'" '.$RequiredStr.'>
                                       <span class="input-group-append">

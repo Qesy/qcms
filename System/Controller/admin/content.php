@@ -87,6 +87,7 @@ class Content extends ControllersAdmin {
                     'CateId' => intval($_POST['CateId']),
                     'Title' => trim($_POST['Title']),
                     'STitle' => trim($_POST['STitle']),
+                    'Tag' => trim($_POST['Tag']),
                     'Pic' => trim($_POST['Pic']),
                     'Source' => trim($_POST['Source']),
                     'Author' => trim($_POST['Author']),
@@ -113,7 +114,6 @@ class Content extends ControllersAdmin {
                     'IsHeadlines' => $IsHeadlines,
                     'IsRec' => $IsRec,
                 );
-
                 foreach($FieldArr as $v){
                     if(is_array($_POST[$v['Name']])){
                         $_POST[$v['Name']] = implode('|', array_keys($_POST[$v['Name']]));
@@ -122,16 +122,14 @@ class Content extends ControllersAdmin {
                     }else{
                         $_POST[$v['Name']] = trim($_POST[$v['Name']]);
                     }
-                    //$_POST[$v['Name']] = is_array($_POST[$v['Name']]) ? implode('|', array_keys($_POST[$v['Name']])) : $_POST[$v['Name']];
                     if($v['NotNull'] == 1 && empty($_POST[$v['Name']])) $this->Err(1001);
                     $InsetArr[$v['Name']] = $_POST[$v['Name']];                                       
-                }     
-                
+                }                     
                 $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetInsert($InsetArr)->ExecInsert();
+                $this->TagObj->RunUpdate($InsetArr['Tag'], '', $InsertId, $ModelRs['ModelId']);
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
-                DB::$s_db_obj->rollBack();
-                
+                DB::$s_db_obj->rollBack();                
                 $this->Err(1002);
             }
             $this->Jump(array('admin', 'content', 'index'));
@@ -159,7 +157,8 @@ class Content extends ControllersAdmin {
                     array('Name' =>'Title', 'Desc' => '标题',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
                     array('Name' =>'STitle', 'Desc' => '短标题',  'Type' => 'input', 'Value' => '', 'Required' => 0, 'Col' => 3),
                     array('Name' =>'Attr', 'Desc' => '属性',  'Type' => 'checkbox', 'Data' => $AttrArr, 'Value' => implode('|', $AttrValArr), 'Required' => 0, 'Col' => 3),
-                    array('Name' =>'Pic', 'Desc' => '图片',  'Type' => 'upload', 'Value' => '', 'Required' => 0, 'Col' => 12),
+                    array('Name' =>'Pic', 'Desc' => '图片',  'Type' => 'upload', 'Value' => '', 'Required' => 0, 'Col' => 6),
+                    array('Name' =>'Tag', 'Desc' => '标签',  'Type' => 'input', 'Value' => '', 'Required' => 0, 'Col' => 6),
                     array('Name' =>'Content', 'Desc' => '内容详情',  'Type' => 'editor', 'Value' => '', 'Required' => 0, 'Col' => 12),
                     array('Name' =>'LinkUrl', 'Desc' => '外链地址',  'Type' => 'hidden', 'Value' => '', 'Required' => 0, 'Col' => 12),
                 )
@@ -231,6 +230,7 @@ class Content extends ControllersAdmin {
                     'CateId' => intval($_POST['CateId']),
                     'Title' => trim($_POST['Title']),
                     'STitle' => trim($_POST['STitle']),
+                    'Tag' => trim($_POST['Tag']),
                     'Pic' => trim($_POST['Pic']),
                     'Source' => trim($_POST['Source']),
                     'Author' => trim($_POST['Author']),
@@ -273,6 +273,8 @@ class Content extends ControllersAdmin {
                 }   
                 
                 $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Rs['Id']))->SetUpdate($InsetArr)->ExecUpdate();                
+                
+                $this->TagObj->RunUpdate($InsetArr['Tag'], $Rs['Tag'], $Rs['Id'], $ModelRs['ModelId']);
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
                 DB::$s_db_obj->rollBack();
@@ -311,7 +313,8 @@ class Content extends ControllersAdmin {
                     array('Name' =>'Title', 'Desc' => '标题',  'Type' => 'input', 'Value' => $Rs['Title'], 'Required' => 1, 'Col' => 6),
                     array('Name' =>'STitle', 'Desc' => '短标题',  'Type' => 'input', 'Value' => $Rs['STitle'], 'Required' => 0, 'Col' => 3),
                     array('Name' =>'Attr', 'Desc' => '属性',  'Type' => 'checkbox', 'Data' => $AttrArr, 'Value' => implode('|', $AttrValArr), 'Required' => 0, 'Col' => 3),
-                    array('Name' =>'Pic', 'Desc' => '图片',  'Type' => 'upload', 'Value' => $Rs['Pic'], 'Required' => 0, 'Col' => 12),
+                    array('Name' =>'Pic', 'Desc' => '图片',  'Type' => 'upload', 'Value' => $Rs['Pic'], 'Required' => 0, 'Col' => 6),
+                    array('Name' =>'Tag', 'Desc' => '标签',  'Type' => 'input', 'Value' => $Rs['Tag'], 'Required' => 0, 'Col' => 6),
                     array('Name' =>'Content', 'Desc' => '内容详情',  'Type' => 'editor', 'Value' => $Rs['Content'], 'Required' => 0, 'Col' => 12),
                     array('Name' =>'LinkUrl', 'Desc' => '外链地址',  'Type' => 'hidden', 'Value' => $Rs['LinkUrl'], 'Required' => 0, 'Col' => 12),
                 )
@@ -366,8 +369,15 @@ class Content extends ControllersAdmin {
         $Ts = time();
         $Rs = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $_GET['Id']))->ExecSelectOne();
         if(empty($Rs)) $this->Err(1003);
-        $Ret = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Rs['Id']))->SetUpdate(array('IsDelete' => 1))->ExecUpdate();
-        if($Ret === false) $this->Err(1002);
+        try{
+            DB::$s_db_obj->beginTransaction();
+            $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Rs['Id']))->SetUpdate(array('IsDelete' => 1))->ExecUpdate();
+            $this->TagObj->DeleteTag($TableRs['Id']);
+            DB::$s_db_obj->commit();
+        }catch(PDOException $e){
+            DB::$s_db_obj->rollBack();
+            $this->Err(1002);
+        }
         $this->Jump(array('admin', 'content', 'index'));
     }
 
@@ -471,7 +481,8 @@ class Content extends ControllersAdmin {
                     array('Name' =>'Title', 'Desc' => '标题',  'Type' => 'input', 'Value' => $Rs['Title'], 'Required' => 1, 'Col' => 6),
                     array('Name' =>'STitle', 'Desc' => '短标题',  'Type' => 'input', 'Value' => $Rs['STitle'], 'Required' => 0, 'Col' => 3),
                     array('Name' =>'Attr', 'Desc' => '属性',  'Type' => 'checkbox', 'Data' => $AttrArr, 'Value' => implode('|', $AttrValArr), 'Required' => 0, 'Col' => 3),
-                    array('Name' =>'Pic', 'Desc' => '图片',  'Type' => 'upload', 'Value' => $Rs['Pic'], 'Required' => 0, 'Col' => 12),
+                    array('Name' =>'Pic', 'Desc' => '图片',  'Type' => 'upload', 'Value' => $Rs['Pic'], 'Required' => 0, 'Col' => 6),
+                    array('Name' =>'Tag', 'Desc' => '标签',  'Type' => 'input', 'Value' => $Rs['Tag'], 'Required' => 0, 'Col' => 6),
                     array('Name' =>'Content', 'Desc' => '内容详情',  'Type' => 'editor', 'Value' => $Rs['Content'], 'Required' => 0, 'Col' => 12),
                     array('Name' =>'LinkUrl', 'Desc' => '外链地址',  'Type' => 'hidden', 'Value' => $Rs['LinkUrl'], 'Required' => 0, 'Col' => 12),
                 )
@@ -527,8 +538,16 @@ class Content extends ControllersAdmin {
         $Rs = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $_GET['Id']))->ExecSelectOne();
         if(empty($Rs)) $this->Err(1003);
         $_GET['ModelId'] = $ModelRs['ModelId'];
-        $Ret = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Rs['Id']))->SetUpdate(array('IsDelete' => 2))->ExecUpdate();
-        if($Ret === false) $this->Err(1002);
+        try{
+            DB::$s_db_obj->beginTransaction();
+            $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Rs['Id']))->SetUpdate(array('IsDelete' => 2))->ExecUpdate();
+            $this->TagObj->RunUpdate($Rs['Tag'], '', $Rs['Id'], $ModelRs['ModelId']);
+            DB::$s_db_obj->commit();
+        }catch(PDOException $e){
+            DB::$s_db_obj->rollBack();
+            $this->Err(1002);
+        }
+
         $this->Jump(array('admin', 'content', 'recovery'));
     }
 
