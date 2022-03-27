@@ -12,7 +12,7 @@ class Swiper extends ControllersAdmin {
         $Arr = $this->SwiperObj->SetCond($CondArr)->SetLimit($Limit)->SetSort(array('Sort' => 'ASC', 'SwiperId' => 'ASC'))->ExecSelectAll($Count);
 
         foreach($Arr as $k => $v){            
-
+            $Arr[$k]['PicView'] = '<a href="'.$v['Pic'].'" target="_blank"><img src="'.$v['Pic'].'" style="width:40px;heihght:40px;"/></a>';
             $Arr[$k]['TitleView'] = empty($v['Title']) ? '<span class="text-danger">无</span>' : $v['Title'];
             $Arr[$k]['LinkView'] = '<input class="form-control" disabled="disabled" type="text" value="'.$v['Link'].'"/>';
             $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
@@ -20,7 +20,7 @@ class Swiper extends ControllersAdmin {
         $KeyArr = array(
             'SwiperId' => array('Name' => 'ID', 'Td' => 'th'),
             'Title' => array('Name' => '标题', 'Td' => 'th'),
-            'Pic' => array('Name' => '图片', 'Td' => 'th', 'Style' => 'width:200px;'), 
+            'PicView' => array('Name' => '图片', 'Td' => 'th', 'Style' => 'width:200px;'), 
             'LinkView' => array('Name' => '链接地址', 'Td' => 'th', 'Style' => 'width:400px;'),   
             'SortView' => array('Name' => '排序', 'Td' => 'th', 'Style' => 'width:100px;'),            
         );
