@@ -17,8 +17,8 @@ class QC_Tag extends \Db_pdo {
 	public $PrimaryKey = 'TagId';
 	
 	public function RunUpdate($NewTags, $OldTags, $TableId, $ModelId){
-	    $NewArr = explode(',', $NewTags);
-	    $OldArr = explode(',', $OldTags);
+	    $NewArr = array_unique(explode(',', $NewTags));
+	    $OldArr = array_unique(explode(',', $OldTags));
 	    $Add = $Del =  array(); //新增的
 	    foreach($NewArr as $v){
 	        if(!in_array($v, $OldArr)) $Add[] = $v;
