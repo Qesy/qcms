@@ -224,7 +224,7 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/data/replace'),
                 array('Key' => 'admin/data/highReplace'),
             )),
-            array('Key' => 'admin/assist', 'subCont' => array('linkCate', 'link', 'inlinkCate', 'inlink', 'file'), 'Icon' => 'bi bi-columns-gap', 'Sub' => array(
+            array('Key' => 'admin/assist', 'subCont' => array('linkCate', 'link', 'inlinkCate', 'inlink', 'file', 'swiper', 'swiperCate', 'tag'), 'Icon' => 'bi bi-columns-gap', 'Sub' => array(
                 //array('Key' => 'admin/linkCate/index'),
                 array('Key' => 'admin/link/index'),
                 array('Key' => 'admin/inlink/index'),
