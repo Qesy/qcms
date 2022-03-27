@@ -13,11 +13,14 @@ class Tag extends ControllersAdmin {
             $GET = $_GET;
             $GET['TagId'] = $v['TagId'];
             $Arr[$k]['TotalView'] = '<a class="text-primary" href="'.$this->CommonObj->Url(array('admin', 'tag', 'list')).'?'.http_build_query($GET).'">'.$v['Total'].'</a>';
+            $Arr[$k]['TsAddView'] = date('Y-m-d H:i:s', $v['TsAdd']);
         }
         $KeyArr = array(
             'TagId' => array('Name' => 'ID', 'Td' => 'th'),
             'Name' => array('Name' => '名字', 'Td' => 'th'),
-            'TotalView' => array('Name' => '数量', 'Td' => 'th'),
+            'ReadNum' => array('Name' => '点击数', 'Td' => 'th'),
+            'TotalView' => array('Name' => '文档数', 'Td' => 'th'),
+            'TsAddView' => array('Name' => '添加时间', 'Td' => 'th'),
         );
         $this->BuildObj->PrimaryKey = 'TagId';
         $this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;

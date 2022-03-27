@@ -26,11 +26,11 @@ class QC_Tag extends \Db_pdo {
 	    foreach($OldArr as $v){
 	        if(!in_array($v, $NewArr)) $Del[] = $v;
 	    }
-	    foreach($Add as $v){ //新增的
-	        $InsertArr = array('Name' => $v, 'Total' => 1);
+	    foreach($Add as $v){ //新增的	        
 	        $Rs = $this->SetCond(array('Name' => $v))->ExecSelectOne();
 	        $TagId = 0;
 	        if(empty($Rs)){
+	            $InsertArr = array('Name' => $v, 'Total' => 1, 'TsAdd' => time());
 	            $this->SetInsert($InsertArr)->ExecInsert();
 	            $TagId = $this->last_insert_id();
 	        }else{
