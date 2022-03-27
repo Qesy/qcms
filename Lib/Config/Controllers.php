@@ -139,7 +139,7 @@ class ControllersAdmin extends Controllers {
             'admin/swiper/add' => array('Name' => '添加图片', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiper', 'add'))),
             'admin/swiper/edit' => array('Name' => '修改图片', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiper', 'edit'))),
             'admin/swiper/del' => array('Name' => '删除图片', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiper', 'del'))),
-            
+            'admin/tag/index' => array('Name' => 'Tag管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'tag', 'index'))),
             'admin/file/index' => array('Name' => '附件管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'file', 'index'))),
             
             //数据维护
@@ -220,6 +220,7 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/link/index'),
                 array('Key' => 'admin/inlink/index'),
                 array('Key' => 'admin/swiperCate/index'),
+                array('Key' => 'admin/tag/index'),
                 array('Key' => 'admin/file/index'),
             )),
             array('Key' => 'index/adminLogout', 'subCont' => array('signout'), 'Icon' => 'bi bi-box-arrow-right'),
