@@ -164,6 +164,15 @@ class ControllersAdmin extends Controllers {
             'admin/formField/add' => array('Name' => '添加字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'formField', 'add'))),
             'admin/formField/edit' => array('Name' => '修改字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'formField', 'edit'))),
             'admin/formField/del' => array('Name' => '删除字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'formField', 'del'))),
+            'admin/database/index' => array('Name' => '数据库管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'database', 'index'))),
+            'admin/database/backups' => array('Name' => '数据库备份', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'database', 'backups'))),
+            'admin/database/restore' => array('Name' => '数据库恢复', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'database', 'restore'))),
+            
+            'admin/redis/index' => array('Name' => 'Redis管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'redis', 'index'))),
+            'admin/redis/del' => array('Name' => 'Redis删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'redis', 'del'))),
+            'admin/redis/empty' => array('Name' => 'Redis清空', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'redis', 'empty'))),
+            'admin/redis/command' => array('Name' => 'Redis命令', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'redis', 'command'))),
+            
             'admin/data/replace' => array('Name' => '批量替换', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'data', 'replace'))),
             'admin/data/highReplace' => array('Name' => '高级替换', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'data', 'highReplace'))),
             
@@ -218,9 +227,10 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/user/index'),
                 array('Key' => 'admin/groupUser/index'),
             )),
-            array('Key' => 'admin/data', 'subCont' => array('data', 'model', 'modelField'), 'Icon' => 'bi bi-tools', 'Sub' => array(
+            array('Key' => 'admin/data', 'subCont' => array('data', 'model', 'modelField', 'database', 'redis'), 'Icon' => 'bi bi-tools', 'Sub' => array(
                 array('Key' => 'admin/model/index'),
-                
+                array('Key' => 'admin/database/index'),
+                array('Key' => 'admin/redis/index'),
                 array('Key' => 'admin/data/replace'),
                 array('Key' => 'admin/data/highReplace'),
             )),
@@ -231,6 +241,11 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/swiperCate/index'),
                 array('Key' => 'admin/tag/index'),
                 array('Key' => 'admin/file/index'),
+            )),
+            array('Key' => 'admin/templates', 'subCont' => array('templates'), 'Icon' => 'bi bi-code-slash', 'Sub' => array(
+                array('Key' => 'admin/templates/index'),
+                array('Key' => 'admin/templates/builder'),
+                array('Key' => 'admin/templates/test'),
             )),
             array('Key' => 'index/adminLogout', 'subCont' => array('signout'), 'Icon' => 'bi bi-box-arrow-right'),
         );
