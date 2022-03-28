@@ -11,14 +11,77 @@ defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
  *
  */
 class Controllers extends Base {
-    public $IsArr = array('1' => '是', 2 => '否');
-    public $OpenArr = array('1' => '开启', 2 => '关闭');
-    public $IsShowArr = array('1' => '显示', 2 => '隐藏');
-    public $StateArr = array('1' => '已发布', 2 => '未发布');
-    public $SexArr = array('1' => '男', 2 => '女');
-    public $EditorArr = array('ckeditor' => 'ckeditor');
+    
+    public $Tmp = array(
+        'Html' => '',
+        'Compile' => '',
+    );
+    public $TmpPath;
+    
+    function __construct(){
+        parent::__construct();
+        $this->SysRs = $this->SysObj->getKv();
+        $this->TmpPath = PATH_TEMPLATE.$this->SysRs['TmpPath'].'/';
+    }
+    
+    
+    
+    public function indexTempRun(){
+        $this->setHtml($this->SysRs['TmpIndex'])->include_Tmp()->global_Tmp();
+        echo($this->Tmp['Compile']);
+    }
+    
+    public function setHtml($TmpFile){
+        $Path = $this->TmpPath.$TmpFile;
+        if(!file_exists($Path)) $this->DieErr(1035);
+        $this->Tmp['Compile'] = $this->Tmp['Html'] = file_get_contents($Path);
+        return $this;
+    }
+    
+    public function include_Tmp(){ // 包含
+        preg_match_all("/{{include filename='([\s\S.]*?)'\/?}}/i",$this->Tmp['Compile'], $Matches);
+        $Replace = array();
+        foreach($Matches[1] as $k => $v){
+            $Replace[] = @file_get_contents($this->TmpPath.$v);         
+        }
+        $this->Tmp['Compile'] = str_replace($Matches[0], $Replace, $this->Tmp['Compile']);
+        return $this;
+    }
+    
+    public function list_Tmp(){ // 列表
+        return $this;
+    }
+    
+    public function global_Tmp(){ // 全局标签
+        return $this;
+    }
+    
+    public function label_Tmp(){ // 自定义标签
+        return $this;
+    }
+    
+    public function menu_Tmp(){ // 菜单
+        return $this;
+    }
+    
+    public function smenu_Tmp(){ // 二级菜单
+        return $this;
+    }
+    
+    public function cate_Tmp(){ // 分类标签
+        return $this;
+    }
+    
+    public function loop_Tmp(){ // 万能查询
+        return $this;
+    }
+    
+    public function slide_Tmp(){ // 幻灯片
+        return $this;
+    }
 }
-class ControllersAdmin extends Controllers {
+
+class ControllersAdmin extends Base {
 
     public $PageTitle;
     public $PageTitle2;
@@ -40,6 +103,12 @@ class ControllersAdmin extends Controllers {
         'radio' => '单选框',
         'checkbox' => '多选框',
     );
+    public $IsArr = array('1' => '是', 2 => '否');
+    public $OpenArr = array('1' => '开启', 2 => '关闭');
+    public $IsShowArr = array('1' => '显示', 2 => '隐藏');
+    public $StateArr = array('1' => '已发布', 2 => '未发布');
+    public $SexArr = array('1' => '男', 2 => '女');
+    public $EditorArr = array('ckeditor' => 'ckeditor');
     function __construct(){
         parent::__construct();
         $Token = $this->CookieObj->get('Token', 'User');

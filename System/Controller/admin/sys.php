@@ -28,10 +28,13 @@ class Sys extends ControllersAdmin {
         }
         $SysArr = $this->SysObj->getList();
         $FormArr = array();
+        $TempList = $this->getTemplate('index_');
+ 
         foreach($SysArr as $v){
             $DataArr = ($v['AttrType'] == 'radio') ? $this->OpenArr : array();
             if($v['Name'] == 'TmpPath') $DataArr = $Folder;
             if($v['Name'] == 'Editor') $DataArr = $this->EditorArr;
+            if($v['Name'] == 'TmpIndex') $DataArr = $TempList;
             $FormArr[$v['GroupId']][] = array('Name' => $v['Name'], 'Desc' => $v['Info'],  'Type' => $v['AttrType'], 'Data' => $DataArr, 'Value' => $v['AttrValue'], 'Col' => 12);;
         }
         $this->BuildObj->Arr = array(

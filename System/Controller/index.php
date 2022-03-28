@@ -4,7 +4,11 @@ class Index extends Controllers {
 
     const CurrentClient = 'Web';
     
-	public function index_Action() {
+    public function index_Action(){
+        $this->indexTempRun();
+    }
+    
+	public function auth_Action() {
 		echo '<br><br><br><h1><center>QFrame PHP Version 1.0.0 </center></h1><center><h2>Author : Qesy, Email : 762264@qq.com</h2><p>Your IP : ' . $this->CommonObj->ip () . '</p></center>';
 	}
 	

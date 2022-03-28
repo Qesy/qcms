@@ -157,6 +157,11 @@ abstract class Base {
 	    $this->CommonObj->Err($Str);
 	}
 	
+	public function DieErr($ErrCode, $Desc = ''){
+	    $Str = ($ErrCode == 1000) ? $Desc : $this->LanguageArr [$ErrCode];
+	    die($Str);
+	}
+	
 	public function Jump($UrlArr, $ErrCode = 1000, $Desc = ''){
 	    $Str = ($ErrCode == 1000) ? $Desc : $this->LanguageArr [$ErrCode];
 	    $this->CommonObj->Success($this->CommonObj->Url($UrlArr), $Str);
