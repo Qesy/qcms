@@ -51,6 +51,9 @@ class Redis {
 	public static function ttl($key) {
 		return self::__getRedis ()->ttl ( $key );
 	}
+	public static function type($key) {
+	    return self::__getRedis ()->type($key);
+	}
 	
 	/**
 	 * String

@@ -169,10 +169,10 @@ class ControllersAdmin extends Controllers {
             'admin/database/restore' => array('Name' => '数据库恢复', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'database', 'restore'))),
             'admin/database/del' => array('Name' => '数据库删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'database', 'del'))),
             
-            'admin/redis/index' => array('Name' => 'Redis管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'redis', 'index'))),
-            'admin/redis/del' => array('Name' => 'Redis删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'redis', 'del'))),
-            'admin/redis/empty' => array('Name' => 'Redis清空', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'redis', 'empty'))),
-            'admin/redis/command' => array('Name' => 'Redis命令', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'redis', 'command'))),
+            'admin/redisManage/index' => array('Name' => 'Redis管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'redisManage', 'index'))),
+            'admin/redisManage/edit' => array('Name' => 'Redis修改', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'redisManage', 'edit'))),
+            'admin/redisManage/del' => array('Name' => 'Redis删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'redisManage', 'del'))),
+            'admin/redisManage/empty' => array('Name' => 'Redis清空', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'redisManage', 'empty'))),            
             
             'admin/data/replace' => array('Name' => '批量替换', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'data', 'replace'))),
             'admin/data/highReplace' => array('Name' => '高级替换', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'data', 'highReplace'))),
@@ -228,10 +228,10 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/user/index'),
                 array('Key' => 'admin/groupUser/index'),
             )),
-            array('Key' => 'admin/data', 'subCont' => array('data', 'model', 'modelField', 'database', 'redis'), 'Icon' => 'bi bi-tools', 'Sub' => array(
+            array('Key' => 'admin/data', 'subCont' => array('data', 'model', 'modelField', 'database', 'redisManage'), 'Icon' => 'bi bi-tools', 'Sub' => array(
                 array('Key' => 'admin/model/index'),
                 array('Key' => 'admin/database/index'),
-                array('Key' => 'admin/redis/index'),
+                array('Key' => 'admin/redisManage/index'),
                 array('Key' => 'admin/data/replace'),
                 array('Key' => 'admin/data/highReplace'),
             )),
