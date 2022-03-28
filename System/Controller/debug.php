@@ -3,6 +3,11 @@ defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class Debug extends Controllers {
     
     public function t_Action(){
+        $Ret = $this->Sys_modelObj->ExportSql();
+        exit;
+        $Ret = $this->Sys_modelObj->Data2Sql('file');
+        var_dump($Ret);
+        return;
         $str = '<img src="https://www.baidu.com/img/flexible/logo/pc/result.png" class="rounded mx-auto d-block" alt="你好吗">
 
 

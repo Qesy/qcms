@@ -605,7 +605,8 @@ class Build {
                         $BtnColor = isset($Btn['Color']) ? $Btn['Color'] : 'primary';
                         $Link = (empty($Btn['Link']) || $Btn['Link'] == '#') ? 'javascript:void(0);' : $Btn['Link'].'?'.http_build_query($_GET);
                         $Disabled = (isset($Btn['IsDisabled']) && $Btn['IsDisabled'] == 1) ? 'disabled' : '';
-                        $ActArr[] = '<a class="btn btn-sm mr-2 btn-'.$BtnColor.' '.$Disabled.' table_btn_'.$Btn['Name'].'" href="'.$Link.'">'.$Btn['Desc'].'</a>';
+                        $Confirm = empty($Btn['Confirm']) ? '' : 'onclick="return confirm(\''.$Btn['Confirm'].'\')"';
+                        $ActArr[] = '<a class="btn btn-sm mr-2 btn-'.$BtnColor.' '.$Disabled.' table_btn_'.$Btn['Name'].'" href="'.$Link.'" '.$Confirm.'>'.$Btn['Desc'].'</a>';
                     }
                 }
                 if($this->IsEdit) $ActArr[] = (isset($v['IsEdit']) && $v['IsEdit'] != 1) ? '<a class="btn btn-sm btn-primary mr-2 disabled" href="javascript:void(0);">'.$this->NameEdit.'</a>' : '<a class="btn btn-sm btn-primary mr-2" href="'.$this->LinkEdit.'?'.http_build_query($_GET).'">'.$this->NameEdit.'</a>';

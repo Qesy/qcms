@@ -20,6 +20,7 @@ define ( 'EXTEND', '.php' );
 require PATH_LIB . 'Config/Config' . EXTEND;
 define ( 'URL_ROOT', substr($_SERVER['PHP_SELF'], 0, -9) );
 define ( 'URL_CURRENT', substr(explode('?', $_SERVER ['REQUEST_URI'])[0], strlen(URL_ROOT))) ; 
+define ( 'URL_STATIC', URL_ROOT . 'Static/' );
 define ( 'URL_IMG', URL_ROOT . 'Static/images/' );
 define ( 'URL_JS', URL_ROOT . 'Static/scripts/' );
 define ( 'URL_CSS', URL_ROOT . 'Static/styles/' );

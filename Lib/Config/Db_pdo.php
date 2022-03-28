@@ -205,5 +205,61 @@ class Db_pdo extends Db {
 		$getArr = $this->get_execute_arr($cond_arr);
 		return $this->exec ( $sql, $getArr );
 	}
+	
+	public function ImportSql($SqlPath){ //导入库
+	    $Result = file($SqlPath);
+	    $query = '';
+	    try{
+	        foreach($Result as $key => $value){
+	            $value=trim($value);
+	            //var_dump($value);
+	            if(empty($value) || $value[0]=='#' || $value[0]=='-') continue;
+	            if(preg_match("/\;$/i",$value)){
+	                $query.=$value;
+	                if(preg_match("/^CREATE/i",$query)){
+	                    $extra = substr(strrchr($query,')'),1);
+	                    $query = str_replace($extra,'',$query);
+	                    $extra = "ENGINE=InnoDB DEFAULT CHARSET=utf8;";
+	                    $query .= $extra;
+	                }elseif(preg_match("/^INSERT/i",$query)){
+	                    $query='REPLACE '.substr($query,6);
+	                }	
+	                self::exec($query, array());
+	                $query='';
+	            }else{
+	                $query.= $value;
+	            }	            
+	        }
+	    }catch (PDOException $e){
+	        echo 'Connection failed: ' . $e->getMessage();exit();
+	    }
+	    return true;
+	}
+	
+	public function ExportSql(){ //导出库
+	    $DbConf = DbConfig();
+	    $Tables = $this->query('SHOW tables', array());
+	    $TableArr = array();
+	    $Sql = '';
+	    foreach($Tables as $k => $v){
+	        $TableName = substr($v['Tables_in_'.$DbConf['Name']], strlen($DbConf['Prefix']));
+	        $Sql .= self::Data2Sql($TableName, $DbConf['Prefix']);
+	    }
+	    return $Sql;
+	}
+	
+	public function Data2Sql($Table, $Prefix){ //导出表
+	    $DbConf = DbConfig();
+	    $TableFullName = $Prefix.$Table;
+	    $tabledump = "DROP TABLE IF EXISTS `".$TableFullName."`;\n";
+	    $createtable = self::query("SHOW CREATE TABLE $TableFullName", array(), 1);
+
+	    $tabledump .= $createtable['Create Table'].";\n\n";
+	    $Arr = self::SetTbName($Table)->ExecSelect();
+	    foreach($Arr as $v){
+	        $tabledump .= "INSERT INTO `".$TableFullName."` VALUES('".implode('\',\'', $v)."');\n";
+	    }
+	    return $tabledump."\n";	    
+	}
 }
 ?>
