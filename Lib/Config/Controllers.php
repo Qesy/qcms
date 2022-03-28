@@ -283,13 +283,13 @@ class ControllersAdmin extends Controllers {
         
     }
     
-    public function getTemplate($Prefix){
+    public function getTemplate($Prefix = ''){
         $Files = scandir(PATH_TEMPLATE.$this->SysRs['TmpPath'].'/');
         $Template = array();
         foreach($Files as $v){
             if(in_array($v, array('.', '..'))) continue;
             if(is_dir(PATH_TEMPLATE.$v)) continue;
-            if(strpos($v, $Prefix) !== 0 || substr($v, -5) != '.html') continue;
+            if((!empty($Prefix) && strpos($v, $Prefix) !== 0) || substr($v, -5) != '.html') continue;
             $Template[$v] = $v;
         }
         return $Template;
