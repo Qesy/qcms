@@ -95,6 +95,42 @@ abstract class Base {
 	public $BasicArr = array();
 	
 	public $SysRs;
+	
+	public $DefaultField = array(
+	    'Index',
+	    'Id',
+	    'CateId',
+	    'Title',
+	    'STitle',
+	    'Tag',
+	    'Pic',
+	    'Source',
+	    'Author',
+	    'Sort',
+	    'Keywords',
+	    'Description',
+	    'TsAdd',
+	    'TsUpdate',
+	    'ReadNum',
+	    'Coins',
+	    'Money',
+	    'UserLevel',
+	    'Color',
+	    'UserId',
+	    'Good',
+	    'Bad',
+	    'State',
+	    'Content',
+	    'IsLink',
+	    'LinkUrl',
+	    'IsBold',
+	    'IsPic',
+	    'IsSpuerRec',
+	    'IsHeadlines',
+	    'IsRec',
+	    'IsPost',
+	    'IsDelete',
+	);
 	function __construct() {
 	    $this->CodeObj = Code::get_instance();
 	    $this->BuildObj = Build::get_instance();

@@ -34,7 +34,7 @@ class QC_Category extends \Db_pdo {
 	        $Json = Redis::get($key);
 	        return json_decode($Json, true);
 	    }
-	    $Arr = $this->SetSort(array('Sort' => 'ASC', 'CateId' => 'ASC'))->SetField('CateId, PCateId, Name, IsShow, IsLink, LinkUrl, Sort')->ExecSelect();
+	    $Arr = $this->SetSort(array('Sort' => 'ASC', 'CateId' => 'ASC'))->SetField('CateId, PCateId, Name, Pic, ModelId, SeoTitle, Keywords, Description, IsShow, IsLink, LinkUrl, UrlList, Sort')->ExecSelect();
 	    if(!empty($Arr) && Redis::$s_IsOpen == 1) Redis::set($key, json_encode($Arr));
 	    return $Arr;
 	}
@@ -76,6 +76,7 @@ class QC_Category extends \Db_pdo {
 	}
 	
 	public function getAllCateId($CateId, $ModelId){ //获取所有子分类ID，方便获取子分类文章
+	    $this->AllSubCateIdArr = array();
 	    $this->CateArr = $this->getList();
 	    $this->AllSubCateIdArr[] = $CateId;
 	    return self::_getAllCateId($CateId, $ModelId);
@@ -95,10 +96,10 @@ class QC_Category extends \Db_pdo {
 	private function _TreeDetail($PCateId, $Level, $PIndex = 0){ // 后台分类列表页展示
 	    foreach($this->CateArr as $k => $v){
 	        if($v['PCateId'] == $PCateId){
-	            $this->CateTreeDetail[$PIndex]['HasSub'] = true; //设置父分类有子分类
+	            $this->CateTreeDetail[$PIndex]['HasSub'] = 1; //设置父分类有子分类
 	            $CateRs = $this->getOne($v['CateId']);
 	            $CateRs['Level'] = $Level;
-	            $CateRs['HasSub'] = false;
+	            $CateRs['HasSub'] = 0;
 	            $this->CateTreeDetail[$this->CateTreeIndex] = $CateRs;
 	            unset($this->CateArr[$k]);
 	            $Index = $this->CateTreeIndex;	

@@ -5,7 +5,7 @@ class Index extends Controllers {
     const CurrentClient = 'Web';
     
     public function index_Action(){
-        $this->indexTempRun();
+        $this->tempRun('index');
     }
     
 	public function auth_Action() {

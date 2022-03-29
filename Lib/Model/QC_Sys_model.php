@@ -19,8 +19,7 @@ class QC_Sys_model extends \Db_pdo {
 	public $TableName = 'sys_model';
 	public $PrimaryKey = 'ModelId';
 	
-	public function getList(){
-	    
+	public function getList(){	    
 	    $key = RedisKey::Sys_Model_Arr_HM();
 	    $FieldArr = array();
 	    if(Redis::$s_IsOpen == 1 && Redis::exists($key)) {

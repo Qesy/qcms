@@ -13,58 +13,139 @@ defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class Controllers extends Base {
     
     public $Tmp = array(
+        'Type' => '',
+        'Index' => '0',
         'Html' => '',
         'Compile' => '',
     );
+    public $ModuleKv = array();
+    public $CateKv = array();
     public $TmpPath;
     
     function __construct(){
         parent::__construct();
         $this->SysRs = $this->SysObj->getKv();
         $this->TmpPath = PATH_TEMPLATE.$this->SysRs['TmpPath'].'/';
+        $this->CategoryObj->getTreeDetal();
+        foreach($this->CategoryObj->CateArr as $v) $this->CateKv[$v['CateId']] = $v;
+        $ModuleArr = $this->Sys_modelObj->getList();
+        foreach($ModuleArr as $v){
+            $this->ModuleKv[$v['KeyName']] = $v;
+        }
     }
     
     
     
-    public function indexTempRun(){
-        $this->setHtml($this->SysRs['TmpIndex'])->include_Tmp()->global_Tmp();
+    public function tempRun($Type, $Index = '0'){
+        $this->initTmp($this->SysRs['TmpIndex'], $Type)->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->menu_Tmp();
+        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp();
         echo($this->Tmp['Compile']);
     }
     
-    public function setHtml($TmpFile){
+
+    public function initTmp($TmpFile, $Type, $Index = '0'){
         $Path = $this->TmpPath.$TmpFile;
         if(!file_exists($Path)) $this->DieErr(1035);
         $this->Tmp['Compile'] = $this->Tmp['Html'] = file_get_contents($Path);
+        $this->Tmp['Type'] = $Type;
+        $this->Tmp['Index'] = $Index;
         return $this;
     }
     
     public function include_Tmp(){ // 包含
-        preg_match_all("/{{include filename='([\s\S.]*?)'\/?}}/i",$this->Tmp['Compile'], $Matches);
+        preg_match_all("/{{include([\s\S.]*?)\/?}}/i",$this->Tmp['Compile'], $Matches); 
         $Replace = array();
         foreach($Matches[1] as $k => $v){
-            $Replace[] = @file_get_contents($this->TmpPath.$v);         
+            $Data = self::_getKv($v);
+            $Replace[] = @file_get_contents($this->TmpPath.$Data['filename']);         
         }
         $this->Tmp['Compile'] = str_replace($Matches[0], $Replace, $this->Tmp['Compile']);
         return $this;
     }
     
-    public function list_Tmp(){ // 列表
+    public function global_Tmp(){ // 全局标签
+        $Search = array('{{qcms:domain}}', '{{qcms:static}}', '{{qcms:pathImg}}', '{{qcms:pathJs}}', '{{qcms:pathCss}}', '{{qcms:Scheme}}');
+        $Replace = array(URL_DOMAIN, URL_STATIC, URL_IMG, URL_JS, URL_CSS, $_SERVER['REQUEST_SCHEME']);
+        foreach($this->SysRs as $k => $v){
+            $Search[] = '{{qcms:'.$k.'}}';
+            $Replace[] = $v;
+        }
+        $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
     
-    public function global_Tmp(){ // 全局标签
+    public function self_Tmp(){ //替换自身需要的
+        $Search = array();
+        $Replace = array();
+        switch($this->Tmp['Type']){
+            case 'index':
+                $Search = array('{{qcms:crumbs}}');
+                $Replace = array('<li class="breadcrumb-item active">首页</li>');
+                break;
+            case 'cate':
+                break;
+            case 'detail':
+                break;
+        }
+        $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
     
     public function label_Tmp(){ // 自定义标签
+        preg_match_all("/{{label:([\w]*?)\/?}}/i",$this->Tmp['Compile'], $Matches);  
+        if(!empty($Matches[1])){
+            $Search = array();
+            $Replace = array();
+            foreach($Matches[1] as $v){
+                $LabelRs = $this->LabelObj->getOne($v);
+                if($LabelRs['State'] != 1) continue;
+                $Search[] = '{{label:'.$v.'}}';                
+                $Replace[] = $LabelRs['Content'];
+            }
+        }
+        $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
     
     public function menu_Tmp(){ // 菜单
+        preg_match_all("/{{menu([\s\S.]*?)}}([\s\S.]*?){{\/menu}}/i", $this->Tmp['Compile'], $Matches);        
+        $Search = array();
+        $Replace = array();
+        foreach($Matches[1] as $k => $v){
+            $Para = self::_getKv($v);
+            $PCateId = isset($Para['PCateId']) ? $Para['PCateId'] : '0';
+            $Search[] = $Matches[0][$k];
+            $Replace[] = self::_replaceCate($PCateId, $Matches[2][$k], 'M');
+        }
+        $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
     
     public function smenu_Tmp(){ // 二级菜单
+        preg_match_all("/{{smenu([\s\S.]*?)}}([\s\S.]*?){{\/smenu}}/i", $this->Tmp['Compile'], $Matches);
+        $Search = array();
+        $Replace = array();
+        foreach($Matches[1] as $k => $v){
+            $Para = self::_getKv($v);
+            $PCateId = isset($Para['PCateId']) ? $Para['PCateId'] : '0';
+            $Search[] = $Matches[0][$k];
+            $Replace[] = self::_replaceCate($PCateId, $Matches[2][$k], 'sM');
+        }
+        $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
+        return $this;
+    }
+    
+    public function ssmenu_Tmp(){ // 三级菜单
+        preg_match_all("/{{ssmenu([\s\S.]*?)}}([\s\S.]*?){{\/ssmenu}}/i", $this->Tmp['Compile'], $Matches);
+        $Search = array();
+        $Replace = array();
+        foreach($Matches[1] as $k => $v){
+            $Para = self::_getKv($v);
+            $PCateId = isset($Para['PCateId']) ? $Para['PCateId'] : '0';
+            $Search[] = $Matches[0][$k];
+            $Replace[] = self::_replaceCate($PCateId, $Matches[2][$k], 'ssM');
+        }
+        $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
     
@@ -72,12 +153,188 @@ class Controllers extends Base {
         return $this;
     }
     
+    public function list_Tmp(){ // 列表
+        preg_match_all("/{{list([\s\S.]*?)}}([\s\S.]*?){{\/list}}/i", $this->Tmp['Compile'], $Matches);
+        $Search = array();
+        $Replace = array();
+        foreach($Matches[1] as $k => $v){
+            $Para = self::_getKv($v);
+            $Ret['Module'] = !isset($Para['Module']) ? 'article' : $Para['Module'];
+            $Ret['Row'] = !isset($Para['Row']) ? '10' : $Para['Row'];
+            if($Ret['Row'] > 100) $Ret['Row'] = 100;
+            $Ret['CateId'] = !isset($Para['CateId']) ? '0' : $Para['CateId'];
+            $Ret['Sort'] = !isset($Para['Sort']) ? 'Id' : $Para['Sort'];
+            $Ret['SortType'] = !isset($Para['SortType']) ? 'DESC' : $Para['SortType'];
+            $Ret['Keyword'] = !isset($Para['Keyword']) ? '' : $Para['Keyword'];
+            $Ret['Ids'] = !isset($Para['Ids']) ? '' : $Para['Ids'];
+            $Ret['Attr'] = !isset($Para['Attr']) ? '' : $Para['Attr'];
+            $Ret['Page'] = !isset($Para['Page']) ? '1' : $Para['Page'];
+            $Search[] = $Matches[0][$k];
+            $Replace[] = self::_replaceList($Ret, $Matches[2][$k], 'L');
+        }
+        $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
+        //var_dump($Matches);exit;
+        return $this;
+    }
+    
     public function loop_Tmp(){ // 万能查询
+        preg_match_all("/{{loop([\s\S.]*?)}}([\s\S.]*?){{\/loop}}/i", $this->Tmp['Compile'], $Matches);
+        $Search = array();
+        $Replace = array();
+        foreach($Matches[1] as $k => $v){
+            $Para = self::_getKv($v);
+            if(empty($Para['sql'])) return $this; 
+            $Search[] = $Matches[0][$k];
+            $Replace[] = self::_replaceLoop($Para['sql'], $Matches[2][$k], 'S');
+        }
+        $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
     
     public function slide_Tmp(){ // 幻灯片
         return $this;
+    }
+    
+    private function _replaceLoop($Sql, $Html, $Pre){
+        //var_dump($Html);exit;
+        $Arr = $this->Sys_modelObj->query($Sql, array());
+        $Compile = '';
+        if(empty($Arr)) return $Compile;
+        $Keys = array_keys($Arr[0]);
+
+        $Search = array();
+        foreach($Keys as $v) $Search[] = '{{qcms:'.$Pre.$v.'}}';
+        foreach($Arr as $k => $v){
+            $Replace = array();
+            foreach($Keys as $sv) $Replace[] = $v[$sv];
+            $Compile .= str_replace($Search, $Replace, $Html);
+        }
+        return $Compile;
+    }
+    
+    private function _replaceList($Ret, $Html, $Pre){
+        $ModuleRs = $this->ModuleKv[$Ret['Module']];
+        $CondArr = array();
+        if(!empty($Ret['CateId'])){
+            $CateIds = explode(',', $Ret['CateId']);
+            $AllSubCateIdArr = array();
+            foreach($CateIds as $v){
+                $this->CategoryObj->getAllCateId($v, $ModuleRs['ModelId']);
+                $AllSubCateIdArr = array_merge($AllSubCateIdArr, $this->CategoryObj->AllSubCateIdArr);
+            }
+            $CondArr['CateId'] = $AllSubCateIdArr;
+        }
+        if(!empty($Ret['Keyword'])){
+            $TagArr = $this->TagObj->SetCond(array('Name' => explode(',', $Ret['Keyword'])))->ExecSelect();
+            $TagIds = array_column($TagArr, 'TagId');
+            $TagMap = $this->Tag_mapObj->SetCond(array('TagId' => $TagIds, 'ModelId' => $ModuleRs['ModelId']))->SetLimit(array(0, ($Ret['Row']+1)))->SetSort(array('TagMapId' => 'DESC'))->ExecSelect();
+            $CondArr['Id'] = array_column($TagMap, 'TableId');
+        }
+        if(!empty($Ret['Ids'])){
+            $Ids = explode(',', $Ret['Ids']);
+            $CondArr['Id'] = !isset($CondArr['Id']) ? $Ids : array_merge($Ids, $CondArr['Id']);
+        }
+        if(!empty($Ret['Attr'])){
+            $Attr = explode(',', $Ret['Attr']);
+            if(in_array('hl', $Attr)) $CondArr['IsHeadlines'] = 1; //头条
+            if(in_array('sr', $Attr)) $CondArr['IsSpuerRec'] = 1; //特推
+            if(in_array('re', $Attr)) $CondArr['IsRec'] = 1; //推荐
+            if(in_array('il', $Attr)) $CondArr['IsLink'] = 1; //外链
+            if(in_array('ib', $Attr)) $CondArr['IsBold'] = 1; //加粗
+            if(in_array('ip', $Attr)) $CondArr['IsPic'] = 1; //带图
+        }
+        $Limit = array(($Ret['Page']-1)*$Ret['Row'], $Ret['Row']);
+        $Count = 0;
+        $Sort = array('Sort' => 'ASC', 'Id' => 'DESC');
+        if($Ret['Sort'] == 'ReadNum'){
+            $Sort = array('ReadNum' => 'DESC', 'Id' => 'DESC');
+        }elseif($Ret['Sort'] == 'TsUpdate'){
+            $Sort = array('TsUpdate' => 'DESC', 'Id' => 'DESC');
+        }elseif($Ret['Sort'] == 'Good'){
+            $Sort = array('Good' => 'DESC', 'Id' => 'DESC');
+        }
+        $FieldArr = empty($ModuleRs['FieldJson']) ? array() : json_decode($ModuleRs['FieldJson'], true);
+        $ListField = $this->DefaultField;
+        foreach($FieldArr as $v){
+            if($v['IsList'] == 1) $ListField[] = $v['Name'];
+        }
+        $ListField = array_diff($ListField, array('Content', 'Index'));
+        $Arr = $this->Sys_modelObj->SetTbName('table_'.$ModuleRs['KeyName'])->SetField(implode(', ', $ListField))->SetCond($CondArr)->SetSort($Sort)->SetLimit($Limit)->SetIsDebug(0)->ExecSelect();
+        $Compile = '';
+        $Search = array();
+        foreach($ListField as $v){
+            $Search[] =  '{{qcms:'.$Pre.$v.'}}';
+        }
+        $Search[] =  '{{qcms:'.$Pre.'i}}';
+        $Search[] =  '{{qcms:'.$Pre.'CateName}}';
+        $Search[] =  '{{qcms:'.$Pre.'CatePic}}';
+        $Search[] =  '{{qcms:'.$Pre.'CateUrl}}';        
+        $Search[] =  '{{qcms:'.$Pre.'Url}}';
+        foreach($Arr as $k => $v){
+            $CateRs = $this->CateKv[$v['CateId']];
+            $Replace = array();
+            foreach($ListField as $sv){
+                $Replace[] =  $v[$sv];
+            }
+            $Replace[] =  $k;
+            $Replace[] = $CateRs['Name'];
+            $Replace[] = $CateRs['Pic'];
+            $Replace[] = ($CateRs['IsLink'] == 1) ? $CateRs['LinkUrl'] : $CateRs['UrlList']; // 分类地址
+            $Replace[] = ($v['IsLink'] == '1') ? $v['LinkUrl'] : $CateRs['UrlDetail'];
+            $Compile .= str_replace($Search, $Replace, $Html);
+        }        
+        return $Compile;
+    }
+    
+    private function _replaceCate($PCateId, $Html, $Pre){
+        $Arr = $this->CategoryObj->CateTreeDetail;
+        $CateArr = array();
+        foreach($Arr as $k => $v){
+            if($v['PCateId'] != $PCateId || $v['IsShow'] != 1) continue;
+            $CateArr[] = $v;
+        }
+        $Compile = '';
+        $Search = array(
+            '{{qcms:'.$Pre.'CateId}}',
+            '{{qcms:'.$Pre.'PCateId}}',
+            '{{qcms:'.$Pre.'Name}}',
+            '{{qcms:'.$Pre.'ModelId}}',
+            '{{qcms:'.$Pre.'Pic}}',
+            '{{qcms:'.$Pre.'SeoTitle}}',
+            '{{qcms:'.$Pre.'Keywords}}',
+            '{{qcms:'.$Pre.'Description}}',
+            '{{qcms:'.$Pre.'Url}}', 
+            '{{qcms:'.$Pre.'HasSub}}',
+            '{{qcms:'.$Pre.'i}}',
+        );
+        foreach($CateArr as $k => $v){
+            $Url = ($v['IsLink'] == 1) ? $v['LinkUrl'] : $v['UrlList'];
+            $Replace = array(
+                $v['CateId'],
+                $v['PCateId'],
+                $v['Name'],
+                $v['ModelId'],
+                $v['Pic'],
+                $v['SeoTitle'],
+                $v['Keywords'],
+                $v['Description'],
+                $Url,
+                $v['HasSub'],
+                $k,
+            );
+            $Compile .= str_replace($Search, $Replace, $Html);
+        }
+        return $Compile;
+    }
+    
+    private function _getKv($Str){
+        preg_match_all("/([\w]*?)=\'([\w\W]*?)\'/i",$Str, $Matches); 
+        if(empty($Matches[0])) return array();
+        $Ret = array();
+        for($i=0;$i<count($Matches[0]);$i++){
+            $Ret[$Matches[1][$i]] = $Matches[2][$i];
+        }
+        return $Ret;
     }
 }
 

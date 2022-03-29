@@ -1,43 +1,7 @@
 <?php
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class ModelField extends ControllersAdmin {
-    
-    public $DefaultField = array(
-        'Index', 
-        'Id', 
-        'CateId', 
-        'Title', 
-        'STitle',
-        'Tag',
-        'Pic', 
-        'Source', 
-        'Author', 
-        'Sort', 
-        'Keywords', 
-        'Description', 
-        'TsAdd', 
-        'TsUpdate',
-        'ReadNum',
-        'Coins',
-        'Money',
-        'UserLevel',
-        'Color',
-        'UserId',
-        'Good',
-        'Bad',
-        'State',        
-        'Content',
-        'IsLink',
-        'LinkUrl',
-        'IsBold',
-        'IsPic',
-        'IsSpuerRec',
-        'IsHeadlines',
-        'IsRec',
-        'IsPost',
-        'IsDelete',
-    );
-    
+        
     public function index_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('ModelId'))) $this->Err(1001);
         $Rs = $this->Sys_modelObj->getOne($_GET['ModelId']);

@@ -15,7 +15,7 @@ class Label extends ControllersAdmin {
 
         foreach($Arr as $k => $v){            
             $Arr[$k]['LabelCateName'] = $labelCateKV[$v['LabelCateId']];
-            $Arr[$k]['KeyNameView'] = '<input class="form-control" disabled="disabled" type="text" value="{{Label:'.$v['KeyName'].'}}"/>';
+            $Arr[$k]['KeyNameView'] = '<input class="form-control" disabled="disabled" type="text" value="{{label:'.$v['KeyName'].'}}"/>';
             $Arr[$k]['JsView'] = '<input class="form-control" disabled="disabled" type="text" value="<script language=JavaScript src=\''.$_SERVER['REQUEST_SCHEME'].'://'.URL_DOMAIN.'/index/js?KeyName='.$v['KeyName'].'\'></script>"/>';
             $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
         }
