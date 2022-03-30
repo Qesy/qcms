@@ -27,6 +27,7 @@ class QC_Category extends \Db_pdo {
 	public $AllSubCateIdArr = array();
 	public $CateTreeIndex = 0;
 	public $CateSelectId = 0; // 选中的select
+	public $CateCrumbsArr = array(); //面包屑
 	
 	public function getList(){
 	    $key = RedisKey::Category_String();
@@ -34,7 +35,7 @@ class QC_Category extends \Db_pdo {
 	        $Json = Redis::get($key);
 	        return json_decode($Json, true);
 	    }
-	    $Arr = $this->SetSort(array('Sort' => 'ASC', 'CateId' => 'ASC'))->SetField('CateId, PCateId, Name, Pic, ModelId, SeoTitle, Keywords, Description, IsShow, IsLink, LinkUrl, UrlList, Sort')->ExecSelect();
+	    $Arr = $this->SetSort(array('Sort' => 'ASC', 'CateId' => 'ASC'))->SetField('CateId, PCateId, Name, Pic, ModelId, SeoTitle, Keywords, Description, IsShow, IsLink, LinkUrl, TempList, TempDetail, Sort')->ExecSelect();
 	    if(!empty($Arr) && Redis::$s_IsOpen == 1) Redis::set($key, json_encode($Arr));
 	    return $Arr;
 	}
@@ -80,6 +81,16 @@ class QC_Category extends \Db_pdo {
 	    $this->CateArr = $this->getList();
 	    $this->AllSubCateIdArr[] = $CateId;
 	    return self::_getAllCateId($CateId, $ModelId);
+	}
+	
+	public function getCrumbs($CateId){
+	    $CateRs = $this->getOne($CateId);
+	    $this->CateCrumbsArr[] = $CateRs;
+	    if($CateRs['PCateId'] != 0){
+	        self::getCrumbs($CateRs['PCateId']);
+	    }else{
+	        $this->CateCrumbsArr = array_reverse($this->CateCrumbsArr);
+	    }
 	}
 	
 	private function _Tree($Node, $PCateId){ //树结构

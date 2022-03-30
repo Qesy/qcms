@@ -29,7 +29,19 @@ class Sys extends ControllersAdmin {
         $SysArr = $this->SysObj->getList();
         $FormArr = array();
         $TempList = $this->getTemplate('index_');
- 
+        $UrlListDesc = '<span class="text-dark">
+            <span class="mr-3 font-weight-bold">{CateId}</span>分类ID<br>
+            <span class="mr-3 font-weight-bold">{PinYin}</span>拼音+分类ID<br>
+            <span class="mr-3 font-weight-bold">{PY}</span>拼音部首+分类ID<br>
+        </span>
+        ';
+        $UrlDetailDesc = '<span class="text-dark">
+        	<span class="mr-3 font-weight-bold">{Y}、{M}、{D}</span>年月日<br>
+            <span class="mr-3 font-weight-bold">{Id}</span>文章ID<br>
+            <span class="mr-3 font-weight-bold">{PinYin}</span>拼音+文章ID<br>
+            <span class="mr-3 font-weight-bold">{PY}</span>拼音部首+文章ID<br>
+        </span>
+        ';
         foreach($SysArr as $v){
             $DataArr = ($v['AttrType'] == 'radio') ? $this->OpenArr : array();
             if($v['Name'] == 'TmpPath') $DataArr = $Folder;
@@ -52,6 +64,8 @@ class Sys extends ControllersAdmin {
                 'Form' => $FormArr[3]
             )
         );
+        $this->BuildObj->Arr[1]['Form'][] = array('Desc' => '规则说明',  'Type' => 'html', 'Value' => $UrlListDesc, 'Required' => 1, 'Col' => 6);
+        $this->BuildObj->Arr[1]['Form'][] = array('Desc' => '规则说明',  'Type' => 'html', 'Value' => $UrlDetailDesc, 'Required' => 1, 'Col' => 6);
         $this->PageTitle2 = $this->BuildObj->FormMultipleTitle();
         $this->BuildObj->FormMultiple('post', 'form-row');
         $this->LoadView('admin/common/edit');

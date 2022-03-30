@@ -75,26 +75,27 @@ class Category extends ControllersAdmin {
                 'LinkUrl' => trim($_POST['LinkUrl']),
                 'TempList' => trim($_POST['TempList']),
                 'TempDetail' => trim($_POST['TempDetail']),
-                'UrlList' => trim($_POST['UrlList']),
-                'UrlDetail' => trim($_POST['UrlDetail']),                
+                /* 'UrlList' => trim($_POST['UrlList']),
+                'UrlDetail' => trim($_POST['UrlDetail']),            */     
                 'SeoTitle' => trim($_POST['SeoTitle']),
                 'Keywords' => trim($_POST['Keywords']),
                 'Description' => trim($_POST['Description']),
                 'Content' => trim($_POST['Content']),
                 'IsCross' => trim($_POST['IsCross']),
                 'Sort' => 99,
+                'PinYin' => $this->PinYinObj->str2pys(trim($_POST['Name'])),
             );
             $Ret = $this->CategoryObj->SetInsert($InsertArr)->ExecInsert();
             if($Ret === false) $this->Err(1002);
             $this->CategoryObj->cleanList();
             $this->Jump(array('admin', 'category', 'index'));
         }
-        $ModelArr = $this->Sys_modelObj->getList();
-        $ModelKV = array_column($ModelArr, 'Name', 'ModelId');
+        $ModelArr = $this->Sys_modelObj->getList();        
+        $ModelKV = array_column($ModelArr, 'Name', 'ModelId');        
         $ModelKV[-1] = '封面';
-        $ModelTempKV = array_column($ModelArr, 'NameKey', 'ModelId');
+        $ModelTempKV = array_column($ModelArr, 'KeyName', 'ModelId');
         $ModelTempKV[-1] = 'page';
- 
+        
         $GroupUserArr = $this->Group_userObj->getList();
         $GroupUserKv = array(0 => '开放浏览'); 
         foreach(array_column($GroupUserArr, 'Name', 'GroupUserId') as $k => $v) $GroupUserKv[$k] = $v;
@@ -139,10 +140,10 @@ class Category extends ControllersAdmin {
                 'Form' => array(                    
                     array('Name' =>'TempList', 'Desc' => '列表模板',  'Type' => 'select', 'Data' => $TempList, 'Value' => '', 'Required' => 0, 'Col' => 6),
                     array('Name' =>'TempDetail', 'Desc' => '详情模板',  'Type' => 'select', 'Data' => $TempDetail, 'Value' => '', 'Required' => 0, 'Col' => 6),
-                    array('Name' =>'UrlList', 'Desc' => '列表命名规则',  'Type' => 'input', 'Value' => $UrlList, 'Required' => 0, 'Col' => 6, 'Help' => '撒旦法安防'),
+                    /* array('Name' =>'UrlList', 'Desc' => '列表命名规则',  'Type' => 'input', 'Value' => $UrlList, 'Required' => 0, 'Col' => 6, 'Help' => '撒旦法安防'),
                     array('Name' =>'UrlDetail', 'Desc' => '详情命名规则',  'Type' => 'input', 'Value' => $UrlDetail, 'Required' => 0, 'Col' => 6),
                     array('Desc' => '规则说明',  'Type' => 'html', 'Value' => $UrlListDesc, 'Required' => 1, 'Col' => 6),
-                    array('Desc' => '规则说明',  'Type' => 'html', 'Value' => $UrlDetailDesc, 'Required' => 1, 'Col' => 6),
+                    array('Desc' => '规则说明',  'Type' => 'html', 'Value' => $UrlDetailDesc, 'Required' => 1, 'Col' => 6), */
                 )),
             array(
                 'Title' => '分类内容',
@@ -178,13 +179,15 @@ class Category extends ControllersAdmin {
                 'LinkUrl' => trim($_POST['LinkUrl']),
                 'TempList' => trim($_POST['TempList']),
                 'TempDetail' => trim($_POST['TempDetail']),
-                'UrlList' => trim($_POST['UrlList']),
-                'UrlDetail' => trim($_POST['UrlDetail']),
+                /* 'UrlList' => trim($_POST['UrlList']),
+                'UrlDetail' => trim($_POST['UrlDetail']), */
                 'SeoTitle' => trim($_POST['SeoTitle']),
                 'Keywords' => trim($_POST['Keywords']),
                 'Description' => trim($_POST['Description']),
                 'Content' => trim($_POST['Content']),
                 'IsCross' => trim($_POST['IsCross']),
+                'PinYin' => $this->PinYinObj->str2pys(trim($_POST['Name'])),
+                'PY' => $this->PinYinObj->str2py(trim($_POST['Name'])),
             );
             $Ret = $this->CategoryObj->SetCond(array('CateId' => $CateRs['CateId']))->SetUpdate($UpdateArr)->ExecUpdate();
             if($Ret === false) $this->Err(1002);
@@ -196,7 +199,7 @@ class Category extends ControllersAdmin {
         $ModelArr = $this->Sys_modelObj->getList();
         $ModelKV = array_column($ModelArr, 'Name', 'ModelId');
         $ModelKV[-1] = '封面';
-        $ModelTempKV = array_column($ModelArr, 'NameKey', 'ModelId');
+        $ModelTempKV = array_column($ModelArr, 'KeyName', 'ModelId');
         $ModelTempKV[-1] = 'page';
         
         $GroupUserArr = $this->Group_userObj->getList();
@@ -244,10 +247,10 @@ class Category extends ControllersAdmin {
                 'Form' => array(
                     array('Name' =>'TempList', 'Desc' => '列表模板',  'Type' => 'select', 'Data' => $TempList, 'Value' => $CateRs['TempList'], 'Required' => 0, 'Col' => 6),
                     array('Name' =>'TempDetail', 'Desc' => '详情模板',  'Type' => 'select', 'Data' => $TempDetail, 'Value' => $CateRs['TempDetail'], 'Required' => 0, 'Col' => 6),
-                    array('Name' =>'UrlList', 'Desc' => '列表命名规则',  'Type' => 'input', 'Value' => $CateRs['UrlList'], 'Required' => 0, 'Col' => 6, 'Help' => '撒旦法安防'),
+                    /* array('Name' =>'UrlList', 'Desc' => '列表命名规则',  'Type' => 'input', 'Value' => $CateRs['UrlList'], 'Required' => 0, 'Col' => 6, 'Help' => '撒旦法安防'),
                     array('Name' =>'UrlDetail', 'Desc' => '详情命名规则',  'Type' => 'input', 'Value' => $CateRs['UrlDetail'], 'Required' => 0, 'Col' => 6),
                     array('Desc' => '规则说明',  'Type' => 'html', 'Value' => $UrlListDesc, 'Required' => 1, 'Col' => 6),
-                    array('Desc' => '规则说明',  'Type' => 'html', 'Value' => $UrlDetailDesc, 'Required' => 1, 'Col' => 6),
+                    array('Desc' => '规则说明',  'Type' => 'html', 'Value' => $UrlDetailDesc, 'Required' => 1, 'Col' => 6), */
                 )),
             array(
                 'Title' => '分类内容',

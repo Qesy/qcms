@@ -1,4 +1,7 @@
 <?php
+use Model\QC_Category;
+use Model\QC_Sys;
+
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 /*
  * Name : Collection
@@ -12,13 +15,11 @@ defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
  */
 class Router {
 	private $_SiteConfig;
-	private $_UrlConfig;
 	private static $s_instance;
 	public static $s_Controller;
 	public static $s_Method;
 	function __construct() {
 		$this->_SiteConfig = SiteConfig ();
-		$this->_UrlConfig = UrlConfig();
 		self::ViewController ();
 	}
 	public static function get_instance() {
@@ -95,20 +96,50 @@ class Router {
 		Base::InsertFuncArray ( $RouterArr );
 	}
 	
-	private function _UrlConvent($url){
-	    foreach($this->_UrlConfig as $v){
-	        $v['search'] = '/^'.str_replace('/', '\/', $v['search']).'$/';
-	        if(preg_match($v['search'],$url, $matches)){
-	            $search = $replace = array();
-	            foreach($matches as $sk => $sv){
-	                if($sk == 0) continue;
-	                $search[] = '{$'.$sk.'}';
-	                $replace[] = $sv;
+	private function _UrlConvent($Url){
+	    $SysObj = QC_Sys::get_instance();
+	    if(strpos($Url, 'cate/') !== false){
+	        $ListUrl = 'cate/'.$SysObj->getOne('UrlList')['AttrValue'];
+	        $ListUrlRep = '/^'.str_replace(array('/', '{CateId}', '{PinYin}', '{PY}'), array('\/', '(\d+)', '([\w]*?)', '([\w]*?)'), $ListUrl).'$/';
+            if(preg_match($ListUrlRep, $Url.$this->_SiteConfig['Extend'], $Matches)){ //匹配列表	            
+	            preg_match_all("/\{([a-zA-Z0-9]+)\}/",$ListUrl, $MatchesSort);
+	            $CateId = 0;
+	            foreach($MatchesSort[1] as $k => $v){
+	                $$v = $Matches[$k+1];
 	            }
-	            return str_replace($search, $replace, $v['action']);
+	            return 'index/cate/'.$CateId;
 	        }
 	    }
-	    return $url;
+	    
+	    if(strpos($Url, 'detail/') !== false){	       
+	        $UrlDetail = 'detail/'.$SysObj->getOne('UrlDetail')['AttrValue'];
+	        $UrlDetailRep = '/^'.str_replace(array('/', '{Y}', '{M}', '{D}', '{Id}', '{PinYin}', '{PY}'), array('\/', '(\d+)', '(\d+)', '(\d+)', '(\d+)','([\w]*?)', '([\w]*?)'), $UrlDetail).'$/';
+	        if(preg_match($UrlDetailRep, $Url.$this->_SiteConfig['Extend'], $Matches)){ //匹配详情	            
+	            preg_match_all("/\{([a-zA-Z0-9]+)\}/",$UrlDetail, $MatchesSort);
+	            $Id = 0;
+	            foreach($MatchesSort[1] as $k => $v){
+	                $$v = $Matches[$k+1];
+	            }
+	            return 'index/detail/'.$Id;
+	        }
+	    }
+	    
+	    if(strpos($Url, 'page/') !== false){
+
+	        $UrlPage = 'page/'.$SysObj->getOne('UrlPage')['AttrValue'];
+	        $UrlPageRep = '/^'.str_replace(array('/', '{PageId}', '{PinYin}', '{PY}'), array('\/', '(\d+)','([\w]*?)', '([\w]*?)'), $UrlPage).'$/';
+	        preg_match($UrlPageRep, $Url.$this->_SiteConfig['Extend'], $Matches);
+	        if(preg_match($UrlPageRep, $Url.$this->_SiteConfig['Extend'], $Matches)){ //匹配详情
+	            preg_match_all("/\{([a-zA-Z0-9]+)\}/",$UrlPage, $MatchesSort);
+	            $PageId = 0;
+	            foreach($MatchesSort[1] as $k => $v){
+	                $$v = $Matches[$k+1];
+	            }
+	            return 'index/page/'.$PageId;
+	        }
+	    }
+	    
+	    return $Url;
 	}
 }
 ?>

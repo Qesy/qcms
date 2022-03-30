@@ -47,7 +47,7 @@ function redisConfig(){
 
 function SiteConfig() {
     return array (
-        'UrlType' => '0',
+        'UrlType' => '1',
         'Extend' => '.html',
         'DefaultController' => 'index',
         'DefaultFunction' => 'index',

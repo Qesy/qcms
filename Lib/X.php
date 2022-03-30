@@ -15,7 +15,6 @@ require PATH_LIB . 'Config/Base' . EXTEND;
 require PATH_LIB . 'Config/Controllers' . EXTEND;
 require PATH_LIB . 'Config/Db' . EXTEND;
 require PATH_LIB . 'Config/Db_pdo' . EXTEND;
-require PATH_LIB . 'Config/Url' . EXTEND;
 require PATH_LIB . 'Config/Router' . EXTEND;
 spl_autoload_register('autoload');
 date_default_timezone_set ( 'Asia/Shanghai' );

@@ -8,6 +8,23 @@ class Index extends Controllers {
         $this->tempRun('index');
     }
     
+    public function cate_Action($CateId = 0){
+        if(empty($CateId)) $this->DieErr(1001);
+        /* $CateRs = $this->CategoryObj->getOne($CateId);
+        if(empty($CateRs)) $this->DieErr(1001); */
+        $this->tempRun('cate', $CateId);
+    }
+    
+    public function detail_Action($Id = 0){
+        if(empty($Id)) $this->DieErr(1001);
+        $this->tempRun('detail', $Id);
+    }
+    
+    public function page_Action($PageId = 0){
+        if(empty($PageId)) $this->DieErr(1001);
+        $this->tempRun('page', $PageId);
+    }
+    
 	public function auth_Action() {
 		echo '<br><br><br><h1><center>QFrame PHP Version 1.0.0 </center></h1><center><h2>Author : Qesy, Email : 762264@qq.com</h2><p>Your IP : ' . $this->CommonObj->ip () . '</p></center>';
 	}

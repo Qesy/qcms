@@ -37,6 +37,7 @@ use Model\QC_Tag;
 use Model\QC_Tag_map;
 use Model\QC_Token;
 use Model\QC_User;
+use Helper\Pinyin;
 
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 
@@ -58,6 +59,7 @@ abstract class Base {
 	public $CurlObj;
 	public $VeriObj;
 	public $UploadObj;
+	public $PinYinObj;
 	
 	public $CategoryObj;
 	public $FileObj;
@@ -139,6 +141,7 @@ abstract class Base {
 		$this->VeriObj = Veri::get_instance();
 		$this->CommonObj = Common::get_instance();		
 		$this->UploadObj = Upload::get_instance();
+		$this->PinYinObj = Pinyin::get_instance();
 		
 		$this->LanguageArr = require_once PATH_LIB .'Language/Cn/Error'.EXTEND;
 		

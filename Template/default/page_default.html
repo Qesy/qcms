@@ -1,0 +1,21 @@
+默认首页模板默认首页模板
+默认首页{{qcms:Scheme}}://{{qcms:domain}}--{{qcms:Email}}模板
+默认首页模板
+{{include  filename='component_header.html'    aa='bb'/}}
+默认首页模板默认首页模板
+默认首页模板
+{{include filename='component_footer.html'}}
+====={{qcms:crumbs}}=====
+默认首页模板默认首页模板默{{label:ltexst}} == {{label:eee}}认首页模板
+{{menu }}<a href="{{qcms:Menu_Url}}">{{qcms:Menu_i}}-{{qcms:Menu_Name}}-{{qcms:Menu_HasSub}}</a>
+    {{smenu PCateId='{{qcms:Menu_CateId}}'}}<a href="{{qcms:sMenu_Url}}">{{qcms:sMenu_Name}}-{{qcms:sMenu_HasSub}}</a>
+        {{ssmenu PCateId='{{qcms:sMenu_CateId}}'}}<a href="{{qcms:ssMenu_Url}}">{{qcms:ssMenu_Name}}-{{qcms:ssMenu_HasSub}}</a>{{/ssmenu}}
+    {{/smenu}}
+{{/menu}}
+/////////
+{{menu PCateId='1'}}<a href="{{qcms:Menu_Url}}">{{qcms:Menu_Name}}-{{qcms:Menu_HasSub}}</a>{{/menu}}
+bbbbbbbbbbbbbbb
+{{loop sql='select * from qc_user'}}QQQ{{qcms:Loop_UserId}}={{qcms:Loop_NickName}}WWW{{/loop}}
+========================
+{{list module=article CateId='1,2' Row='10'}}<a href="{{qcms:List_Url}}">{{qcms:List_Title}}</a><br>{{/list}}
+==={{qcms:Page_PageId}}=={{qcms:Page_Name}}==

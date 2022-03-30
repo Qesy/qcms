@@ -43,12 +43,12 @@ class Page extends ControllersAdmin {
     
     public function add_Action(){
         if(!empty($_POST)){
-            if(!$this->VeriObj->VeriPara($_POST, array('Name', 'PageCateId', 'TempDetail', 'UrlDetail'))) $this->Err(1001);
+            if(!$this->VeriObj->VeriPara($_POST, array('Name', 'PageCateId', 'TempDetail'))) $this->Err(1001);
             $Ret = $this->PageObj->SetInsert(array(
                 'PageCateId' => $_POST['PageCateId'],
                 'Name' => $_POST['Name'],
                 'TempDetail' => $_POST['TempDetail'],
-                'UrlDetail' => $_POST['UrlDetail'],
+                //'UrlDetail' => $_POST['UrlDetail'],
                 'SeoTitle' => $_POST['SeoTitle'],
                 'Keywords' => $_POST['Keywords'],
                 'Description' => $_POST['Description'],
@@ -83,12 +83,12 @@ class Page extends ControllersAdmin {
             array(
                 'Title' => '扩展设置',
                 'Form' => array(                   
-                    array('Name' =>'TempDetail', 'Desc' => '选择模板',  'Type' => 'select', 'Data' => $TempList, 'Value' => $Keys[0], 'Required' => 1, 'Col' => 6),
-                    array('Name' =>'UrlDetail', 'Desc' => '文件名字',  'Type' => 'input', 'Value' => '{PageId}.html', 'Required' => 1, 'Col' => 6),
+                    array('Name' =>'TempDetail', 'Desc' => '选择模板',  'Type' => 'select', 'Data' => $TempList, 'Value' => $Keys[0], 'Required' => 1, 'Col' => 12),
+                    //array('Name' =>'UrlDetail', 'Desc' => '文件名字',  'Type' => 'input', 'Value' => '{PageId}.html', 'Required' => 1, 'Col' => 6),
                     array('Name' =>'SeoTitle', 'Desc' => 'SEO标题',  'Type' => 'input', 'Value' => '', 'Required' => 0, 'Col' => 12),
                     array('Name' =>'Keywords', 'Desc' => '关键字',  'Type' => 'input', 'Value' => '', 'Required' => 0, 'Col' => 12),
-                    array('Name' =>'Description', 'Desc' => '单页描述',  'Type' => 'textarea', 'Value' => '', 'Required' => 0, 'Col' => 12),                    
-                    array('Desc' => '规则说明',  'Type' => 'html', 'Value' => $UrlListDesc, 'Required' => 1, 'Col' => 12),
+                    array('Name' =>'Description', 'Desc' => '单页描述',  'Type' => 'textarea', 'Value' => '', 'Required' => 0, 'Col' => 12, 'Row' => 6),                    
+                    //array('Desc' => '规则说明',  'Type' => 'html', 'Value' => $UrlListDesc, 'Required' => 1, 'Col' => 12),
                 )
             )
             
@@ -105,12 +105,12 @@ class Page extends ControllersAdmin {
         if(empty($Rs)) $this->Err(1003);
         
         if(!empty($_POST)){
-            if(!$this->VeriObj->VeriPara($_POST, array('Name', 'PageCateId', 'TempDetail', 'UrlDetail'))) $this->Err(1001);
+            if(!$this->VeriObj->VeriPara($_POST, array('Name', 'PageCateId', 'TempDetail'))) $this->Err(1001);
             $Ret = $this->PageObj->SetCond(array('PageId' => $Rs['PageId']))->SetUpdate(array(
                 'PageCateId' => $_POST['PageCateId'],
                 'Name' => $_POST['Name'],
                 'TempDetail' => $_POST['TempDetail'],
-                'UrlDetail' => $_POST['UrlDetail'],
+                //'UrlDetail' => $_POST['UrlDetail'],
                 'SeoTitle' => $_POST['SeoTitle'],
                 'Keywords' => $_POST['Keywords'],
                 'Description' => $_POST['Description'],
@@ -143,12 +143,12 @@ class Page extends ControllersAdmin {
             array(
                 'Title' => '扩展设置',
                 'Form' => array(
-                    array('Name' =>'TempDetail', 'Desc' => '选择模板',  'Type' => 'select', 'Data' => $TempList, 'Value' => $Rs['TempDetail'], 'Required' => 1, 'Col' => 6),
-                    array('Name' =>'UrlDetail', 'Desc' => '文件名字',  'Type' => 'input', 'Value' => $Rs['UrlDetail'], 'Required' => 1, 'Col' => 6),
+                    array('Name' =>'TempDetail', 'Desc' => '选择模板',  'Type' => 'select', 'Data' => $TempList, 'Value' => $Rs['TempDetail'], 'Required' => 1, 'Col' => 12),
+                    //array('Name' =>'UrlDetail', 'Desc' => '文件名字',  'Type' => 'input', 'Value' => $Rs['UrlDetail'], 'Required' => 1, 'Col' => 6),
                     array('Name' =>'SeoTitle', 'Desc' => 'SEO标题',  'Type' => 'input', 'Value' => $Rs['SeoTitle'], 'Required' => 0, 'Col' => 12),
                     array('Name' =>'Keywords', 'Desc' => '关键字',  'Type' => 'input', 'Value' => $Rs['Keywords'], 'Required' => 0, 'Col' => 12),
                     array('Name' =>'Description', 'Desc' => '单页描述',  'Type' => 'textarea', 'Value' => $Rs['Description'], 'Required' => 0, 'Col' => 12),
-                    array('Desc' => '规则说明',  'Type' => 'html', 'Value' => $UrlListDesc, 'Required' => 1, 'Col' => 12),
+                    //array('Desc' => '规则说明',  'Type' => 'html', 'Value' => $UrlListDesc, 'Required' => 1, 'Col' => 12),
                 )
             )
             

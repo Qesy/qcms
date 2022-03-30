@@ -13,10 +13,14 @@ defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class Controllers extends Base {
     
     public $Tmp = array(
-        'Type' => '',
-        'Index' => '0',
-        'Html' => '',
-        'Compile' => '',
+        'Type' => '', //页面类型 index,cate,detail,page
+        'Index' => '0', //索引ID
+        'Html' => '', //模板代码
+        'Compile' => '', //编译后的
+        'CateRs' => array(),
+        'TableRs' => array(),
+        'PageRs' => array(),
+    
     );
     public $ModuleKv = array();
     public $CateKv = array();
@@ -37,18 +41,47 @@ class Controllers extends Base {
     
     
     public function tempRun($Type, $Index = '0'){
-        $this->initTmp($this->SysRs['TmpIndex'], $Type)->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->menu_Tmp();
+        $this->initTmp($Type, $Index)->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->menu_Tmp();
         $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp();
         echo($this->Tmp['Compile']);
     }
     
 
-    public function initTmp($TmpFile, $Type, $Index = '0'){
-        $Path = $this->TmpPath.$TmpFile;
-        if(!file_exists($Path)) $this->DieErr(1035);
-        $this->Tmp['Compile'] = $this->Tmp['Html'] = file_get_contents($Path);
+    public function initTmp($Type, $Index = '0'){
         $this->Tmp['Type'] = $Type;
         $this->Tmp['Index'] = $Index;
+        switch($Type){
+            case 'index':
+                $Path = $this->SysRs['TmpIndex'];        
+                break;
+            case 'cate':                
+                $CateRs = $this->CategoryObj->getOne($Index);                
+                if(empty($CateRs)) $this->DieErr(1001);
+                $this->Tmp['CateRs'] = $CateRs;
+                $Path = $CateRs['TempList'];    
+                break;
+            case 'detail':
+                $TableRs = $this->TableObj->SetCond(array('Id' => $this->Tmp['Index']))->ExecSelectOne();
+                if(empty($TableRs)) $this->DieErr(1001);
+                $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
+                $TableRs = $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $TableRs['Id']))->ExecSelectOne();
+                $CateRs = $this->CategoryObj->getOne($TableRs['CateId']); 
+                $Path = $CateRs['TempDetail'];    
+                $this->Tmp['CateRs'] = $CateRs;
+                $this->Tmp['TableRs'] = $TableRs;
+                break;
+            case 'page':
+                $PageRs = $this->PageObj->SetCond(array('PageId' => $Index))->ExecSelectOne();
+                if(empty($PageRs)) $this->DieErr(1001);
+                $this->Tmp['PageRs'] = $PageRs;
+                $Path = $PageRs['TempDetail'];    
+                break;
+        }
+        
+        if(!file_exists($this->TmpPath.$Path)) $this->DieErr(1035);
+        $this->Tmp['Compile'] = $this->Tmp['Html'] = file_get_contents($this->TmpPath.$Path);
+        
+        
         return $this;
     }
     
@@ -83,8 +116,53 @@ class Controllers extends Base {
                 $Replace = array('<li class="breadcrumb-item active">首页</li>');
                 break;
             case 'cate':
+                $Search = array('{{qcms:crumbs}}');
+                $this->CategoryObj->getCrumbs($this->Tmp['Index']);
+                $CrumbsArr = array('<li class="breadcrumb-item"><a href="/">首页</a></li>');
+                foreach($this->CategoryObj->CateCrumbsArr as $k => $v){
+                    if($k+1 < count($this->CategoryObj->CateCrumbsArr)){
+                        $CrumbsArr[] = '<li class="breadcrumb-item"><a href="'.$this->createUrl('cate', $v['CateId'], $v['PinYin'], $v['PY']).'">'.$v['Name'].'</a></li>';
+                    }else{
+                        $CrumbsArr[] = '<li class="breadcrumb-item active">'.$v['Name'].'</li>';
+                    }                    
+                }
+                $Replace = array(implode('', $CrumbsArr));
+                foreach($this->Tmp['CateRs'] as $k => $v){
+                    $Search[] = '{{qcms:Cate_'.$k.'}}';
+                    $Replace[] = $v;
+                }
                 break;
-            case 'detail':
+            case 'detail':                
+                $Search = array('{{qcms:crumbs}}');
+                $this->CategoryObj->getCrumbs($this->Tmp['CateRs']['CateId']);
+                $CrumbsArr = array('<li class="breadcrumb-item"><a href="/">首页</a></li>');
+                foreach($this->CategoryObj->CateCrumbsArr as $k => $v){
+                    if($k+1 < count($this->CategoryObj->CateCrumbsArr)){
+                        $CrumbsArr[] = '<li class="breadcrumb-item"><a href="'.$this->createUrl('cate', $v['CateId'], $v['PinYin'], $v['PY']).'">'.$v['Name'].'</a></li>';
+                    }else{
+                        $CrumbsArr[] = '<li class="breadcrumb-item active">'.$v['Name'].'</li>';
+                    }
+                }
+                $Replace = array(implode('', $CrumbsArr));
+                //$CateRs = $this->CategoryObj->getOne($Rs['CateId']); 
+                foreach($this->Tmp['CateRs'] as $k => $v){
+                    $Search[] = '{{qcms:Cate_'.$k.'}}';
+                    $Replace[] = $v;
+                }
+                foreach($this->Tmp['TableRs'] as $k => $v){
+                    $Search[] = '{{qcms:Detail_'.$k.'}}';
+                    $Replace[] = $v;
+                }
+                break;
+            case 'page':
+                $Search = array('{{qcms:crumbs}}');
+                $CrumbsArr = array('<li class="breadcrumb-item"><a href="/">首页</a></li>');
+                $CrumbsArr[] = '<li class="breadcrumb-item active">'.$this->Tmp['PageRs']['Name'].'</li>';
+                $Replace = array(implode('', $CrumbsArr));
+                foreach($this->Tmp['PageRs'] as $k => $v){
+                    $Search[] = '{{qcms:Page_'.$k.'}}';
+                    $Replace[] = $v;
+                }
                 break;
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
@@ -115,7 +193,7 @@ class Controllers extends Base {
             $Para = self::_getKv($v);
             $PCateId = isset($Para['PCateId']) ? $Para['PCateId'] : '0';
             $Search[] = $Matches[0][$k];
-            $Replace[] = self::_replaceCate($PCateId, $Matches[2][$k], 'M');
+            $Replace[] = self::_replaceCate($PCateId, $Matches[2][$k], 'Menu_');
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
@@ -129,7 +207,7 @@ class Controllers extends Base {
             $Para = self::_getKv($v);
             $PCateId = isset($Para['PCateId']) ? $Para['PCateId'] : '0';
             $Search[] = $Matches[0][$k];
-            $Replace[] = self::_replaceCate($PCateId, $Matches[2][$k], 'sM');
+            $Replace[] = self::_replaceCate($PCateId, $Matches[2][$k], 'sMenu_');
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
@@ -143,13 +221,9 @@ class Controllers extends Base {
             $Para = self::_getKv($v);
             $PCateId = isset($Para['PCateId']) ? $Para['PCateId'] : '0';
             $Search[] = $Matches[0][$k];
-            $Replace[] = self::_replaceCate($PCateId, $Matches[2][$k], 'ssM');
+            $Replace[] = self::_replaceCate($PCateId, $Matches[2][$k], 'ssMenu_');
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
-        return $this;
-    }
-    
-    public function cate_Tmp(){ // 分类标签
         return $this;
     }
     
@@ -170,7 +244,7 @@ class Controllers extends Base {
             $Ret['Attr'] = !isset($Para['Attr']) ? '' : $Para['Attr'];
             $Ret['Page'] = !isset($Para['Page']) ? '1' : $Para['Page'];
             $Search[] = $Matches[0][$k];
-            $Replace[] = self::_replaceList($Ret, $Matches[2][$k], 'L');
+            $Replace[] = self::_replaceList($Ret, $Matches[2][$k], 'List_');
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         //var_dump($Matches);exit;
@@ -185,7 +259,7 @@ class Controllers extends Base {
             $Para = self::_getKv($v);
             if(empty($Para['sql'])) return $this; 
             $Search[] = $Matches[0][$k];
-            $Replace[] = self::_replaceLoop($Para['sql'], $Matches[2][$k], 'S');
+            $Replace[] = self::_replaceLoop($Para['sql'], $Matches[2][$k], 'Loop_');
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
@@ -193,6 +267,27 @@ class Controllers extends Base {
     
     public function slide_Tmp(){ // 幻灯片
         return $this;
+    }
+    
+    public function createUrl($Type, $Index, $PinYin, $PY, $Ts = 0){
+        switch($Type){
+            case 'cate':
+                $Url = $this->SysObj->getOne('UrlList')['AttrValue'];
+                $RetUrl = str_replace(array('{CateId}', '{PinYin}', '{PY}'), array($Index, $PinYin, $PY), $Url);
+                break;
+            case 'detail':
+                $Url = $this->SysObj->getOne('UrlDetail')['AttrValue'];
+                $Y = date('Y', $Ts);
+                $m = date('m', $Ts);
+                $d = date('d', $Ts);
+                $RetUrl = str_replace(array('{Id}', '{PinYin}', '{PY}', '{Y}', '{M}', '{D}'), array($Index, $PinYin, $PY, $Y, $m, $d), $Url);
+                break;
+            case 'page':
+                $Url = $this->SysObj->getOne('UrlPage')['AttrValue'];
+                $RetUrl = str_replace(array('{PageId}', '{PinYin}', '{PY}'), array($Index, $PinYin, $PY), $Url);
+                break;
+        }
+        return '/'.$Type.'/'.$RetUrl;
     }
     
     private function _replaceLoop($Sql, $Html, $Pre){
@@ -271,7 +366,10 @@ class Controllers extends Base {
         $Search[] =  '{{qcms:'.$Pre.'CateUrl}}';        
         $Search[] =  '{{qcms:'.$Pre.'Url}}';
         foreach($Arr as $k => $v){
+            
             $CateRs = $this->CateKv[$v['CateId']];
+            $UrlCate = self::createUrl('cate', $CateRs['CateId'], $CateRs['PinYin'], $CateRs['PY']);//$Url,
+            $UrlDetail = self::createUrl('detail', $v['Id'], $v['PinYin'], $v['PY']);//$Url,
             $Replace = array();
             foreach($ListField as $sv){
                 $Replace[] =  $v[$sv];
@@ -279,8 +377,8 @@ class Controllers extends Base {
             $Replace[] =  $k;
             $Replace[] = $CateRs['Name'];
             $Replace[] = $CateRs['Pic'];
-            $Replace[] = ($CateRs['IsLink'] == 1) ? $CateRs['LinkUrl'] : $CateRs['UrlList']; // 分类地址
-            $Replace[] = ($v['IsLink'] == '1') ? $v['LinkUrl'] : $CateRs['UrlDetail'];
+            $Replace[] = ($CateRs['IsLink'] == 1) ? $CateRs['LinkUrl'] : $UrlCate; // 分类地址
+            $Replace[] = ($v['IsLink'] == '1') ? $v['LinkUrl'] : $UrlDetail;
             $Compile .= str_replace($Search, $Replace, $Html);
         }        
         return $Compile;
@@ -318,7 +416,7 @@ class Controllers extends Base {
                 $v['SeoTitle'],
                 $v['Keywords'],
                 $v['Description'],
-                $Url,
+                self::createUrl('cate', $v['CateId'], $v['PinYin'], $v['PY']),//$Url,
                 $v['HasSub'],
                 $k,
             );
