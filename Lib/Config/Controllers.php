@@ -20,6 +20,7 @@ class Controllers extends Base {
         'CateRs' => array(),
         'TableRs' => array(),
         'PageRs' => array(),
+        'ModelRs' => array(),
     
     );
     public $ModuleKv = array();
@@ -67,6 +68,7 @@ class Controllers extends Base {
                 $TableRs = $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $TableRs['Id']))->ExecSelectOne();
                 $CateRs = $this->CategoryObj->getOne($TableRs['CateId']); 
                 $Path = $CateRs['TempDetail'];    
+                $this->Tmp['ModelRs'] = $ModelRs;
                 $this->Tmp['CateRs'] = $CateRs;
                 $this->Tmp['TableRs'] = $TableRs;
                 break;
@@ -153,6 +155,12 @@ class Controllers extends Base {
                     $Search[] = '{{qcms:Detail_'.$k.'}}';
                     $Replace[] = $v;
                 }
+                $PreRs = $this->Sys_modelObj->SetTbName('table_'.$this->Tmp['ModelRs']['KeyName'])->SetCond(' Id < '.$this->Tmp['Index'])->SetLimit(' ORDER BY Id DESC LIMIT 0, 1')->ExecSelectOne();
+                $NextRs = $this->Sys_modelObj->SetTbName('table_'.$this->Tmp['ModelRs']['KeyName'])->SetCond(' Id > '.$this->Tmp['Index'])->SetLimit(' ORDER BY Id ASC LIMIT 0, 1')->ExecSelectOne();
+                $Search[] = '{{qcms:Detail_Prev}}';
+                $Search[] = '{{qcms:Detail_Next}}';
+                $Replace[] = '<a href="'.$this->createUrl('detail', $PreRs['Id'], $PreRs['PinYin'], $PreRs['PY']).'">'.$PreRs['Title'].'</a>';
+                $Replace[] = '<a href="'.$this->createUrl('detail', $NextRs['Id'], $NextRs['PinYin'], $NextRs['PY']).'">'.$NextRs['Title'].'</a>';
                 break;
             case 'page':
                 $Search = array('{{qcms:crumbs}}');
