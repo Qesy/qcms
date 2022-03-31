@@ -125,7 +125,7 @@ class Db_pdo extends Db {
 		    }
 		}
 		$sql = "SELECT " . $field . " FROM " . $this->p_dbConfig ['Prefix'] . $tb_name . $this->get_sql_cond ( $cond_arr ) . $sort_str . $limit_str . "";
-		$getArr = $this->get_execute_arr($cond_arr);		
+		$getArr = is_array($cond_arr) ? $this->get_execute_arr($cond_arr) : array();		
 		if($isDebug){
 		    var_dump ( $sql );
 		    var_dump($getArr);

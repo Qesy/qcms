@@ -113,6 +113,8 @@ class Content extends ControllersAdmin {
                     'IsSpuerRec' => $IsSpuerRec,
                     'IsHeadlines' => $IsHeadlines,
                     'IsRec' => $IsRec,
+                    'PinYin' => $this->PinYinObj->str2pys(trim($_POST['Title'])),
+                    'PY' => $this->PinYinObj->str2py(trim($_POST['Title'])),
                 );
                 foreach($FieldArr as $v){
                     if(is_array($_POST[$v['Name']])){
@@ -256,6 +258,8 @@ class Content extends ControllersAdmin {
                     'IsSpuerRec' => $IsSpuerRec,
                     'IsHeadlines' => $IsHeadlines,
                     'IsRec' => $IsRec,
+                    'PinYin' => $this->PinYinObj->str2pys(trim($_POST['Title'])),
+                    'PY' => $this->PinYinObj->str2py(trim($_POST['Title'])),
                 );
                 foreach($FieldArr as $v){
                     if(is_array($_POST[$v['Name']])){

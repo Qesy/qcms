@@ -84,6 +84,7 @@ class Category extends ControllersAdmin {
                 'IsCross' => trim($_POST['IsCross']),
                 'Sort' => 99,
                 'PinYin' => $this->PinYinObj->str2pys(trim($_POST['Name'])),
+                'PY' => $this->PinYinObj->str2py(trim($_POST['Name'])),
             );
             $Ret = $this->CategoryObj->SetInsert($InsertArr)->ExecInsert();
             if($Ret === false) $this->Err(1002);

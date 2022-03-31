@@ -47,6 +47,15 @@ class Controllers extends Base {
         echo($this->Tmp['Compile']);
     }
     
+    public function tempRunTest($Type, $Index = '0', $Html = ''){
+        $this->initTmp($Type, $Index);
+        
+        $this->Tmp['Compile'] = $this->Tmp['Html'] = $Html;
+        //var_dump($this->Tmp['Compile']);exit;
+        $this->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->menu_Tmp();
+        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp();
+        echo($this->Tmp['Compile']);
+    }
 
     public function initTmp($Type, $Index = '0'){
         $this->Tmp['Type'] = $Type;
@@ -132,7 +141,7 @@ class Controllers extends Base {
                 foreach($this->Tmp['CateRs'] as $k => $v){
                     $Search[] = '{{qcms:Cate_'.$k.'}}';
                     $Replace[] = $v;
-                }
+                }                
                 break;
             case 'detail':                
                 $Search = array('{{qcms:crumbs}}');
@@ -155,12 +164,13 @@ class Controllers extends Base {
                     $Search[] = '{{qcms:Detail_'.$k.'}}';
                     $Replace[] = $v;
                 }
-                $PreRs = $this->Sys_modelObj->SetTbName('table_'.$this->Tmp['ModelRs']['KeyName'])->SetCond(' Id < '.$this->Tmp['Index'])->SetLimit(' ORDER BY Id DESC LIMIT 0, 1')->ExecSelectOne();
-                $NextRs = $this->Sys_modelObj->SetTbName('table_'.$this->Tmp['ModelRs']['KeyName'])->SetCond(' Id > '.$this->Tmp['Index'])->SetLimit(' ORDER BY Id ASC LIMIT 0, 1')->ExecSelectOne();
+                $PreRs = $this->Sys_modelObj->SetTbName('table_'.$this->Tmp['ModelRs']['KeyName'])->SetCond(' WHERE Id < '.$this->Tmp['Index'])->SetLimit(' ORDER BY Id DESC LIMIT 0, 1')->ExecSelectOne();
+                $NextRs = $this->Sys_modelObj->SetTbName('table_'.$this->Tmp['ModelRs']['KeyName'])->SetCond(' WHERE Id > '.$this->Tmp['Index'])->SetLimit(' ORDER BY Id ASC LIMIT 0, 1')->ExecSelectOne();
                 $Search[] = '{{qcms:Detail_Prev}}';
                 $Search[] = '{{qcms:Detail_Next}}';
-                $Replace[] = '<a href="'.$this->createUrl('detail', $PreRs['Id'], $PreRs['PinYin'], $PreRs['PY']).'">'.$PreRs['Title'].'</a>';
-                $Replace[] = '<a href="'.$this->createUrl('detail', $NextRs['Id'], $NextRs['PinYin'], $NextRs['PY']).'">'.$NextRs['Title'].'</a>';
+                $Replace[] = empty($PreRs) ? '没有了' : '<a href="'.$this->createUrl('detail', $PreRs['Id'], $PreRs['PinYin'], $PreRs['PY']).'">'.$PreRs['Title'].'</a>';
+                $Replace[] = empty($NextRs) ? '没有了' : '<a href="'.$this->createUrl('detail', $NextRs['Id'], $NextRs['PinYin'], $NextRs['PY']).'">'.$NextRs['Title'].'</a>';
+                
                 break;
             case 'page':
                 $Search = array('{{qcms:crumbs}}');
@@ -203,6 +213,7 @@ class Controllers extends Base {
             $Search[] = $Matches[0][$k];
             $Replace[] = self::_replaceCate($PCateId, $Matches[2][$k], 'Menu_');
         }
+        
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
@@ -373,6 +384,7 @@ class Controllers extends Base {
         $Search[] =  '{{qcms:'.$Pre.'CatePic}}';
         $Search[] =  '{{qcms:'.$Pre.'CateUrl}}';        
         $Search[] =  '{{qcms:'.$Pre.'Url}}';
+        var_export($Search);exit;
         foreach($Arr as $k => $v){
             
             $CateRs = $this->CateKv[$v['CateId']];
@@ -444,7 +456,7 @@ class Controllers extends Base {
     }
 }
 
-class ControllersAdmin extends Base {
+class ControllersAdmin extends Controllers {
 
     public $PageTitle;
     public $PageTitle2;

@@ -65,7 +65,11 @@ class Model extends ControllersAdmin {
                   `IsHeadlines` tinyint(3) NOT NULL DEFAULT '2' COMMENT '是否头条',
                   `IsRec` tinyint(3) NOT NULL DEFAULT '2' COMMENT '是否推荐',
                   `IsPost` tinyint(3) NOT NULL DEFAULT '1' COMMENT '允许评论',
-                  `IsDelete` tinyint(3) NOT NULL DEFAULT '2' COMMENT '是否删除',";
+                  `IsDelete` tinyint(3) NOT NULL DEFAULT '2' COMMENT '是否删除',
+                  `PinYin` varchar(255) NOT NULL DEFAULT '',
+                  `PY` varchar(255) NOT NULL DEFAULT '',
+                  ";
+                
                 $TableSql = 'CREATE TABLE `'.$DbConfig['Prefix'].'table_'.$_POST['KeyName'].'` ( '.PHP_EOL.$FieldStr.' PRIMARY KEY (`Id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=\'\';';
                 $this->SysObj->exec($TableSql, array());
                 DB::$s_db_obj->commit();

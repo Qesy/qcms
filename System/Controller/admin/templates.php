@@ -100,4 +100,42 @@ class Templates extends ControllersAdmin {
         $this->Jump(array('admin', 'templates', 'index'), 1888);
     }
     
+    public function builder_Action(){
+        $LabelArr = array(
+            'include' => '引入页面',
+            'label' => '自定义标签',
+            'global' => '全局标签',
+            'cate' => '分类标签',
+            'detail' => '详情标签',
+            'page' => '单页专属',
+            'menu' => '一级菜单',
+            'smenu' => '二级菜单',
+            'ssmenu' => '三级菜单',
+            'list' => '列表标签',
+            'loop' => '万能标签',
+            
+        );
+        $tmp['LabelArr'] = $LabelArr;
+        $this->LoadView('admin/templates/builder', $tmp);
+    }
+    
+    public function test_Action(){
+        if(!empty($_POST)){
+            if(!$this->VeriObj->VeriPara($_POST, array('Html', 'Type'))) $this->DieErr(1001);
+            switch ($_POST['Type']){
+                case 'index':                    
+                    $this->tempRunTest($_POST['Type'], 0, $_POST['Html']);
+                    break;
+                case 'cate':
+                    break;
+                case 'detail':
+                    break;
+                case 'page':
+                    break;
+            }
+            return;
+        }
+        $this->LoadView('admin/templates/test');
+    }
+    
 }

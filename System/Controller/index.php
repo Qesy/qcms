@@ -10,8 +10,6 @@ class Index extends Controllers {
     
     public function cate_Action($CateId = 0){
         if(empty($CateId)) $this->DieErr(1001);
-        /* $CateRs = $this->CategoryObj->getOne($CateId);
-        if(empty($CateRs)) $this->DieErr(1001); */
         $this->tempRun('cate', $CateId);
     }
     

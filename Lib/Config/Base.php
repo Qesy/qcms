@@ -132,6 +132,8 @@ abstract class Base {
 	    'IsRec',
 	    'IsPost',
 	    'IsDelete',
+	    'PinYin',
+	    'PY',
 	);
 	function __construct() {
 	    $this->CodeObj = Code::get_instance();
