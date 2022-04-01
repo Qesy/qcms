@@ -8,7 +8,7 @@ class SwiperCate extends ControllersAdmin {
             $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
             $Arr[$k]['BtnArr'] = array(
                 array('Desc' => '图片管理', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'swiper', 'index'))),
-                array('Desc' => '代码管理', 'Color' => 'success'),
+                //array('Desc' => '代码管理', 'Color' => 'success'),
             );
         }
         $KeyArr = array(

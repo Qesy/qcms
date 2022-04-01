@@ -82,10 +82,10 @@
                                             <textarea class="form-control" style="height:480px " id="Input_Html"></textarea>
                                         </div>
                                         <div class="col-6">
-                                            <button class="btn btn-primary btn-sm ">结果区</button>
-                                            <button class="btn btn-default btn-sm ">Html</button>
+                                            <button type="button" class="btn btn-primary btn-sm ChangeBtn" data="Compile">结果区</button>
+                                            <button type="button" class="btn btn-default btn-sm ChangeBtn" data="CompileHtml">Html</button>
                                             <textarea class="form-control"  style="height:480px " id="Compile"></textarea>
-                                            <div id="CompileHtml" class="border" style="height:480px "></div>
+                                            <div id="CompileHtml" class="border d-none" style="height:480px; color: #2f2c2c; font-size: 1rem;padding: 0.375rem 0.75rem; "></div>
                                         </div>
                                     </div>
 
@@ -111,15 +111,34 @@
     <!-- jQuery -->
     <?=$this->LoadView('admin/common/js')?>
     <script type="text/javascript">
+        var ResultView = 'Compile';
         $(function(){
+            ResultViewFunc();
             $('#actBtn').click(function(){
                 $.post('/admin/templates/test', {'Html':$('#Input_Html').val(), 'Type':$('#Input_Type').val(), 'Index':$('#Input_Index').val()}, function(Res){
                     $('#Compile').val(Res);
                     $('#CompileHtml').html(Res);
                 }, 'html')
             })
+            $('.ChangeBtn').click(function(){
+                ResultView = $(this).attr('data');
+                console.log(ResultView)
+                ResultViewFunc();
+            })
 
         })
+
+        var ResultViewFunc = function(){
+            $('.ChangeBtn').removeClass('btn-primary').addClass('btn-default');
+            $('.ChangeBtn[data='+ResultView+']').removeClass('btn-default').addClass('btn-primary');
+            if(ResultView == 'Compile'){
+                $('#Compile').removeClass('d-none');
+                $('#CompileHtml').addClass('d-none');
+            }else{
+                $('#Compile').addClass('d-none');
+                $('#CompileHtml').removeClass('d-none');
+            }
+        }
     </script>
 </body>
 </html>

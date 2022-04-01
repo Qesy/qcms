@@ -127,10 +127,13 @@ class Templates extends ControllersAdmin {
                     $this->tempRunTest($_POST['Type'], 0, $_POST['Html']);
                     break;
                 case 'cate':
+                    $this->tempRunTest($_POST['Type'], $_POST['Index'], $_POST['Html']);
                     break;
                 case 'detail':
+                    $this->tempRunTest($_POST['Type'], $_POST['Index'], $_POST['Html']);
                     break;
                 case 'page':
+                    $this->tempRunTest($_POST['Type'], $_POST['Index'], $_POST['Html']);
                     break;
             }
             return;

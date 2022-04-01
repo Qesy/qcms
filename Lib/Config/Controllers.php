@@ -384,7 +384,6 @@ class Controllers extends Base {
         $Search[] =  '{{qcms:'.$Pre.'CatePic}}';
         $Search[] =  '{{qcms:'.$Pre.'CateUrl}}';        
         $Search[] =  '{{qcms:'.$Pre.'Url}}';
-        var_export($Search);exit;
         foreach($Arr as $k => $v){
             
             $CateRs = $this->CateKv[$v['CateId']];
