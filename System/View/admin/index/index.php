@@ -155,7 +155,7 @@
                                 <div class="clearfix"></div>
                             </div>
                             <div class="panel-wrapper ">
-                                <div id="morris_extra_line_chart" class="morris-chart" style="height:442px;"></div>
+                                <div id="BarChart"></div>
                             </div>
                         </div>
                     </div>
@@ -175,7 +175,23 @@
     </div>
     <!-- jQuery -->
     <?=$this->LoadView('admin/common/js')?>
+    <script src="/Static/bootstrap/Highcharts-7.1.1/highcharts.js"></script>
+    <script src="/Static/bootstrap/Highcharts-7.1.1/modules/series-label.js"></script>
+    <script src="/Static/bootstrap/Highcharts-7.1.1/modules/exporting.js"></script>
+    <script src="/Static/bootstrap/Highcharts-7.1.1/modules/export-data.js"></script>
+<script type="text/javascript">
+    ChartsFull('<?=date('Y-m')?> 流量报表', 'BarChart', <?=json_encode(array_keys($DataArr))?>,
+    [
+      {
+        'name' : '总流量： <?=$Total?> 个',
+        'color':"#3cb878",
+        'data' : <?=json_encode(array_values($DataArr))?>,
+        'dataLabels': {enabled: true},
+      },
 
+    ]
+  );
+</script>
 
 
 </body>

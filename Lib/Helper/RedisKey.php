@@ -71,5 +71,9 @@ class RedisKey {
 	public static function Statistics_HM(){ // 后台首页简单统计
 	    return self::$s_projectKey.'_Statistics_HM';
 	}
+	
+	public static function Admin_Index_Chart_String(){
+	    return self::$s_projectKey.'_Admin_Index_Chart_String';
+	}
 
 }

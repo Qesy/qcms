@@ -85,25 +85,25 @@ function CreatUpload(DomId){
 
 function ChartsFull(Title, DomIdStr, Categories, Series){
     Highcharts.chart(DomIdStr, {
-	    chart: {type: 'column'},
-	    title: {
-	        text: Title
-	    },
-	    subtitle: {
-	        //text: 'Source: WorldClimate.com'
-	    },
-	    xAxis: {
-	        categories: Categories,
-	        crosshair: true
-	    },
-	    yAxis: {
-	        min: 0,
-	        title: {
-	            text: '量 (个/条)'
-	        }
-	    },
-	    series: Series
-	});
+        chart: {type: 'column'},
+        title: {
+            text: Title
+        },
+        subtitle: {
+            //text: 'Source: WorldClimate.com'
+        },
+        xAxis: {
+            categories: Categories,
+            crosshair: true
+        },
+        yAxis: {
+            min: 0,
+            title: {
+                text: '量 (个/条)'
+            }
+        },
+        series: Series
+    });
 }
 function ChartsLineFull(Title, DomIdStr, Categories, Series){
     Highcharts.chart(DomIdStr, {
