@@ -39,8 +39,6 @@ class Controllers extends Base {
         }
     }
     
-    
-    
     public function tempRun($Type, $Index = '0'){
         $this->initTmp($Type, $Index)->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->menu_Tmp();
         $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp();
@@ -453,6 +451,8 @@ class Controllers extends Base {
         }
         return $Ret;
     }
+    
+    
 }
 
 class ControllersAdmin extends Controllers {
@@ -485,6 +485,7 @@ class ControllersAdmin extends Controllers {
     public $EditorArr = array('ckeditor' => 'ckeditor');
     function __construct(){
         parent::__construct();
+        self::_postKey();
         $Token = $this->CookieObj->get('Token', 'User');
         $TokenRs = $this->TokenObj->getOne($Token);
         if(empty($TokenRs)) $this->Jump(array('index', 'adminLogout'), 1007);
@@ -507,6 +508,7 @@ class ControllersAdmin extends Controllers {
             'admin/index/index' => array('Name' => '用户首页', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'index', 'index'))),
             // 系统管理
             'admin/sys/index' => array('Name' => '基本设置', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sys', 'index'))),
+            'admin/sys/license' => array('Name' => '系统授权', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sys', 'license'))),
             'admin/admin/index' => array('Name' => '管理员管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'admin', 'index'))),
             'admin/admin/add' => array('Name' => '添加管理员', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'admin', 'add'))),
             'admin/admin/edit' => array('Name' => '修改管理员', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'admin', 'edit'))),
@@ -653,13 +655,7 @@ class ControllersAdmin extends Controllers {
         //var_dump($this->MenuArr);exit;
         $this->RoleMenuArr = array(
             array('Key' => 'admin/index/index', 'subCont' => array('index'), 'Icon' => 'bi bi-house'),
-            array('Key' => 'admin/index', 'subCont' => array('sys', 'admin', 'groupAdmin', 'log'), 'Icon' => 'bi bi-gear', 'Sub' => array(
-                array('Key' => 'admin/sys/index'),
-                array('Key' => 'admin/admin/index'),
-                array('Key' => 'admin/groupAdmin/index'),
-                array('Key' => 'admin/log/operate'),
-                array('Key' => 'admin/log/login'),
-            )),
+            
             array('Key' => 'admin/category', 'subCont' => array('category', 'page', 'pageCate', 'labelCate', 'label', 'form', 'formField', ), 'Icon' => 'bi bi-list-ol', 'Sub' => array(
                 array('Key' => 'admin/category/index'),
                 array('Key' => 'admin/page/index'),
@@ -690,6 +686,14 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/templates/index'),
                 array('Key' => 'admin/templates/builder'),
                 array('Key' => 'admin/templates/test'),
+            )),
+            array('Key' => 'admin/index', 'subCont' => array('sys', 'admin', 'groupAdmin', 'log'), 'Icon' => 'bi bi-gear', 'Sub' => array(
+                array('Key' => 'admin/sys/index'),
+                array('Key' => 'admin/sys/license'),
+                array('Key' => 'admin/admin/index'),
+                array('Key' => 'admin/groupAdmin/index'),
+                array('Key' => 'admin/log/operate'),
+                array('Key' => 'admin/log/login'),
             )),
             array('Key' => 'index/adminLogout', 'subCont' => array('signout'), 'Icon' => 'bi bi-box-arrow-right'),
         );
@@ -736,6 +740,55 @@ class ControllersAdmin extends Controllers {
             $Template[$v] = $v;
         }
         return $Template;
+    }
+    
+    public function getLicense($LicenseStr){
+        $pk = self::_pvKey();
+        return $this->_sslDecrypt($LicenseStr, $pk, 'public');
+    }
+    
+    public function getKey(){
+        $pk = self::_pvKey();
+        $Token = $this->CookieObj->get('Token', 'User');
+        $Rs = array('Token' => $Token, 'Domain' => URL_DOMAIN);
+        $key = $this->_sslEncrypt(json_encode($Rs) , $pk, 'public');
+        return $key;
+    }
+    
+    private function _postKey(){
+        $key = self::getKey();
+        $this->CurlObj->SetUrl('http://www.q-cms.cn/client/updata.html')->SetPara(array('Key' => $key))->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
+    }
+    
+    private function _pvKey(){
+        return '-----BEGIN PUBLIC KEY-----
+MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0rwpQg7QurxLuMP3knkD
+O0dXouHcp6+lwjQuDiRDzNflCQ7L8tSLg5CZiUlyF1LvinyP9addBIF+LC0h/bHr
+SWZhlA3bTBeIY4bFIe5bWYA+Aqo8/iHWkJIO+1HkcU1E0AJejBTwvOlNWaWtlkth
+vQ4CvboRoLsyQ8YI2tBYF2DOSqEjzH/5pQmo7E1nFrOrovG3uZmULfkgdihY8M0H
+SRniif+15/8FV7u7hXCLNmj7zfZl4fHz96HWbzkudnn7ciY/R21JAdBgekya5lgE
+R6LXQzX/zL3NwvCd/hiT0XgdYW6rGH3qYL36d44Hziw/2PWC7psfZ3TrUwFzYRmg
+oQIDAQAB
+-----END PUBLIC KEY-----';
+    }
+    
+    private function _sslEncrypt($Data, $Key, $Type = 'private', $ReturnType = 'base64') { // $Type: private, public
+        if($Type == 'private'){
+            $Ret = openssl_private_encrypt($Data, $encrypted, $Key);
+        }else{
+            $Ret = openssl_public_encrypt($Data, $encrypted, $Key);
+        }
+        return ($ReturnType == 'base64') ? base64_encode($encrypted) : bin2hex($encrypted);
+    }
+    private function _sslDecrypt($Source, $Key, $Type = 'private', $ReturnType = 'base64') {
+        $encrypted = '';
+        $SourceNew = ($ReturnType == 'base64') ? base64_decode($Source) : hex2bin($Source);
+        if($Type == 'private'){
+            $Ret = openssl_private_decrypt($SourceNew, $encrypted, $Key);
+        }else{
+            $Ret = openssl_public_decrypt($SourceNew, $encrypted, $Key);
+        }
+        return $encrypted;
     }
     
     function __destruct(){       

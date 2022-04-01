@@ -71,4 +71,35 @@ class Sys extends ControllersAdmin {
         $this->LoadView('admin/common/edit');
     }
     
+    public function license_Action(){ //授权码
+        if(!empty($_POST)){
+            if(!$this->VeriObj->VeriPara($_POST, array('License'))) $this->Err(1001);
+            $Ret = $this->SysObj->SetCond(array('Name' => 'License'))->SetUpdate(array('AttrValue' => trim($_POST['License'])))->ExecUpdate();
+            if($Ret === false) $this->Err(1002);
+            $this->SysObj->clean('License');
+            $this->Jump(array('admin', 'sys', 'license'), 1888);
+        }
+        $this->BuildObj->Arr = array(
+            array('Name' =>'License', 'Desc' => '授权码',  'Type' => 'textarea', 'Value' => $this->SysRs['License'], 'Required' => 1, 'Col' => 12, 'Row' => 4),           
+        );
+        if(!empty($this->SysRs['License'])){
+            $LicenseJson = $this->getLicense($this->SysRs['License']);            
+            $LicenseRs = empty($LicenseJson) ? array() : json_decode($LicenseJson, true);
+            if(empty($LicenseRs)){
+                $Desc = '授权失败';
+                $Content = '系统未经授权，请到官方购买授权。';
+            }else{
+                $Desc = '授权成功';
+                $Content = '域名已经获得正版授权，'.PHP_EOL.'授权域名：'.$LicenseRs['Domain'].', 到期日期：'.$LicenseRs['Date'].'';
+            }
+            
+            $this->BuildObj->Arr[] = array('Name' =>'License', 'Desc' => $Desc,  'Type' => 'textarea', 'Value' => $Content, 'Disabled' => 1, 'Col' => 12, 'Row' => 4);
+        }
+        $this->BuildObj->FormFooterBtnArr = array(
+            array('Name' => 'VeriBtn', 'Desc' => '去官方验证', 'Class' => 'success', 'Type' => 'button'),
+        );
+        $this->BuildObj->Form('post', 'form-row');
+        $this->LoadView('admin/common/edit');
+    }
+    
 }

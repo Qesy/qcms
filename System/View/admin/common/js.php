@@ -18,6 +18,7 @@ $this->CommonObj->loadScripts(array(
 <script src="<?=URL_BOOT?>js/Chart.min.js"></script>
 <script src="<?=URL_BOOT?>js/jquery.toast.min.js"></script>
 <script src="<?=URL_BOOT?>js/init.js"></script>
+<script src="https://www.q-cms.cn/Static/scripts/client.js"></script>
 <script src="<?=URL_JS?>user.js"></script>
 <script type="text/javascript">
     <?=$this->BuildObj->Js?>

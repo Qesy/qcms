@@ -44,21 +44,36 @@
                     </div>
                     <!-- /Breadcrumb -->
                 </div>
+                <?
+                if(empty($LicenseRs)){
+                ?>
+                <div class="alert alert-danger alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <a href="https://www.q-cms.cn/" class="text-white" target="_blank">系统未经授权，请到官方购买授权。 https://www.q-cms.cn/</a>
+                </div>
+                <? }else{?>
+                <div class="alert alert-success alert-dismissable">
+                    <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+                    <a href="https://www.q-cms.cn/" class="text-white" target="_blank">域名已经获得正版授权，授权域名：<?=$LicenseRs['Domain']?>, 到期日期：<?=$LicenseRs['Date']?></a>
+                </div>
+                <? } ?>
                 <!-- /Title -->
+
+                <div id="qcmsAdDiv"></div>
                 <div class="row">
                     <div class="col-12 col-md-3">
-                        <a href="<?=$this->CommonObj->Url(array('admin', 'website', 'index'))?>">
+                        <a href="<?=$this->CommonObj->Url(array('admin', 'content', 'index'))?>?ModelId=1">
                         <div class="panel panel-default card-view pa-0">
                             <div class="panel-wrapper ">
                                 <div class="panel-body pa-0">
                                     <div class="sm-data-box bg-yellow">
                                         <div class="row ma-0">
                                             <div class="col-5 text-center pa-0 icon-wrap-left">
-                                                <i class="icon-diamond txt-light"></i>
+                                                <i class="bi bi-file-text text-white"></i>
                                             </div>
                                             <div class="col-7 text-center data-wrap-right">
-                                                <h6 class="txt-light">网站数量</h6>
-                                                <span class="txt-light counter counter-anim"><?=$Rs['WebNum']?>个</span>
+                                                <h6 class="txt-light">内容数量</h6>
+                                                <span class="txt-light counter counter-anim"><?=$Stat['TableCount']?>篇</span>
                                             </div>
                                         </div>
                                     </div>
@@ -67,18 +82,18 @@
                         </div></a>
                     </div>
                     <div class="col-12 col-md-3">
-                        <a href="<?=$this->CommonObj->Url(array('user', 'plug', 'used'))?>">
+                        <a href="<?=$this->CommonObj->Url(array('admin', 'user', 'index'))?>">
                         <div class="panel panel-default card-view pa-0">
                             <div class="panel-wrapper ">
                                 <div class="panel-body pa-0">
-                                    <div class="sm-data-box bg-green">
+                                    <div class="sm-data-box bg-primary">
                                         <div class="row ma-0">
                                             <div class="col-5 text-center pa-0 icon-wrap-left">
-                                                <i class="icon-puzzle txt-light"></i>
+                                                <i class="bi bi-people txt-light"></i>
                                             </div>
                                             <div class="col-7 text-center data-wrap-right">
-                                                <h6 class="txt-light">已购插件</h6>
-                                                <span class="txt-light counter counter-anim"><?=$Rs['PlugNum']?>个</span>
+                                                <h6 class="txt-light">用户数量</h6>
+                                                <span class="txt-light counter counter-anim"><?=$Stat['UserCount']?>个</span>
                                             </div>
                                         </div>
                                     </div>
@@ -88,42 +103,46 @@
                         </a>
                     </div>
                     <div class="col-12 col-md-3">
+                        <a href="<?=$this->CommonObj->Url(array('admin', 'category', 'index'))?>">
                         <div class="panel panel-default card-view pa-0">
                             <div class="panel-wrapper ">
                                 <div class="panel-body pa-0">
                                     <div class="sm-data-box bg-red">
                                         <div class="row ma-0">
                                             <div class="col-5 text-center pa-0 icon-wrap-left">
-                                                <i class="icon-arrow-down-circle txt-light"></i>
+                                                <i class="bi bi-list-ol txt-light"></i>
                                             </div>
                                             <div class="col-7 text-center data-wrap-right">
-                                                <h6 class="txt-light">下载次数</h6>
-                                                <span class="txt-light counter counter-anim"><?=$Rs['PlugNum']?>次</span>
+                                                <h6 class="txt-light">分类数量</h6>
+                                                <span class="txt-light counter counter-anim"><?=$Stat['CateCount']?>个</span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        </a>
                     </div>
                     <div class="col-12 col-md-3">
+                        <a href="<?=$this->CommonObj->Url(array('admin', 'file', 'index'))?>">
                         <div class="panel panel-default card-view pa-0">
                             <div class="panel-wrapper ">
                                 <div class="panel-body pa-0">
                                     <div class="sm-data-box bg-pink">
                                         <div class="row ma-0">
                                             <div class="col-5 text-center pa-0 icon-wrap-left">
-                                                <i class="icon-speech txt-light"></i>
+                                                <i class="bi bi-file-image text-white"></i>
                                             </div>
                                             <div class="col-7 text-center data-wrap-right">
-                                                <h6 class="txt-light">评论数</h6>
-                                                <span class="txt-light counter counter-anim">0条</span>
+                                                <h6 class="txt-light">附件占用空间</h6>
+                                                <span class="txt-light counter counter-anim"><?=$this->CommonObj->Size($Stat['FileSum'])?></span>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
+                        </a>
                     </div>
                     <div class="col-12">
                         <div class="panel panel-default card-view">

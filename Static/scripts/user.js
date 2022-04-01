@@ -45,7 +45,9 @@ $(function(){
             CreatUpload($(this).attr('data'))
         })
     }
-
+    $('#Button_VeriBtn').click(function(){
+        window.open('https://www.q-cms.cn/');
+    })
 
 })
 

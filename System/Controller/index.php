@@ -69,15 +69,16 @@ class Index extends Controllers {
 	        
 	        $Rs = $this->UserObj->SetCond(array('Phone' => trim($_POST['Phone']), 'Password' => md5(trim($_POST['Password']))))->ExecSelectOne();
 	        if(empty($Rs)) $this->Err(1006);
-	        $OldToken = $this->TokenObj->SetCond(array('UserId' => $Rs['UserId'], 'Client' => self::CurrentClient))->ExecSelectOne();
+	        $OldTokenList = $this->TokenObj->SetCond(array('UserId' => $Rs['UserId'], 'Client' => self::CurrentClient))->ExecSelect();
+	        $OldTokenArr = array_column($OldTokenList, 'Token');
 	        $Ts = time();
 	        $Ip = $this->CommonObj->ip();
 	        $Token = sha1($this->IdCreate());
 	        
             try{
                 DB::$s_db_obj->beginTransaction();
-                if(!empty($OldToken)){
-                    $this->TokenObj->SetCond(array('Token' => $OldToken['Token']))->ExecSelectOne();
+                if(!empty($OldTokenArr)){
+                    $this->TokenObj->SetCond(array('Token' => $OldTokenArr))->ExecDelete();
                 }
                 $this->Log_loginObj->SetInsert(array('UserId' => $Rs['UserId'], 'Ip' => $Ip, 'Ts' => $Ts, 'Ua'=> $_SERVER['HTTP_USER_AGENT']))->ExecInsert();
                 $this->TokenObj->SetInsert(array('Token' => $Token, 'UserId' => $Rs['UserId'], 'Client' => self::CurrentClient, 'Ts' => $Ts))->ExecInsert();                
@@ -87,7 +88,7 @@ class Index extends Controllers {
                 DB::$s_db_obj->rollBack();
                 $this->Err(1040);
             }
-            $this->TokenObj->clean($OldToken['Token']);
+            foreach($OldTokenArr as $OldToken) $this->TokenObj->clean($OldToken);            
             $this->UserObj->clean($Rs['UserId']);
             $this->CookieObj->set(array('Token' => $Token, 'Key' => $Key), 'User', 24*14);	        
 	        /* if(isset($_GET['Refer'])){ //后台用户不需要

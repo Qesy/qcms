@@ -67,5 +67,9 @@ class RedisKey {
 	public static function Sys_Form_RS_HM($KeyName){
 	    return self::$s_projectKey.'_Sys_Form_RS_HM_'.$KeyName;
 	}
+	
+	public static function Statistics_HM(){ // 后台首页简单统计
+	    return self::$s_projectKey.'_Statistics_HM';
+	}
 
 }
