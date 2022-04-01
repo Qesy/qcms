@@ -1,5 +1,5 @@
 <div class="fixed-sidebar-left">
-    <ul class="nav navbar-nav side-nav nicescroll-bar">
+    <ul class="nav navbar-nav side-nav nicescroll-bar flex-nowrap">
         <?
         foreach($this->RoleMenuArr as $val){
             $Key = $val['Key'];
