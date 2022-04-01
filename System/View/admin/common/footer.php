@@ -5,7 +5,7 @@
             <svg class="logo " style="fill: #999!important;width: 84px;height: 20px;" >
                   <use xlink:href="/Static/images/logo.svg#layer"/>
                 </svg>
-
+            <span class="h5 pl-1 pr-3 mb-0 font-italic">v<?=$this->SysRs['Version']?></span>
             <ul class="footer-link nav navbar-nav d-flex flex-row">
                 <li class="logo-footer"><a href="#">帮助</a></li>
                 <li class="logo-footer"><a href="#">条款</a></li>
@@ -18,4 +18,4 @@
         </div>
     </div>
 </footer>
-<iframe src="http://www.q-cms.cn/client/info.html?n=<?=$this->getKey()?>" width="0" height="0" frameborder="0" ></iframe>
+<iframe src="https://www.q-cms.cn/client/info.html?n=<?=$this->getKey()?>" width="0" height="0" frameborder="0" ></iframe>

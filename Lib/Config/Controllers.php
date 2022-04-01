@@ -757,7 +757,7 @@ class ControllersAdmin extends Controllers {
     
     private function _postKey(){
         $key = self::getKey();
-        $this->CurlObj->SetUrl('http://www.q-cms.cn/client/updata.html')->SetPara(array('Key' => $key))->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $this->CurlObj->SetUrl('https://www.q-cms.cn/client/updata.html')->SetPara(array('Key' => $key))->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
     }
     
     private function _pvKey(){

@@ -68,8 +68,8 @@ var kenny = function(){
 	/*Counter Animation*/
 	var counterAnim = $('.counter-anim');
 	if( counterAnim.length > 0 ){
-		counterAnim.counterUp({ delay: 10,
-        time: 100});
+		/*counterAnim.counterUp({ delay: 10,
+        time: 100});*/
 	}
 
 	/*Tooltip*/

@@ -121,4 +121,13 @@ class Index extends Controllers {
 	    var_dump($this->CommonObj->GetQuery());
 		echo 'test';
 	}
+	
+	function __destruct(){
+	    $Rs = $this->Stat_flowObj->SetCond(array('Date' => date('Y-m-d')))->ExecSelectOne();
+	    if(empty($Rs)){
+	        $this->Stat_flowObj->SetInsert(array('Date' => date('Y-m-d'), 'FlowNum' => '1'))->ExecInsert();
+	    }else{
+	        $this->Stat_flowObj->SetCond(array('Date' => date('Y-m-d')))->SetUpdate(array('FlowNum' => ($Rs['FlowNum']+1)))->ExecUpdate();
+	    }
+	}
 }

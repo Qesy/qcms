@@ -58,12 +58,10 @@
                 </div>
                 <? } ?>
                 <!-- /Title -->
-
-                <div id="qcmsAdDiv"></div>
                 <div class="row">
                     <div class="col-12 col-md-3">
                         <a href="<?=$this->CommonObj->Url(array('admin', 'content', 'index'))?>?ModelId=1">
-                        <div class="panel panel-default card-view pa-0">
+                        <div class="panel panel-default card-view pa-0 mb-4">
                             <div class="panel-wrapper ">
                                 <div class="panel-body pa-0">
                                     <div class="sm-data-box bg-yellow">
@@ -83,7 +81,7 @@
                     </div>
                     <div class="col-12 col-md-3">
                         <a href="<?=$this->CommonObj->Url(array('admin', 'user', 'index'))?>">
-                        <div class="panel panel-default card-view pa-0">
+                        <div class="panel panel-default card-view pa-0 mb-4">
                             <div class="panel-wrapper ">
                                 <div class="panel-body pa-0">
                                     <div class="sm-data-box bg-primary">
@@ -104,7 +102,7 @@
                     </div>
                     <div class="col-12 col-md-3">
                         <a href="<?=$this->CommonObj->Url(array('admin', 'category', 'index'))?>">
-                        <div class="panel panel-default card-view pa-0">
+                        <div class="panel panel-default card-view pa-0 mb-4">
                             <div class="panel-wrapper ">
                                 <div class="panel-body pa-0">
                                     <div class="sm-data-box bg-red">
@@ -125,7 +123,7 @@
                     </div>
                     <div class="col-12 col-md-3">
                         <a href="<?=$this->CommonObj->Url(array('admin', 'file', 'index'))?>">
-                        <div class="panel panel-default card-view pa-0">
+                        <div class="panel panel-default card-view pa-0 mb-4">
                             <div class="panel-wrapper ">
                                 <div class="panel-body pa-0">
                                     <div class="sm-data-box bg-pink">
@@ -144,6 +142,10 @@
                         </div>
                         </a>
                     </div>
+                </div>
+                <div id="qcmsAdDiv"></div>
+                <div class="row">
+
                     <div class="col-12">
                         <div class="panel panel-default card-view">
                             <div class="panel-heading">
