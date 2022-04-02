@@ -8,16 +8,19 @@ class Label extends ControllersAdmin {
         $Count = 0;
         $Limit = array(($Page-1)*$this->PageNum, $this->PageNum);
         $CondArr = array();
+        if(!empty($_GET['LabelCateId'])) $CondArr['LabelCateId'] = $_GET['LabelCateId'];
         $Arr = $this->LabelObj->SetCond($CondArr)->SetLimit($Limit)->SetSort(array('Sort' => 'ASC', 'LabelId' => 'ASC'))->ExecSelectAll($Count);
         
         $labelCateArr = $this->Label_cateObj->getList();
         $labelCateKV = array_column($labelCateArr, 'Name', 'LabelCateId');
 
-        foreach($Arr as $k => $v){            
-            $Arr[$k]['LabelCateName'] = $labelCateKV[$v['LabelCateId']];
+        foreach($Arr as $k => $v){  
+            $GET = $_GET;
+            $GET['LabelCateId'] = $v['LabelCateId'];
+            $Arr[$k]['LabelCateName'] = '<a class="btn btn-primary btn-outline btn-sm" href="'.$this->CommonObj->Url(array('admin', 'label', 'index')).'?'.http_build_query($GET).'">'.$labelCateKV[$v['LabelCateId']].'</a>';
             $Arr[$k]['KeyNameView'] = '<input class="form-control" disabled="disabled" type="text" value="{{label:'.$v['KeyName'].'}}"/>';
             $Arr[$k]['JsView'] = '<input class="form-control" disabled="disabled" type="text" value="<script language=JavaScript src=\''.$_SERVER['REQUEST_SCHEME'].'://'.URL_DOMAIN.'/index/js?KeyName='.$v['KeyName'].'\'></script>"/>';
-            $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
+            $Arr[$k]['SortView'] = '<input class="form-control SortInput" type="text" data-type="label" data-index="'.$v['LabelId'].'" value="'.$v['Sort'].'"/>';
         }
         $KeyArr = array(
             'LabelId' => array('Name' => 'ID', 'Td' => 'th'),
@@ -37,12 +40,17 @@ class Label extends ControllersAdmin {
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
         $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'labelState')).'";';
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
+        $this->BuildObj->Arr = array(
+            array('Name' =>'LabelCateId', 'Desc' => '选择分类',  'Type' => 'select', 'Data' => $labelCateKV, 'Value' => $_GET['LabelCateId'], 'Required' => 0, 'Col' => 12),
+        );
+        $this->BuildObj->Form('get', 'form-inline');
+        $this->HeadHtml = $this->BuildObj->Html;
         $this->LoadView('admin/common/list', $tmp);
     }
     
     public function add_Action(){
         if(!empty($_POST)){
-            if(!$this->VeriObj->VeriPara($_POST, array('Name', 'KeyName', 'LabelCateId', 'Content'))) $this->Err(1001);
+            if(!$this->VeriObj->VeriPara($_POST, array('Name', 'KeyName', 'LabelCateId'))) $this->Err(1001);
             if(!$this->VeriObj->IsPassword($_POST['KeyName'], 1, 30)) $this->Err(1048);
             $Ret = $this->LabelObj->SetInsert(array(
                 'Name' => $_POST['Name'],
@@ -77,7 +85,7 @@ class Label extends ControllersAdmin {
         $Rs = $this->LabelObj->SetCond(array('LabelId' => $_GET['LabelId']))->ExecSelectOne();
         if(empty($Rs)) $this->Err(1003);
         if(!empty($_POST)){
-            if(!$this->VeriObj->VeriPara($_POST, array('Name', 'KeyName', 'LabelCateId', 'Content', 'IsEditor'))) $this->Err(1001);
+            if(!$this->VeriObj->VeriPara($_POST, array('Name', 'KeyName', 'LabelCateId', 'IsEditor'))) $this->Err(1001);
             if(!$this->VeriObj->IsPassword($_POST['KeyName'], 1, 30)) $this->Err(1048);
             $Ret = $this->LabelObj->SetCond(array('LabelId' => $Rs['LabelId']))->SetUpdate(array(
                 'Name' => $_POST['Name'],

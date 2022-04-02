@@ -14,7 +14,7 @@ class Form extends ControllersAdmin {
             $GET['FormId'] = $v['FormId'];
             $Arr[$k]['KeyNameView'] = '<input class="form-control" disabled="disabled" type="text" value="{{Label:'.$v['KeyName'].'}}"/>';
             //$Arr[$k]['Url'] = '<input class="form-control" disabled="disabled" type="text" value="'.$_SERVER['REQUEST_SCHEME'].'://'.URL_DOMAIN.'/index/form?KeyName='.$v['KeyName'].'"/>';
-            $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
+            $Arr[$k]['SortView'] = '<input class="form-control SortInput" type="text" data-type="form" data-index="'.$v['FormId'].'" value="'.$v['Sort'].'"/>';
             $Arr[$k]['IsLoginView'] = ($v['IsLogin'] == 1) ? '需登录' : '无需登录';
             $Arr[$k]['StateDefaultView'] = ($v['StateDefault'] == 1) ? '已审核' : '未审核';
             $Arr[$k]['DataView'] = '<a class="btn btn-primary btn-outline btn-sm" href="'.$this->CommonObj->Url(array('admin', 'formData', 'index')).'?'.http_build_query($GET).'">数据管理</a>'; 
@@ -68,11 +68,12 @@ class Form extends ControllersAdmin {
                 $FieldArr[] = '`UserId` bigint(20) NOT NULL DEFAULT \'0\' COMMENT \'\','.PHP_EOL;
                 $FieldArr[] = '`State` tinyint(3) NOT NULL DEFAULT \'2\' COMMENT \'\','.PHP_EOL;
                 $FieldArr[] = '`TsAdd` bigint(20) NOT NULL DEFAULT \'0\' COMMENT \'\','.PHP_EOL;
-                $TableSql = 'CREATE TABLE `'.$DbConfig['Prefix'].'form_'.$_POST['KeyName'].'` ( '.PHP_EOL.implode('', $FieldArr).' PRIMARY KEY (`FormId`)) ENGINE=InnoDB AUTO_INCREMENT=10000 DEFAULT CHARSET=utf8 COMMENT=\'\';';
+                $TableSql = 'CREATE TABLE `'.$DbConfig['Prefix'].'form_'.$_POST['KeyName'].'` ( '.PHP_EOL.implode('', $FieldArr).' PRIMARY KEY (`FormListId`)) ENGINE=InnoDB AUTO_INCREMENT=10000 DEFAULT CHARSET=utf8 COMMENT=\'\';';
                 if ($this->SysObj->exec($TableSql, array()) === false) throw new PDOException(self::lang(1025));
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
                 DB::$s_db_obj->rollBack();
+                var_dump($e->getMessage());exit;
                 $this->Err(1002);
             }
 

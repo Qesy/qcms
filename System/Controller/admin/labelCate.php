@@ -5,7 +5,7 @@ class LabelCate extends ControllersAdmin {
     public function index_Action(){
         $Arr = $this->Label_cateObj->getList();
         foreach($Arr as $k => $v){
-            $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
+            $Arr[$k]['SortView'] = '<input class="form-control SortInput" type="text" data-type="labelCate" data-index="'.$v['LabelCateId'].'" value="'.$v['Sort'].'"/>';
         }
         $KeyArr = array(
             'LabelCateId' => array('Name' => 'ID', 'Td' => 'th'),
@@ -13,6 +13,9 @@ class LabelCate extends ControllersAdmin {
             'SortView' => array('Name' => '排序', 'Td' => 'th', 'Style' => 'width:100px;'),
         );
         $this->BuildObj->PrimaryKey = 'LabelCateId';
+        $this->BuildObj->TableTopBtnArr = array(
+            array('Desc' => '返回', 'Link' => $this->CommonObj->Url(array('admin', 'label', 'index')), 'Class' => 'default'),
+        );
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr);
         $this->LoadView('admin/common/list', $tmp);
     }

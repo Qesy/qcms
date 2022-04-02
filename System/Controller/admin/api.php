@@ -116,6 +116,21 @@ class Api extends ControllersAdmin {
             $Ret = $this->PageObj->SetCond(array('PageId' => $_POST['Index']))->SetUpdate(array('Sort' => intval($_POST['Sort'])))->ExecUpdate();
             if($Ret === false) $this->ApiErr(1002);
             $this->ApiSuccess();
+        }elseif($_POST['Type'] == 'form'){
+            $Ret = $this->Sys_formObj->SetCond(array('FormId' => $_POST['Index']))->SetUpdate(array('Sort' => intval($_POST['Sort'])))->ExecUpdate();
+            if($Ret === false) $this->ApiErr(1002);
+            $this->ApiSuccess();
+        }elseif($_POST['Type'] == 'labelCate'){
+            $Ret = $this->Label_cateObj->SetCond(array('LabelCateId' => $_POST['Index']))->SetUpdate(array('Sort' => intval($_POST['Sort'])))->ExecUpdate();
+            if($Ret === false) $this->ApiErr(1002);
+            $this->Label_cateObj->cleanList();
+            $this->ApiSuccess();
+        }elseif($_POST['Type'] == 'label'){
+            $Rs = $this->LabelObj->SetCond(array('LabelId' => $_POST['Index']))->ExecSelectOne();
+            $Ret = $this->LabelObj->SetCond(array('LabelId' => $_POST['Index']))->SetUpdate(array('Sort' => intval($_POST['Sort'])))->ExecUpdate();
+            if($Ret === false) $this->ApiErr(1002);
+            $this->LabelObj->clean($Rs['KeyName']);
+            $this->ApiSuccess();
         }
         
     }

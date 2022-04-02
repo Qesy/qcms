@@ -50,7 +50,7 @@
                             <div class="panel-heading mb-3 pb-2 d-flex justify-content-between align-items-center border-bottom">
 
 <h5 class="txt-dark"><?=$this->PageTitle2?></h5>
-<a href="<?=$this->CommonObj->url(array('admin', 'form', 'index'))?>" class="btn btn-primary btn-sm">返回</a>
+<a href="<?=$this->CommonObj->url(array('admin', 'form', 'index'))?>" class="btn btn-default btn-sm">返回</a>
 
 <?
 $Html = '<form method="post" action="'.$_SERVER['REQUEST_SCHEME'].'://'.URL_DOMAIN.'/index/form.html?KeyName='.$Rs['KeyName'].'">';

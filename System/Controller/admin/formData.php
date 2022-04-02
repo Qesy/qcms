@@ -32,6 +32,9 @@ class FormData extends ControllersAdmin {
         //$this->BuildObj->IsDel =  = $this->BuildObj->IsEdit = false;
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
         $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'formDataState', $FormRs['FormId'])).'";';
+        $this->BuildObj->TableTopBtnArr = array(
+            array('Desc' => '返回', 'Link' => $this->CommonObj->Url(array('admin', 'form', 'index')), 'Class' => 'default'),
+        );
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar);
         $this->LoadView('admin/common/list', $tmp);
     }
