@@ -131,6 +131,16 @@ class Api extends ControllersAdmin {
             if($Ret === false) $this->ApiErr(1002);
             $this->LabelObj->clean($Rs['KeyName']);
             $this->ApiSuccess();
+        }elseif($_POST['Type'] == 'linkCate'){
+            $Ret = $this->Link_cateObj->SetCond(array('LinkCateId' => $_POST['Index']))->SetUpdate(array('Sort' => intval($_POST['Sort'])))->ExecUpdate();
+            if($Ret === false) $this->ApiErr(1002);
+            $this->Link_cateObj->cleanList();
+            $this->ApiSuccess();
+        }elseif($_POST['Type'] == 'link'){
+            $Ret = $this->LinkObj->SetCond(array('LinkId' => $_POST['Index']))->SetUpdate(array('Sort' => intval($_POST['Sort'])))->ExecUpdate();
+            if($Ret === false) $this->ApiErr(1002);
+            $this->LinkObj->clean($_POST['Index']);
+            $this->ApiSuccess();
         }
         
     }

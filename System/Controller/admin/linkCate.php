@@ -5,7 +5,7 @@ class LinkCate extends ControllersAdmin {
     public function index_Action(){
         $Arr = $this->Link_cateObj->getList();
         foreach($Arr as $k => $v){
-            $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
+            $Arr[$k]['SortView'] = '<input class="form-control SortInput" type="text" data-type="linkCate" data-index="'.$v['LinkCateId'].'" value="'.$v['Sort'].'"/>';
         }
         $KeyArr = array(
             'LinkCateId' => array('Name' => 'ID', 'Td' => 'th'),
@@ -13,7 +13,7 @@ class LinkCate extends ControllersAdmin {
             'SortView' => array('Name' => '排序', 'Td' => 'th', 'Style' => 'width:100px;'),
         );
         $this->BuildObj->PrimaryKey = 'LinkCateId';
-        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr);
+        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, '', 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }
     

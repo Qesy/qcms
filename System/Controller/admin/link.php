@@ -8,15 +8,18 @@ class Link extends ControllersAdmin {
         $Count = 0;
         $Limit = array(($Page-1)*$this->PageNum, $this->PageNum);
         $CondArr = array();
+        if(!empty($_GET['LinkCateId'])) $CondArr['LinkCateId'] = $_GET['LinkCateId'];
         $Arr = $this->LinkObj->SetCond($CondArr)->SetLimit($Limit)->SetSort(array('Sort' => 'ASC', 'LinkId' => 'ASC'))->ExecSelectAll($Count);
         
         $linkCateArr = $this->Link_cateObj->getList();
         $linkCateKV = array_column($linkCateArr, 'Name', 'LinkCateId');
         foreach($Arr as $k => $v){
+            $GET = $_GET;
+            $GET['LinkCateId'] = $v['LinkCateId'];
             $Arr[$k]['LogoView'] = empty($v['Logo']) ? '无Logo' : '<image src="'.$v['Logo'].'" style="height:33px;"/>';
             $Arr[$k]['TsAddView'] = date('Y-m-d', $v['TsAdd']);
-            $Arr[$k]['LinkCateName'] = $linkCateKV[$v['LinkCateId']];
-            $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
+            $Arr[$k]['LinkCateName'] = '<a class="btn btn-sm btn-primary btn-outline" href="'.$this->CommonObj->Url(array('admin', 'link', 'index')).'?'.http_build_query($GET).'">'.$linkCateKV[$v['LinkCateId']].'</a>';
+            $Arr[$k]['SortView'] = '<input class="form-control SortInput" type="text" data-type="link" data-index="'.$v['LinkId'].'" value="'.$v['Sort'].'"/>';
         }
         $KeyArr = array(
             'LinkId' => array('Name' => 'ID', 'Td' => 'th'),
@@ -31,13 +34,18 @@ class Link extends ControllersAdmin {
         );
         $this->BuildObj->PrimaryKey = 'LinkId';
         $this->BuildObj->TableTopBtnArr = array(
-            array('Name' => '分类管理', 'Link' => $this->CommonObj->Url(array('admin', 'linkCate', 'index'))),
+            array('Desc' => '分类管理', 'Link' => $this->CommonObj->Url(array('admin', 'linkCate', 'index')), 'Class' => 'primary'),
         );
         $this->BuildObj->NameAdd = '添加友情链接';
         //$this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
         $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'linkState')).'";';
-        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar);
+        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
+        $this->BuildObj->Arr = array(
+            array('Name' =>'LinkCateId', 'Desc' => '选择分类',  'Type' => 'select', 'Data' => $linkCateKV, 'Value' => $_GET['LinkCateId'], 'Required' => 0, 'Col' => 12),
+        );
+        $this->BuildObj->Form('get', 'form-inline');
+        $this->HeadHtml = $this->BuildObj->Html;
         $this->LoadView('admin/common/list', $tmp);
     }
     
