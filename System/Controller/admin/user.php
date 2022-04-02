@@ -9,18 +9,21 @@ class User extends ControllersAdmin {
         $Limit = array(($Page-1)*$this->PageNum, $this->PageNum);
         $CondArr = array();
         if(!empty($_GET['GroupUserId'])) $CondArr['GroupUserId'] = $_GET['GroupUserId'];
+        if(!empty($_GET['Phone'])) $CondArr['Phone LIKE'] = $_GET['Phone'];
         $Arr = $this->UserObj->SetCond($CondArr)->SetLimit($Limit)->SetSort(array('UserId' => 'DESC'))->ExecSelectAll($Count);
         
         $GroupUserArr = $this->Group_userObj->getList();
         $GroupUserKV = array_column($GroupUserArr, 'Name', 'GroupUserId');
         foreach($Arr as $k => $v){
+            $GET = $_GET;
+            $GET['GroupUserId'] = $v['GroupUserId'];
             $Arr[$k]['PhoneView'] = $v['Phone'].(($v['GroupAdminId'] != 0) ? '<small class="px-2 text-danger">管理员</small>' : '');
-            $Arr[$k]['GroupUserView'] = $GroupUserKV[$v['GroupUserId']];
+            $Arr[$k]['GroupUserView'] = '<a class="btn btn-primary btn-outline btn-sm" href="'.$this->CommonObj->Url(array('admin', 'user', 'index')).'?'.http_build_query($GET).'">'.$GroupUserKV[$v['GroupUserId']].'</a>';
             //$Arr[$k]['IsEdit'] = $Arr[$k]['IsDel'] = ($v['GroupAdminId'] == 1 || $v['UserId'] == $this->LoginUserRs['UserId']) ? 2 : 1;
             $Arr[$k]['TsLastView'] = empty($v['TsLast']) ? '未登录' : date('Y-m-d H:i', $v['TsLast']);
             $Arr[$k]['IpLastView'] = empty($v['IpLast']) ? '未登录' : $v['IpLast'];
             $Arr[$k]['BtnArr'] = array(
-                array('Desc' => '文档', 'Link' => '#', 'Color' => 'success'),
+                //array('Desc' => '文档', 'Link' => '#', 'Color' => 'success'),
                 array('Desc' => '提升', 'Link' => $this->CommonObj->Url(array('admin', 'user', 'upgrade')), 'Color' => 'danger', 'IsDisabled' => $v['IsAdmin']),
             );
         }
@@ -32,8 +35,7 @@ class User extends ControllersAdmin {
             'GroupUserView' => array('Name' => '用户组', 'Td' => 'th'),
             'State' => array('Name' => '状态', 'Td' => 'th', 'Type' => 'Switch'),
             'TsLastView' => array('Name' => '登录时间', 'Td' => 'th'),
-            'IpLastView' => array('Name' => '登录IP', 'Td' => 'th'),
-            
+            'IpLastView' => array('Name' => '登录IP', 'Td' => 'th'),            
         );
         $this->BuildObj->PrimaryKey = 'UserId';
         $this->BuildObj->IsDel = false;
@@ -41,7 +43,12 @@ class User extends ControllersAdmin {
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
         $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'userState')).'";';
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar);
-        
+        $this->BuildObj->Arr = array(            
+            array('Name' =>'Phone', 'Desc' => '账号',  'Type' => 'input', 'Value' => $_GET['Phone'], 'Required' => 0, 'Col' => 12),
+            array('Name' =>'GroupUserId', 'Desc' => '用户组',  'Type' => 'select', 'Data' => $GroupUserKV, 'Value' => $_GET['GroupUserId'], 'Required' => 0, 'Col' => 12),            
+        );
+        $this->BuildObj->Form('get', 'form-inline');
+        $this->HeadHtml = $this->BuildObj->Html;
         $this->LoadView('admin/common/list', $tmp);
     }
     

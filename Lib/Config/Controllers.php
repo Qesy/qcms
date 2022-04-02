@@ -87,7 +87,7 @@ class Controllers extends Base {
                 break;
         }
         
-        if(!file_exists($this->TmpPath.$Path)) $this->DieErr(1035);
+        if(!file_exists($this->TmpPath.$Path) || !is_file( $this->TmpPath.$Path)) $this->DieErr(1054);
         $this->Tmp['Compile'] = $this->Tmp['Html'] = file_get_contents($this->TmpPath.$Path);
         
         

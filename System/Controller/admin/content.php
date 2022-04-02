@@ -11,7 +11,14 @@ class Content extends ControllersAdmin {
         $Count = 0;
         $Limit = array(($Page-1)*$this->PageNum, $this->PageNum);
         $CondArr = array('IsDelete' => 2);
-
+        
+        if(!empty($_GET['CateId'])){
+            $this->CategoryObj->getAllCateId($_GET['CateId'], $ModelRs['ModelId']);
+            //var_dump($this->CategoryObj->AllSubCateIdArr);exit;
+            $CondArr['CateId'] = $this->CategoryObj->AllSubCateIdArr;
+        }
+        if(!empty($_GET['State'])) $CondArr['State'] = $_GET['State'];
+        if(!empty($_GET['Title'])) $CondArr['Title LIKE'] = $_GET['Title'];
         $Arr = $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond($CondArr)->SetLimit($Limit)->SetSort(array('Sort' => 'ASC', 'Id' => 'Desc'))->ExecSelectAll($Count);
         $CateArr = $this->CategoryObj->SetCond(array('CateId' => array_column($Arr, 'CateId')))->SetField('CateId, Name')->ExecSelect();
         $CateKV = array_column($CateArr, 'Name', 'CateId');
@@ -24,6 +31,9 @@ class Content extends ControllersAdmin {
         foreach(array_column($GroupUserArr, 'Name', 'GroupUserId') as $k => $v) $GroupUserKv[$k] = $v;
 
         foreach($Arr as $k => $v){
+            $GET = $_GET;
+            $GET['ModelId'] = $ModelRs['ModelId'];
+            $GET['CateId'] = $v['CateId'];
             $Attr = array();
             if($v['IsLink'] == 1) $Attr[] = '外链';
             if($v['IsSpuerRec'] == 1) $Attr[] = '特推';
@@ -32,13 +42,13 @@ class Content extends ControllersAdmin {
             if($v['IsPic'] == 1) $Attr[] = '图片';
             $AttrStr = empty($Attr) ? '' : '<span class="px-2 text-danger" style="font-size:.6rem;">[ '.implode(' ', $Attr).' ]</span>';
             $Arr[$k]['TsUpdateView'] = date('Y-m-d H:i', $v['TsUpdate']);
-            $Arr[$k]['CateName'] = $CateKV[$v['CateId']];
-            $Arr[$k]['UserLevelView'] = $GroupUserKv[$v['UserLevel']];
+            $Arr[$k]['CateName'] = '<a class="btn btn-primary btn-outline btn-sm" href="'.$this->CommonObj->Url(array('admin', 'content', 'index')).'?'.http_build_query($GET).'">'.$CateKV[$v['CateId']].'</a>';
+            $Arr[$k]['UserLevelView'] = '<span class="text-muted ">'.$GroupUserKv[$v['UserLevel']].'</span>';
             $Arr[$k]['NickName'] = $UserKv[$v['UserId']];
             $Arr[$k]['StateView'] = $this->StateArr[$v['State']];
             $Arr[$k]['TitleView'] = '<span class="'.($v['IsBold'] == 2 ? '' : 'font-weight-bold').'">'.$v['Title'].'</span>'.$AttrStr;
             $Arr[$k]['BtnArr'] = array(
-                array('Desc' => '预览', 'Color' => 'success'),
+                array('Desc' => '预览', 'Color' => 'success', 'Link' => $this->createUrl('detail', $v['Id'], $v['PinYin'], $v['PY'], $v['TsUpdate']), 'IsBlank' => 1),
             );
         }
         $KeyArr = array(
@@ -47,7 +57,7 @@ class Content extends ControllersAdmin {
             'CateName' => array('Name' => '分类名', 'Td' => 'th'),
             'ReadNum' => array('Name' => '浏览数', 'Td' => 'th'),
             'UserLevelView' => array('Name' => '权限', 'Td' => 'th'),
-            'StateView' => array('Name' => '状态', 'Td' => 'th'),
+            'State' => array('Name' => '状态', 'Type' => 'Switch', 'Td' => 'th'),
             'TsUpdateView' => array('Name' => '更新时间', 'Td' => 'th'),
             'NickName' => array('Name' => '发布人', 'Td' => 'th'),
         );
@@ -57,7 +67,24 @@ class Content extends ControllersAdmin {
         $this->BuildObj->PrimaryKey = 'Id';
         //$this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
+        $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'contentState')).'";';
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
+        
+        $this->CategoryObj->CateSelectId = $_GET['CateId'];
+        $this->CategoryObj->getTreeModelSelectHtml($ModelRs['ModelId']);
+        $CateHtml = '<label for="Input_CateId" class="mb-1">分类</label><select class="form-control" name="CateId" id="Input_CateId" >';
+        $CateHtml .= '<option value="" >请选择分类</option>';
+        $CateHtml .= $this->CategoryObj->CateTreeModelSelectHtml;
+        $CateHtml .= '</select>';
+        $this->BuildObj->Arr = array(            
+            array('Name' =>'CateId', 'Desc' => $CateHtml,  'Type' => 'diy', 'Value' => '', 'Required' => 0, 'Col' => 12),
+            array('Name' =>'State', 'Desc' => '状态',  'Type' => 'select', 'Data' => $this->OpenArr, 'Value' => $_GET['State'], 'Required' => 0, 'Col' => 12),
+            array('Name' =>'Title', 'Desc' => '标题',  'Type' => 'text', 'Value' => $_GET['Title'], 'Required' => 0, 'Col' => 12),
+            array('Name' =>'ModelId', 'Desc' => '模型ID',  'Type' => 'hidden', 'Value' => $ModelRs['ModelId'], 'Required' => 0, 'Col' => 12),
+        );
+        $this->BuildObj->Form('get', 'form-inline');
+        $this->HeadHtml = $this->BuildObj->Html;
+        
         $this->LoadView('admin/common/list', $tmp);
     }
 
@@ -415,7 +442,7 @@ class Content extends ControllersAdmin {
             if($v['IsPic'] == 1) $Attr[] = '图片';
             $AttrStr = empty($Attr) ? '' : '<span class="px-2 text-danger" style="font-size:.6rem;">[ '.implode(' ', $Attr).' ]</span>';
             $Arr[$k]['TsUpdateView'] = date('Y-m-d H:i', $v['TsUpdate']);
-            $Arr[$k]['CateName'] = $CateKV[$v['CateId']];
+            $Arr[$k]['CateName'] = '<a class="btn btn-primary btn-outline btn-sm" >'.$CateKV[$v['CateId']].'</a>';
             $Arr[$k]['UserLevelView'] = $GroupUserKv[$v['UserLevel']];
             $Arr[$k]['NickName'] = $UserKv[$v['UserId']];
             $Arr[$k]['StateView'] = $this->StateArr[$v['State']];
@@ -441,6 +468,9 @@ class Content extends ControllersAdmin {
         $this->BuildObj->LinkDel = $this->CommonObj->Url(array('admin', 'content', 'tDelete'));
         $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
+        $this->BuildObj->TableTopBtnArr = array(
+            array('Desc' => '返回', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'index')).'?'.http_build_query($_GET), 'Class' => 'default'),
+        );
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }
