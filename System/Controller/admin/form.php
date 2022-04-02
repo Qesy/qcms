@@ -10,11 +10,14 @@ class Form extends ControllersAdmin {
         $CondArr = array();
         $Arr = $this->Sys_formObj->SetCond($CondArr)->SetLimit($Limit)->SetSort(array('Sort' => 'ASC', 'FormId' => 'ASC'))->ExecSelectAll($Count);
         foreach($Arr as $k => $v){
+            $GET = $_GET;
+            $GET['FormId'] = $v['FormId'];
             $Arr[$k]['KeyNameView'] = '<input class="form-control" disabled="disabled" type="text" value="{{Label:'.$v['KeyName'].'}}"/>';
             //$Arr[$k]['Url'] = '<input class="form-control" disabled="disabled" type="text" value="'.$_SERVER['REQUEST_SCHEME'].'://'.URL_DOMAIN.'/index/form?KeyName='.$v['KeyName'].'"/>';
             $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
             $Arr[$k]['IsLoginView'] = ($v['IsLogin'] == 1) ? '需登录' : '无需登录';
             $Arr[$k]['StateDefaultView'] = ($v['StateDefault'] == 1) ? '已审核' : '未审核';
+            $Arr[$k]['DataView'] = '<a class="btn btn-primary btn-outline btn-sm" href="'.$this->CommonObj->Url(array('admin', 'formData', 'index')).'?'.http_build_query($GET).'">数据管理</a>'; 
             $Arr[$k]['BtnArr'] = array(
                 array('Desc' => '字段管理', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'formField', 'index'))),
                 array('Desc' => '获取代码', 'Color' => 'info', 'Link' => $this->CommonObj->Url(array('admin', 'form', 'code'))),
@@ -25,8 +28,10 @@ class Form extends ControllersAdmin {
             'Name' => array('Name' => '标签名', 'Td' => 'th'),
             'IsLoginView' => array('Name' => '是否需登录', 'Td' => 'th'),
             'StateDefaultView' => array('Name' => '数据默认状态', 'Td' => 'th'),
+            
             //'Url' => array('Name' => '访问地址', 'Td' => 'th', 'Style' => 'width:400px;'),
             'State' => array('Name' => '状态', 'Td' => 'th', 'Type' => 'Switch'),
+            'DataView' => array('Name' => '数据管理', 'Td' => 'th'),
             'SortView' => array('Name' => '排序', 'Td' => 'th', 'Style' => 'width:100px;'),
 
         );
@@ -58,7 +63,8 @@ class Form extends ControllersAdmin {
                     'Sort' => 99,
                 ))->ExecInsert();
                 $FieldArr = array();
-                $FieldArr[] = '`FormId` bigint(20) NOT NULL auto_increment COMMENT \'\','.PHP_EOL;
+                $FieldArr[] = '`FormListId` bigint(20) NOT NULL auto_increment COMMENT \'\','.PHP_EOL;
+                $FieldArr[] = '`FormId` bigint(20) NOT NULL DEFAULT \'0\' COMMENT \'\','.PHP_EOL;
                 $FieldArr[] = '`UserId` bigint(20) NOT NULL DEFAULT \'0\' COMMENT \'\','.PHP_EOL;
                 $FieldArr[] = '`State` tinyint(3) NOT NULL DEFAULT \'2\' COMMENT \'\','.PHP_EOL;
                 $FieldArr[] = '`TsAdd` bigint(20) NOT NULL DEFAULT \'0\' COMMENT \'\','.PHP_EOL;
@@ -136,7 +142,6 @@ class Form extends ControllersAdmin {
             DB::$s_db_obj->rollBack();
             $this->Err(1002);
         }
-        //$this->Sys_formObj->clean($Rs['FormId']);
         $this->Sys_formObj->clean($Rs['KeyName']);
         $this->Jump(array('admin', 'form', 'index'), 1888);
     }

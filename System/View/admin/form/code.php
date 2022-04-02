@@ -56,7 +56,10 @@
 $Html = '<form method="post" action="'.$_SERVER['REQUEST_SCHEME'].'://'.URL_DOMAIN.'/index/form.html?KeyName='.$Rs['KeyName'].'">';
 
 foreach($Rs['FieldJson'] as $v){
-    $FormRs = array('Name' => $v['Name'], 'Desc' => $v['Comment'],  'Type' => $v['Type'], 'Value' => $v['Content'], 'Required' => $v['NotNull'], 'Col' => 12);
+    $DataTmp = empty($v['Data']) ? array() : explode('|', $v['Data']);
+    $Data = array();
+    foreach($DataTmp as $dv) $Data[$dv] = $dv;
+    $FormRs = array('Name' => $v['Name'], 'Desc' => $v['Comment'],  'Type' => $v['Type'], 'Data' => $Data, 'Value' => $v['Content'], 'Required' => $v['NotNull'], 'Col' => 12);
     $Html .= $this->BuildObj->FormOne($FormRs).PHP_EOL;
 
 }

@@ -6,6 +6,7 @@ class Home extends Controllers {
 		echo '404 error !';
 	}
 	public function phpinfo_Action() {
+	    var_dump($_SERVER);
 		phpinfo ();
 	}
 	

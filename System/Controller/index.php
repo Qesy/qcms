@@ -6,21 +6,25 @@ class Index extends Controllers {
     
     public function index_Action(){
         $this->tempRun('index');
+        self::_statFlow();
     }
     
     public function cate_Action($CateId = 0){
         if(empty($CateId)) $this->DieErr(1001);
         $this->tempRun('cate', $CateId);
+        self::_statFlow();
     }
     
     public function detail_Action($Id = 0){
         if(empty($Id)) $this->DieErr(1001);
         $this->tempRun('detail', $Id);
+        self::_statFlow();
     }
     
     public function page_Action($PageId = 0){
         if(empty($PageId)) $this->DieErr(1001);
         $this->tempRun('page', $PageId);
+        self::_statFlow();
     }
     
 	public function auth_Action() {
@@ -42,7 +46,7 @@ class Index extends Controllers {
 	    if($Rs['State'] != 1) $this->Err(1003);
 	    $DbConfig = DbConfig();
 	    if(!empty($_POST)){
-	        $InsertArr = array('TsAdd' =>time(), 'State' => $Rs['StateDefault']);
+	        $InsertArr = array('TsAdd' =>time(), 'State' => $Rs['StateDefault'], 'FormId' => $Rs['FormId']);
 	        if($Rs['IsLogin'] == 1){
 	            if(empty($_POST['Token'])) $this->Err(1007); 
 	            $TokenRs= $this->TokenObj->getOne(trim($_POST['Token']));
@@ -50,7 +54,8 @@ class Index extends Controllers {
 	            $InsertArr['UserId'] = $TokenRs['UserId'];
 	        }
 	        $FieldArr = empty($Rs['FieldJson']) ? array() : json_decode($Rs['FieldJson'], true);	
-	        foreach($FieldArr as $v){
+	        foreach($FieldArr as $v){	            
+	            if($v['NotNull'] == 1 && empty($_POST[$v['Name']])) $this->Err(1001);
 	            $InsertArr[$v['Name']] = $_POST[$v['Name']];
 	        }
 	        $Ret = $this->Sys_formObj->SetTbName('form_'.$Rs['KeyName'])->SetInsert($InsertArr)->ExecInsert();
@@ -122,7 +127,7 @@ class Index extends Controllers {
 		echo 'test';
 	}
 	
-	function __destruct(){
+	private function _statFlow(){
 	    $Rs = $this->Stat_flowObj->SetCond(array('Date' => date('Y-m-d')))->ExecSelectOne();
 	    if(empty($Rs)){
 	        $this->Stat_flowObj->SetInsert(array('Date' => date('Y-m-d'), 'FlowNum' => '1'))->ExecInsert();

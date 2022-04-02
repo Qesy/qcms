@@ -81,11 +81,43 @@ class Api extends ControllersAdmin {
         $this->LabelObj->clean($Rs['KeyName']);
         $this->CommonObj->ApiSuccess();
     }
+    
+    public function formDataState_Action($FormId = 0){
+        if(empty($FormId)) $this->ApiErr(1001);
+        if(!$this->VeriObj->VeriPara($_GET, array('Id', 'Status', 'Field'))) $this->ApiErr(1001);
+        $FormRs = $this->Sys_formObj->SetCond(array('FormId' => $FormId))->ExecSelectOne();
+        if(empty($FormRs))  $this->ApiErr(1003);
+        $DataArr = array($_GET['Field'] => $_GET['Status']);
+        $Ret = $this->Sys_formObj->SetTbName('form_'.$FormRs['KeyName'])->SetCond(array('FormListId' => $_GET['Id']))->SetUpdate($DataArr)->ExecUpdate();
+        if($Ret === false) $this->Err(1002);
+        $this->CommonObj->ApiSuccess();
+    }
 
     public function tableField_Action(){ //获取表字段
         if(!$this->VeriObj->VeriPara($_POST, array('TableName'))) $this->ApiErr(1001);
         $FieldArr = $this->SysObj->query('SHOW FULL COLUMNS FROM '.$_POST['TableName'], array());
         $this->ApiSuccess($FieldArr);
+    }
+    
+    public function sort_Action(){ // 排序
+        if(!$this->VeriObj->VeriPara($_POST, array('Index', 'Type', 'Sort'))) $this->ApiErr(1001);
+        if($_POST['Type'] == 'category'){
+            $Ret = $this->CategoryObj->SetCond(array('CateId' => $_POST['Index']))->SetUpdate(array('Sort' => intval($_POST['Sort'])))->ExecUpdate();
+            if($Ret === false) $this->ApiErr(1002);
+            $this->CategoryObj->cleanList();
+            $this->CategoryObj->clean($_POST['Index']);
+            $this->ApiSuccess();
+        }elseif($_POST['Type'] == 'pageCate'){
+            $Ret = $this->Page_cateObj->SetCond(array('PageCateId' => $_POST['Index']))->SetUpdate(array('Sort' => intval($_POST['Sort'])))->ExecUpdate();
+            if($Ret === false) $this->ApiErr(1002);
+            $this->Page_cateObj->cleanList();
+            $this->ApiSuccess();
+        }elseif($_POST['Type'] == 'page'){
+            $Ret = $this->PageObj->SetCond(array('PageId' => $_POST['Index']))->SetUpdate(array('Sort' => intval($_POST['Sort'])))->ExecUpdate();
+            if($Ret === false) $this->ApiErr(1002);
+            $this->ApiSuccess();
+        }
+        
     }
 
 }

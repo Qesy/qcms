@@ -15,9 +15,14 @@ class Page extends ControllersAdmin {
         $pageCateKV = array_column($pageCateArr, 'Name', 'PageCateId');
         foreach($Arr as $k => $v){
             //$Arr[$k]['LogoView'] = empty($v['Logo']) ? '无Logo' : '<image src="'.$v['Logo'].'" style="height:33px;"/>';
+            $GET = $_GET;
+            $GET['PageCateId'] = $v['PageCateId'];
             $Arr[$k]['TsAddView'] = date('Y-m-d', $v['TsAdd']);
-            $Arr[$k]['PageCateName'] = $pageCateKV[$v['PageCateId']];
-            $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
+            $Arr[$k]['PageCateName'] = '<a class="btn btn-primary btn-outline btn-sm" href="'.$this->CommonObj->Url(array('admin', 'page', 'index')).'?'.http_build_query($GET).'">'.$pageCateKV[$v['PageCateId']].'</a>';
+            $Arr[$k]['SortView'] = '<input class="form-control SortInput" type="text" data-type="page" data-index="'.$v['PageId'].'" value="'.$v['Sort'].'"/>';
+            $Arr[$k]['BtnArr'] = array(
+              array('Desc' => '预览', 'Link' => $this->createUrl('page', $v['PageId'], $v['PinYin'], $v['PY']), 'Color' => 'success', 'IsBlank' => 1),  
+            );
         }
         $KeyArr = array(
             'PageId' => array('Name' => 'ID', 'Td' => 'th'),
@@ -38,6 +43,12 @@ class Page extends ControllersAdmin {
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
         $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'pageState')).'";';
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
+        $this->BuildObj->Arr = array(            
+            array('Name' =>'PageCateId', 'Desc' => '选择分类',  'Type' => 'select', 'Data' => $pageCateKV, 'Value' => $_GET['PageCateId'], 'Required' => 0, 'Col' => 12),            
+        );
+        $this->BuildObj->Form('get', 'form-inline');
+        $this->HeadHtml = $this->BuildObj->Html;
+        
         $this->LoadView('admin/common/list', $tmp);
     }
     
@@ -55,6 +66,9 @@ class Page extends ControllersAdmin {
                 'Content' => $_POST['Content'],
                 'Sort' => 99,
                 'State' => 1,
+                'Pic' => trim($_POST['Pic']),
+                'PinYin' => $this->PinYinObj->str2pys(trim($_POST['Name'])),
+                'PY' => $this->PinYinObj->str2py(trim($_POST['Name'])),
             ))->ExecInsert();
             if($Ret === false) $this->Err(1002);
             $this->Jump(array('admin', 'page', 'index'), 1888);
@@ -76,8 +90,9 @@ class Page extends ControllersAdmin {
                 'Title' => '核心设置',
                 'Form' => array(
                         array('Name' =>'Name', 'Desc' => '单页名字',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
-                    array('Name' =>'PageCateId', 'Desc' => '分类',  'Type' => 'select', 'Data' => $CateKV, 'Value' => $CateDefaultId, 'Required' => 1, 'Col' => 6),                        
-                        array('Name' =>'Content', 'Desc' => '单页内容',  'Type' => 'editor', 'Value' => '', 'Required' => 0, 'Col' => 12),
+                        array('Name' =>'PageCateId', 'Desc' => '分类',  'Type' => 'select', 'Data' => $CateKV, 'Value' => $CateDefaultId, 'Required' => 1, 'Col' => 6),                        
+                    array('Name' =>'Pic', 'Desc' => '分类图片',  'Type' => 'upload', 'Value' => '', 'Required' => 0, 'Col' => 12),
+                    array('Name' =>'Content', 'Desc' => '单页内容',  'Type' => 'editor', 'Value' => '', 'Required' => 0, 'Col' => 12),
                 )
             ),
             array(
@@ -115,6 +130,9 @@ class Page extends ControllersAdmin {
                 'Keywords' => $_POST['Keywords'],
                 'Description' => $_POST['Description'],
                 'Content' => $_POST['Content'],
+                'Pic' => trim($_POST['Pic']),
+                'PinYin' => $this->PinYinObj->str2pys(trim($_POST['Name'])),
+                'PY' => $this->PinYinObj->str2py(trim($_POST['Name'])),
             ))->ExecUpdate();
             if($Ret === false) $this->Err(1002);
             $this->Jump(array('admin', 'page', 'index'), 1888);
@@ -137,6 +155,7 @@ class Page extends ControllersAdmin {
                 'Form' => array(
                     array('Name' =>'Name', 'Desc' => '单页名字',  'Type' => 'input', 'Value' => $Rs['Name'], 'Required' => 1, 'Col' => 6),
                     array('Name' =>'PageCateId', 'Desc' => '分类',  'Type' => 'select', 'Data' => $CateKV, 'Value' => $Rs['PageCateId'], 'Required' => 1, 'Col' => 6),
+                    array('Name' =>'Pic', 'Desc' => '分类图片',  'Type' => 'upload', 'Value' => $Rs['Pic'], 'Required' => 0, 'Col' => 12),
                     array('Name' =>'Content', 'Desc' => '单页内容',  'Type' => 'editor', 'Value' => $Rs['Content'], 'Required' => 0, 'Col' => 12),
                 )
             ),

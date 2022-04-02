@@ -68,7 +68,7 @@
                                     <div class="table-wrap">
                                         <div class="table-responsive">
                                             <div id="myTable_wrapper" class="table table-hover  mb-0 no-footer"><div id="myTable_filter" class="dataTables_filter"></div>
-                                                <?=$this->HeadHtml?>
+                                                <div class="mb-2"><?=$this->HeadHtml?></div>
                                                 <?=$Table?>
                                             </div>
                                         </div>

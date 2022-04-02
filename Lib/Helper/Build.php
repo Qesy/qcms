@@ -169,15 +169,10 @@ class Build {
         if($this->IsSubmit) $ButtonArr[] = array('Name' => 'submit', 'Type' => 'submit', 'Desc' => '提交');
         if($this->IsBack) $ButtonArr[] = array('Name' => 'back', 'Type' => 'button', 'Desc' => '返回');
         foreach($this->FormFooterBtnArr as $v) $ButtonArr[] = $v;
-        $this->Html .= self::_FromButtonGroup($ButtonArr);  
+        $this->Html .= self::_FromButtonGroup($ButtonArr, $Class);  
         $this->Html .= $ExtHtml;
         if(!$this->FormMultipleMerge) $this->Html .= '</form>';
-        $this->Html .= ($MultipleKey == -1) ? '</form>' : '</div>';
-        if(!empty($this->Js)){
-            $this->Js =  '
-	               var URL_ROOT = "'.URL_ROOT.'";
-                   var UploadBtn = {}, interval;'.$this->Js;
-        }
+        $this->Html .= ($MultipleKey == -1) ? '</form>' : '</div>';       
     }
     
     public function FormOne($v){
@@ -187,34 +182,34 @@ class Build {
                 $Html = self::_FromGroup($v['Col'], $v['Desc']); 
                 break;
             case 'radio':
-                $Html = self::_FormRadio($v['Name'], $v['Desc'], $v['Value'], $v['Data'], $v['Col'], $v['Disabled']); 
+                $Html = self::_FormRadio($v['Name'], $v['Desc'], $v['Value'], $v['Data'], $v['Col'], $v['Disabled'], $v['Required']); 
                 break;
             case 'checkbox':
-                $Html = self::_FormCheckbox($v['Name'], $v['Desc'], $v['Value'], $v['Data'], $v['Col'], $v['Disabled']); 
+                $Html = self::_FormCheckbox($v['Name'], $v['Desc'], $v['Value'], $v['Data'], $v['Col'], $v['Disabled'], $v['Required']); 
                 break;
             case 'select':
-                $Html = self::_FromSelect($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Data'], $v['Disabled']); 
+                $Html = self::_FromSelect($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Data'], $v['Disabled'], $v['Required']); 
                 break;
             case 'upload':
-                $Html = self::_FormUpload($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']);
+                $Html = self::_FormUpload($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder'], $v['Required']);
                 break;
             case 'slide':
                 $Html = self::_FormSlide($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']);
                 break;
             case 'textarea':
-                $Html = self::_FormTextarea($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'],  $v['Placeholder'], $v['Required'], $v['Placeholder']); 
+                $Html = self::_FormTextarea($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'],  $v['Placeholder'], $v['Required'], $v['Row']); 
                 break;
             case 'editor':
-                $Html = self::_FormEditor($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']);
+                $Html = self::_FormEditor($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder'], $v['Required']);
                 break;
             case 'money':
                 $Html = self::_FromMoney($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']); 
                 break;
             case 'date':
-                $Html = self::_FromInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], 'date', $v['Disabled'], $v['Placeholder']); 
+                $Html = self::_FromInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], 'date', $v['Disabled'], $v['Placeholder'], $v['Required']); 
                 break;
             case 'password':
-                $Html = self::_FromInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], 'password', $v['Disabled'], $v['Placeholder']); 
+                $Html = self::_FromInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], 'password', $v['Disabled'], $v['Placeholder'], $v['Required']); 
                 break;
             case 'button':
                 if(empty($v['ButtonType'])) $v['ButtonType'] = 'submit';
@@ -235,10 +230,10 @@ class Build {
                 break;
             case 'color':
                 if(empty($v['Class'])) $v['Class'] = 'primary';
-                $Html = self::_ColorInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Data'], $v['Class']);
+                $Html = self::_ColorInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], 'text', $v['Disabled'], $v['Placeholder'], $v['Required']);
                 break;
             default:
-                $Html= self::_FromInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], 'text', $v['Disabled'], $v['Placeholder']); 
+                $Html= self::_FromInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], 'text', $v['Disabled'], $v['Placeholder'], $v['Required']); 
                 break;
         }
         return $Html;
@@ -280,16 +275,16 @@ class Build {
         return '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'"><button type="'.$Type.'" class="btn btn-'.$Class.' '.(($this->FormStyle == 2) ? 'btn-xs' : '').'" id="Button_'.$Name.'">'.$Desc.'</button></div>';
     }
     
-    private function _FromButtonGroup($ButtonArr, $Col = 12){ //Button
+    private function _FromButtonGroup($ButtonArr, $FormClass = '', $Col = 12){ //Button
         $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
         $Html = '';
         foreach($ButtonArr as $v){
             $Class = isset($v['Class']) ? $v['Class'] : 'primary';
             $Type = isset($v['Type']) ? $v['Type'] : 'submit';
             $IsBack = ($v['Name'] == 'back') ? 'onclick="history.go(-1)"' : '';
-            $Html .= '<button type="'.$Type.'" '.$IsBack.' class="mr-2 btn btn-'.$Class.' '.(($this->FormStyle == 2) ? 'btn-xs' : '').'" id="Button_'.$v['Name'].'">'.$v['Desc'].'</button>';
+            $Html .= '<button type="'.$Type.'" '.$IsBack.' class="mr-2 btn btn-'.$Class.' " id="Button_'.$v['Name'].'">'.$v['Desc'].'</button>';
         }
-        return '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'">'.$Html.'</div>';
+        return '<div class="form-group '.(($FormClass == 'form-inline') ? '' : 'col-'.$SubCol.'  col-lg-'.$Col).'">'.$Html.'</div>';
     }
     
     private function _FormRadio($Name, $Desc, $Value, $DataArr = array(),  $Col, $IsDisabled = 0, $Required = 0){
@@ -603,10 +598,11 @@ class Build {
                 if(!empty($v['BtnArr'])){
                     foreach($v['BtnArr'] as $Btn){
                         $BtnColor = isset($Btn['Color']) ? $Btn['Color'] : 'primary';
+                        if(!empty($Btn['Para'])) $_GET = array_merge($_GET, $Btn['Para']);
                         $Link = (empty($Btn['Link']) || $Btn['Link'] == '#') ? 'javascript:void(0);' : $Btn['Link'].'?'.http_build_query($_GET);
                         $Disabled = (isset($Btn['IsDisabled']) && $Btn['IsDisabled'] == 1) ? 'disabled' : '';
                         $Confirm = empty($Btn['Confirm']) ? '' : 'onclick="return confirm(\''.$Btn['Confirm'].'\')"';
-                        $ActArr[] = '<a class="btn btn-sm mr-2 btn-'.$BtnColor.' '.$Disabled.' table_btn_'.$Btn['Name'].'" href="'.$Link.'" '.$Confirm.'>'.$Btn['Desc'].'</a>';
+                        $ActArr[] = '<a class="btn btn-sm mr-2 btn-'.$BtnColor.' '.$Disabled.' table_btn_'.$Btn['Name'].'" href="'.$Link.'" '.(($Btn['IsBlank']) ? 'target="_blank"' : '').' '.$Confirm.'>'.$Btn['Desc'].'</a>';
                     }
                 }
                 if($this->IsEdit) $ActArr[] = (isset($v['IsEdit']) && $v['IsEdit'] != 1) ? '<a class="btn btn-sm btn-primary mr-2 disabled" href="javascript:void(0);">'.$this->NameEdit.'</a>' : '<a class="btn btn-sm btn-primary mr-2" href="'.$this->LinkEdit.'?'.http_build_query($_GET).'">'.$this->NameEdit.'</a>';

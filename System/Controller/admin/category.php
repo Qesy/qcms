@@ -20,11 +20,11 @@ class Category extends ControllersAdmin {
             $Arr[$k]['AttrView'] = $IsShow.$IsPost.$IsLink;
             $Model = $ModelKV[$v['ModelId']];
             $Arr[$k]['ModelView'] = '<span class="text-secondary">'.$Model.'</span>';
-            $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
+            $Arr[$k]['SortView'] = '<input class="form-control SortInput" type="text" data-type="category" data-index="'.$v['CateId'].'" value="'.$v['Sort'].'"/>';
             $Arr[$k]['UserLevel'] = '<span class="text-secondary">开放浏览</span>';
             $Arr[$k]['BtnArr'] = array(
-                array('Desc' => '预览', 'Color' => 'success'),
-                array('Desc' => '内容', 'Color' => 'success', 'IsDisabled' => ($v['IsLink'] == 1 || $v['IsPost'] != 1) ? '1' : '2'),
+                array('Desc' => '预览', 'Color' => 'success', 'Link' => $this->createUrl('cate', $v['CateId'], $v['PinYin'], $v['PY']), 'IsBlank' => 1),
+                array('Desc' => '内容', 'Color' => 'success', 'IsDisabled' => ($v['IsLink'] == 1 || $v['IsPost'] != 1) ? '1' : '2', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'index')), 'Para' => array('ModelId' => $v['ModelId'])),
                 array('Desc' => '加子类', 'Link' => $this->CommonObj->Url(array('admin', 'category', 'add'))),
                 array('Desc' => '移动', 'Link' => $this->CommonObj->Url(array('admin', 'category', 'move'))),                
             );

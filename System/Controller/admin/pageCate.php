@@ -5,7 +5,7 @@ class PageCate extends ControllersAdmin {
     public function index_Action(){
         $Arr = $this->Page_cateObj->getList();
         foreach($Arr as $k => $v){
-            $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
+            $Arr[$k]['SortView'] = '<input class="form-control SortInput" type="text" data-type="pageCate" data-index="'.$v['PageCateId'].'" value="'.$v['Sort'].'"/>';
         }
         $KeyArr = array(
             'PageCateId' => array('Name' => 'ID', 'Td' => 'th'),

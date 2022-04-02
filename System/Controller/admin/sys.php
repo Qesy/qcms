@@ -102,4 +102,47 @@ class Sys extends ControllersAdmin {
         $this->LoadView('admin/common/edit');
     }
     
+    public function check_Action(){
+        $ModuleArr = array(
+            'curl', 'gd', 'mbstring', 'pdo_mysql', 'iconv', 'date', 'hash', 'json', 'session', 'zip', 'PDO', 'SimpleXML' //'redis',
+        );
+        $DescArr = array(
+            'curl' => 'curl 是常用的命令行工具，用来请求 Web 服务器。它的名字就是客户端（client）的 URL 工具的意思。',
+            'gd' => 'php处理图形的扩展库,GD库提供了一系列用来处理图片的API,使用GD库可以处理图片,或者生成图片。',
+            'mbstring' => 'mbstring库 全称是Multi-Byte String ,解决各个编码字节数不一致的问题。',
+            'pdo_mysql' => 'PDO扩展为PHP访问数据库定义了一个轻量级的、一致性的接口，它提供了一个数据访问抽象层，这样，无论使用什么数据库，都可以通过一致的函数执行查询和获取数据。',
+            'iconv' => 'iconv函数库能够完成各种字符集间的转换，是php编程中不可缺少的基础函数库。',
+            'date' => 'PHP日期/时间处理扩展',
+            'hash' => '信息摘要（hash）引擎。允许使用各种hash算法直接或增量处理任意长度的信息。',
+            'json' => '实现了 » JavaScript对象符号（JSON） 数据转换格式。',
+            'session' => '会话支持在 PHP 中是在并发访问时由一个方法来保存某些数据.从而使你能够构建更多的定制程序 从而提高你的 web 网站的吸引力。',
+            'zip' => '此扩展可以让你透明地读写ZIP压缩文档以及它们里面的文件。',
+            'PDO' => 'PHP 数据对象 （PDO） 扩展为PHP访问数据库定义了一个轻量级的一致接口。实现 PDO 接口的每个数据库驱动可以公开具体数据库的特性作为标准扩展功能。',
+            'SimpleXML' => 'SimpleXML 扩展提供了一个非常简单和易于使用的工具集，能将 XML 转换成一个带有一般属性选择器和数组迭代器的对象。',
+            'redis' => 'PHP支持redis的扩展，可以让你的程序大幅度提高响应速度。',
+            'opcache' => 'OPcache 通过将 PHP 脚本预编译的字节码存储到共享内存中来提升 PHP 的性能， 存储预编译字节码的好处就是 省去了每次加载和解析 PHP 脚本的开销。'
+            
+        );
+        $is_writeabl = is_writeable(PATH_STATIC.'upload/');
+        $Extensions = get_loaded_extensions();
+        $Arr = array();
+        foreach($ModuleArr as $k => $v){
+            $State = !in_array($v, $Extensions) ? '<span class="label label-danger font-weight-100"><i class="bi bi-x-lg"></i> 未安装</span>' : '<span class="label label-success font-weight-100"><i class="bi bi-check-lg"></i> 已安装</span>';
+            $Arr[$k]['Name'] = $v;
+            $Arr[$k]['State'] = $State;
+            $Arr[$k]['Desc'] = $DescArr[$v];
+        }
+        $State = !$is_writeabl ? '<span class="label label-danger font-weight-100"><i class="bi bi-x-lg"></i> 不可写</span>' : '<span class="label label-success font-weight-100"><i class="bi bi-check-lg"></i> 可写</span>';
+        $Arr [] = array('Name' => 'upload/', 'Desc' => '检测上传文件夹是否有可写权限', 'State' => $State);
+        $KeyArr = array(
+            'Name' => array('Name' => '名称', 'Td' => 'th'),
+            'Desc' => array('Name' => '说明', 'Td' => 'th'),
+            'State' => array('Name' => '状态', 'Td' => 'th'),            
+        );
+        $this->BuildObj->PrimaryKey = 'UserId';
+        $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = $this->BuildObj->IsDel = false;
+        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, '', 'table-sm');
+        $this->LoadView('admin/common/list', $tmp);
+    }
+    
 }

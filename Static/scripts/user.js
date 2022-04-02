@@ -48,6 +48,14 @@ $(function(){
     $('#Button_VeriBtn').click(function(){
         window.open('https://www.q-cms.cn/');
     })
+    $('.SortInput').change(function(){
+        $.post('/admin/api/sort', {'Index':$(this).attr('data-index'), 'Type' : $(this).attr('data-type'), 'Sort':$(this).val()}, function(Res){
+            if(Res.Code != 0){
+                alert(Res.Msg);return;
+            }
+            location.reload();
+        }, 'json')
+    })
 
 })
 
@@ -61,7 +69,6 @@ var IsSuccess = function(Res){
 }
 
 function CreatUpload(DomId){
-    console.log("AAA", DomId)
     UploadBtn[DomId] = $("#uploadImg_"+DomId);
     new AjaxUpload(UploadBtn[DomId], {
         action: "/admin/api/ajaxUpload.html",
