@@ -28,7 +28,7 @@
             <a href="#" class="pr-0" data-toggle="dropdown"><img src="<?= (empty($this->LoginUserRs['Head']) ? URL_IMG . 'head.png' : $this->LoginUserRs['Head']) ?>" alt="user_auth" class="user-auth-img rounded-circle"></a>
             <ul class="dropdown-menu " data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
                 <li>
-                    <a class="dropdown-item py-1" href="<?= $this->CommonObj->url(array('user', 'profile', 'index')) ?>"><i class="icon-user"></i> 个人资料</a>
+                    <a class="dropdown-item py-1" href="<?= $this->CommonObj->url(array('admin', 'user', 'edit')).'?UserId='.$this->LoginUserRs['UserId'] ?>"><i class="icon-user"></i> 个人资料</a>
                 </li>
                 <li>
                     <a class="dropdown-item py-1" href="<?= $this->CommonObj->url(array('index', 'adminLogout')) ?>"><i class="icon-power"></i> 安全退出</a>

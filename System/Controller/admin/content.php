@@ -52,7 +52,8 @@ class Content extends ControllersAdmin {
             );
         }
         $KeyArr = array(
-            'Id' => array('Name' => 'ID', 'Td' => 'th'),
+            'Id' => array('Name' => '全选', 'Td' => 'th', 'Type' => 'CheckBox'),
+            //'Id' => array('Name' => 'ID', 'Td' => 'th'),
             'TitleView' => array('Name' => '标题', 'Td' => 'th'),
             'CateName' => array('Name' => '分类名', 'Td' => 'th'),
             'ReadNum' => array('Name' => '浏览数', 'Td' => 'th'),
@@ -64,6 +65,18 @@ class Content extends ControllersAdmin {
         $this->BuildObj->TableTopBtnArr = array(
             array('Name' => 'Recycle', 'Desc' => '回收站', 'Class' => 'default', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'recovery')).'?'.http_build_query($_GET))
         );
+        $this->BuildObj->TableFooterBtnArr = array(
+            array('Name' => 'ContentState1Btn', 'Desc' => '批量发布', 'Class' => 'primary'),
+            array('Name' => 'ContentState2Btn', 'Desc' => '取消发布', 'Class' => 'primary'),
+            array('Name' => 'ContentbatchDel1Btn', 'Desc' => '批量删除', 'Class' => 'primary'),
+            array('Name' => 'ContentbatchSR1Btn', 'Desc' => '批量特推', 'Class' => 'primary'),
+            array('Name' => 'ContentbatchSR2Btn', 'Desc' => '取消特推', 'Class' => 'primary'),
+            array('Name' => 'ContentbatchHL1Btn', 'Desc' => '批量头条', 'Class' => 'primary'),
+            array('Name' => 'ContentbatchHL2Btn', 'Desc' => '取消头条', 'Class' => 'primary'),
+            array('Name' => 'ContentbatchRE1Btn', 'Desc' => '批量推荐', 'Class' => 'primary'),
+            array('Name' => 'ContentbatchRE2Btn', 'Desc' => '取消推荐', 'Class' => 'primary'),
+        );
+
         $this->BuildObj->PrimaryKey = 'Id';
         //$this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
@@ -454,7 +467,7 @@ class Content extends ControllersAdmin {
             );
         }
         $KeyArr = array(
-            'Id' => array('Name' => 'ID', 'Td' => 'th'),
+            'Id' => array('Name' => '全选', 'Td' => 'th', 'Type' => 'CheckBox'),
             'TitleView' => array('Name' => '标题', 'Td' => 'th'),
             'CateName' => array('Name' => '分类名', 'Td' => 'th'),
             'ReadNum' => array('Name' => '浏览数', 'Td' => 'th'),
@@ -470,6 +483,10 @@ class Content extends ControllersAdmin {
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
         $this->BuildObj->TableTopBtnArr = array(
             array('Desc' => '返回', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'index')).'?'.http_build_query($_GET), 'Class' => 'default'),
+        );
+        $this->BuildObj->TableFooterBtnArr = array(
+            array('Name' => 'ContentbatchDel2Btn', 'Desc' => '批量还原', 'Class' => 'primary'), 
+            array('Name' => 'ContentbatchDel3Btn', 'Desc' => '彻底删除', 'Class' => 'primary'),
         );
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
         $this->LoadView('admin/common/list', $tmp);

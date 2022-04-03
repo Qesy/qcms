@@ -99,6 +99,36 @@ class Api extends ControllersAdmin {
         $this->ApiSuccess($FieldArr);
     }
     
+    public function contentState_Action(){ // 批量发布内容
+        if(!$this->VeriObj->VeriPara($_POST, array('Ids', 'Key', 'Val'))) $this->ApiErr(1001);
+        if(!in_array($_POST['Key'], array('State', 'IsSpuerRec', 'IsHeadlines', 'IsRec', 'IsDelete'))) $this->ApiErr(1001);
+        $Ids = explode(',', $_POST['Ids']);
+
+        $TableRs = $this->TableObj->SetCond(array('Id' => $Ids[0]))->ExecSelectOne();
+        $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
+        
+        $Ret = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Ids))->SetUpdate(array($_POST['Key'] => $_POST['Val']))->ExecUpdate();
+        if($Ret === false) $this->ApiErr(1002);
+        $this->ApiSuccess();
+    }
+    
+    public function deleteRec_Action(){ // 彻底删除
+        if(!$this->VeriObj->VeriPara($_POST, array('Ids'))) $this->ApiErr(1001);
+        $Ids = explode(',', $_POST['Ids']);        
+        $TableRs = $this->TableObj->SetCond(array('Id' => $Ids[0]))->ExecSelectOne();
+        $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
+        try{
+            DB::$s_db_obj->beginTransaction();
+            $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Ids))->ExecDelete();
+            $this->TableObj->SetCond(array('Id' => $Ids))->ExecDelete();
+            DB::$s_db_obj->commit();
+        }catch (PDOException $e){
+            DB::$s_db_obj->rollBack();
+            $this->ApiErr(1002);
+        }
+        $this->ApiSuccess();
+    }
+    
     public function sort_Action(){ // 排序
         if(!$this->VeriObj->VeriPara($_POST, array('Index', 'Type', 'Sort'))) $this->ApiErr(1001);
         if($_POST['Type'] == 'category'){

@@ -562,7 +562,20 @@ class Build {
         if(empty($this->LinkEdit)) $this->LinkEdit = $this->CommObj->Url(array($this->Module, \Router::$s_Controller, 'edit'));
         if(empty($this->LinkDel)) $this->LinkDel = $this->CommObj->Url(array($this->Module, \Router::$s_Controller, 'del'));
         $str = '<table class="table '.$Class.'"><thead><tr>';
-        foreach($keyArr as $k => $v) $str .= '<th  scope="col">'.$v['Name'].'</th>';
+        foreach($keyArr as $k => $v){
+            if($v['Type'] == 'CheckBox'){
+                $str .= '<th  scope="col">
+                    <div class="checkbox">
+						<input id="SelectAllBtn" type="checkbox">
+						<label for="SelectAllBtn">
+							全选
+						</label>
+					</div>
+                </th>';
+            }else{
+                $str .= '<th  scope="col">'.$v['Name'].'</th>';
+            }
+        } 
         if($this->IsEdit || $this->IsDel || !empty($v['BtnArr'])) $str .= '<th scope="col">操作</th>';
         $str .= '</tr></thead><tbody>';
         foreach($arr as $k => $v){
@@ -571,6 +584,15 @@ class Build {
                 $Pre = isset($sv['Pre']) ? $sv['Pre'] : '';
                 $Td = empty($sv['Td']) ? 'td' : $sv['Td'];
                 switch ($sv['Type']){
+                    case 'CheckBox':
+                        $str .= '<td style="'.$sv['Style'].'">
+                        <div class="checkbox ">
+						<input id="checkbox_'.$v[$this->PrimaryKey].'" class="CheckBoxOne" type="checkbox" value="'.$v[$this->PrimaryKey].'">
+						<label for="checkbox_'.$v[$this->PrimaryKey].'">
+							'.$v[$sk].'
+						</label>
+					</div>
+                        </td>';break;
                     case 'Date':
                         $str .= '<td style="'.$sv['Style'].'">'.date('Y-m-d', $v[$sk]).'</td>';break;
                     case 'Time':
@@ -616,7 +638,14 @@ class Build {
             
             $str .= '</tr>';
         }
-        if(!empty($Page)) $str .= '</tbody><tfoot><tr><td colspan="'.$num.'" class="page ">'.$Page.'</td></tr></tfoot>';
+        
+        $TableFooterBtnArr = array();
+        foreach($this->TableFooterBtnArr as $Btn){
+            $TableFooterBtnArr[] = '<button id="'.$Btn['Name'].'" type="button" class="mr-2 btn btn-sm btn-'.$Btn['Class'].'">'.$Btn['Desc'].'</button>';
+        }
+        //var_dump($this->TableFooterBtnArr, $TableFooterBtnArr);exit;
+        $str .= '</tbody>';
+        if(!empty($Page)) $str .= '<tfoot><tr><td colspan="'.$num.'" class="page "><div class="d-flex justify-content-between align-items-center"><div>'.implode('', $TableFooterBtnArr).'</div>'.$Page.'</div></td></tr></tfoot>';
         $str .= '</table>';
         return ($IsResponsive == 1) ? '<div class="table-responsive-sm">'.$str.'</div>' : $str;
     }

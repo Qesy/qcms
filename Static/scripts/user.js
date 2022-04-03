@@ -3,6 +3,11 @@ var IsEditorCreat = false;
 var URL_ROOT = "/";
 var UploadBtn = {}, interval;
 $(function(){
+    $('#SelectAllBtn').change(function(){
+        $('.CheckBoxOne').prop('checked' , $(this).prop('checked'))
+
+        //if($(this).prop(true))
+    })
     $('.colorpicker').colorpicker();
 	$('.StateBtn').click(function(){
         let _this = this;
@@ -56,8 +61,73 @@ $(function(){
             location.reload();
         }, 'json')
     })
+    $('#ContentState1Btn').click(function(){
+        contentState('State', '1');
+    })
+    $('#ContentState2Btn').click(function(){
+        contentState('State', '2');
+    })
+    $('#ContentbatchDel1Btn').click(function(){
+        contentState('IsDelete', '1');
+    })
+    $('#ContentbatchDel2Btn').click(function(){
+        contentState('IsDelete', '2');
+    })
+    $('#ContentbatchSR1Btn').click(function(){
+        contentState('IsSpuerRec', '1');
+    })
+    $('#ContentbatchSR2Btn').click(function(){
+        contentState('IsSpuerRec', '2');
+    })
+    $('#ContentbatchHL1Btn').click(function(){
+        contentState('IsHeadlines', '1');
+    })
+    $('#ContentbatchHL2Btn').click(function(){
+        contentState('IsHeadlines', '2');
+    })
+    $('#ContentbatchRE1Btn').click(function(){
+        contentState('IsRec', '1');
+    })
+    $('#ContentbatchRE2Btn').click(function(){
+        contentState('IsRec', '2');
+    })
+    $('#ContentbatchDel3Btn').click(function(){ //彻底删除
+        let Ids = getAllChecked();
+        if(Ids.length == 0){
+            alert('没有选中任何内容');
+            return;
+        }
+        $.post('/admin/api/deleteRec', {Ids:Ids.join(',')}, function(Res){
+            if(Res.Code != 0){
+                alert(Res.Msg);return;
+            }
+            location.reload();
+        }, 'json')
+    })
 
 })
+
+var contentState = function(Key, Val){
+    let Ids = getAllChecked();
+    if(Ids.length == 0){
+        alert('没有选中任何内容');
+        return;
+    }
+    $.post('/admin/api/contentState', {Ids:Ids.join(','), Key:Key, Val:Val}, function(Res){
+        if(Res.Code != 0){
+            alert(Res.Msg);return;
+        }
+        location.reload();
+    }, 'json')
+}
+
+var getAllChecked = function(){
+    let Ids = [];
+    $('.CheckBoxOne:checked').each(function(index, item){
+        Ids.push($(this).val())
+    })
+    return Ids;
+}
 
 
 var IsSuccess = function(Res){

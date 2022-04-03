@@ -26,7 +26,6 @@ use Model\QC_Stat_flow;
 use Model\QC_Swiper;
 use Model\QC_Swiper_cate;
 use Model\QC_Sys;
-use Model\QC_Sys_attr;
 use Model\QC_Sys_form;
 use Model\QC_Sys_model;
 use Model\QC_Table;
@@ -80,7 +79,6 @@ abstract class Base {
 	public $SwiperObj;
 	public $Swiper_cateObj;
 	public $SysObj;
-	public $Sys_attrObj;
 	public $Sys_formObj;
 	public $Sys_modelObj;
 	public $TableObj;
@@ -167,7 +165,6 @@ abstract class Base {
 		$this->SwiperObj = QC_Swiper::get_instance();
 		$this->Swiper_cateObj = QC_Swiper_cate::get_instance();
 		$this->SysObj = QC_Sys::get_instance();
-		$this->Sys_attrObj = QC_Sys_attr::get_instance();
 		$this->Sys_formObj = QC_Sys_form::get_instance();
 		$this->Sys_modelObj = QC_Sys_model::get_instance();
 		$this->TableObj = QC_Table::get_instance();
