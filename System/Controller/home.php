@@ -1,10 +1,37 @@
 <?php
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class Home extends Controllers {
-	public function err_Action() {
-		header ( "HTTP/1.1 404 Not Found" );
-		echo '404 error !';
+	public function err_Action() {	    
+	    $Url = substr($_SERVER['REQUEST_URI'], 1) ;
+	    $FileArr =  explode('/', $Url);
+	
+	    $FileName = $FileArr[count($FileArr)-1];	
+	    $Ext = end(explode('.', $FileName));	    
+	    if(!in_array($Ext, explode('|', $this->SysRs['ImgViewType']))) self::err404();
+	    array_splice($FileArr, -1);
+	    
+	    $NewPath = implode('/', $FileArr); //新的文件路径	    
+	    $OldPath = str_replace('Static/upload/thumb/', 'Static/upload/', $NewPath);
+	    $FileNameArr = explode('_', substr($FileName, 0, -strlen('.'.$Ext)));	  
+	    if(!in_array($FileNameArr[1].'x'.$FileNameArr[2], explode('|', $this->SysRs['ThumbSize']))) self::err404();	 
+	    $OriFileName = $FileNameArr[0].'.'.$Ext;
+
+	    if(!file_exists($OldPath.'/'.$OriFileName)) self::err404(); 
+	    // 文件存在，在允许范围的尺寸内，是允许的扩展名
+	    if(!is_dir($NewPath)) mkdir($NewPath, 0777);
+	    $Ret = $this->CommonObj->img2thumb($OldPath.'/'.$OriFileName, $NewPath.'/'.$FileName, $FileNameArr[1], $FileNameArr[2], 1);    
+	    if($Ret === false) self::err404();
+
+	    Header('Location:/'.$Url);
+	    exit;
 	}
+	
+	public function err404(){
+	    header ( "HTTP/1.1 404 Not Found" );
+	    echo '404 error !';
+	    exit;
+	}
+	
 	public function phpinfo_Action() {
 	    var_dump($_SERVER);
 		phpinfo ();
