@@ -16,7 +16,7 @@ class LabelCate extends ControllersAdmin {
         $this->BuildObj->TableTopBtnArr = array(
             array('Desc' => '返回', 'Link' => $this->CommonObj->Url(array('admin', 'label', 'index')), 'Class' => 'default'),
         );
-        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr);
+        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, '', 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }
     

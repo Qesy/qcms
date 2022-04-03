@@ -40,7 +40,7 @@ class Form extends ControllersAdmin {
         //$this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
         $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'FormState')).'";';
-        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar);
+        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }
 

@@ -15,7 +15,7 @@ class GroupUser extends ControllersAdmin {
             'Name' => array('Name' => '管理组', 'Td' => 'th'),
         );
         $this->BuildObj->PrimaryKey = 'GroupUserId';        
-        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr);
+        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, '', 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }
     

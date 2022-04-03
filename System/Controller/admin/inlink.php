@@ -8,14 +8,16 @@ class Inlink extends ControllersAdmin {
         $Count = 0;
         $Limit = array(($Page-1)*$this->PageNum, $this->PageNum);
         $CondArr = array();
+        if(!empty($_GET['InlinkCateId'])) $CondArr['InlinkCateId'] = $_GET['InlinkCateId'];
         $Arr = $this->InlinkObj->SetCond($CondArr)->SetLimit($Limit)->SetSort(array('Sort' => 'ASC', 'InlinkId' => 'ASC'))->ExecSelectAll($Count);
         
         $inlinkCateArr = $this->Inlink_cateObj->getList();
         $inlinkCateKV = array_column($inlinkCateArr, 'Name', 'InlinkCateId');
         foreach($Arr as $k => $v){
-           
-            $Arr[$k]['InlinkCateName'] = $inlinkCateKV[$v['InlinkCateId']];
-            $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
+            $GET = $_GET;
+            $GET['InlinkCateId'] = $v['InlinkCateId'];
+            $Arr[$k]['InlinkCateName'] = '<a class="btn btn-sm btn-primary btn-outline" href="'.$this->CommonObj->Url(array('admin', 'inlink', 'index')).'?'.http_build_query($GET).'">'.$inlinkCateKV[$v['InlinkCateId']].'</a>';
+            $Arr[$k]['SortView'] = '<input class="form-control SortInput" type="text" data-type="inlink" data-index="'.$v['InlinkId'].'" value="'.$v['Sort'].'"/>';
         }
         $KeyArr = array(
             'InlinkId' => array('Name' => 'ID', 'Td' => 'th'),
@@ -27,13 +29,18 @@ class Inlink extends ControllersAdmin {
         );
         $this->BuildObj->PrimaryKey = 'InlinkId';
         $this->BuildObj->TableTopBtnArr = array(
-            array('Name' => '分类管理', 'Link' => $this->CommonObj->Url(array('admin', 'inlinkCate', 'index'))),
+            array('Desc' => '分类管理', 'Class' => 'primary', 'Link' => $this->CommonObj->Url(array('admin', 'inlinkCate', 'index'))),
         );
         $this->BuildObj->NameAdd = '添加内链';
         //$this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
         $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'inlinkState')).'";';
-        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar);
+        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
+        $this->BuildObj->Arr = array(
+            array('Name' =>'InlinkCateId', 'Desc' => '选择分类',  'Type' => 'select', 'Data' => $inlinkCateKV, 'Value' => $_GET['InlinkCateId'], 'Required' => 0, 'Col' => 12),
+        );
+        $this->BuildObj->Form('get', 'form-inline');
+        $this->HeadHtml = $this->BuildObj->Html;
         $this->LoadView('admin/common/list', $tmp);
     }
     

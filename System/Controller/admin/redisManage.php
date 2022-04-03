@@ -31,7 +31,7 @@ class RedisManage extends ControllersAdmin {
             array('Desc' => '清空缓存', 'Class' => 'primary', 'Link' => $this->CommonObj->Url(array('admin', 'redisManage', 'empty'))),
         );
         $this->BuildObj->PrimaryKey = 'Name';
-        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr);
+        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, '', 'table-sm');
         
         $this->LoadView('admin/common/list', $tmp);
     }

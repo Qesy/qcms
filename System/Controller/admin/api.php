@@ -141,6 +141,25 @@ class Api extends ControllersAdmin {
             if($Ret === false) $this->ApiErr(1002);
             $this->LinkObj->clean($_POST['Index']);
             $this->ApiSuccess();
+        }elseif($_POST['Type'] == 'inlinkCate'){
+            $Ret = $this->Inlink_cateObj->SetCond(array('InLinkCateId' => $_POST['Index']))->SetUpdate(array('Sort' => intval($_POST['Sort'])))->ExecUpdate();
+            if($Ret === false) $this->ApiErr(1002);
+            $this->Inlink_cateObj->cleanList();
+            $this->ApiSuccess();
+        }elseif($_POST['Type'] == 'inlink'){
+            $Ret = $this->InlinkObj->SetCond(array('InLinkId' => $_POST['Index']))->SetUpdate(array('Sort' => intval($_POST['Sort'])))->ExecUpdate();
+            if($Ret === false) $this->ApiErr(1002);
+            $this->InlinkObj->cleanList();
+            $this->ApiSuccess();
+        }elseif($_POST['Type'] == 'swiperCate'){
+            $Ret = $this->Swiper_cateObj->SetCond(array('SwiperCateId' => $_POST['Index']))->SetUpdate(array('Sort' => intval($_POST['Sort'])))->ExecUpdate();
+            if($Ret === false) $this->ApiErr(1002);
+            $this->ApiSuccess();
+        }elseif($_POST['Type'] == 'swiper'){
+            $Ret = $this->SwiperObj->SetCond(array('SwiperId' => $_POST['Index']))->SetUpdate(array('Sort' => intval($_POST['Sort'])))->ExecUpdate();
+            if($Ret === false) $this->ApiErr(1002);
+            $this->SwiperObj->clean($Rs['SwiperId']);
+            $this->ApiSuccess();
         }
         
     }

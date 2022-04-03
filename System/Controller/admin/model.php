@@ -22,7 +22,7 @@ class Model extends ControllersAdmin {
         );
         $this->BuildObj->NameAdd = '添加模型';
 
-        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr);
+        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, '', 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }
     

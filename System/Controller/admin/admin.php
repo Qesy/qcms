@@ -9,12 +9,15 @@ class Admin extends ControllersAdmin {
         $Limit = array(($Page-1)*$this->PageNum, $this->PageNum);
         $CondArr = array('IsAdmin' => 1);
         if(!empty($_GET['GroupAdminId'])) $CondArr['GroupAdminId'] = $_GET['GroupAdminId'];
+        if(!empty($_GET['Phone'])) $CondArr['Phone LIKE '] = $_GET['Phone'];
         $Arr = $this->UserObj->SetCond($CondArr)->SetLimit($Limit)->SetSort(array('GroupAdminId' => 'ASC', 'UserId' => 'ASC'))->ExecSelectAll($Count);
 
         $GroupAdminArr = $this->Group_adminObj->getList();        
         $GroupAdminKV = array_column($GroupAdminArr, 'Name', 'GroupAdminId');
         foreach($Arr as $k => $v){
-            $Arr[$k]['AdminGroupView'] = $GroupAdminKV[$v['GroupAdminId']];
+            $GET = $_GET;
+            $GET['GroupAdminId'] = $v['GroupAdminId'];
+            $Arr[$k]['AdminGroupView'] = '<a class="btn btn-primary btn-sm btn-outline" href="'.$this->CommonObj->Url(array('admin', 'admin', 'index')).'?'.http_build_query($GET).'">'.$GroupAdminKV[$v['GroupAdminId']].'</a>';
             $Arr[$k]['IsDel'] = ($v['GroupAdminId'] == 1 || $v['UserId'] == $this->LoginUserRs['UserId']) ? 2 : 1;
             $Arr[$k]['TsLastView'] = empty($v['TsLast']) ? '未登录' : date('Y-m-d H:i', $v['TsLast']);
             $Arr[$k]['IpLastView'] = empty($v['IpLast']) ? '未登录' : $v['IpLast'];
@@ -37,6 +40,12 @@ class Admin extends ControllersAdmin {
         //$this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
+        $this->BuildObj->Arr = array(
+            array('Name' =>'Phone', 'Desc' => '账号',  'Type' => 'input', 'Value' => $_GET['Phone'], 'Required' => 0, 'Col' => 12),
+            array('Name' =>'GroupAdminId', 'Desc' => '管理组',  'Type' => 'select', 'Data' => $GroupAdminKV, 'Value' => $_GET['GroupAdminId'], 'Required' => 0, 'Col' => 12),
+        );
+        $this->BuildObj->Form('get', 'form-inline');
+        $this->HeadHtml = $this->BuildObj->Html;
         $this->LoadView('admin/common/list', $tmp);
     }
 

@@ -5,7 +5,7 @@ class inlinkCate extends ControllersAdmin {
     public function index_Action(){
         $Arr = $this->Inlink_cateObj->getList();
         foreach($Arr as $k => $v){
-            $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
+            $Arr[$k]['SortView'] = '<input class="form-control SortInput" type="text" data-type="inlinkCate" data-index="'.$v['InlinkCateId'].'" value="'.$v['Sort'].'"/>';
         }
         $KeyArr = array(
             'InlinkCateId' => array('Name' => 'ID', 'Td' => 'th'),
@@ -13,7 +13,10 @@ class inlinkCate extends ControllersAdmin {
             'SortView' => array('Name' => '排序', 'Td' => 'th', 'Style' => 'width:100px;'),
         );
         $this->BuildObj->PrimaryKey = 'InlinkCateId';
-        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr);
+        $this->BuildObj->TableTopBtnArr = array(
+            array('Desc' => '返回', 'Link' => $this->CommonObj->Url(array('admin', 'inlink', 'index')), 'Class' => 'default'),
+        );
+        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, '', 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }
     

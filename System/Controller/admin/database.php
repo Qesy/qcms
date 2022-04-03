@@ -36,7 +36,7 @@ class Database extends ControllersAdmin {
         $this->BuildObj->NameEdit = '还原';
         $this->BuildObj->LinkEdit = $this->CommonObj->Url(array('admin', 'database', 'restore'));
         $this->BuildObj->PrimaryKey = 'Name';
-        $tmp['Table'] = $this->BuildObj->Table($FileArr, $KeyArr);
+        $tmp['Table'] = $this->BuildObj->Table($FileArr, $KeyArr, '', 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }
     

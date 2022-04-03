@@ -42,7 +42,7 @@ class User extends ControllersAdmin {
         //$this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
         $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'userState')).'";';
-        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar);
+        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
         $this->BuildObj->Arr = array(            
             array('Name' =>'Phone', 'Desc' => '账号',  'Type' => 'input', 'Value' => $_GET['Phone'], 'Required' => 0, 'Col' => 12),
             array('Name' =>'GroupUserId', 'Desc' => '用户组',  'Type' => 'select', 'Data' => $GroupUserKV, 'Value' => $_GET['GroupUserId'], 'Required' => 0, 'Col' => 12),            

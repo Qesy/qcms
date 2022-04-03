@@ -15,7 +15,7 @@ class Swiper extends ControllersAdmin {
             $Arr[$k]['PicView'] = '<a href="'.$v['Pic'].'" target="_blank"><img src="'.$v['Pic'].'" style="width:40px;heihght:40px;"/></a>';
             $Arr[$k]['TitleView'] = empty($v['Title']) ? '<span class="text-danger">无</span>' : $v['Title'];
             $Arr[$k]['LinkView'] = '<input class="form-control" disabled="disabled" type="text" value="'.$v['Link'].'"/>';
-            $Arr[$k]['SortView'] = '<input class="form-control" type="text" value="'.$v['Sort'].'"/>';
+            $Arr[$k]['SortView'] = '<input class="form-control SortInput" type="text" data-type="swiper" data-index="'.$v['SwiperId'].'" value="'.$v['Sort'].'"/>';
         }
         $KeyArr = array(
             'SwiperId' => array('Name' => 'ID', 'Td' => 'th'),
@@ -49,9 +49,9 @@ class Swiper extends ControllersAdmin {
             $this->Jump(array('admin', 'swiper', 'index'), 1888);
         }
         $this->BuildObj->Arr = array(
-            array('Name' =>'Pic', 'Desc' => '上传图片',  'Type' => 'upload', 'Value' => '', 'Required' => 1, 'Col' => 12),
-            array('Name' =>'Title', 'Desc' => '图片标题',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),            
+            array('Name' =>'Title', 'Desc' => '图片标题',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
             array('Name' =>'Link', 'Desc' => '链接地址',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
+            array('Name' =>'Pic', 'Desc' => '上传图片',  'Type' => 'upload', 'Value' => '', 'Required' => 1, 'Col' => 12),            
         );
         $this->BuildObj->FormFooterBtnArr = array(
             array('Name' => 'back', 'Desc' => '返回', 'Type' => 'button', 'Class' => 'default'),
@@ -77,9 +77,10 @@ class Swiper extends ControllersAdmin {
         }
         
         $this->BuildObj->Arr = array(
-            array('Name' =>'Pic', 'Desc' => '上传图片',  'Type' => 'upload', 'Value' => $Rs['Pic'], 'Required' => 1, 'Col' => 12),
             array('Name' =>'Title', 'Desc' => '图片标题',  'Type' => 'input', 'Value' => $Rs['Title'], 'Required' => 1, 'Col' => 6),
             array('Name' =>'Link', 'Desc' => '链接地址',  'Type' => 'input', 'Value' => $Rs['Link'], 'Required' => 1, 'Col' => 6),
+            array('Name' =>'Pic', 'Desc' => '上传图片',  'Type' => 'upload', 'Value' => $Rs['Pic'], 'Required' => 1, 'Col' => 12),
+            
         );
         $this->BuildObj->FormFooterBtnArr = array(
             array('Name' => 'back', 'Desc' => '返回', 'Type' => 'button', 'Class' => 'default'),
