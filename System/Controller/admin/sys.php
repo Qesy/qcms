@@ -42,11 +42,30 @@ class Sys extends ControllersAdmin {
             <span class="mr-3 font-weight-bold">{PY}</span>拼音部首+文章ID<br>
         </span>
         ';
+        $UrlPageDesc = '<span class="text-dark">
+            <span class="mr-3 font-weight-bold">{PageId}</span>文章ID<br>
+            <span class="mr-3 font-weight-bold">{PinYin}</span>拼音+文章ID<br>
+            <span class="mr-3 font-weight-bold">{PY}</span>拼音部首+文章ID<br>
+        </span>
+        ';
         foreach($SysArr as $v){
             $DataArr = ($v['AttrType'] == 'radio') ? $this->OpenArr : array();
             if($v['Name'] == 'TmpPath') $DataArr = $Folder;
             if($v['Name'] == 'Editor') $DataArr = $this->EditorArr;
             if($v['Name'] == 'TmpIndex') $DataArr = $TempList;
+            if($v['Name'] == 'WaterMaskType') $DataArr = array(1 => '图片', 2 => '文字');
+            if($v['Name'] == 'WaterMaskPostion') $DataArr = array(
+                0 => '随机位置',
+                1 => '上左',
+                2 => '上中',
+                3 => '上右',
+                4 => '中左',
+                5 => '中中',
+                6 => '中右',
+                7 => '下左',
+                8 => '下中',
+                9 => '下右',
+            );
             $FormArr[$v['GroupId']][] = array('Name' => $v['Name'], 'Desc' => $v['Info'],  'Type' => $v['AttrType'], 'Data' => $DataArr, 'Value' => $v['AttrValue'], 'Col' => 12);;
         }
         $this->BuildObj->Arr = array(
@@ -64,8 +83,9 @@ class Sys extends ControllersAdmin {
                 'Form' => $FormArr[3]
             )
         );
-        $this->BuildObj->Arr[1]['Form'][] = array('Desc' => '规则说明',  'Type' => 'html', 'Value' => $UrlListDesc, 'Required' => 1, 'Col' => 6);
-        $this->BuildObj->Arr[1]['Form'][] = array('Desc' => '规则说明',  'Type' => 'html', 'Value' => $UrlDetailDesc, 'Required' => 1, 'Col' => 6);
+        $this->BuildObj->Arr[1]['Form'][] = array('Desc' => '列表地址规则说明',  'Type' => 'html', 'Value' => $UrlListDesc, 'Required' => 1, 'Col' => 4);
+        $this->BuildObj->Arr[1]['Form'][] = array('Desc' => '文章地址规则说明',  'Type' => 'html', 'Value' => $UrlDetailDesc, 'Required' => 1, 'Col' => 4);
+        $this->BuildObj->Arr[1]['Form'][] = array('Desc' => '单页地址规则说明',  'Type' => 'html', 'Value' => $UrlPageDesc, 'Required' => 1, 'Col' => 4);
         $this->PageTitle2 = $this->BuildObj->FormMultipleTitle();
         $this->BuildObj->FormMultiple('post', 'form-row');
         $this->LoadView('admin/common/edit');

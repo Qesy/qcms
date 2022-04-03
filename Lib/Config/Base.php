@@ -38,6 +38,7 @@ use Model\QC_Tag_map;
 use Model\QC_Token;
 use Model\QC_User;
 use Helper\Pinyin;
+use Helper\WaterMask;
 
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 
@@ -60,6 +61,7 @@ abstract class Base {
 	public $VeriObj;
 	public $UploadObj;
 	public $PinYinObj;
+	public $WaterMaskObj;
 	
 	public $CategoryObj;
 	public $FileObj;
@@ -144,6 +146,7 @@ abstract class Base {
 		$this->CommonObj = Common::get_instance();		
 		$this->UploadObj = Upload::get_instance();
 		$this->PinYinObj = Pinyin::get_instance();
+		$this->WaterMaskObj = WaterMask::get_instance();
 		
 		$this->LanguageArr = require_once PATH_LIB .'Language/Cn/Error'.EXTEND;
 		
