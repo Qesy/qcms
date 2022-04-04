@@ -2,6 +2,7 @@
     <ul class="nav navbar-nav side-nav nicescroll-bar flex-nowrap">
         <?
         foreach($this->RoleMenuArr as $val){
+            if($this->LoginUserRs['GroupAdminId'] != 1 && !in_array($val['Key'], $this->PermissionArr)) continue;
             $Key = $val['Key'];
             $Key2Id = str_replace('/', '_', $Key);
             $CateRs = $this->MenuArr[$Key];
@@ -17,6 +18,8 @@
             <ul id="<?=$Key2Id?>" class="collapse <? if(in_array(Router::$s_Controller, $val['subCont'])) echo 'show';?> collapse-level-1">
                 <?
                 foreach($val['Sub'] as $sval){
+
+                    if($this->LoginUserRs['GroupAdminId'] != 1 && !in_array($sval['Key'], $this->PermissionArr)) continue;
                     $sKey = $sval['Key'];
                     $sCateRs = $this->MenuArr[$sKey];
                     if(!in_array($this->LoginUserRs['GroupAdminId'], $sCateRs['Permission'])) continue;
