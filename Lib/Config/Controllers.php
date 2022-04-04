@@ -836,5 +836,10 @@ oQIDAQAB
 
 }
 class ControllersUser extends Base {
+    
+}
+
+class ControllersApi extends Base {
+    public $PostData = array();
 }
 ?>

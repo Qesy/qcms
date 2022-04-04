@@ -4,12 +4,9 @@ class Swiper extends ControllersAdmin {
     
     public function index_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('SwiperCateId'))) $this->Err(1001);
-        $Page = intval($_GET['Page']);
-        if($Page < 1) $Page = 1;
-        $Count = 0;
-        $Limit = array(($Page-1)*$this->PageNum, $this->PageNum);
+        
         $CondArr = array('SwiperCateId' => $_GET['SwiperCateId']);
-        $Arr = $this->SwiperObj->SetCond($CondArr)->SetLimit($Limit)->SetSort(array('Sort' => 'ASC', 'SwiperId' => 'ASC'))->ExecSelectAll($Count);
+        $Arr = $this->SwiperObj->SetCond($CondArr)->SetSort(array('Sort' => 'ASC', 'SwiperId' => 'ASC'))->ExecSelect();
 
         foreach($Arr as $k => $v){            
             $Arr[$k]['PicView'] = '<a href="'.$v['Pic'].'" target="_blank"><img src="'.$v['Pic'].'" style="width:40px;heihght:40px;"/></a>';
@@ -29,8 +26,7 @@ class Swiper extends ControllersAdmin {
             array('Desc' => '返回', 'Class' => 'default', 'Link' => $this->CommonObj->Url(array('admin', 'swiperCate', 'index'))),
         );
         $this->BuildObj->NameAdd = '添加图片';
-        $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
-        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
+        $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, '', 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }
     

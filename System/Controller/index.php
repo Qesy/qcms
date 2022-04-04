@@ -80,7 +80,6 @@ class Index extends Controllers {
 	    $Rs = $this->Sys_formObj->getOne(trim($_GET['KeyName']));
 	    if(empty($Rs)) $this->Err(1003);
 	    if($Rs['State'] != 1) $this->Err(1003);
-	    $DbConfig = DbConfig();
 	    if(!empty($_POST)){
 	        $InsertArr = array('TsAdd' =>time(), 'State' => $Rs['StateDefault'], 'FormId' => $Rs['FormId']);
 	        if($Rs['IsLogin'] == 1){
