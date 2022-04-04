@@ -521,6 +521,10 @@ class ControllersAdmin extends Controllers {
             'admin/groupAdmin/del' => array('Name' => '删除管理组', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'groupAdmin', 'del'))),
             'admin/log/operate' => array('Name' => '操作日志', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'log', 'operate'))),
             'admin/log/login' => array('Name' => '登录日志', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'log', 'login'))),
+            'admin/site/index' => array('Name' => '多站点管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'site', 'index'))),
+            'admin/site/add' => array('Name' => '添加站点', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'site', 'add'))),
+            'admin/site/edit' => array('Name' => '修改站点', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'site', 'edit'))),
+            'admin/site/del' => array('Name' => '删除站点', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'site', 'del'))),
             
             // 分类管理
             'admin/category/index' => array('Name' => '分类管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'index'))),
@@ -704,6 +708,7 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/sys/index'),
                 array('Key' => 'admin/sys/license'),
                 array('Key' => 'admin/sys/check'),
+                array('Key' => 'admin/site/index'),
                 array('Key' => 'admin/admin/index'),
                 array('Key' => 'admin/groupAdmin/index'),
                 array('Key' => 'admin/log/operate'),

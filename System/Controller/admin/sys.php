@@ -81,6 +81,10 @@ class Sys extends ControllersAdmin {
             array(
                 'Title' => '附件设置',
                 'Form' => $FormArr[3]
+            ),
+            array(
+                'Title' => '多站点管理',
+                'Form' => $FormArr[4]
             )
         );
         $this->BuildObj->Arr[1]['Form'][] = array('Desc' => '列表地址规则说明',  'Type' => 'html', 'Value' => $UrlListDesc, 'Required' => 1, 'Col' => 4);

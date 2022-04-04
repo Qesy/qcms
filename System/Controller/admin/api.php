@@ -192,6 +192,11 @@ class Api extends ControllersAdmin {
             if($Ret === false) $this->ApiErr(1002);
             $this->SwiperObj->clean($Rs['SwiperId']);
             $this->ApiSuccess();
+        }elseif($_POST['Type'] == 'site'){
+            $Ret = $this->SiteObj->SetCond(array('SiteId' => $_POST['Index']))->SetUpdate(array('Sort' => intval($_POST['Sort'])))->ExecUpdate();
+            if($Ret === false) $this->ApiErr(1002);
+            $this->SiteObj->cleanList();
+            $this->ApiSuccess();
         }
         
     }

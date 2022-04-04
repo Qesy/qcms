@@ -44,6 +44,10 @@ class RedisKey {
 	    return self::$s_projectKey.'_Link_Cate_String';
 	}
 	
+	public static function Site_String(){
+	    return self::$s_projectKey.'_Site_String';
+	}
+	
 	public static function Inlink_Cate_String(){
 	    return self::$s_projectKey.'_Inlink_Cate_String';
 	}

@@ -27,6 +27,42 @@ class Index extends Controllers {
         self::_statFlow();
     }
     
+    public function muLogin_Action(){
+        if($this->SysRs['MultistationIsOpen'] != 1) $this->Err(1055);
+        if(!$this->VeriObj->VeriPara($_GET, array('Secret'))) $this->Err(1001);
+        if(trim($_GET['Secret']) != md5($this->SysRs['MultistationSecret'])) $this->Err(1048);
+        $Rs = $this->UserObj->SetCond(array('GroupAdminId' => 1))->SetSort(array('UserId' => 'ASC'))->ExecSelectOne();
+        if(empty($Rs)) $this->Err(1006);
+        $Client = 'muLogin';
+        $OldTokenList = $this->TokenObj->SetCond(array('UserId' => $Rs['UserId'], 'Client' => $Client))->ExecSelect();
+        $OldTokenArr = array_column($OldTokenList, 'Token');
+        $Ts = time();
+        $Ip = $this->CommonObj->ip();
+        $Token = sha1($this->IdCreate());
+        
+        try{
+            DB::$s_db_obj->beginTransaction();
+            if(!empty($OldTokenArr)){
+                $this->TokenObj->SetCond(array('Token' => $OldTokenArr))->ExecDelete();
+            }
+            $this->Log_loginObj->SetInsert(array('UserId' => $Rs['UserId'], 'Ip' => $Ip, 'Ts' => $Ts, 'Ua'=> $_SERVER['HTTP_USER_AGENT']))->ExecInsert();
+            $this->TokenObj->SetInsert(array('Token' => $Token, 'UserId' => $Rs['UserId'], 'Client' => $Client, 'Ts' => $Ts))->ExecInsert();
+            $this->UserObj->SetCond(array('UserId' => $Rs['UserId']))->SetUpdate(array('TsLast' => $Ts, 'IpLast' => $Ip))->ExecUpdate();
+            DB::$s_db_obj->commit();
+        }catch(PDOException $e){
+            DB::$s_db_obj->rollBack();
+            $this->Err(1040);
+        }
+        foreach($OldTokenArr as $OldToken) $this->TokenObj->clean($OldToken);
+        $this->UserObj->clean($Rs['UserId']);
+        $this->CookieObj->set(array('Token' => $Token, 'Key' => $Key), 'User', 24*14);
+        /* if(isset($_GET['Refer'])){ //后台用户不需要
+         $this->CommonObj->ExecScript('window.location.href="'.urldecode($_GET['Refer']).'"');
+         } */
+        $this->CommonObj->Success($this->CommonObj->Url(array('admin', 'index')));
+        
+    }
+    
 	public function auth_Action() {
 		echo '<br><br><br><h1><center>QFrame PHP Version 1.0.0 </center></h1><center><h2>Author : Qesy, Email : 762264@qq.com</h2><p>Your IP : ' . $this->CommonObj->ip () . '</p></center>';
 	}

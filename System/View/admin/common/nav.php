@@ -16,12 +16,12 @@
     <ul class="nav navbar-right top-nav pull-right">
         <li>
             <a href="<?=$_SERVER['REQUEST_SCHEME'].'://'.URL_DOMAIN?>/" target="_blank">
-            <i class="bi bi-grid h5"></i> 网站主页
+            <i class="bi bi-grid "></i> 网站主页
             </a>
         </li>
         <li>
             <a href="http://bbs.q-cms.cn/" target="_blank">
-            <i class="bi bi-chat-text h5"></i> 官网论坛
+            <i class="bi bi-chat-text "></i> 官网论坛
             </a>
         </li>
         <li class="dropdown">
