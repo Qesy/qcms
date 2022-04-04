@@ -483,6 +483,7 @@ class ControllersAdmin extends Controllers {
     public $StateArr = array('1' => '已发布', 2 => '未发布');
     public $SexArr = array('1' => '男', 2 => '女');
     public $EditorArr = array('ckeditor' => 'ckeditor');
+    public $SiteArr = array();
     public $HeadHtml = '';
     function __construct(){
         parent::__construct();
@@ -704,7 +705,7 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/templates/builder'),
                 array('Key' => 'admin/templates/test'),
             )),
-            array('Key' => 'admin/index', 'subCont' => array('sys', 'admin', 'groupAdmin', 'log'), 'Icon' => 'bi bi-gear', 'Sub' => array(
+            array('Key' => 'admin/index', 'subCont' => array('sys', 'admin', 'groupAdmin', 'log', 'site'), 'Icon' => 'bi bi-gear', 'Sub' => array(
                 array('Key' => 'admin/sys/index'),
                 array('Key' => 'admin/sys/license'),
                 array('Key' => 'admin/sys/check'),
@@ -746,6 +747,7 @@ class ControllersAdmin extends Controllers {
                 break;
             }
         }
+        $this->SiteArr = $this->SiteObj->getList();
         
     }
     

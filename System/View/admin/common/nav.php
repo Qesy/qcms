@@ -19,6 +19,20 @@
             <i class="bi bi-grid "></i> 网站主页
             </a>
         </li>
+        <li class="dropdown <?=empty($this->SiteArr) ? 'd-none' : ''?>">
+            <a href="#" data-toggle="dropdown">
+            <i class="bi bi-diagram-3"></i> 切换站点 <i class="bi bi-caret-down-fill"></i>
+            </a>
+            <ul class="dropdown-menu " data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">
+                <?
+                foreach($this->SiteArr as $v){
+                ?>
+                <li>
+                    <a class="dropdown-item py-1" href="<?=$v['WebSite'].'index/muLogin.html?Secret='.md5($v['Secret'])?>"><i class="bi bi-star"></i> <?=$v['Name']?></a>
+                </li>
+                <? } ?>
+            </ul>
+        </li>
         <li>
             <a href="http://bbs.q-cms.cn/" target="_blank">
             <i class="bi bi-chat-text "></i> 官网论坛

@@ -20,8 +20,7 @@ class Site extends ControllersAdmin {
             'TsView' => array('Name' => '添加时间', 'Td' => 'th'),
         );
         $this->BuildObj->PrimaryKey = 'SiteId';
-
-        $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'inlinkState')).'";';
+        
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, '', 'table-sm');
         
         $this->LoadView('admin/common/list', $tmp);
