@@ -14,7 +14,6 @@ class Content extends ControllersAdmin {
         
         if(!empty($_GET['CateId'])){
             $this->CategoryObj->getAllCateId($_GET['CateId'], $ModelRs['ModelId']);
-            //var_dump($this->CategoryObj->AllSubCateIdArr);exit;
             $CondArr['CateId'] = $this->CategoryObj->AllSubCateIdArr;
         }
         if(!empty($_GET['State'])) $CondArr['State'] = $_GET['State'];
@@ -50,7 +49,11 @@ class Content extends ControllersAdmin {
             $Arr[$k]['BtnArr'] = array(
                 array('Desc' => '预览', 'Color' => 'success', 'Link' => $this->createUrl('detail', $v['Id'], $v['PinYin'], $v['PY'], $v['TsUpdate']), 'IsBlank' => 1),
             );
+            if($ModelRs['KeyName'] == 'album'){
+                $Arr[$k]['BtnArr'][] = array('Desc' => '照片管理', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'photos')));
+            }
         }
+        
         $KeyArr = array(
             'Id' => array('Name' => '全选', 'Td' => 'th', 'Type' => 'CheckBox'),
             //'Id' => array('Name' => 'ID', 'Td' => 'th'),
@@ -620,5 +623,9 @@ class Content extends ControllersAdmin {
         }
 
         $this->Jump(array('admin', 'content', 'recovery'));
+    }
+    
+    public function photos_Action(){
+        
     }
 }
