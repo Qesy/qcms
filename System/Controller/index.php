@@ -30,7 +30,7 @@ class Index extends Controllers {
     public function muLogin_Action(){
         if($this->SysRs['MultistationIsOpen'] != 1) $this->Err(1055);
         if(!$this->VeriObj->VeriPara($_GET, array('Secret'))) $this->Err(1001);
-        if(trim($_GET['Secret']) != md5($this->SysRs['MultistationSecret'])) $this->Err(1048);
+        if(trim($_GET['Secret']) != md5($this->SysRs['Secret'])) $this->Err(1048);
         $Rs = $this->UserObj->SetCond(array('GroupAdminId' => 1))->SetSort(array('UserId' => 'ASC'))->ExecSelectOne();
         if(empty($Rs)) $this->Err(1006);
         $Client = 'muLogin';

@@ -23,7 +23,7 @@ class Controllers extends Base {
         'ModelRs' => array(),
     
     );
-    public $ModuleKv = array();
+    public $ModelKv = array();
     public $CateKv = array();
     public $TmpPath;
     
@@ -33,9 +33,9 @@ class Controllers extends Base {
         $this->TmpPath = PATH_TEMPLATE.$this->SysRs['TmpPath'].'/';
         $this->CategoryObj->getTreeDetal();
         foreach($this->CategoryObj->CateArr as $v) $this->CateKv[$v['CateId']] = $v;
-        $ModuleArr = $this->Sys_modelObj->getList();
-        foreach($ModuleArr as $v){
-            $this->ModuleKv[$v['KeyName']] = $v;
+        $ModelArr = $this->Sys_modelObj->getList();
+        foreach($ModelArr as $v){
+            $this->ModelKv[$v['KeyName']] = $v;
         }
     }
     
@@ -250,7 +250,7 @@ class Controllers extends Base {
         $Replace = array();
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);
-            $Ret['Module'] = !isset($Para['Module']) ? 'article' : $Para['Module'];
+            $Ret['Model'] = !isset($Para['Model']) ? 'article' : $Para['Model'];
             $Ret['Row'] = !isset($Para['Row']) ? '10' : $Para['Row'];
             if($Ret['Row'] > 100) $Ret['Row'] = 100;
             $Ret['CateId'] = !isset($Para['CateId']) ? '0' : $Para['CateId'];
@@ -325,13 +325,13 @@ class Controllers extends Base {
     }
     
     private function _replaceList($Ret, $Html, $Pre){
-        $ModuleRs = $this->ModuleKv[$Ret['Module']];
+        $ModelRs = $this->ModelKv[$Ret['Model']];
         $CondArr = array();
         if(!empty($Ret['CateId'])){
             $CateIds = explode(',', $Ret['CateId']);
             $AllSubCateIdArr = array();
             foreach($CateIds as $v){
-                $this->CategoryObj->getAllCateId($v, $ModuleRs['ModelId']);
+                $this->CategoryObj->getAllCateId($v, $ModelRs['ModelId']);
                 $AllSubCateIdArr = array_merge($AllSubCateIdArr, $this->CategoryObj->AllSubCateIdArr);
             }
             $CondArr['CateId'] = $AllSubCateIdArr;
@@ -339,7 +339,7 @@ class Controllers extends Base {
         if(!empty($Ret['Keyword'])){
             $TagArr = $this->TagObj->SetCond(array('Name' => explode(',', $Ret['Keyword'])))->ExecSelect();
             $TagIds = array_column($TagArr, 'TagId');
-            $TagMap = $this->Tag_mapObj->SetCond(array('TagId' => $TagIds, 'ModelId' => $ModuleRs['ModelId']))->SetLimit(array(0, ($Ret['Row']+1)))->SetSort(array('TagMapId' => 'DESC'))->ExecSelect();
+            $TagMap = $this->Tag_mapObj->SetCond(array('TagId' => $TagIds, 'ModelId' => $ModelRs['ModelId']))->SetLimit(array(0, ($Ret['Row']+1)))->SetSort(array('TagMapId' => 'DESC'))->ExecSelect();
             $CondArr['Id'] = array_column($TagMap, 'TableId');
         }
         if(!empty($Ret['Ids'])){
@@ -365,13 +365,13 @@ class Controllers extends Base {
         }elseif($Ret['Sort'] == 'Good'){
             $Sort = array('Good' => 'DESC', 'Id' => 'DESC');
         }
-        $FieldArr = empty($ModuleRs['FieldJson']) ? array() : json_decode($ModuleRs['FieldJson'], true);
+        $FieldArr = empty($ModelRs['FieldJson']) ? array() : json_decode($ModelRs['FieldJson'], true);
         $ListField = $this->DefaultField;
         foreach($FieldArr as $v){
             if($v['IsList'] == 1) $ListField[] = $v['Name'];
         }
         $ListField = array_diff($ListField, array('Content', 'Index'));
-        $Arr = $this->Sys_modelObj->SetTbName('table_'.$ModuleRs['KeyName'])->SetField(implode(', ', $ListField))->SetCond($CondArr)->SetSort($Sort)->SetLimit($Limit)->SetIsDebug(0)->ExecSelect();
+        $Arr = $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetField(implode(', ', $ListField))->SetCond($CondArr)->SetSort($Sort)->SetLimit($Limit)->SetIsDebug(0)->ExecSelect();
         $Compile = '';
         $Search = array();
         foreach($ListField as $v){
@@ -651,6 +651,7 @@ class ControllersAdmin extends Controllers {
             'admin/templates/del' => array('Name' => '删除模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'del'))),
             'admin/templates/builder' => array('Name' => '代码生成器', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'builder'))),
             'admin/templates/test' => array('Name' => '模板标签测试', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'test'))),
+            'admin/templates/api' => array('Name' => 'API接口调试', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'api'))),
             // API
             'admin/api/ajaxUpload' => array('Name' => 'AJAX上传', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'ajaxUpload'))),
             'admin/api/ckUpload' => array('Name' => 'CkEditor上传', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'ckUpload'))),
@@ -711,6 +712,7 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/templates/index'),
                 array('Key' => 'admin/templates/builder'),
                 array('Key' => 'admin/templates/test'),
+                array('Key' => 'admin/templates/api'),
             )),
             array('Key' => 'admin/sys', 'subCont' => array('sys', 'admin', 'groupAdmin', 'log', 'site'), 'Icon' => 'bi bi-gear', 'Sub' => array(
                 array('Key' => 'admin/sys/index'),
@@ -841,5 +843,14 @@ class ControllersUser extends Base {
 
 class ControllersApi extends Base {
     public $PostData = array();
+    public $ModelKv = array();
+    function __construct(){
+        parent::__construct();
+        $this->SysRs = $this->SysObj->getKv();        
+        $ModelArr = $this->Sys_modelObj->getList();
+        foreach($ModelArr as $v){
+            $this->ModelKv[$v['KeyName']] = $v;
+        }
+    }
 }
 ?>

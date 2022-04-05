@@ -49,12 +49,12 @@ class Common {
 	public function ApiErr($Code, $Msg = '参数错误'){
 	    $this->Ret['Code'] = $Code;
 	    $this->Ret['Msg'] = $Msg;
-	    die(json_encode($this->Ret));
+	    die(json_encode($this->Ret, JSON_UNESCAPED_UNICODE));
 	}
 
 	public function ApiSuccess($Data = array()){
 	    $this->Ret['Data'] = $Data;
-	    die(json_encode($this->Ret));
+	    die(json_encode($this->Ret, JSON_UNESCAPED_UNICODE));
 	}
 
 	public function CreateSn() { // -- Name : 生成编号 --

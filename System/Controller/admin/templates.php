@@ -141,4 +141,52 @@ class Templates extends ControllersAdmin {
         $this->LoadView('admin/templates/test');
     }
     
+    public function api_Action(){ // 接口演示
+        $ApiArr = array(
+            'sys' => array('Name' => '获取系统信息', 'Path' => 'api/common/sys', 'Para' => array()),
+            'cateList' => array('Name' => '获取分类列表', 'Path' => 'api/common/cateList', 'Para' => array()),
+            'cateOne' => array('Name' => '获取分类详情', 'Path' => 'api/common/cateOne', 'Para' => array(
+                array('Key' => 'CateId', 'IsMust' => 1, 'Default' => '1', 'Desc' => '分类ID')
+            )),
+            'pageOne' => array('Name' => '获取单页信息', 'Path' => 'api/common/pageOne', 'Para' => array(
+                array('Key' => 'PageId', 'IsMust' => 1, 'Default' => '1', 'Desc' => '单页ID')
+            )),
+            'formOne' => array('Name' => '获取表单信息', 'Path' => 'api/common/formOne', 'Para' => array(
+                array('Key' => 'KeyName', 'IsMust' => 1, 'Default' => '', 'Desc' => '表单调用名')
+            )),
+            'formSubmit' => array('Name' => '表单提交', 'Path' => 'api/common/formSubmit', 'Para' => array(
+                array('Key' => 'KeyName', 'IsMust' => 1, 'Default' => '', 'Desc' => '表单调用名'),
+                array('Key' => 'Token', 'IsMust' => 2, 'Default' => '', 'Desc' => '需要登陆的表单需提交'),
+                array('Key' => 'Xxx', 'IsMust' => 2, 'Default' => '', 'Desc' => '其他自定义字段'),
+            )),
+            'labelOne' => array('Name' => '获取自定义标签', 'Path' => 'api/common/labelOne', 'Para' => array(
+                array('Key' => 'KeyName', 'IsMust' => 1, 'Default' => '', 'Desc' => '标签调用名')
+            )),
+            'contentlist' => array('Name' => '获取文章列表', 'Path' => 'api/common/contentlist', 'Para' => array(
+                array('Key' => 'Model', 'IsMust' => 1, 'Default' => 'article', 'Desc' => '模型名(article:文章,product:产品,album:相册,down:下载 ,Xxx:自定义模型)'),
+                array('Key' => 'CateId', 'IsMust' => 2, 'Default' => '0', 'Desc' => '分类ID'),
+                array('Key' => 'Page', 'IsMust' => 2, 'Default' => '1', 'Desc' => '页码'),
+                array('Key' => 'Row', 'IsMust' => 2, 'Default' => '10', 'Desc' => '条数(默认20)'),
+                array('Key' => 'State', 'IsMust' => 2, 'Default' => '1', 'Desc' => '状态(1:已发布，2:未发布)'),
+                array('Key' => 'Ids', 'IsMust' => 2, 'Default' => '', 'Desc' => '指定获取多条内容(Ids:1|2|3)'),
+                array('Key' => 'Keyword', 'IsMust' => 2, 'Default' => '', 'Desc' => '关键字(搜索用)'),
+            )),
+            'contentOne' => array('Name' => '获取文章详情', 'Path' => 'api/common/contentOne', 'Para' => array(
+                array('Key' => 'Id', 'IsMust' => 1, 'Default' => '', 'Desc' => '文章ID')
+            )),
+            'link' => array('Name' => '获取友情链接', 'Path' => 'api/common/link', 'Para' => array(
+                array('Key' => 'LinkCateId', 'IsMust' => 2, 'Default' => '1', 'Desc' => '友情链接分类ID'),
+                array('Key' => 'Page', 'IsMust' => 2, 'Default' => '1', 'Desc' => '页码'),
+                array('Key' => 'Row', 'IsMust' => 2, 'Default' => '10', 'Desc' => '条数(默认20)'),
+            )),
+            'swiper' => array('Name' => '获取幻灯片', 'Path' => 'api/common/swiper', 'Para' => array(
+                array('Key' => 'SwiperCateId', 'IsMust' => 1, 'Default' => '1', 'Desc' => '幻灯片ID'),
+            )),
+                       
+        );
+        
+        $tmp['ApiArr'] = $ApiArr;
+        $this->LoadView('admin/templates/api', $tmp);
+    }
+    
 }
