@@ -52,6 +52,7 @@
                                 <h5 class="txt-dark">
                                     <?=$this->PageTitle2?>
                                 </h5>
+                                <div class="text-dark">附件占用空间：<?=$this->CommonObj->Size($SizeTotal)?></div>
                             </div>
                             <div class="panel-wrapper ">
                                 <div class="panel-body">
@@ -81,9 +82,10 @@
                                     </div>
                                     <div class="d-flex justify-content-between align-items-center">
                                     <div>
-                                    <button type="button" class="btn btn-primary btn-sm mr-2" id="checkAllBtn">全选</button>
-                                    <button type="button" class="btn btn-primary btn-sm mr-2" id="emptyAllBtn">清空</button>
-                                    <button type="button" class="btn btn-danger btn-sm mr-2" id="DelBatchBtn">彻底删除</button>
+                                    <button type="button" class="btn btn-primary btn-sm mr-2" id="checkAllBtn">全部选中</button>
+                                    <button type="button" class="btn btn-primary btn-sm mr-2" id="emptyAllBtn">全部不选</button>
+                                    <button type="button" class="btn btn-danger btn-sm mr-2" id="DelBatchBtn">选中删除附件</button>
+                                    <button type="button" class="btn btn-success btn-sm mr-2" id="cleanFileBtn">清空无效附件</button>
                                 </div>
                                     <?=$PageBar?>
                                     </div>
@@ -115,6 +117,15 @@
             let Ids = getAllChecked();
             //console.log('ids', Ids); return;
             $.post('<?=$this->CommonObj->Url(array('admin', 'api', 'fileDel')).'?'.http_build_query($_GET)?>', {'Ids':Ids.join('|')}, function(Res){
+                if(Res.Code){
+                    alert(Res.Msg);return;
+                }
+                location.reload();
+            }, 'json')
+        })
+        $('#cleanFileBtn').click(function(){
+            if(!confirm('确定清空无效附件?')) return false;
+            $.post('<?=$this->CommonObj->Url(array('admin', 'api', 'fileClean')).'?'.http_build_query($_GET)?>', {}, function(Res){
                 if(Res.Code){
                     alert(Res.Msg);return;
                 }

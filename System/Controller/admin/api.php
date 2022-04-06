@@ -46,6 +46,24 @@ class Api extends ControllersAdmin {
         echo json_encode($msg);
     }
     
+    public function fileClean_Action(){
+        $Arr = $this->FileObj->SetCond(array('IsDel' => 1))->ExecSelect();
+        try{
+            DB::$s_db_obj->beginTransaction();
+            $this->FileObj->SetCond(array('FileId' => array_column($Arr, 'FileId')))->ExecDelete();
+            foreach($Arr as $v){
+                $FilePath = realpath(substr($v['Img'], 1));
+                if(!file_exists($FilePath)) continue;
+                if(!@unlink($FilePath)) throw new PDOException('删除文件失败');
+            }
+            DB::$s_db_obj->commit();
+        }catch(PDOException $e){
+            DB::$s_db_obj->rollBack();
+            $this->ApiErr(1002);
+        }
+        $this->ApiSuccess();
+    }
+    
     public function fileDel_Action(){
         if(!$this->VeriObj->VeriPara($_POST, array('Ids'))) $this->ApiErr(1001);
         $Ids = explode('|', $_POST['Ids']);
