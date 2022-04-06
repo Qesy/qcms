@@ -68,6 +68,11 @@
                                     </div>
 
                                 </div>
+                                <div>
+                                    <button type="button" class="btn btn-primary btn-sm mr-2" id="checkAllBtn">全选</button>
+                                    <button type="button" class="btn btn-primary btn-sm mr-2" id="emptyAllBtn">清空</button>
+                                    <button type="button" class="btn btn-danger btn-sm mr-2" id="DelBatchBtn">删除</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -137,6 +142,23 @@
     }
     $(function(){
         fillPhoto();
+        $('#checkAllBtn').click(function(){
+            $('.ImgView').prop('checked', true);
+        })
+        $('#emptyAllBtn').click(function(){
+            $('.ImgView').prop('checked', false);
+        })
+        $('#DelBatchBtn').click(function(){
+            if(!confirm('确定删除?')) return false;
+            let Ids = getAllChecked();
+            $.post('<?=$this->CommonObj->Url(array('admin', 'content', 'photoDel')).'?'.http_build_query($_GET)?>', {'PhotoIndex':Ids.join('|')}, function(Res){
+                if(Res.Code){
+                    alert(Res.Msg);return;
+                }
+                PhotoArr = Res.Data;
+                fillPhoto();
+            }, 'json')
+        })
         $('#PhotoList').on('click', '.delBtn', function(){
             let Index = $(this).attr('data-index');
             $.post('<?=$this->CommonObj->Url(array('admin', 'content', 'photoDel')).'?'.http_build_query($_GET)?>', {'PhotoIndex':Index}, function(Res){
@@ -149,6 +171,14 @@
         })
     })
 
+    var getAllChecked = function(){
+        let Ids = [];
+        $('.ImgView:checked').each(function(index, item){
+            Ids.push($(this).val())
+        })
+        return Ids;
+    }
+
     var fillPhoto = function(){
         $('#PhotoList').html('');
         let Html = '';
@@ -157,6 +187,10 @@
             Html += `
             <div class="file-box">
                 <div class="file">
+                <div class="checkbox checkbox-primary position-absolute pt-0" style="right:0px;top:0px;">
+                    <input class="ImgView" id="checkbox_`+Index+`" data-index="`+Index+`" value="`+Index+`" type="checkbox" >
+                    <label for="checkbox_`+Index+`"></label>
+                </div>
                     <a target="_blank" href="`+Rs.Path+`">
 
                         <div class="image" style="height: 120px;">

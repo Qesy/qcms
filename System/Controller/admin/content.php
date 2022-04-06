@@ -712,27 +712,35 @@ class Content extends ControllersAdmin {
     
     public function photoDel_Action(){ //删除
         if(!$this->VeriObj->VeriPara($_GET, array('Id'))) $this->ApiErr(1001);
-        $PhotoIndex = intval($_POST['PhotoIndex']);
+        //$PhotoIndex = intval($_POST['PhotoIndex']);
         $TableRs = $this->TableObj->getOne($_GET['Id']);
         $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
         if($ModelRs['KeyName'] != 'album') $this->ApiErr(1048);
         $Rs = $this->PhotosObj->SetCond(array('Id' => $TableRs['Id']))->ExecSelectOne();
         $Photos = empty($Rs['Photos']) ? array() : json_decode($Rs['Photos'], true);
-        $Delete = $Photos[$PhotoIndex];
-        array_splice($Photos, $PhotoIndex, 1);
+        $NewPhotos = $DelPhotos = array();
+        $PhotoIndexArr = explode('|', $_POST['PhotoIndex']);
+        foreach($Photos as $k => $v){
+            if(in_array($k, $PhotoIndexArr)){
+                $DelPhotos[] = $v;
+            }else{
+                $NewPhotos[] = $v;                
+            }
+        }        
+        
         try{
             DB::$s_db_obj->beginTransaction();
-            $this->PhotosObj->SetInsert(array('Id' => $TableRs['Id'], 'Photos' => json_encode($Photos)))->ExecReplace();
-            $this->FileObj->SetCond(array('FType' => 2, 'IndexId' => $TableRs['Id'], 'Img' => $Delete['Path']))->SetUpdate(array('IsDel' => 1))->ExecUpdate();
+            $this->PhotosObj->SetInsert(array('Id' => $TableRs['Id'], 'Photos' => json_encode($NewPhotos)))->ExecReplace();
+            $this->FileObj->SetCond(array('FType' => 2, 'IndexId' => $TableRs['Id'], 'Img' => array_column($DelPhotos, 'Path')))->SetUpdate(array('IsDel' => 1))->ExecUpdate();
             DB::$s_db_obj->commit();
         }catch (PDOException $e){
             DB::$s_db_obj->rollBack();
             $this->ApiErr(1002);
         }
-        foreach($Photos as $k => $v) {
-            $Photos[$k]['SizeView'] = $this->CommonObj->Size($v['Size']);
+        foreach($NewPhotos as $k => $v) {
+            $NewPhotos[$k]['SizeView'] = $this->CommonObj->Size($v['Size']);
         }
-        $this->ApiSuccess($Photos);
+        $this->ApiSuccess($NewPhotos);
     }
 
 }
