@@ -2,6 +2,7 @@
 var IsEditorCreat = false;
 var URL_ROOT = "/";
 var UploadBtn = {}, interval;
+
 $(function(){
     $('#SelectAllBtn').change(function(){
         $('.CheckBoxOne').prop('checked' , $(this).prop('checked'))

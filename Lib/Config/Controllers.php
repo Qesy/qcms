@@ -307,6 +307,29 @@ class Controllers extends Base {
         return '/'.$Type.'/'.$RetUrl;
     }
     
+    protected function p_upload($FileData){
+        $Ret = $this->UploadObj->upload_file($FileData);
+        if($this->SysRs['WaterMaskIsOpen'] != 1) return $Ret; //未开启水印
+        if($Ret['Code'] != 0) return $Ret;
+        $this->WaterMaskObj->waterType = ($this->SysRs['WaterMaskType'] == 1) ? 1 : 0;
+        $this->WaterMaskObj->fontFile = realpath('./Static/fonts/msyh.ttc');
+        $this->WaterMaskObj->waterImg = realpath('.'.$this->SysRs['WaterMaskPic']);
+        if($this->WaterMaskObj->waterType == 1){
+            if(empty($this->SysRs['WaterMaskPic']) || !file_exists($this->WaterMaskObj->waterImg)) return $Ret;
+        }else{
+            if(!file_exists($this->WaterMaskObj->fontFile)) return $Ret;
+        }
+        
+        $this->WaterMaskObj->waterStr = $this->SysRs['WaterMaskTxt'];
+        $this->WaterMaskObj->pos = $this->SysRs['WaterMaskPostion'];
+        $this->WaterMaskObj->transparent = $this->SysRs['WaterMaskFontOpacity'];
+        $this->WaterMaskObj->fontSize = $this->SysRs['WaterMaskFontSize'];
+        $this->WaterMaskObj->fontColor = explode(',', $this->SysRs['WaterMaskFontColor']);
+        $this->WaterMaskObj->setSrcImg(realpath('.'.$Ret['Url']) );
+        $this->WaterMaskObj->output();
+        return $Ret;
+    }
+    
     private function _replaceLoop($Sql, $Html, $Pre){
         //var_dump($Html);exit;
         $Arr = $this->Sys_modelObj->query($Sql, array());
@@ -566,6 +589,8 @@ class ControllersAdmin extends Controllers {
             'admin/content/restore' => array('Name' => '恢复文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'restore'))),
             'admin/content/tDelete' => array('Name' => '彻底删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'tDelete'))),
             'admin/content/photos' => array('Name' => '照片管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'photos'))),
+            'admin/content/photoDel' => array('Name' => '照片删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'photoDel'))),
+            'admin/content/photoSort' => array('Name' => '照片排序', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'photoSort'))),
             
             // 会员管理
             'admin/user/index' => array('Name' => '会员管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'user', 'index'))),
@@ -655,6 +680,7 @@ class ControllersAdmin extends Controllers {
             'admin/templates/api' => array('Name' => 'API接口调试', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'api'))),
             // API
             'admin/api/ajaxUpload' => array('Name' => 'AJAX上传', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'ajaxUpload'))),
+            'admin/api/batchUpload' => array('Name' => '批量上传', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'batchUpload'))),
             'admin/api/ckUpload' => array('Name' => 'CkEditor上传', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'ckUpload'))),
             'admin/api/userState' => array('Name' => '设置用户状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'userState'))),
             'admin/api/linkState' => array('Name' => '设置链接状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'linkState'))),

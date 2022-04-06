@@ -172,6 +172,9 @@ class Content extends ControllersAdmin {
                 }                     
                 $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetInsert($InsetArr)->ExecInsert();
                 $this->TagObj->RunUpdate($InsetArr['Tag'], '', $InsertId, $ModelRs['ModelId']);
+                if($ModelRs['KeyName'] == 'album'){
+                    $this->PhotosObj->SetInsert(array('Id' => $InsertId, 'Photos' => json_encode(array())))->ExecInsert();
+                }
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
                 DB::$s_db_obj->rollBack();                
@@ -616,6 +619,10 @@ class Content extends ControllersAdmin {
             DB::$s_db_obj->beginTransaction();
             $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Rs['Id']))->ExecDelete();
             $this->TableObj->SetCond(array('Id' => $Rs['Id']))->ExecDelete();
+            if($ModelRs['KeyName'] == 'album'){ //相册表删除
+                $this->PhotosObj->SetCond(array('Id' => $Rs['Id']))->ExecDelete();
+                $this->FileObj->SetCond(array('FType' => 2, 'IndexId' => $Rs['Id']))->SetUpdate(array('IsDel' => 1))->ExecDelete();
+            }
             DB::$s_db_obj->commit();
         }catch (PDOException $e){
             DB::$s_db_obj->rollBack();
@@ -626,6 +633,106 @@ class Content extends ControllersAdmin {
     }
     
     public function photos_Action(){
-        
+        if(!$this->VeriObj->VeriPara($_GET, array('Id'))) $this->Err(1001);
+        $TableRs = $this->TableObj->getOne($_GET['Id']);
+        $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
+        if($ModelRs['KeyName'] != 'album') $this->Err(1048);
+        $Rs = $this->PhotosObj->SetCond(array('Id' => $TableRs['Id']))->ExecSelectOne();
+        $Photos = empty($Rs['Photos']) ? array() : json_decode($Rs['Photos'], true);
+
+        if(!empty($_FILES)){
+            try{
+                DB::$s_db_obj->beginTransaction();
+                foreach($_FILES as $File){
+                    $Ret = self::p_upload($File);
+                    if($Ret['Code'] == 0) {
+                        $Photos[] = array('Name' => $File['name'], 'Path' => $Ret['Url'], 'Size' => $File['size']);
+                        $ext = substr ( strrchr ( $File['name'], '.' ), 1 );
+                        $this->FileObj->SetInsert(array(
+                            'UserId' => $this->LoginUserRs['UserId'],
+                            'Name' => $File['name'],
+                            'Img' => $Ret['Url'],
+                            'Size' => $File['size'],
+                            'Ext' => $ext,
+                            'Ts' => time(),
+                            'FType' => 2,
+                            'IndexId' => $TableRs['Id'],
+                        ))->ExecInsert();
+                    }
+                }
+                $this->PhotosObj->SetInsert(array('Id' => $TableRs['Id'], 'Photos' => json_encode($Photos)))->ExecReplace();
+                DB::$s_db_obj->commit();
+            }catch (PDOException $e){
+                DB::$s_db_obj->rollBack();
+                $this->ApiErr(1002);
+            }
+            foreach($Photos as $k => $v) {
+                $Photos[$k]['SizeView'] = $this->CommonObj->Size($v['Size']);
+            }
+            $this->ApiSuccess($Photos);
+            
+        }
+        foreach($Photos as $k => $v) {
+            $Photos[$k]['SizeView'] = $this->CommonObj->Size($v['Size']);
+        }
+        $tmp['Photos'] = $Photos;
+        $this->LoadView('admin/content/photos', $tmp);
     }
+    
+    public function photoSort_Action(){ //排序
+        if(!$this->VeriObj->VeriPara($_GET, array('Id'))) $this->ApiErr(1001);
+        $PhotoIndex = intval($_POST['PhotoIndex']);
+        $TableRs = $this->TableObj->getOne($_GET['Id']);
+        $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
+        if($ModelRs['KeyName'] != 'album') $this->ApiErr(1048);
+        $Rs = $this->PhotosObj->SetCond(array('Id' => $TableRs['Id']))->ExecSelectOne();
+        $Photos = empty($Rs['Photos']) ? array() : json_decode($Rs['Photos'], true);
+        //if(!$this->VeriObj->VeriPara($_POST, array('oldIndex', 'newIndex'))) $this->ApiErr(1001);
+        $OldIndex = intval($_POST['oldIndex']);
+        $NewIndex = intval($_POST['newIndex']);
+        $Old = $Photos[$OldIndex]; 
+        array_splice($Photos, $OldIndex, 1);
+        $NewPhotoArr = array();
+        foreach($Photos as $k => $v){
+            if($k == $_POST['newIndex']){
+                $NewPhotoArr[] = $Old;
+            }
+            $NewPhotoArr[] = $v;
+        }
+        if(count($NewPhotoArr) < $NewIndex+1){
+            $NewPhotoArr[] = $Old;
+        }
+        $Ret = $this->PhotosObj->SetInsert(array('Id' => $TableRs['Id'], 'Photos' => json_encode($NewPhotoArr)))->ExecReplace();
+        if($Ret === false) $this->ApiErr(1002);
+        foreach($NewPhotoArr as $k => $v) {
+            $NewPhotoArr[$k]['SizeView'] = $this->CommonObj->Size($v['Size']);
+        }
+        $this->ApiSuccess($NewPhotoArr);
+    }
+    
+    public function photoDel_Action(){ //删除
+        if(!$this->VeriObj->VeriPara($_GET, array('Id'))) $this->ApiErr(1001);
+        $PhotoIndex = intval($_POST['PhotoIndex']);
+        $TableRs = $this->TableObj->getOne($_GET['Id']);
+        $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
+        if($ModelRs['KeyName'] != 'album') $this->ApiErr(1048);
+        $Rs = $this->PhotosObj->SetCond(array('Id' => $TableRs['Id']))->ExecSelectOne();
+        $Photos = empty($Rs['Photos']) ? array() : json_decode($Rs['Photos'], true);
+        $Delete = $Photos[$PhotoIndex];
+        array_splice($Photos, $PhotoIndex, 1);
+        try{
+            DB::$s_db_obj->beginTransaction();
+            $this->PhotosObj->SetInsert(array('Id' => $TableRs['Id'], 'Photos' => json_encode($Photos)))->ExecReplace();
+            $this->FileObj->SetCond(array('FType' => 2, 'IndexId' => $TableRs['Id'], 'Img' => $Delete['Path']))->SetUpdate(array('IsDel' => 1))->ExecUpdate();
+            DB::$s_db_obj->commit();
+        }catch (PDOException $e){
+            DB::$s_db_obj->rollBack();
+            $this->ApiErr(1002);
+        }
+        foreach($Photos as $k => $v) {
+            $Photos[$k]['SizeView'] = $this->CommonObj->Size($v['Size']);
+        }
+        $this->ApiSuccess($Photos);
+    }
+
 }

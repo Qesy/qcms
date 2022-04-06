@@ -4,7 +4,7 @@ class Api extends ControllersAdmin {
 
     public function ajaxUpload_Action(){
         //$Ret = $this->UploadObj->upload_file($_FILES['filedata']);
-        $Ret = self::_upload($_FILES['filedata']);
+        $Ret = self::p_upload($_FILES['filedata']);
         if($Ret['Code'] != 0) {
             $this->CommonObj->ApiErr($Ret['Code'], $Ret['Msg']);
         }
@@ -23,7 +23,7 @@ class Api extends ControllersAdmin {
     public function ckUpload_Action(){
         $msg = array();
         //$Ret = $this->UploadObj->upload_file($_FILES['upload']);
-        $Ret = self::_upload($_FILES['upload']);
+        $Ret = self::p_upload($_FILES['upload']);
         if($Ret['Code'] != 0) {
             $msg['uploaded'] = false;
             $msg['error'] = array('message' => $Ret['Msg']);
@@ -44,6 +44,10 @@ class Api extends ControllersAdmin {
         $msg['error'] = array('message' => 'no error');
         $msg['url'] = $Ret['Url'];
         echo json_encode($msg);
+    }
+    
+    public function batchUpload_Action(){ // 批量上传
+        var_dump($_FILES);
     }
 
     public function userState_Action(){
@@ -201,27 +205,6 @@ class Api extends ControllersAdmin {
         
     }
     
-    private function _upload($FileData){
-        $Ret = $this->UploadObj->upload_file($FileData);
-        if($this->SysRs['WaterMaskIsOpen'] != 1) return $Ret; //未开启水印
-        if($Ret['Code'] != 0) return $Ret;
-        $this->WaterMaskObj->waterType = ($this->SysRs['WaterMaskType'] == 1) ? 1 : 0; 
-        $this->WaterMaskObj->fontFile = realpath('./Static/fonts/msyh.ttc');
-        $this->WaterMaskObj->waterImg = realpath('.'.$this->SysRs['WaterMaskPic']);  
-        if($this->WaterMaskObj->waterType == 1){
-            if(empty($this->SysRs['WaterMaskPic']) || !file_exists($this->WaterMaskObj->waterImg)) return $Ret;
-        }else{
-            if(!file_exists($this->WaterMaskObj->fontFile)) return $Ret;
-        }
-        
-        $this->WaterMaskObj->waterStr = $this->SysRs['WaterMaskTxt'];
-        $this->WaterMaskObj->pos = $this->SysRs['WaterMaskPostion'];
-        $this->WaterMaskObj->transparent = $this->SysRs['WaterMaskFontOpacity'];
-        $this->WaterMaskObj->fontSize = $this->SysRs['WaterMaskFontSize'];
-        $this->WaterMaskObj->fontColor = explode(',', $this->SysRs['WaterMaskFontColor']);
-        $this->WaterMaskObj->setSrcImg(realpath('.'.$Ret['Url']) );
-        $this->WaterMaskObj->output();
-        return $Ret;
-    }
+
 
 }

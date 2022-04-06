@@ -17,7 +17,7 @@ class File extends ControllersAdmin {
     public function fileView($path, $ext){
         $Html = '';
         if(in_array($ext, array('jpg', 'jepg', 'png', 'gif', 'webp', 'bmp'))){
-            $Html = '<div class="image" style="height:200px">
+            $Html = '<div class="image" style="height:120px">
                         <img alt="image" class="img-fluid" src="'.$path.'">
                     </div>';
         }else{
