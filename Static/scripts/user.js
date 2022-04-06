@@ -3,6 +3,7 @@ var IsEditorCreat = false;
 var URL_ROOT = "/";
 var UploadBtn = {}, interval;
 
+var UploadFilePathArr = [];
 $(function(){
     $('#SelectAllBtn').change(function(){
         $('.CheckBoxOne').prop('checked' , $(this).prop('checked'))
@@ -46,7 +47,6 @@ $(function(){
         }
     })
     if($('.uploadDiv').length > 0){
-
         $.each($('.uploadDiv'), function(k, v){
             CreatUpload($(this).attr('data'))
         })
@@ -155,6 +155,8 @@ function CreatUpload(DomId){
             }
             window.clearInterval(interval);
             this.enable();
+            UploadFilePathArr.push(jsonArr.Data);
+            $('#Input_FilePaths').val(UploadFilePathArr.join('|'));
             $("#Img_"+DomId).val(jsonArr.Data)
         }
     });

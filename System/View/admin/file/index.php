@@ -83,7 +83,7 @@
                                     <div>
                                     <button type="button" class="btn btn-primary btn-sm mr-2" id="checkAllBtn">全选</button>
                                     <button type="button" class="btn btn-primary btn-sm mr-2" id="emptyAllBtn">清空</button>
-                                    <button type="button" class="btn btn-danger btn-sm mr-2" id="DelBatchBtn">删除</button>
+                                    <button type="button" class="btn btn-danger btn-sm mr-2" id="DelBatchBtn">彻底删除</button>
                                 </div>
                                     <?=$PageBar?>
                                     </div>
@@ -111,7 +111,7 @@
             $('.ImgView').prop('checked', false);
         })
         $('#DelBatchBtn').click(function(){
-            if(!confirm('确定删除?')) return false;
+            if(!confirm('将物理删除文件，确定删除?')) return false;
             let Ids = getAllChecked();
             //console.log('ids', Ids); return;
             $.post('<?=$this->CommonObj->Url(array('admin', 'api', 'fileDel')).'?'.http_build_query($_GET)?>', {'Ids':Ids.join('|')}, function(Res){

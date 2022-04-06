@@ -175,6 +175,10 @@ class Content extends ControllersAdmin {
                 if($ModelRs['KeyName'] == 'album'){
                     $this->PhotosObj->SetInsert(array('Id' => $InsertId, 'Photos' => json_encode(array())))->ExecInsert();
                 }
+                if(!empty($_POST['FilePaths'])){
+                    $FilePathArr = explode('|', $_POST['FilePaths']);
+                    $this->FileObj->SetCond(array('Img' => $FilePathArr))->SetUpdate(array('FType' => 2, 'IndexId' => $InsertId))->ExecUpdate();
+                }
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
                 DB::$s_db_obj->rollBack();                
@@ -232,6 +236,7 @@ class Content extends ControllersAdmin {
 
                     array('Name' =>'Keywords', 'Desc' => '关键字',  'Type' => 'input', 'Value' => '', 'Required' => 0, 'Col' => 12),
                     array('Name' =>'Description', 'Desc' => '描述',  'Type' => 'textarea', 'Value' => '', 'Required' => 0, 'Col' => 12),
+                    array('Name' =>'FilePaths', 'Desc' => '记录上传资料',  'Type' => 'hidden', 'Value' => '', 'Required' => 0, 'Col' => 12),
 
                 )
             ),
@@ -325,6 +330,11 @@ class Content extends ControllersAdmin {
                 $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Rs['Id']))->SetUpdate($InsetArr)->ExecUpdate();                
                 
                 $this->TagObj->RunUpdate($InsetArr['Tag'], $Rs['Tag'], $Rs['Id'], $ModelRs['ModelId']);
+                
+                if(!empty($_POST['FilePaths'])){
+                    $FilePathArr = explode('|', $_POST['FilePaths']);
+                    $this->FileObj->SetCond(array('Img' => $FilePathArr))->SetUpdate(array('FType' => 2, 'IndexId' => $InsertId))->ExecUpdate();
+                }
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
                 DB::$s_db_obj->rollBack();
@@ -390,7 +400,7 @@ class Content extends ControllersAdmin {
 
                     array('Name' =>'Keywords', 'Desc' => '关键字',  'Type' => 'input', 'Value' => $Rs['Keywords'], 'Required' => 0, 'Col' => 12),
                     array('Name' =>'Description', 'Desc' => '描述',  'Type' => 'textarea', 'Value' => $Rs['Description'], 'Required' => 0, 'Col' => 12),
-
+                    array('Name' =>'FilePaths', 'Desc' => '记录上传资料',  'Type' => 'hidden', 'Value' => '', 'Required' => 0, 'Col' => 12),
                 )
             ),
 
