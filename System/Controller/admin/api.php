@@ -46,8 +46,22 @@ class Api extends ControllersAdmin {
         echo json_encode($msg);
     }
     
-    public function batchUpload_Action(){ // 批量上传
-        var_dump($_FILES);
+    public function fileDel_Action(){
+        if(!$this->VeriObj->VeriPara($_POST, array('Ids'))) $this->ApiErr(1001);
+        $Ids = explode('|', $_POST['Ids']);
+        $Arr = $this->FileObj->SetCond(array('FileId' => $Ids))->ExecSelect();
+        try{
+            DB::$s_db_obj->beginTransaction();
+            $this->FileObj->SetCond(array('FileId' => $Ids))->ExecDelete();
+            foreach($Arr as $v){
+                if(!@unlink(realpath(substr($v['Img'], 1)))) throw new PDOException('删除文件失败');
+            }
+            DB::$s_db_obj->commit();
+        }catch(PDOException $e){
+            DB::$s_db_obj->rollBack();
+            $this->ApiErr(1002);
+        }
+        $this->ApiSuccess();
     }
 
     public function userState_Action(){

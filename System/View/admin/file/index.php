@@ -58,10 +58,14 @@
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <?
-                                            foreach($Arr as $v){
+                                            foreach($Arr as $k => $v){
                                             ?>
                                             <div class="file-box">
                                                 <div class="file">
+                                                    <div class="checkbox checkbox-primary position-absolute pt-0" style="right:0px;top:0px;">
+                                                        <input class="ImgView" id="checkbox_<?=$k?>" value="<?=$v['FileId']?>" type="checkbox" >
+                                                        <label for="checkbox_<?=$k?>"></label>
+                                                    </div>
                                                     <a target="_blank" href="<?=$v['Img']?>">
                                                         <?=$this->fileView($v['Img'], $v['Ext'])?>
                                                         <div class="file-name">
@@ -75,7 +79,14 @@
 
                                         </div>
                                     </div>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                    <button type="button" class="btn btn-primary btn-sm mr-2" id="checkAllBtn">全选</button>
+                                    <button type="button" class="btn btn-primary btn-sm mr-2" id="emptyAllBtn">清空</button>
+                                    <button type="button" class="btn btn-danger btn-sm mr-2" id="DelBatchBtn">删除</button>
+                                </div>
                                     <?=$PageBar?>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -91,5 +102,32 @@
     <!-- jQuery -->
     <?=$this->LoadView('admin/common/js')?>
 </body>
-
+<script type="text/javascript">
+    $(function(){
+        $('#checkAllBtn').click(function(){
+            $('.ImgView').prop('checked', true);
+        })
+        $('#emptyAllBtn').click(function(){
+            $('.ImgView').prop('checked', false);
+        })
+        $('#DelBatchBtn').click(function(){
+            if(!confirm('确定删除?')) return false;
+            let Ids = getAllChecked();
+            //console.log('ids', Ids); return;
+            $.post('<?=$this->CommonObj->Url(array('admin', 'api', 'fileDel')).'?'.http_build_query($_GET)?>', {'Ids':Ids.join('|')}, function(Res){
+                if(Res.Code){
+                    alert(Res.Msg);return;
+                }
+                location.reload();
+            }, 'json')
+        })
+    })
+    var getAllChecked = function(){
+        let Ids = [];
+        $('.ImgView:checked').each(function(index, item){
+            Ids.push($(this).val())
+        })
+        return Ids;
+    }
+</script>
 </html>

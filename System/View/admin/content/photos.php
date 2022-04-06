@@ -188,7 +188,7 @@
             <div class="file-box">
                 <div class="file">
                 <div class="checkbox checkbox-primary position-absolute pt-0" style="right:0px;top:0px;">
-                    <input class="ImgView" id="checkbox_`+Index+`" data-index="`+Index+`" value="`+Index+`" type="checkbox" >
+                    <input class="ImgView" id="checkbox_`+Index+`" value="`+Index+`" type="checkbox" >
                     <label for="checkbox_`+Index+`"></label>
                 </div>
                     <a target="_blank" href="`+Rs.Path+`">
