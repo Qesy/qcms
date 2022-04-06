@@ -333,7 +333,7 @@ class Content extends ControllersAdmin {
                 
                 if(!empty($_POST['FilePaths'])){
                     $FilePathArr = explode('|', $_POST['FilePaths']);
-                    $this->FileObj->SetCond(array('Img' => $FilePathArr))->SetUpdate(array('FType' => 2, 'IndexId' => $InsertId))->ExecUpdate();
+                    $this->FileObj->SetCond(array('Img' => $FilePathArr))->SetUpdate(array('FType' => 2, 'IndexId' => $Rs['Id']))->ExecUpdate();
                 }
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
@@ -631,8 +631,9 @@ class Content extends ControllersAdmin {
             $this->TableObj->SetCond(array('Id' => $Rs['Id']))->ExecDelete();
             if($ModelRs['KeyName'] == 'album'){ //相册表删除
                 $this->PhotosObj->SetCond(array('Id' => $Rs['Id']))->ExecDelete();
-                $this->FileObj->SetCond(array('FType' => 2, 'IndexId' => $Rs['Id']))->SetUpdate(array('IsDel' => 1))->ExecDelete();
             }
+            $this->FileObj->SetCond(array('FType' => 2, 'IndexId' => $Rs['Id']))->SetUpdate(array('IsDel' => 1))->ExecUpdate();
+            
             DB::$s_db_obj->commit();
         }catch (PDOException $e){
             DB::$s_db_obj->rollBack();

@@ -143,8 +143,9 @@ class Api extends ControllersAdmin {
             $this->TableObj->SetCond(array('Id' => $Ids))->ExecDelete();
             if($ModelRs['KeyName'] == 'album'){ //相册表删除
                 $this->PhotosObj->SetCond(array('Id' => $Ids))->ExecDelete();
-                $this->FileObj->SetCond(array('FType' => 2, 'IndexId' => $Ids))->SetUpdate(array('IsDel' => 1))->ExecDelete();
             }
+            $this->FileObj->SetCond(array('FType' => 2, 'IndexId' => $Ids))->SetUpdate(array('IsDel' => 1))->ExecUpdate();
+            
             DB::$s_db_obj->commit();
         }catch (PDOException $e){
             DB::$s_db_obj->rollBack();

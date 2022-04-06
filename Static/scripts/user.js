@@ -242,6 +242,7 @@ function EditorCreate(Dom){
     IsEditorCreat = true;
     //ClassicEditor.create( document.querySelector( Dom ), {
     ClassicEditor.create( Dom, {
+
     toolbar: {
       items: [
         'heading',
@@ -262,18 +263,67 @@ function EditorCreate(Dom){
         'mediaEmbed',
         'undo',
         'redo',
-        'Image toolbar',
+
       ]
     },
-     ckfinder: {
+     /*ckfinder: {
       uploadUrl: '/admin/api/ckUpload.html',
       height:'300',
-     }
+     }*/
     })
   .then( editor => {
     window.editor = editor;
+    editor.plugins.get('FileRepository').createUploadAdapter = (loader)=>{
+        return new UploadAdapter(loader);
+    };
+
   } )
   .catch( err => {
     console.log('no editor');
   });
+
+
+
 }
+
+class UploadAdapter {
+    constructor(loader) {
+        this.loader = loader;
+    }
+    upload() {
+        return new Promise((resolve, reject) => {
+        const data = new FormData();
+        this.loader.file.then(realFile => {
+            data.append('upload', realFile);
+            data.append('allowSize', 10);//允许图片上传的大小/兆
+            $.ajax({
+                url: '/admin/api/ckUpload.html',
+                type: 'POST',
+                data: data,
+                dataType: 'json',
+                cache: false,
+                processData: false,
+                contentType: false,
+                success: function (Res) {
+                    if (Res.uploaded) {
+                        UploadFilePathArr.push(Res.url);
+                        $('#Input_FilePaths').val(UploadFilePathArr.join('|'));
+                        resolve({
+                            default: Res.url
+                        });
+                    } else {
+                        reject(data.msg);
+                    }
+
+                }
+            });
+        })
+
+
+
+    });
+    }
+    abort() {
+    }
+}
+
