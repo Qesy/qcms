@@ -1,19 +1,198 @@
-默认首页模板默认首页模板
-默认首页{{qcms:Scheme}}://{{qcms:domain}}--{{qcms:Email}}模板
-默认首页模板
-{{include  filename='component_header.html'    aa='bb'/}}
-默认首页模板默认首页模板
-默认首页模板
-{{include filename='component_footer.html'}}
-{{qcms:crumbs}}
-默认首页模板默认首页模板默{{label:ltexst}} == {{label:eee}}认首页模板
-{{menu }}<a href="{{qcms:MUrl}}">{{qcms:Mi}}-{{qcms:MName}}-{{qcms:MHasSub}}</a>
-    {{smenu PCateId='{{qcms:MCateId}}'}}<a href="{{qcms:sMUrl}}">{{qcms:sMName}}-{{qcms:sMHasSub}}</a>
-        {{ssmenu PCateId='{{qcms:sMCateId}}'}}<a href="{{qcms:ssMUrl}}">{{qcms:ssMName}}-{{qcms:ssMHasSub}}</a>{{/ssmenu}}
-    {{/smenu}}
-{{/menu}}
-/////////
-{{menu PCateId='1'}}<a href="{{qcms:MUrl}}">{{qcms:MName}}-{{qcms:MHasSub}}</a>{{/menu}}
-bbbbbbbbbbbbbbb
-{{loop sql='select * from qc_user'}}QQQ{{qcms:SUserId}}={{qcms:SNickName}}WWW{{/loop}}
-{{list module=article CateId='1,2' Row='10'}}{{qcms:LTitle}}<br>{{/list}}
+<!doctype html>
+<html lang="zh-CN">
+
+<head>
+    <title>{{qcms:WebName}}</title>
+    <meta charset="utf-8">
+    <meta name="keywords" content="QCMS" />
+    <meta name="description" content="QCMS" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link href="{{qcms:static}}bootstrap/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="{{qcms:static}}bootstrap/css/morris.css" rel="stylesheet" type="text/css">
+    <link href="{{qcms:static}}bootstrap/css/style-init.css" rel="stylesheet" type="text/css">
+    <link href="{{qcms:pathCss}}index.css" rel="stylesheet" type="text/css">
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container py-3">
+            <a class="navbar-brand" href="#">
+            <svg class="logo mx-3" style="fill: #1572E8!important;width: 98px;height: 24px;" >
+                <use xlink:href="/Static/images/logo.svg#layer"/>
+            </svg>
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">网站首页 <span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link " id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false" href="#">公司介绍
+                            <i class="bi bi-chevron-down"></i>
+                        </a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="#">新闻子页</a>
+                            <a class="dropdown-item" href="#">新闻子页</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#">新闻子页</a>
+                        </div>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">新闻动态</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">产品中心</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">相册展示</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">资料下载</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">联系我们</a>
+                    </li>
+
+                </ul>
+                <form class="form-inline my-2 my-lg-0">
+                    <input class="form-control mr-sm-2" type="search" placeholder="请输入搜索关键字" aria-label="Search">
+                    <button class="btn btn-primary my-2 my-sm-0" type="submit">搜索</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+    <div class="mb-4" style="height: 550px;">
+        <div style="height: 600px;background-color: rgba(0, 0, 0, 0); background-repeat: no-repeat; background-image: url(Static/images/banner1.jpg); background-size: cover; background-position: center top; width: 100%; height: 100%; opacity: 1; visibility: inherit;"></div>
+    </div>
+
+    <div class="py-5 text-center ">
+        <div class=" h3 text-black font-weight-bold">产品中心</div>
+        <p class="text-secondary" >无线降噪无线降噪无线降噪无线降噪无线降噪</p>
+    </div >
+    <div class="container mb-4">
+        <div class="row text-center">
+            <div class="col-3 py-2 px-2 ">
+                <div class="bg-white p-4">
+                <img class="w-100 my-4 d-block" src="/Static/images/p1.jpg">
+                <div class="text-black mb-1">Xiaomi真无线降噪耳机3</div>
+                <div class="mb-2">静听好声音</div>
+                <p class="text-danger"><span class="mr-2">409 元</span><!----><del class="text-muted"><span class="num">499元</span></del></p>
+                </div>
+            </div>
+            <div class="col-3 py-2 px-2">
+                <div class="bg-white p-4">
+                <img class="w-100 my-4 d-block" src="/Static/images/p1.jpg">
+                <div class="text-black mb-1">Xiaomi真无线降噪耳机3</div>
+                <div class="mb-2">静听好声音</div>
+                <p class="text-danger"><span class="mr-2">409 元</span><!----><del class="text-muted"><span class="num">499元</span></del></p>
+                </div>
+            </div>
+            <div class="col-3 py-2 px-2">
+                <div class="bg-white p-4">
+                <img class="w-100 my-4 d-block" src="/Static/images/p1.jpg">
+                <div class="text-black mb-1">Xiaomi真无线降噪耳机3</div>
+                <div class="mb-2">静听好声音</div>
+                <p class="text-danger"><span class="mr-2">409 元</span><!----><del class="text-muted"><span class="num">499元</span></del></p>
+                </div>
+            </div>
+            <div class="col-3 py-2 px-2">
+                <div class="bg-white p-4">
+                <img class="w-100 my-4 d-block" src="/Static/images/p1.jpg">
+                <div class="text-black mb-1">Xiaomi真无线降噪耳机3</div>
+                <div class="mb-2">静听好声音</div>
+                <p class="text-danger"><span class="mr-2">409 元</span><!----><del class="text-muted"><span class="num">499元</span></del></p>
+                </div>
+            </div>
+            <div class="col-3 py-2 px-2">
+                <div class="bg-white p-4">
+                <img class="w-100 my-4 d-block" src="/Static/images/p1.jpg">
+                <div class="text-black mb-1">Xiaomi真无线降噪耳机3</div>
+                <div class="mb-2">静听好声音</div>
+                <p class="text-danger"><span class="mr-2">409 元</span><!----><del class="text-muted"><span class="num">499元</span></del></p>
+                </div>
+            </div>
+            <div class="col-3 py-2 px-2">
+                <div class="bg-white p-4">
+                <img class="w-100 my-4 d-block" src="/Static/images/p1.jpg">
+                <div class="text-black mb-1">Xiaomi真无线降噪耳机3</div>
+                <div class="mb-2">静听好声音</div>
+                <p class="text-danger"><span class="mr-2">409 元</span><!----><del class="text-muted"><span class="num">499元</span></del></p>
+                </div>
+            </div>
+            <div class="col-3 py-2 px-2">
+                <div class="bg-white p-4">
+                <img class="w-100 my-4 d-block" src="/Static/images/p1.jpg">
+                <div class="text-black mb-1">Xiaomi真无线降噪耳机3</div>
+                <div class="mb-2">静听好声音</div>
+                <p class="text-danger"><span class="mr-2">409 元</span><!----><del class="text-muted"><span class="num">499元</span></del></p>
+                </div>
+            </div>
+            <div class="col-3 py-2 px-2">
+                <div class="bg-white p-4">
+                <img class="w-100 my-4 d-block" src="/Static/images/p1.jpg">
+                <div class="text-black mb-1">Xiaomi真无线降噪耳机3</div>
+                <div class="mb-2">静听好声音</div>
+                <p class="text-danger"><span class="mr-2">409 元</span><!----><del class="text-muted"><span class="num">499元</span></del></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container mb-4 px-2">
+        <div class="row">
+            <div class="col-8" >
+
+                    <div class=" text-black py-2 font-weight-bold">新闻动态</div>
+                    <div class="bg-white" style="height: 500px;"></div>
+
+
+
+            </div>
+            <div class="col-4" >
+
+                    <div class="text-black py-2 font-weight-bold">下载中心</div>
+                    <div  class="bg-white" style="height: 500px;"></div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="py-5 text-center ">
+        <div class=" h3 text-black font-weight-bold">相册展示</div>
+        <p class="text-secondary" >无线降噪无线降噪无线降噪无线降噪无线降噪</p>
+    </div >
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-3 px-0">
+                <img class="w-100 d-block" src="/Static/images/p1.jpg">
+            </div>
+            <div class="col-3 px-0">
+                <img class="w-100 d-block" src="/Static/images/p2.jpg">
+            </div>
+            <div class="col-3 px-0">
+                <img class="w-100 d-block" src="/Static/images/p3.jpg">
+            </div>
+            <div class="col-3 px-0">
+                <img class="w-100 d-block" src="/Static/images/p1.jpg">
+            </div>
+            <div class="col-3 px-0">
+                <img class="w-100 d-block" src="/Static/images/p2.jpg">
+            </div>
+            <div class="col-3 px-0">
+                <img class="w-100 d-block" src="/Static/images/p3.jpg">
+            </div>
+            <div class="col-3 px-0">
+                <img class="w-100 d-block" src="/Static/images/p1.jpg">
+            </div>
+            <div class="col-3 px-0">
+                <img class="w-100 d-block" src="/Static/images/p2.jpg">
+            </div>
+        </div>
+    </div>
+</body>
+<script src="{{qcms:static}}bootstrap/js/jquery-3.3.1.min.js"></script>
+<script src="{{qcms:static}}bootstrap/js/bootstrap.min.js"></script>
+</html>

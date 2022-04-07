@@ -11,7 +11,13 @@
     <!-- vector map CSS -->
     <link href="<?=URL_BOOT?>css/jasny-bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="<?=URL_BOOT?>css/style-init.css" rel="stylesheet" type="text/css">
-    <link href="<?=URL_CSS?>index.css" rel="stylesheet" type="text/css">
+    <style type="text/css">
+        body{background-color:#1572e8!important;touch-action:none}
+        .login{max-width:400px}
+        .login .bi{font-size:1.4rem}
+        .loginContainer{max-width:400px}
+        .login .logo{width:110px}
+    </style>
 </head>
 
 <body class="d-flex align-items-center" style="min-height: 100vh;">
