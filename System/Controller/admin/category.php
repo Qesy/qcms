@@ -24,7 +24,7 @@ class Category extends ControllersAdmin {
             $Arr[$k]['UserLevel'] = '<span class="text-secondary">开放浏览</span>';
             $Arr[$k]['BtnArr'] = array(
                 array('Desc' => '预览', 'Color' => 'success', 'Link' => $this->createUrl('cate', $v['CateId'], $v['PinYin'], $v['PY']), 'IsBlank' => 1),
-                array('Desc' => '内容', 'Color' => 'success', 'IsDisabled' => ($v['IsLink'] == 1 || $v['IsPost'] != 1) ? '1' : '2', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'index')), 'Para' => array('ModelId' => $v['ModelId'])),
+                array('Desc' => '内容', 'Color' => 'success', 'IsDisabled' => ($v['IsLink'] == 1 || $v['IsPost'] != 1 || $v['ModelId'] == -1) ? '1' : '2', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'index')), 'Para' => array('ModelId' => $v['ModelId'])),
                 array('Desc' => '加子类', 'Link' => $this->CommonObj->Url(array('admin', 'category', 'add'))),
                 array('Desc' => '移动', 'Link' => $this->CommonObj->Url(array('admin', 'category', 'move'))),                
             );
@@ -194,6 +194,7 @@ class Category extends ControllersAdmin {
             if($Ret === false) $this->Err(1002);
             $this->CategoryObj->cleanList();
             $this->CategoryObj->clean($CateRs['CateId']);
+            unset($_GET['CateId']);
             $this->Jump(array('admin', 'category', 'index'));
         }
         
@@ -271,13 +272,16 @@ class Category extends ControllersAdmin {
         if(empty($CateRs)) $this->Err(1003);
         $HaveSub = $this->CategoryObj->SetCond(array('PCateId' => $CateRs['CateId']))->SetField('COUNT(*) AS c')->ExecSelectOne();
         $ModelRs = $this->Sys_modelObj->getOne($CateRs['ModelId']);
-        if($HaveSub['c'] > 0) $this->Err(1044);
-        $HaveDetail = $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('CateId' => $CateRs['CateId']))->SetField('COUNT(*) AS c')->ExecSelectOne();
-        if($HaveDetail['c'] > 0) $this->Err(1045);
+        if($ModelRs !== false){
+            if($HaveSub['c'] > 0) $this->Err(1044);
+            $HaveDetail = $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('CateId' => $CateRs['CateId']))->SetField('COUNT(*) AS c')->ExecSelectOne();
+            if($HaveDetail['c'] > 0) $this->Err(1045);
+        }        
         $Ret = $this->CategoryObj->SetCond(array('CateId' => $CateRs['CateId']))->ExecDelete();
         if($Ret === false) $this->Err(1002);
         $this->CategoryObj->cleanList();
         $this->CategoryObj->clean($CateRs['CateId']);
+        unset($_GET['CateId']);
         $this->Jump(array('admin', 'category', 'index'));
     }
     
@@ -294,6 +298,7 @@ class Category extends ControllersAdmin {
             if($Ret === false) $this->Err(1002);
             $this->CategoryObj->cleanList();
             $this->CategoryObj->clean($CateRs['CateId']);
+            unset($_GET['CateId']);
             $this->Jump(array('admin', 'category', 'index'));
         }
         $this->CategoryObj->getTreeSelectHtml($CateRs['CateId']);       

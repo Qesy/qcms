@@ -122,7 +122,9 @@ class Controllers extends Base {
         switch($this->Tmp['Type']){
             case 'index':
                 $Search = array('{{qcms:crumbs}}');
-                $Replace = array('<li class="breadcrumb-item active">首页</li>');
+                $Replace = array('<nav aria-label="breadcrumb"><ol class="breadcrumb">
+                    <li class="breadcrumb-item active">首页</li>
+                </ol></nav>');
                 break;
             case 'cate':
                 $Search = array('{{qcms:crumbs}}');
@@ -135,7 +137,7 @@ class Controllers extends Base {
                         $CrumbsArr[] = '<li class="breadcrumb-item active">'.$v['Name'].'</li>';
                     }                    
                 }
-                $Replace = array(implode('', $CrumbsArr));
+                $Replace = array('<nav aria-label="breadcrumb"><ol class="breadcrumb">'.implode('', $CrumbsArr).'</ol></nav>');
                 foreach($this->Tmp['CateRs'] as $k => $v){
                     $Search[] = '{{qcms:Cate_'.$k.'}}';
                     $Replace[] = $v;
@@ -152,7 +154,7 @@ class Controllers extends Base {
                         $CrumbsArr[] = '<li class="breadcrumb-item active">'.$v['Name'].'</li>';
                     }
                 }
-                $Replace = array(implode('', $CrumbsArr));
+                $Replace = array('<nav aria-label="breadcrumb"><ol class="breadcrumb">'.implode('', $CrumbsArr).'</ol></nav>');
                 //$CateRs = $this->CategoryObj->getOne($Rs['CateId']); 
                 foreach($this->Tmp['CateRs'] as $k => $v){
                     $Search[] = '{{qcms:Cate_'.$k.'}}';
@@ -174,7 +176,7 @@ class Controllers extends Base {
                 $Search = array('{{qcms:crumbs}}');
                 $CrumbsArr = array('<li class="breadcrumb-item"><a href="/">首页</a></li>');
                 $CrumbsArr[] = '<li class="breadcrumb-item active">'.$this->Tmp['PageRs']['Name'].'</li>';
-                $Replace = array(implode('', $CrumbsArr));
+                $Replace = array('<nav aria-label="breadcrumb"><ol class="breadcrumb">'.implode('', $CrumbsArr).'</ol></nav>');
                 foreach($this->Tmp['PageRs'] as $k => $v){
                     $Search[] = '{{qcms:Page_'.$k.'}}';
                     $Replace[] = $v;

@@ -59,7 +59,7 @@ class Templates extends ControllersAdmin {
         }
         $this->BuildObj->Arr = array(
             array('Name' =>'Type', 'Desc' => '模板类型',  'Type' => 'select', 'Data' => $this->TempType, 'Value' => 'index', 'Required' => 1, 'Col' => 6),
-            array('Name' =>'KeyName', 'Desc' => '模板名字 (article_diy)',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),  
+            array('Name' =>'KeyName', 'Desc' => '模板名字 (article_diy) 不需要写.Html',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),  
             array('Name' =>'Html', 'Desc' => '模板HTML',  'Type' => 'textarea', 'Value' => '', 'Required' => 1, 'Col' => 12, 'Row' => 20),  
         );
         $this->BuildObj->Form('post', 'form-row');
@@ -84,7 +84,7 @@ class Templates extends ControllersAdmin {
         $Html = file_get_contents($FilePath);
         $this->BuildObj->Arr = array(
             array('Name' =>'Type', 'Desc' => '模板类型',  'Type' => 'select', 'Data' => $this->TempType, 'Value' => $FileNameArr[0], 'Required' => 1, 'Col' => 6),
-            array('Name' =>'KeyName', 'Desc' => '模板名字 (article_diy)',  'Type' => 'input', 'Value' => $KeyName, 'Required' => 1, 'Col' => 6),
+            array('Name' =>'KeyName', 'Desc' => '模板名字 (article_diy) 不需要写.Html',  'Type' => 'input', 'Value' => $KeyName, 'Required' => 1, 'Col' => 6),
             array('Name' =>'Html', 'Desc' => '模板HTML',  'Type' => 'textarea', 'Value' => $Html, 'Required' => 1, 'Col' => 12, 'Row' => 20),
         );
         $this->BuildObj->Form('post', 'form-row');
