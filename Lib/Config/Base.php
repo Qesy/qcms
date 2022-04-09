@@ -117,6 +117,7 @@ abstract class Base {
 	    'Sort',
 	    'Keywords',
 	    'Description',
+	    'Summary',
 	    'TsAdd',
 	    'TsUpdate',
 	    'ReadNum',

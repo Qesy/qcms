@@ -268,7 +268,7 @@
 
 <textarea class="form-control text-dark mb-3 p-2" rows="5">
 {{list Module='article' CateId='1' Row='10'}}
-    <a href="{{qcms:ssMenu_Url}}">{{qcms:ssMenu_Name}}</a>
+    <a href="{{qcms:List_Url}}">{{qcms:List_Title}}</a>
 {{/list}}
 </textarea>
                                         <h5 >属性说明</h5>
@@ -289,6 +289,7 @@
 {{qcms:List_Author}} ： 作者<br>
 {{qcms:List_Keywords}} ： SEO关键字<br>
 {{qcms:List_Description}} ： SEO简介<br>
+{{qcms:List_Summary}} ： 摘要<br>
 {{qcms:List_TsAdd}} ： 添加时间<br>
 {{qcms:List_TsUpdate}} ： 更新时间<br>
 {{qcms:List_ReadNum}} ： 阅读数量<br>

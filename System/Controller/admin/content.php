@@ -137,6 +137,7 @@ class Content extends ControllersAdmin {
                     'Sort' => intval($_POST['Sort']),
                     'Keywords' => trim($_POST['Keywords']),
                     'Description' => trim($_POST['Description']),
+                    'Summary' =>trim($_POST['Summary']),
                     'TsAdd' => $Ts,
                     'TsUpdate' => empty($_POST['TsUpdate']) ? $Ts : strtotime($_POST['TsUpdate']),
                     'ReadNum' => intval($_POST['ReadNum']),
@@ -210,7 +211,7 @@ class Content extends ControllersAdmin {
                     array('Name' =>'STitle', 'Desc' => '短标题',  'Type' => 'input', 'Value' => '', 'Required' => 0, 'Col' => 3),
                     array('Name' =>'Attr', 'Desc' => '属性',  'Type' => 'checkbox', 'Data' => $AttrArr, 'Value' => implode('|', $AttrValArr), 'Required' => 0, 'Col' => 3),
                     array('Name' =>'Pic', 'Desc' => '图片',  'Type' => 'upload', 'Value' => '', 'Required' => 0, 'Col' => 6),
-                    array('Name' =>'Tag', 'Desc' => '标签',  'Type' => 'input', 'Value' => '', 'Required' => 0, 'Col' => 6),
+                    array('Name' =>'Tag', 'Desc' => '标签(用,分割)',  'Type' => 'input', 'Value' => '', 'Required' => 0, 'Col' => 6),
                     array('Name' =>'Content', 'Desc' => '内容详情',  'Type' => 'editor', 'Value' => '', 'Required' => 0, 'Col' => 12),
                     array('Name' =>'LinkUrl', 'Desc' => '外链地址',  'Type' => 'hidden', 'Value' => '', 'Required' => 0, 'Col' => 12),
                 )
@@ -236,6 +237,7 @@ class Content extends ControllersAdmin {
 
                     array('Name' =>'Keywords', 'Desc' => '关键字',  'Type' => 'input', 'Value' => '', 'Required' => 0, 'Col' => 12),
                     array('Name' =>'Description', 'Desc' => '描述',  'Type' => 'textarea', 'Value' => '', 'Required' => 0, 'Col' => 12),
+                    array('Name' =>'Summary', 'Desc' => '摘要',  'Type' => 'textarea', 'Value' => '', 'Required' => 0, 'Col' => 12),
                     array('Name' =>'FilePaths', 'Desc' => '记录上传资料',  'Type' => 'hidden', 'Value' => '', 'Required' => 0, 'Col' => 12),
 
                 )
@@ -290,6 +292,7 @@ class Content extends ControllersAdmin {
                     'Sort' => intval($_POST['Sort']),
                     'Keywords' => trim($_POST['Keywords']),
                     'Description' => trim($_POST['Description']),
+                    'Summary' => trim($_POST['Summary']),
                     //'TsAdd' => $Ts,
                     'TsUpdate' => empty($_POST['TsUpdate']) ? $Ts : strtotime($_POST['TsUpdate']),
                     'ReadNum' => intval($_POST['ReadNum']),
@@ -374,7 +377,7 @@ class Content extends ControllersAdmin {
                     array('Name' =>'STitle', 'Desc' => '短标题',  'Type' => 'input', 'Value' => $Rs['STitle'], 'Required' => 0, 'Col' => 3),
                     array('Name' =>'Attr', 'Desc' => '属性',  'Type' => 'checkbox', 'Data' => $AttrArr, 'Value' => implode('|', $AttrValArr), 'Required' => 0, 'Col' => 3),
                     array('Name' =>'Pic', 'Desc' => '图片',  'Type' => 'upload', 'Value' => $Rs['Pic'], 'Required' => 0, 'Col' => 6),
-                    array('Name' =>'Tag', 'Desc' => '标签',  'Type' => 'input', 'Value' => $Rs['Tag'], 'Required' => 0, 'Col' => 6),
+                    array('Name' =>'Tag', 'Desc' => '标签(用,分割)',  'Type' => 'input', 'Value' => $Rs['Tag'], 'Required' => 0, 'Col' => 6),
                     array('Name' =>'Content', 'Desc' => '内容详情',  'Type' => 'editor', 'Value' => $Rs['Content'], 'Required' => 0, 'Col' => 12),
                     array('Name' =>'LinkUrl', 'Desc' => '外链地址',  'Type' => 'hidden', 'Value' => $Rs['LinkUrl'], 'Required' => 0, 'Col' => 12),
                 )
@@ -400,6 +403,7 @@ class Content extends ControllersAdmin {
 
                     array('Name' =>'Keywords', 'Desc' => '关键字',  'Type' => 'input', 'Value' => $Rs['Keywords'], 'Required' => 0, 'Col' => 12),
                     array('Name' =>'Description', 'Desc' => '描述',  'Type' => 'textarea', 'Value' => $Rs['Description'], 'Required' => 0, 'Col' => 12),
+                    array('Name' =>'Summary', 'Desc' => '摘要',  'Type' => 'textarea', 'Value' => $Rs['Summary'], 'Required' => 0, 'Col' => 12),
                     array('Name' =>'FilePaths', 'Desc' => '记录上传资料',  'Type' => 'hidden', 'Value' => '', 'Required' => 0, 'Col' => 12),
                 )
             ),

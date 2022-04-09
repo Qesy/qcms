@@ -57,6 +57,36 @@ class Common {
 	    die(json_encode($this->Ret, JSON_UNESCAPED_UNICODE));
 	}
 
+	public function TimeView($Ts){
+	    if($Ts == 0) return '';
+	    $Now = time();
+	    list($NowY, $NowM, $NowD) =  explode('-', date('Y-m-d', $Now));
+	    list($TsY, $TsM, $TsD) =  explode('-', date('Y-m-d', $Ts));
+	    $Time = $Now-$Ts;
+	    $Str = '';
+	    if($Time < 60){
+	        $Str = '刚刚';
+	    }elseif($Time >= 60 && $Time < 3600){
+	        $Str = intval($Time/60).'分钟前';
+	    }elseif($Time >= 3600 && $Time < 86400){
+	        $Str = ceil($Time/3600).'小时前';
+	    }elseif($Time >= 86400 && $Time < 84600*30){ //本月内
+	        $NowWeek = date('W', $Now);
+	        $TsWeek = date('W', $Ts);
+	        if($NowWeek == $TsWeek){
+	            $Str = ceil($Time/86400).'天前';
+	        }else{
+	            $Str = $NowWeek-$TsWeek.'周前';
+	        }
+	    }elseif($Time < (84600*365)){ //一年内
+	        $Str = round($Time/(86400*30)).'个月前';
+	    }else{
+	        $Str = $NowY-$TsY.'年前';
+	    }
+	    return $Str;
+	}
+	
+
 	public function CreateSn() { // -- Name : 生成编号 --
 	    return WEB_PREFIX . '-' . uniqid ( rand ( 100, 999 ), false );
 	}

@@ -41,7 +41,7 @@ class Controllers extends Base {
     
     public function tempRun($Type, $Index = '0'){
         $this->initTmp($Type, $Index)->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->menu_Tmp();
-        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp();
+        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->Date_Tmp();
         echo($this->Tmp['Compile']);
     }
     
@@ -51,7 +51,7 @@ class Controllers extends Base {
         $this->Tmp['Compile'] = $this->Tmp['Html'] = $Html;
         //var_dump($this->Tmp['Compile']);exit;
         $this->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->menu_Tmp();
-        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp();
+        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->Date_Tmp();
         echo($this->Tmp['Compile']);
     }
 
@@ -100,6 +100,18 @@ class Controllers extends Base {
         foreach($Matches[1] as $k => $v){
             $Data = self::_getKv($v);
             $Replace[] = @file_get_contents($this->TmpPath.$Data['filename']);         
+        }
+        $this->Tmp['Compile'] = str_replace($Matches[0], $Replace, $this->Tmp['Compile']);
+        return $this;
+    }
+    
+    public function Date_Tmp(){
+        preg_match_all("/{{Date([\s\S.]*?)\/?}}/i",$this->Tmp['Compile'], $Matches); 
+        $Replace = array();
+        foreach($Matches[1] as $k => $v){
+            $Para = self::_getKv($v);
+            
+            $Replace[] = ($Para['format'] == 'special') ? $this->CommonObj->TimeView($Para['time']) : date($Para['format'], $Para['time']);
         }
         $this->Tmp['Compile'] = str_replace($Matches[0], $Replace, $this->Tmp['Compile']);
         return $this;
@@ -485,7 +497,16 @@ class Controllers extends Base {
             $UrlDetail = self::createUrl('detail', $v['Id'], $v['PinYin'], $v['PY']);//$Url,
             $Replace = array();
             foreach($ListField as $sv){
-                $Replace[] =  $v[$sv];
+                if($sv == 'Tag'){
+                    $TagArr = explode(',', $v[$sv]);
+                    $TagStrArr = array();
+                    foreach($TagArr as $tv){
+                        $TagStrArr[] = '<a class="btn btn-default btn-sm mr-2" href="#">'.$tv.'</a>';
+                    }
+                    $Replace[] =  implode('', $TagStrArr);
+                }else{
+                    $Replace[] =  $v[$sv];
+                }                
             }
             $Replace[] =  $k;
             $Replace[] = $CateRs['Name'];
