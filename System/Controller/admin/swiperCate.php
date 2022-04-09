@@ -51,6 +51,7 @@ class SwiperCate extends ControllersAdmin {
                 'Name' => $_POST['Name'],
             ))->ExecUpdate();
             if($Ret === false) $this->Err(1002);
+            $this->Swiper_cateObj->clean($Rs['SwiperCateId']);
             $this->Jump(array('admin', 'swiperCate', 'index'), 1888);
         }
         $this->BuildObj->Arr = array(
@@ -68,6 +69,7 @@ class SwiperCate extends ControllersAdmin {
         if($Count['c'] != 0) $this->Err(1045);
         $Ret = $this->Swiper_cateObj->SetCond(array('SwiperCateId' => $Rs['SwiperCateId']))->ExecDelete();
         if($Ret === false) $this->Err(1002);
+        $this->Swiper_cateObj->clean($Rs['SwiperCateId']);
         $this->Jump(array('admin', 'swiperCate', 'index'), 1888);
     }
     

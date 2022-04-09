@@ -41,7 +41,7 @@ class Controllers extends Base {
     
     public function tempRun($Type, $Index = '0'){
         $this->initTmp($Type, $Index)->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->menu_Tmp();
-        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp();
+        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp();
         echo($this->Tmp['Compile']);
     }
     
@@ -51,7 +51,7 @@ class Controllers extends Base {
         $this->Tmp['Compile'] = $this->Tmp['Html'] = $Html;
         //var_dump($this->Tmp['Compile']);exit;
         $this->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->menu_Tmp();
-        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp();
+        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp();
         echo($this->Tmp['Compile']);
     }
 
@@ -203,6 +203,39 @@ class Controllers extends Base {
         return $this;
     }
     
+    public function if_Tmp(){ //IF标签
+        preg_match_all("/{{if([\s\S.]*?)}}([\s\S.]*?){{\/if}}/i", $this->Tmp['Compile'], $Matches);
+        $Search = array();
+        $Replace = array();        
+        $ok = false;
+        foreach($Matches[1] as $k => $v){            
+            if(strpos($v, '>=') !== false){
+                $Arr = self::_getKv2If($v, '>=');
+                $ok = ($Arr[0] >= $Arr[1]) ? true : false;
+            }elseif(strpos($v, '<=') !== false){
+                $Arr = self::_getKv2If($v, '<=');
+                $ok = ($Arr[0] <= $Arr[1]) ? true : false;
+            }elseif(strpos($v, '==') !== false){
+                $Arr = self::_getKv2If($v, '==');
+                $ok = ($Arr[0] == $Arr[1]) ? true : false;
+            }elseif(strpos($v, '>') !== false){
+                $Arr = self::_getKv2If($v, '>');
+                $ok = ($Arr[0] > $Arr[1]) ? true : false;
+            }elseif(strpos($v, '<') !== false){
+                $Arr = self::_getKv2If($v, '<');
+                $ok = ($Arr[0] < $Arr[1]) ? true : false;
+            }else{ // 匹配不到直接返回
+                return $this;
+            }
+            $ContArr = explode('{{else}}', $Matches[2][$k]);
+            if(count($ContArr) == 1) $ContArr[1] = '';
+            $Search[] = $Matches[0][$k];
+            $Replace[] = ($ok) ? $ContArr[0] : $ContArr[1];
+        }
+        $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
+        return $this;
+    }
+    
     public function menu_Tmp(){ // 菜单
         preg_match_all("/{{menu([\s\S.]*?)}}([\s\S.]*?){{\/menu}}/i", $this->Tmp['Compile'], $Matches);        
         $Search = array();
@@ -285,6 +318,17 @@ class Controllers extends Base {
     }
     
     public function slide_Tmp(){ // 幻灯片
+        preg_match_all("/{{slide([\s\S.]*?)}}([\s\S.]*?){{\/slide}}/i", $this->Tmp['Compile'], $Matches);
+        $Search = array();
+        $Replace = array();
+        foreach($Matches[1] as $k => $v){
+            $Para = self::_getKv($v);
+            $Ret['SwiperCateId'] = !isset($Para['SwiperCateId']) ? '0' : $Para['SwiperCateId'];
+            $Search[] = $Matches[0][$k];
+            $Replace[] = self::_replaceSlide($Ret['SwiperCateId'], $Matches[2][$k], 'Slide_');
+        }
+        $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
+        //var_dump($Matches);exit;
         return $this;
     }
     
@@ -313,6 +357,8 @@ class Controllers extends Base {
         $Ret = $this->UploadObj->upload_file($FileData);
         if($this->SysRs['WaterMaskIsOpen'] != 1) return $Ret; //未开启水印
         if($Ret['Code'] != 0) return $Ret;
+        $ext = substr ( strrchr ( $FileData['name'], '.' ), 1 );
+        if(!in_array(strtolower($ext), array('jpg', 'png', 'gif'))) return $Ret;
         $this->WaterMaskObj->waterType = ($this->SysRs['WaterMaskType'] == 1) ? 1 : 0;
         $this->WaterMaskObj->fontFile = realpath('./Static/fonts/msyh.ttc');
         $this->WaterMaskObj->waterImg = realpath('.'.$this->SysRs['WaterMaskPic']);
@@ -330,6 +376,31 @@ class Controllers extends Base {
         $this->WaterMaskObj->setSrcImg(realpath('.'.$Ret['Url']) );
         $this->WaterMaskObj->output();
         return $Ret;
+    }
+    
+    private function _replaceSlide($SwiperCateId, $Html, $Pre){
+        $Arr = $this->SwiperObj->getList($SwiperCateId);
+        $Compile = '';
+        $Search = array(
+            '{{qcms:'.$Pre.'SwiperId}}',
+            '{{qcms:'.$Pre.'Pic}}',
+            '{{qcms:'.$Pre.'Title}}',
+            '{{qcms:'.$Pre.'Link}}',
+            '{{qcms:'.$Pre.'Sort}}',
+            '{{qcms:'.$Pre.'i}}',
+        );
+        foreach($Arr as $k => $v){
+            $Replace = array(
+                $v['SwiperId'],
+                $v['Pic'],
+                $v['Title'],
+                $v['Link'],
+                $v['Sort'],                
+                $k,
+            );
+            $Compile .= str_replace($Search, $Replace, $Html);
+        }
+        return $Compile;
     }
     
     private function _replaceLoop($Sql, $Html, $Pre){
@@ -477,6 +548,12 @@ class Controllers extends Base {
         return $Ret;
     }
     
+    private function _getKv2If($Str, $CondStr){ // if专用获取参数        
+        $Str = str_replace(' ', '', $Str);
+        preg_match("/\'([\w\W]*?)\'".$CondStr."\'([\w\W]*?)\'/i",$Str, $Matches); 
+        if(empty($Matches[0])) return array();
+        return array($Matches[1], $Matches[2]);
+    }
     
 }
 
@@ -530,7 +607,7 @@ class ControllersAdmin extends Controllers {
         $GroupAdminRs = $this->Group_adminObj->getOne($this->LoginUserRs['GroupAdminId']);
         $this->PermissionArr = empty($GroupAdminRs['Permission']) ? array() : explode('|', $GroupAdminRs['Permission']);
         $this->BuildObj->UploadUrl = $this->CommonObj->Url(array('admin', 'api', 'ajaxUpload'));
-        
+        $this->UploadObj->set(explode('|', $this->SysRs['AllowUploadType']), 2048);
         $this->MenuArr = array(
             /***一级***/
             'admin/sys' => array('Name' => '系统管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sys'))),

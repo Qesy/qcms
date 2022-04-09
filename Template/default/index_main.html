@@ -11,8 +11,15 @@
 {{include filename='component_meta.html'}}
 <body>
     {{include filename='component_header.html'}}
-    <div class="mb-4" style="height: 550px;">
-        <div style="height: 600px;background-color: rgba(0, 0, 0, 0); background-repeat: no-repeat; background-image: url(/Static/images/banner1.jpg); background-size: cover; background-position: center top; width: 100%; height: 100%; opacity: 1; visibility: inherit;"></div>
+    <div class=" mb-4">
+        <div class="swiper mySwiper">
+            <a href="{{qcms:Slide_Link}}" class="swiper-wrapper" style="height: 560px;">
+                {{slide SwiperCateId='1'}}
+                <div class="swiper-slide" style="background-color: rgba(0, 0, 0, 0); background-repeat: no-repeat; background-image: url({{qcms:Slide_Pic}}); background-size: cover; background-position: center center; width: 100%; height: 100%; opacity: 1; visibility: inherit;">
+                </div>
+                {{/slide}}
+            </a>
+        </div>
     </div>
 
     <div class="py-5 text-center ">
@@ -338,4 +345,6 @@
 </body>
 <script src="{{qcms:static}}bootstrap/js/jquery-3.3.1.min.js"></script>
 <script src="{{qcms:static}}bootstrap/js/bootstrap.min.js"></script>
+<script src="{{qcms:static}}bootstrap/js/swiper.min.js"></script>
+<script src="{{qcms:pathJs}}/index.js"></script>
 </html>

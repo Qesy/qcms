@@ -19,9 +19,15 @@ class Upload {
         }
         return self::$s_instance;
     }
+    
+    public function  set($Type, $Size){
+        $this->_type = $Type;
+        $this->_size = $Size;
+    }
+    
     public function upload_file($fileRs) {
         $ext = substr ( strrchr ( $fileRs ['name'], '.' ), 1 );
-        if(! in_array ( $ext, $this->_type )){
+        if(! in_array ( strtolower($ext), $this->_type )){
             $this->Ret['Code'] = 1001;
             $this->Ret['Msg'] = '不允许上传的文件类型';
             return $this->Ret;

@@ -113,6 +113,8 @@ class Templates extends ControllersAdmin {
             'ssmenu' => '三级菜单',
             'list' => '列表标签',
             'loop' => '万能标签',
+            'slide' => '幻灯片',
+            'if' => 'if条件标签',
             
         );
         $tmp['LabelArr'] = $LabelArr;

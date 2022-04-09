@@ -72,6 +72,10 @@ class RedisKey {
 	    return self::$s_projectKey.'_Sys_Form_RS_HM_'.$KeyName;
 	}
 	
+	public static function swiper_String($SwiperCateId){
+	    return self::$s_projectKey.'_swiper_String_'.$SwiperCateId;
+	}
+	
 	public static function Statistics_HM(){ // 后台首页简单统计
 	    return self::$s_projectKey.'_Statistics_HM';
 	}

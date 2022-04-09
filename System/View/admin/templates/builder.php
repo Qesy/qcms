@@ -337,6 +337,51 @@
                                         </div>
                                     </div>
 
+                                    <div class="my-3 DemoDiv d-none" data="slide">
+                                        <h5 >幻灯片</h5>
+                                        <div class="mb-2">列表形式调用数据库里任何数据</div>
+
+<textarea class="form-control text-dark mb-3 p-2" rows="5">
+{{slide SwiperCateId='1'}}
+    <a href="{{qcms:Slide_Link}}"><img src="{{qcms:Slide_Pic}}"/></a>
+{{/slide}}
+</textarea>
+                                        <h5 >属性说明</h5>
+                                        <div class="mb-2">
+                                            SwiperCateId : 幻灯片ID
+                                        </div>
+                                        <h5 >标签说明</h5>
+                                        <div>
+                                            {{qcms:Slide_SwiperId}} ： 图片ID<br>
+                                            {{qcms:Slide_Pic}} ： 图片地址<br>
+                                            {{qcms:Slide_Title}} ： 图片标题<br>
+                                            {{qcms:Slide_Link}} ： 链接地址<br>
+                                            {{qcms:Slide_Sort}} ： 排序<br>
+                                            {{qcms:Slide_i}} ： 自曾数（从0开始）<br>
+                                        </div>
+                                    </div>
+
+                                    <div class="my-3 DemoDiv d-none" data="if">
+                                        <h5 >if条件标签</h5>
+                                        <div class="mb-2">简单的IF判断，可用于简单判断</div>
+
+<textarea class="form-control text-dark mb-3 p-2" rows="15">
+{{if '{{qcms:WebName}}' >= 'QCMS官网'}}
+我是QCMS官网
+{{else}}
+我是其他网站
+{{/if}}
+
+<!====================================>
+
+{{if '{{qcms:WebName}}' >= 'QCMS官网'}}
+我是QCMS官网
+{{/if}}
+</textarea>
+
+
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
