@@ -5,9 +5,11 @@ class SwiperCate extends ControllersAdmin {
     public function index_Action(){
         $Arr = $this->Swiper_cateObj->SetSort(array('Sort' => 'ASC', 'SwiperCateId' => 'ASC'))->ExecSelect();
         foreach($Arr as $k => $v){
+            $GET = $_GET;
+            $GET['SwiperCateId'] = $v['SwiperCateId'];
             $Arr[$k]['SortView'] = '<input class="form-control SortInput" type="text" data-type="swiperCate" data-index="'.$v['SwiperCateId'].'" value="'.$v['Sort'].'"/>';
             $Arr[$k]['BtnArr'] = array(
-                array('Desc' => '图片管理', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'swiper', 'index'))),
+                array('Desc' => '图片管理', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'swiper', 'index')), 'Para' => $GET),
                 //array('Desc' => '代码管理', 'Color' => 'success'),
             );
         }

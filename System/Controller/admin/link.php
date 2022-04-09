@@ -39,13 +39,14 @@ class Link extends ControllersAdmin {
         $this->BuildObj->NameAdd = '添加友情链接';
         //$this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
-        $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'linkState')).'";';
+        
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
         $this->BuildObj->Arr = array(
             array('Name' =>'LinkCateId', 'Desc' => '选择分类',  'Type' => 'select', 'Data' => $linkCateKV, 'Value' => $_GET['LinkCateId'], 'Required' => 0, 'Col' => 12),
         );
         $this->BuildObj->Form('get', 'form-inline');
         $this->HeadHtml = $this->BuildObj->Html;
+        $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'linkState')).'";';
         $this->LoadView('admin/common/list', $tmp);
     }
     

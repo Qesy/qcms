@@ -34,13 +34,14 @@ class Inlink extends ControllersAdmin {
         $this->BuildObj->NameAdd = '添加内链';
         //$this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
-        $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'inlinkState')).'";';
+        
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
         $this->BuildObj->Arr = array(
             array('Name' =>'InlinkCateId', 'Desc' => '选择分类',  'Type' => 'select', 'Data' => $inlinkCateKV, 'Value' => $_GET['InlinkCateId'], 'Required' => 0, 'Col' => 12),
         );
         $this->BuildObj->Form('get', 'form-inline');
         $this->HeadHtml = $this->BuildObj->Html;
+        $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'inlinkState')).'";';
         $this->LoadView('admin/common/list', $tmp);
     }
     

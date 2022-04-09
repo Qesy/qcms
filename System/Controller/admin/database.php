@@ -8,6 +8,7 @@ class Database extends ControllersAdmin {
         $Files = scandir($this->Path);
         $FileArr = array();
         foreach($Files as $v){
+            
             if(in_array($v, array('.', '..'))) continue;            
             if(is_dir($this->Path.$v) || $v == 'index.html') continue;
             $StrArr = explode('.', $v);
@@ -19,9 +20,11 @@ class Database extends ControllersAdmin {
             
         }
         foreach($FileArr as $k => $v){
+            $GET = $_GET;
+            $GET['Name'] = $v['Name'];
             $FileArr[$k]['BtnArr'] = array(
                 array('Desc' => '下载', 'Color' => 'success', 'Link' => URL_STATIC.'backups/'.$v['Name']),
-                array('Desc' => '还原', 'Color' => 'primary', 'Confirm' => '还原数据库将覆盖原来数据，是否继续？', 'Link' => $this->CommonObj->Url(array('admin', 'database', 'restore'))),
+                array('Desc' => '还原', 'Color' => 'primary', 'Confirm' => '还原数据库将覆盖原来数据，是否继续？', 'Link' => $this->CommonObj->Url(array('admin', 'database', 'restore')), 'Para' => $GET),
             );
         }
         $KeyArr = array(
@@ -33,9 +36,10 @@ class Database extends ControllersAdmin {
         krsort($FileArr);
         $this->BuildObj->NameAdd = '添加备份';
         $this->BuildObj->LinkAdd = $this->CommonObj->Url(array('admin', 'database', 'backups'));        
-        $this->BuildObj->NameEdit = '还原';
-        $this->BuildObj->LinkEdit = $this->CommonObj->Url(array('admin', 'database', 'restore'));
+        /* $this->BuildObj->NameEdit = '还原';
+        $this->BuildObj->LinkEdit = $this->CommonObj->Url(array('admin', 'database', 'restore')); */
         $this->BuildObj->PrimaryKey = 'Name';
+        $this->BuildObj->IsEdit = false;
         $tmp['Table'] = $this->BuildObj->Table($FileArr, $KeyArr, '', 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }

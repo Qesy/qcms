@@ -19,8 +19,8 @@ class Form extends ControllersAdmin {
             $Arr[$k]['StateDefaultView'] = ($v['StateDefault'] == 1) ? '已审核' : '未审核';
             $Arr[$k]['DataView'] = '<a class="btn btn-primary btn-outline btn-sm" href="'.$this->CommonObj->Url(array('admin', 'formData', 'index')).'?'.http_build_query($GET).'">数据管理</a>'; 
             $Arr[$k]['BtnArr'] = array(
-                array('Desc' => '字段管理', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'formField', 'index'))),
-                array('Desc' => '获取代码', 'Color' => 'info', 'Link' => $this->CommonObj->Url(array('admin', 'form', 'code'))),
+                array('Desc' => '字段管理', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'formField', 'index')), 'Para' => $GET),
+                array('Desc' => '获取代码', 'Color' => 'info', 'Link' => $this->CommonObj->Url(array('admin', 'form', 'code')), 'Para' => $GET),
             );
         }
         $KeyArr = array(
@@ -39,7 +39,7 @@ class Form extends ControllersAdmin {
 
         //$this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
-        $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'FormState')).'";';
+        $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'formState')).'";';
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }

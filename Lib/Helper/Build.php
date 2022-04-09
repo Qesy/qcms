@@ -620,8 +620,8 @@ class Build {
                 if(!empty($v['BtnArr'])){
                     foreach($v['BtnArr'] as $Btn){
                         $BtnColor = isset($Btn['Color']) ? $Btn['Color'] : 'primary';
-                        if(!empty($Btn['Para'])) $_GET = array_merge($_GET, $Btn['Para']);
-                        $Link = (empty($Btn['Link']) || $Btn['Link'] == '#') ? 'javascript:void(0);' : $Btn['Link'].'?'.http_build_query($_GET);
+                        $ParaStr = !empty($Btn['Para']) ? '?'.http_build_query($Btn['Para']) : '';
+                        $Link = (empty($Btn['Link']) || $Btn['Link'] == '#') ? 'javascript:void(0);' : $Btn['Link'].$ParaStr;
                         $Disabled = (isset($Btn['IsDisabled']) && $Btn['IsDisabled'] == 1) ? 'disabled' : '';
                         $Confirm = empty($Btn['Confirm']) ? '' : 'onclick="return confirm(\''.$Btn['Confirm'].'\')"';
                         $ActArr[] = '<a class="btn btn-sm mr-2 btn-'.$BtnColor.' '.$Disabled.' table_btn_'.$Btn['Name'].'" href="'.$Link.'" '.(($Btn['IsBlank']) ? 'target="_blank"' : '').' '.$Confirm.'>'.$Btn['Desc'].'</a>';

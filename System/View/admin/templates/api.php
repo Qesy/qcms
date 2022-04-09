@@ -88,19 +88,20 @@
                                             </div>
                                         </div>
 
-                                        <div class="mb-3">
+                                        <div class="mb-4">
                                             <button class="btn btn-default btn-sm disabled">返回结果</button>
                                             <div>
                                             <div class="" id="ResultHtml" style="height: 600px;"></div>
                                         </div>
                                         </div>
 
+                                        <button class="btn btn-primary btn-sm">签名生成规则</button>
                                         <div class="mb-3">
 
                                             <div class="text-dark row" >
 
                                                 <div class="col-6 " >
-                                                    <button class="btn btn-default btn-sm disabled">请求数据</button>
+                                                    <button class="btn btn-default btn-sm disabled float-right">请求数据</button>
                                                     <div class="p-2 border" style="background-color: #f5f5f5;">
                                                     {<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ts: 1649157257,<br>
@@ -112,7 +113,7 @@
 }<br><br>
                                                 </div></div>
                                                 <div class="col-6 " >
-                                                    <button class="btn btn-default btn-sm disabled">加签名后请求数据</button>
+                                                    <button class="btn btn-default btn-sm disabled float-right">加签名后请求数据</button>
                                                     <div class="p-2 border" style="background-color: #f5f5f5;">
 {<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Ts: 1649157257,<br>

@@ -169,7 +169,7 @@ class QC_Category extends \Db_pdo {
 	            $CateRs = $this->getOne($v['CateId']);
 	            $Step = '';
 	            for($i=0; $i<$Level;$i++) $Step .= '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-	            if($ModelId == $CateRs['ModelId']){
+	            if($ModelId == $CateRs['ModelId'] && $CateRs['IsPost'] == 1){
 	                $Disabled = '';
 	            }else{
 	                $Disabled = 'disabled="disabled"';

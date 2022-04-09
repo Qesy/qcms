@@ -5,9 +5,11 @@ class GroupUser extends ControllersAdmin {
     public function index_Action(){
         $Arr = $this->Group_userObj->SetSort(array('GroupUserId' => 'ASC'))->ExecSelect();
         foreach($Arr as $k => $v){
+            $GET = $_GET;
+            $GET['GroupUserId'] = $v['GroupUserId'];
             $Arr[$k]['IsEdit'] = $Arr[$k]['IsDel'] = ($v['IsSys'] == 1) ? 2 : 1;
             $Arr[$k]['BtnArr'] = array(
-                array('Desc' => '组用户', 'Link' => $this->CommonObj->Url(array('admin', 'user', 'index')), 'Color' => 'success'),
+                array('Desc' => '组用户', 'Link' => $this->CommonObj->Url(array('admin', 'user', 'index')), 'Color' => 'success', 'Para' => $GET),
             );
         }
         $KeyArr = array(

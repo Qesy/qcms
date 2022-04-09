@@ -16,6 +16,7 @@ class User extends ControllersAdmin {
         $GroupUserKV = array_column($GroupUserArr, 'Name', 'GroupUserId');
         foreach($Arr as $k => $v){
             $GET = $_GET;
+            $GET['UserId'] = $v['UserId'];
             $GET['GroupUserId'] = $v['GroupUserId'];
             $Arr[$k]['PhoneView'] = $v['Phone'].(($v['GroupAdminId'] != 0) ? '<small class="px-2 text-danger">管理员</small>' : '');
             $Arr[$k]['GroupUserView'] = '<a class="btn btn-primary btn-outline btn-sm" href="'.$this->CommonObj->Url(array('admin', 'user', 'index')).'?'.http_build_query($GET).'">'.$GroupUserKV[$v['GroupUserId']].'</a>';
@@ -24,7 +25,7 @@ class User extends ControllersAdmin {
             $Arr[$k]['IpLastView'] = empty($v['IpLast']) ? '未登录' : $v['IpLast'];
             $Arr[$k]['BtnArr'] = array(
                 //array('Desc' => '文档', 'Link' => '#', 'Color' => 'success'),
-                array('Desc' => '提升', 'Link' => $this->CommonObj->Url(array('admin', 'user', 'upgrade')), 'Color' => 'danger', 'IsDisabled' => $v['IsAdmin']),
+                array('Desc' => '提升', 'Link' => $this->CommonObj->Url(array('admin', 'user', 'upgrade')), 'Color' => 'danger', 'IsDisabled' => $v['IsAdmin'], 'Para' => $GET),
             );
         }
         $KeyArr = array(
@@ -41,7 +42,7 @@ class User extends ControllersAdmin {
         $this->BuildObj->IsDel = false;
         //$this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
-        $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'userState')).'";';
+        
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
         $this->BuildObj->Arr = array(            
             array('Name' =>'Phone', 'Desc' => '账号',  'Type' => 'input', 'Value' => $_GET['Phone'], 'Required' => 0, 'Col' => 12),
@@ -49,6 +50,7 @@ class User extends ControllersAdmin {
         );
         $this->BuildObj->Form('get', 'form-inline');
         $this->HeadHtml = $this->BuildObj->Html;
+        $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'userState')).'";';
         $this->LoadView('admin/common/list', $tmp);
     }
     

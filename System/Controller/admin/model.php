@@ -5,9 +5,11 @@ class Model extends ControllersAdmin {
     public function index_Action(){
         $Arr = $this->Sys_modelObj->getList();
         foreach($Arr as $k => $v){
+            $GET = $_GET;
+            $GET['ModelId'] = $v['ModelId'];
             $Arr[$k]['IsSysView'] = ($v['IsSys'] == 1) ? '<i class="bi bi-check-lg text-success h5"></i>' : '<i class="bi bi-x-lg text-danger h5"></i>';
             $Arr[$k]['BtnArr'] = array(
-                array('Desc' => '字段管理', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'modelField', 'index'))),                
+                array('Desc' => '字段管理', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'modelField', 'index')), 'Para' => $GET),                
             );
         }
         $KeyArr = array(

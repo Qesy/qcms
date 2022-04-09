@@ -11,6 +11,9 @@ class Category extends ControllersAdmin {
         $ModelKV = array_column($ModelArr, 'Name', 'ModelId');
         $ModelKV[-1] = '封面';
         foreach($Arr as $k => $v){
+            $GET = $_GET;
+            $GET['CateId'] = $v['CateId'];
+            $GET['ModelId'] = $v['ModelId'];
             $IsPost = ($v['IsPost'] == 1 && $v['IsLink'] != 1) ? '<span class="text-danger mr-2">发布</span>': '<span class="text-secondary mr-2">发布</span>';
             $IsLink = ($v['IsLink'] == 1) ? '<span class="text-danger mr-2">外链</span>': '<span class="text-secondary mr-2">外链</span>';
             $IsShow = ($v['IsShow'] == 1) ? '<span class="text-danger mr-2">显示</span>': '<span class="text-secondary mr-2">显示</span>';
@@ -24,9 +27,9 @@ class Category extends ControllersAdmin {
             $Arr[$k]['UserLevel'] = '<span class="text-secondary">开放浏览</span>';
             $Arr[$k]['BtnArr'] = array(
                 array('Desc' => '预览', 'Color' => 'success', 'Link' => $this->createUrl('cate', $v['CateId'], $v['PinYin'], $v['PY']), 'IsBlank' => 1),
-                array('Desc' => '内容', 'Color' => 'success', 'IsDisabled' => ($v['IsLink'] == 1 || $v['IsPost'] != 1 || $v['ModelId'] == -1) ? '1' : '2', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'index')), 'Para' => array('ModelId' => $v['ModelId'])),
-                array('Desc' => '加子类', 'Link' => $this->CommonObj->Url(array('admin', 'category', 'add'))),
-                array('Desc' => '移动', 'Link' => $this->CommonObj->Url(array('admin', 'category', 'move'))),                
+                array('Desc' => '内容', 'Color' => 'success', 'IsDisabled' => ($v['IsLink'] == 1 || $v['IsPost'] != 1 || $v['ModelId'] == -1) ? '1' : '2', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'index')), 'Para' => $GET),
+                array('Desc' => '加子类', 'Link' => $this->CommonObj->Url(array('admin', 'category', 'add')), 'Para' => $GET),
+                array('Desc' => '移动', 'Link' => $this->CommonObj->Url(array('admin', 'category', 'move')), 'Para' => $GET),                
             );
             if($Level < $v['Level']){
                 $Level = $v['Level'];
