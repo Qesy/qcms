@@ -108,7 +108,7 @@ class Controllers extends Base {
     }
     
     public function date_Tmp(){
-        preg_match_all("/{{Date([\s\S.]*?)\/?}}/i",$this->Tmp['Compile'], $Matches); 
+        preg_match_all("/{{date([\s\S.]*?)\/?}}/i",$this->Tmp['Compile'], $Matches); 
         $Replace = array();
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);
@@ -120,7 +120,7 @@ class Controllers extends Base {
     }
     
     public function substr_Tmp(){ //截取字符串
-        preg_match_all("/{{Cut([\s\S.]*?)\/?}}/i",$this->Tmp['Compile'], $Matches); 
+        preg_match_all("/{{cut([\s\S.]*?)\/?}}/i",$this->Tmp['Compile'], $Matches); 
         $Replace = array();
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);       
@@ -496,7 +496,6 @@ class Controllers extends Base {
     }
     
     private function _replaceList($Ret, $Html, $Pre){
-        
         $ModelRs = $this->ModelKv[$Ret['Model']];
         $CondArr = array();
         if(!empty($Ret['CateId'])){

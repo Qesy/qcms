@@ -395,7 +395,7 @@
                                         <div class="mb-2">日期和时间 格式化标签</div>
 
 <textarea class="form-control text-dark mb-3 p-2" rows="15">
-{{Date format='Y-m-d' time='{{qcms:List_TsUpdate}}'}}
+{{date format='Y-m-d' time='{{qcms:List_TsUpdate}}'}}
 </textarea>
                                         <h5 >属性说明</h5>
                                         <div class="mb-2">
@@ -411,7 +411,7 @@
                                         <div class="mb-2">截取字符串长度</div>
 
 <textarea class="form-control text-dark mb-3 p-2" rows="15">
-{{Cut Len='20' Str='{{qcms:List_Title}}'}}
+{{cut Len='20' Str='{{qcms:List_Title}}'}}
 </textarea>
                                         <h5 >属性说明</h5>
                                         <div class="mb-2">

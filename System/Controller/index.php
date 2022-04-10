@@ -18,6 +18,9 @@ class Index extends Controllers {
     public function detail_Action($Id = 0){
         if(empty($Id)) $this->DieErr(1001);
         $this->tempRun('detail', $Id);
+        if(!empty($this->Tmp['TableRs'])){
+            $this->TableObj->SetTbName('table_'.$this->Tmp['ModelRs']['KeyName'])->SetCond(array('Id' => $Id))->SetUpdate(array('ReadNum' => ($this->Tmp['TableRs']['ReadNum']+1)))->ExecUpdate();
+        }        
         self::_statFlow();
     }
     
