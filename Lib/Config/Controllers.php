@@ -26,7 +26,8 @@ class Controllers extends Base {
     public $ModelKv = array();
     public $CateKv = array();
     public $TmpPath;
-    
+    public $PageTmp = 1;
+    public $CountTmp = 0; //分页用
     function __construct(){
         parent::__construct();
         $this->SysRs = $this->SysObj->getKv();
@@ -37,11 +38,13 @@ class Controllers extends Base {
         foreach($ModelArr as $v){
             $this->ModelKv[$v['KeyName']] = $v;
         }
+        $this->PageTmp = (intval($_GET['Page']) < 1) ? 1 : intval($_GET['Page']);
     }
     
     public function tempRun($Type, $Index = '0'){
         $this->initTmp($Type, $Index)->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->menu_Tmp();
-        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->Date_Tmp();
+        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
+        $this->substr_Tmp()->math_Tmp()->replace_Tmp();
         echo($this->Tmp['Compile']);
     }
     
@@ -51,7 +54,8 @@ class Controllers extends Base {
         $this->Tmp['Compile'] = $this->Tmp['Html'] = $Html;
         //var_dump($this->Tmp['Compile']);exit;
         $this->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->menu_Tmp();
-        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->Date_Tmp();
+        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
+        $this->substr_Tmp()->math_Tmp()->replace_Tmp();
         echo($this->Tmp['Compile']);
     }
 
@@ -88,9 +92,7 @@ class Controllers extends Base {
         }
         
         if(!file_exists($this->TmpPath.$Path) || !is_file( $this->TmpPath.$Path)) $this->DieErr(1054);
-        $this->Tmp['Compile'] = $this->Tmp['Html'] = file_get_contents($this->TmpPath.$Path);
-        
-        
+        $this->Tmp['Compile'] = $this->Tmp['Html'] = file_get_contents($this->TmpPath.$Path);        
         return $this;
     }
     
@@ -105,7 +107,7 @@ class Controllers extends Base {
         return $this;
     }
     
-    public function Date_Tmp(){
+    public function date_Tmp(){
         preg_match_all("/{{Date([\s\S.]*?)\/?}}/i",$this->Tmp['Compile'], $Matches); 
         $Replace = array();
         foreach($Matches[1] as $k => $v){
@@ -114,6 +116,63 @@ class Controllers extends Base {
             $Replace[] = ($Para['format'] == 'special') ? $this->CommonObj->TimeView($Para['time']) : date($Para['format'], $Para['time']);
         }
         $this->Tmp['Compile'] = str_replace($Matches[0], $Replace, $this->Tmp['Compile']);
+        return $this;
+    }
+    
+    public function substr_Tmp(){ //截取字符串
+        preg_match_all("/{{Cut([\s\S.]*?)\/?}}/i",$this->Tmp['Compile'], $Matches); 
+        $Replace = array();
+        foreach($Matches[1] as $k => $v){
+            $Para = self::_getKv($v);       
+            $Len = isset($Para['Len']) ? intval($Para['Len']) : 0;
+            $Replace[] = ($Len > 0) ? mb_substr($Para['Str'], 0, $Len) : $Para['Str'];
+        }
+        $this->Tmp['Compile'] = str_replace($Matches[0], $Replace, $this->Tmp['Compile']);
+        return $this;
+    }
+    
+    public function replace_Tmp(){
+        preg_match_all("/{{replace([\s\S.]*?)\/?}}/i", $this->Tmp['Compile'], $Matches);
+        $Replace = array();
+        foreach($Matches[1] as $k => $v){
+            $Para = self::_getKv($v);   
+            $SubStr = $Para['Str'];
+            $SubSearch = $Para['Search'];
+            $SubReplace = $Para['Replace'];
+            $Replace[] = str_replace($SubSearch, $SubReplace, $SubStr);
+        }
+        $this->Tmp['Compile'] = str_replace($Matches[0], $Replace, $this->Tmp['Compile']);
+        return $this;
+    }
+    
+    public function math_Tmp(){ //数学标签
+        preg_match_all("/{{math([\s\S.]*?)\/?}}/i", $this->Tmp['Compile'], $Matches);        
+        $Search = array();
+        $Replace = array();
+        $Result = 0;
+        foreach($Matches[1] as $k => $v){
+            if(strpos($v, '+') !== false){                
+                $Arr = self::_getKv2If($v, '\+'); 
+                $Result = intval($Arr[0]) + intval($Arr[1]);                
+            }elseif(strpos($v, '-') !== false){
+                $Arr = self::_getKv2If($v, '-');
+                $Result = intval($Arr[0]) - intval($Arr[1]);
+            }elseif(strpos($v, '*') !== false){
+                $Arr = self::_getKv2If($v, '\*');
+                $Result = intval($Arr[0]) * intval($Arr[1]);
+            }elseif(strpos($v, '/') !== false){
+                $Arr = self::_getKv2If($v, '\/');
+                $Result = intval($Arr[0]) / intval($Arr[1]);
+            }elseif(strpos($v, '%') !== false){
+                $Arr = self::_getKv2If($v, '%');
+                $Result = intval($Arr[0]) % intval($Arr[1]);
+            }else{ // 匹配不到直接返回
+                return $this;
+            }
+            $Search[] = $Matches[0][$k];
+            $Replace[] = $Result;
+        }
+        $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
     
@@ -306,9 +365,13 @@ class Controllers extends Base {
             $Ret['Keyword'] = !isset($Para['Keyword']) ? '' : $Para['Keyword'];
             $Ret['Ids'] = !isset($Para['Ids']) ? '' : $Para['Ids'];
             $Ret['Attr'] = !isset($Para['Attr']) ? '' : $Para['Attr'];
-            $Ret['Page'] = !isset($Para['Page']) ? '1' : $Para['Page'];
+            $Ret['IsPage'] = !isset($Para['IsPage']) ? '-1' : intval($Para['IsPage']); //是否开启分页
             $Search[] = $Matches[0][$k];
             $Replace[] = self::_replaceList($Ret, $Matches[2][$k], 'List_');
+            if($Ret['IsPage'] == 1){
+                $Search[] = '{{qcms:List_PageBar}}';
+                $Replace[] = $this->CommonObj->PageBar($this->CountTmp, $Ret['Row']);
+            }
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         //var_dump($Matches);exit;
@@ -408,7 +471,7 @@ class Controllers extends Base {
                 $v['Title'],
                 $v['Link'],
                 $v['Sort'],                
-                $k,
+                ($k+1),
             );
             $Compile .= str_replace($Search, $Replace, $Html);
         }
@@ -433,6 +496,7 @@ class Controllers extends Base {
     }
     
     private function _replaceList($Ret, $Html, $Pre){
+        
         $ModelRs = $this->ModelKv[$Ret['Model']];
         $CondArr = array();
         if(!empty($Ret['CateId'])){
@@ -463,7 +527,9 @@ class Controllers extends Base {
             if(in_array('ib', $Attr)) $CondArr['IsBold'] = 1; //加粗
             if(in_array('ip', $Attr)) $CondArr['IsPic'] = 1; //带图
         }
-        $Limit = array(($Ret['Page']-1)*$Ret['Row'], $Ret['Row']);
+        
+        $Limit = array(($this->PageTmp-1)*$Ret['Row'], $Ret['Row']);
+
         $Count = 0;
         $Sort = array('Sort' => 'ASC', 'Id' => 'DESC');
         if($Ret['Sort'] == 'ReadNum'){
@@ -479,7 +545,14 @@ class Controllers extends Base {
             if($v['IsList'] == 1) $ListField[] = $v['Name'];
         }
         $ListField = array_diff($ListField, array('Content', 'Index'));
-        $Arr = $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetField(implode(', ', $ListField))->SetCond($CondArr)->SetSort($Sort)->SetLimit($Limit)->SetIsDebug(0)->ExecSelect();
+
+        if($Ret['IsPage'] == 1){
+            $Arr = $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetField(implode(', ', $ListField))->SetCond($CondArr)->SetSort($Sort)->SetLimit($Limit)->SetIsDebug(0)->ExecSelectAll($Count);
+            $this->CountTmp = $Count;
+        }else{
+            $Arr = $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetField(implode(', ', $ListField))->SetCond($CondArr)->SetSort($Sort)->SetLimit($Limit)->SetIsDebug(0)->ExecSelect();
+        }
+        
         $Compile = '';
         $Search = array();
         foreach($ListField as $v){
@@ -508,7 +581,7 @@ class Controllers extends Base {
                     $Replace[] =  $v[$sv];
                 }                
             }
-            $Replace[] =  $k;
+            $Replace[] =  ($k+1);
             $Replace[] = $CateRs['Name'];
             $Replace[] = $CateRs['Pic'];
             $Replace[] = ($CateRs['IsLink'] == 1) ? $CateRs['LinkUrl'] : $UrlCate; // 分类地址
@@ -552,7 +625,7 @@ class Controllers extends Base {
                 $v['Description'],
                 self::createUrl('cate', $v['CateId'], $v['PinYin'], $v['PY']),//$Url,
                 $v['HasSub'],
-                $k,
+                ($k+1),
             );
             $Compile .= str_replace($Search, $Replace, $Html);
         }
@@ -567,6 +640,13 @@ class Controllers extends Base {
             $Ret[$Matches[1][$i]] = $Matches[2][$i];
         }
         return $Ret;
+    }
+    
+    private function _getKv2If2($Str, $CondStr){ // if专用获取参数        
+        $Str = str_replace(' ', '', $Str);
+        preg_match("/\'([\w\W]*?)\'".$CondStr."\'([\w\W]*?)\'/i",$Str, $Matches);
+        if(empty($Matches[0])) return array();
+        return array($Matches[1], $Matches[2]);
     }
     
     private function _getKv2If($Str, $CondStr){ // if专用获取参数        

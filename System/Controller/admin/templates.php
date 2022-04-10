@@ -115,7 +115,10 @@ class Templates extends ControllersAdmin {
             'loop' => '万能标签',
             'slide' => '幻灯片',
             'if' => 'if条件标签',
-            
+            'date' => '日期标签',
+            'substr' => '截取字符串',
+            'math' => '数学标签',
+            'replace' => '替换标签',
         );
         $tmp['LabelArr'] = $LabelArr;
         $this->LoadView('admin/templates/builder', $tmp);

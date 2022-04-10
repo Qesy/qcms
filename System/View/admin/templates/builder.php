@@ -60,28 +60,28 @@
                                     <?
                                     foreach($LabelArr as $k => $v){
                                         $BtnColor = ($k == 'include') ? 'btn-primary' : 'btn-default';
-                                        echo '<button class="btn '.$BtnColor.' mr-2 DisplayBtn" data="'.$k.'">'.$v.'</button>';
+                                        echo '<button class="btn '.$BtnColor.' mr-2 mb-2 DisplayBtn" data="'.$k.'">'.$v.'</button>';
                                     }
                                     ?>
                                     </div>
                                     <div class="my-3 DemoDiv d-none" data="include">
                                         <h5 >引入页面</h5>
                                         <div class="mb-2">引入一些通用代码页面，比如一个网站的导航和底部都是一样的，就单独做一个组件，通过include标签引入</div>
-                                        <textarea class="form-control text-dark mb-3 p-2" rows="5">{{include  filename='component_header.html'/}}</textarea>
+                                        <textarea class="form-control text-dark mb-3 p-2" rows="15">{{include  filename='component_header.html'/}}</textarea>
                                         <h5 >标签说明</h5>
                                         <div>filename : 文件名</div>
                                     </div>
                                     <div class="my-3 DemoDiv d-none" data="label">
                                         <h5 >自定义标签</h5>
                                         <div class="mb-2">后台自定义一些文字，列表等代码，在网站任意地方调用，通常用于广告代码，特殊JS统计代码等</div>
-                                        <textarea class="form-control text-dark mb-3 p-2" rows="5">{{label:testlabel}}</textarea>
+                                        <textarea class="form-control text-dark mb-3 p-2" rows="15">{{label:testlabel}}</textarea>
                                         <h5 >标签说明</h5>
                                         <div>label : 标签调用名 （后台创建的时候命名）</div>
                                     </div>
                                     <div class="my-3 DemoDiv d-none" data="global">
                                         <h5 >全局标签</h5>
                                         <div class="mb-2">网站模板任何页面都可以调用的标签</div>
-                                        <textarea class="form-control text-dark mb-3 p-2" rows="5">{{qcms:WebName}}</textarea>
+                                        <textarea class="form-control text-dark mb-3 p-2" rows="15">{{qcms:WebName}}</textarea>
                                         <h5 >标签说明</h5>
                                         <div>
                                             {{qcms:domain}} ： 网站域名<br>
@@ -107,7 +107,7 @@
                                     <div class="my-3 DemoDiv d-none" data="cate">
                                         <h5 >分类标签</h5>
                                         <div class="mb-2">分类页和详情页专属标签，比如分类名等</div>
-                                        <textarea class="form-control text-dark mb-3 p-2" rows="5">{{qcms:Cate_Name}}</textarea>
+                                        <textarea class="form-control text-dark mb-3 p-2" rows="15">{{qcms:Cate_Name}}</textarea>
                                         <h5 >标签说明</h5>
                                         <div>
                                             {{qcms:Cate_CateId}} ： 分类ID<br>
@@ -128,7 +128,7 @@
                                     <div class="my-3 DemoDiv d-none" data="detail">
                                         <h5 >详情页标签</h5>
                                         <div class="mb-2">文章详情页面专属标签，比如文章标题，文章内容等</div>
-                                        <textarea class="form-control text-dark mb-3 p-2" rows="5">{{qcms:Detail_Title}}</textarea>
+                                        <textarea class="form-control text-dark mb-3 p-2" rows="15">{{qcms:Detail_Title}}</textarea>
                                         <h5 >标签说明</h5>
                                         <div>
                                             {{qcms:Detail_Id}} ： 详情ID<br>
@@ -167,7 +167,7 @@
                                     <div class="my-3 DemoDiv d-none" data="page">
                                         <h5 >单页标签</h5>
                                         <div class="mb-2">单页专属标签，比如单页名字，单页内容等</div>
-                                        <textarea class="form-control text-dark mb-3 p-2" rows="5">{{qcms:Page_Name}}</textarea>
+                                        <textarea class="form-control text-dark mb-3 p-2" rows="15">{{qcms:Page_Name}}</textarea>
                                         <h5 >标签说明</h5>
                                         <div>
                                             {{qcms:Page_PageId}} ： 单页ID<br>
@@ -183,7 +183,7 @@
                                         <h5 >一级菜单列表</h5>
                                         <div class="mb-2">一级菜单列表，循环列表</div>
 
-<textarea class="form-control text-dark mb-3 p-2" rows="5">
+<textarea class="form-control text-dark mb-3 p-2" rows="15">
 {{menu PCateId='0'}}
     <a href="{{qcms:Menu_Url}}">{{qcms:Menu_Name}}</a>
 {{/menu}}
@@ -211,7 +211,7 @@
                                         <h5 >二级菜单列表</h5>
                                         <div class="mb-2">二级菜单列表，循环列表</div>
 
-<textarea class="form-control text-dark mb-3 p-2" rows="5">
+<textarea class="form-control text-dark mb-3 p-2" rows="15">
 {{smenu PCateId='0'}}
     <a href="{{qcms:sMenu_Url}}">{{qcms:sMenu_Name}}</a>
 {{/smenu}}
@@ -238,7 +238,7 @@
                                         <h5 >三级菜单列表</h5>
                                         <div class="mb-2">三级菜单列表，循环列表</div>
 
-<textarea class="form-control text-dark mb-3 p-2" rows="5">
+<textarea class="form-control text-dark mb-3 p-2" rows="15">
 {{ssmenu PCateId='0'}}
     <a href="{{qcms:ssMenu_Url}}">{{qcms:ssMenu_Name}}</a>
 {{/ssmenu}}
@@ -266,7 +266,7 @@
                                         <h5 >列表标签</h5>
                                         <div class="mb-2">列表形式调用内容数据</div>
 
-<textarea class="form-control text-dark mb-3 p-2" rows="5">
+<textarea class="form-control text-dark mb-3 p-2" rows="15">
 {{list Module='article' CateId='1' Row='10'}}
     <a href="{{qcms:List_Url}}">{{qcms:List_Title}}</a>
 {{/list}}
@@ -276,7 +276,12 @@
                                             Module : 模型调用名，默认 ：article （article：文章, product:产品， album：相册， down：下载 ）<br>
                                             Row：行数，默认：10<br>
                                             CateId : 分类ID， 默认：0 （模型下所有文章）<br>
-                                            Sort ： 排序方式， 默认 ：default （default：按排序正序，ReadNum：按阅读数倒叙，TsUpdate：按更新时间倒叙， Good：按好评倒叙）<br>
+                                            Sort ： 排序方式 (默认:Sort, ReadNum:点击数,TsUpdate:更新时间,Good:好评数)<br>
+                                            Keyword：关键字<br>
+                                            Ids ： 文章ID (用 | 分割，例：12|23|33)<br>
+                                            Attr：属性 (sr:特推、hl:头条、re:推荐、ip:带图, 例 ：sr,hl,re,ip hl)<br>
+                                            IsPage：开启分页 （默认 0：关闭, 1：开启 ）<br>
+
                                         </div>
                                         <h5 >标签说明</h5>
                                         <div>
@@ -314,6 +319,7 @@
 {{qcms:List_CateName}} ： 分类名<br>
 {{qcms:List_CatePic}} ： 分类图片<br>
 {{qcms:List_CateUrl}} ： 分类地址<br>
+{{qcms:List_PageBar}} ： 分页 (IsPage 必须是1 才生效)<br>
                                         </div>
                                     </div>
 
@@ -322,7 +328,7 @@
                                         <h5 >万能标签</h5>
                                         <div class="mb-2">列表形式调用数据库里任何数据</div>
 
-<textarea class="form-control text-dark mb-3 p-2" rows="5">
+<textarea class="form-control text-dark mb-3 p-2" rows="15">
 {{loop sql='select * from qc_user'}}
     用户昵称：{{qcms:Loop_NickName}}
     用户头像： <img src="{{qcms:Loop_Head}}" style="height: 100px;width:100px;" />
@@ -342,7 +348,7 @@
                                         <h5 >幻灯片</h5>
                                         <div class="mb-2">列表形式调用数据库里任何数据</div>
 
-<textarea class="form-control text-dark mb-3 p-2" rows="5">
+<textarea class="form-control text-dark mb-3 p-2" rows="15">
 {{slide SwiperCateId='1'}}
     <a href="{{qcms:Slide_Link}}"><img src="{{qcms:Slide_Pic}}"/></a>
 {{/slide}}
@@ -364,7 +370,7 @@
 
                                     <div class="my-3 DemoDiv d-none" data="if">
                                         <h5 >if条件标签</h5>
-                                        <div class="mb-2">简单的IF判断，可用于简单判断</div>
+                                        <div class="mb-2">简单的IF判断，可用于简单判断 (可使用 >、>=、<、<=、== 这5种判断)</div>
 
 <textarea class="form-control text-dark mb-3 p-2" rows="15">
 {{if '{{qcms:WebName}}' >= 'QCMS官网'}}
@@ -380,6 +386,71 @@
 {{/if}}
 </textarea>
 
+
+
+                                    </div>
+
+                                    <div class="my-3 DemoDiv d-none" data="date">
+                                        <h5 >日期标签</h5>
+                                        <div class="mb-2">日期和时间 格式化标签</div>
+
+<textarea class="form-control text-dark mb-3 p-2" rows="15">
+{{Date format='Y-m-d' time='{{qcms:List_TsUpdate}}'}}
+</textarea>
+                                        <h5 >属性说明</h5>
+                                        <div class="mb-2">
+                                            format : 格式字串 (Y-m-d H:i:s 转换成 '2022-03-06 12:20:36')
+                                            特殊处理 special （3天前）<br>
+                                            time : Unix 时间戳 （ 1646540436 ）
+                                        </div>
+
+                                    </div>
+
+                                    <div class="my-3 DemoDiv d-none" data="substr">
+                                        <h5 >截取字符串</h5>
+                                        <div class="mb-2">截取字符串长度</div>
+
+<textarea class="form-control text-dark mb-3 p-2" rows="15">
+{{Cut Len='20' Str='{{qcms:List_Title}}'}}
+</textarea>
+                                        <h5 >属性说明</h5>
+                                        <div class="mb-2">
+                                            Len : 字符串长度<br>
+                                            Str : 字符串内容
+                                        </div>
+
+                                    </div>
+
+                                    <div class="my-3 DemoDiv d-none" data="math">
+                                        <h5 >数学标签</h5>
+                                        <div class="mb-2">实现了 加 减 乘 除 和 求余 功能</div>
+
+<textarea class="form-control text-dark mb-3 p-2" rows="15">
+{{math '5'+'2'}}    // 加法
+{{math '5'-'2'}}    // 减法
+{{math '5'*'2'}}    // 乘法
+{{math '5'/'2'}}    // 除法
+{{math '5'%'2'}}    // 求余
+</textarea>
+                                        <h5 >属性说明</h5>
+                                        <div class="mb-2">
+                                            无
+                                        </div>
+
+                                    </div>
+                                    <div class="my-3 DemoDiv d-none" data="replace">
+                                        <h5 >替换标签</h5>
+                                        <div class="mb-2">实现了替换字符串功能</div>
+
+<textarea class="form-control text-dark mb-3 p-2" rows="15">
+{{replace Search='刘德华' Replace='张学友' Str='我是刘德华'}}  //结果为 ： 我是张学友
+</textarea>
+                                        <h5 >属性说明</h5>
+                                        <div class="mb-2">
+                                            Search ： 替换前得字符串<br>
+                                            Replace：替换后得字符串<br>
+                                            Str ： 字符串内容<br>
+                                        </div>
 
                                     </div>
 

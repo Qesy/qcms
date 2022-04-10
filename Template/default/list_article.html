@@ -20,10 +20,10 @@
 
                     <div class="h5 text-black py-2 font-weight-bold">{{qcms:Cate_Name}} </div>
                     <div class="bg-white py-2" >
-                        {{list Module='article' CateId='{{qcms:Cate_CateId}} ' Row='10'}}
+                        {{list Module='article' CateId='{{qcms:Cate_CateId}}' Row='10' IsPage='1'}}
                         <div class="p-4 border-bottom d-flex">
 
-                            <div class="mr-3"><a class="" href="{{qcms:List_Url}}"><img class="d-block" src="{{qcms:List_Pic}}" style="width:120px;"></a></div>
+                            <div class="mr-3"><a class="" href="{{qcms:List_Url}}"><img class="d-block border" src="{{qcms:List_Pic}}" style="width:120px;"></a></div>
                             <div class="d-flex align-items-start flex-column">
                                 <a class="" href="{{qcms:List_Url}}">
                                 <div class="font-weight-bold mb-1" style="font-size: 1.2rem;">{{qcms:List_Title}}</div>
@@ -37,55 +37,9 @@
 
                         </div>
                         {{/list}}
-                        <div class=" p-4 border-bottom">
-                            <a class="d-flex" href="#">
-                            <div class="mr-3"><img class="d-block" src="/Static/images/p1.jpg" style="width:120px;"></div>
-                            <div class="d-flex align-items-start flex-column">
-                                <div class="font-weight-bold mb-1" style="font-size: 1.2rem;">OLED屏新iPad和MacBook Air曝光：京东方供货</div>
-                                <div class="text-secondary">打入iPhone屏幕供应链，意味着京东方的显示品质、良率、产能等已经得到苹果这样苛刻巨头的认可。事实上，按照京东方董事长陈炎顺在2021年报致辞上..</div>
-                                <div class="mt-auto">
-                                    <span class="btn btn-default btn-sm mr-2">iPadPro</span>
-                                    <span class="btn btn-default btn-sm mr-2">MacBookAir</span>
-                                    <span class="btn btn-default btn-sm mr-2">手机</span>
-                                    <span class="btn btn-default btn-sm mr-2">平板电脑</span>
-                                    <span class="text-secondary">15小时前</span>
-                                    </div>
-                            </div>
-                            </a>
-                        </div>
-                        <div class="p-4 border-bottom">
-                            <a class="d-flex" href="#">
-                            <div class="mr-3"><img class="d-block" src="/Static/images/p1.jpg" style="width:120px;"></div>
-                            <div class="d-flex align-items-start flex-column">
-                                <div class="font-weight-bold mb-1" style="font-size: 1.2rem;">OLED屏新iPad和MacBook Air曝光：京东方供货</div>
-                                <div class="text-secondary">打入iPhone屏幕供应链，意味着京东方的显示品质、良率、产能等已经得到苹果这样苛刻巨头的认可。事实上，按照京东方董事长陈炎顺在2021年报致辞上..</div>
-                                <div class="mt-auto">
-                                    <span class="btn btn-default btn-sm mr-2">iPadPro</span>
-                                    <span class="btn btn-default btn-sm mr-2">MacBookAir</span>
-                                    <span class="btn btn-default btn-sm mr-2">手机</span>
-                                    <span class="btn btn-default btn-sm mr-2">平板电脑</span>
-                                    <span class="text-secondary">15小时前</span>
-                                    </div>
-                            </div>
-                            </a>
-                        </div>
-                        <div class="p-4 border-bottom">
-                            <a class="d-flex" href="#">
-                            <div class="mr-3"><img class="d-block" src="/Static/images/p1.jpg" style="width:120px;"></div>
-                            <div class="d-flex align-items-start flex-column">
-                                <div class="font-weight-bold mb-1" style="font-size: 1.2rem;">OLED屏新iPad和MacBook Air曝光：京东方供货</div>
-                                <div class="text-secondary">打入iPhone屏幕供应链，意味着京东方的显示品质、良率、产能等已经得到苹果这样苛刻巨头的认可。事实上，按照京东方董事长陈炎顺在2021年报致辞上..</div>
-                                <div class="mt-auto">
-                                    <span class="btn btn-default btn-sm mr-2">iPadPro</span>
-                                    <span class="btn btn-default btn-sm mr-2">MacBookAir</span>
-                                    <span class="btn btn-default btn-sm mr-2">手机</span>
-                                    <span class="btn btn-default btn-sm mr-2">平板电脑</span>
-                                    <span class="text-secondary">15小时前</span>
-                                    </div>
-                            </div>
-                            </a>
-                        </div>
-                        <ul class="pagination justify-content-center py-3 my-0"><li class="page-item disabled"><a href="/admin/content/index.html?ModelId=1&amp;Page=1" class="page-link">首页</a></li><li class="page-item disabled"><a href="/admin/content/index.html?ModelId=1&amp;Page=1" class="page-link">上一页</a></li><li class="page-item active"><a class="page-link">1</a></li><li class="page-item disabled"><a href="/admin/content/index.html?ModelId=1&amp;Page=1" class="page-link">下一页</a></li><li class="page-item disabled"><a href="/admin/content/index.html?ModelId=1&amp;Page=1" class="page-link">尾页</a></li><li class="page-item  disabled "><a class="page-link">总5条</a></li></ul>
+
+                        {{replace Search='刘德华' Replace='张学友' Str='我是刘德华'}}
+                        {{qcms:List_PageBar}}
                     </div>
 
 
@@ -94,16 +48,10 @@
             <div class="col-4" >
                     <div class="h5 text-black py-2 font-weight-bold">热门新闻</div>
                     <div  class="bg-white p-4 mb-4" >
-                        <li class="mb-2 text-nowrap"><a href="#">OLED屏新iPad和MacBook Air曝光：京东方供货</a></li>
-                        <li class="mb-2 text-nowrap"><a href="#">OLED屏新iPad和MacBook A</a></li>
-                        <li class="mb-2 text-nowrap"><a href="#">OLED屏新iPad和MacBook Air曝光：京东方供货</a></li>
-                        <li class="mb-2 text-nowrap"><a href="#">OLED屏新iPad和MacBook Air曝光：京东方供货</a></li>
-                        <li class="mb-2 text-nowrap"><a href="#">OLED屏新iPad和MacB东方供货</a></li>
-                        <li class="mb-2 text-nowrap"><a href="#">OLED屏新iPad和MacBook Air曝光：京东</a></li>
-                        <li class="mb-2 text-nowrap"><a href="#">OLED屏新iPad和MacBoo京东方供货</a></li>
-                        <li class="mb-2 text-nowrap"><a href="#">OLED屏新iPad和MacBook Air曝光：京东方供货</a></li>
-                        <li class="mb-2 text-nowrap"><a href="#">OLED屏新iPad和MacBook Air曝光</a></li>
-                        <li class="mb-2 text-nowrap"><a href="#">OLED屏新iPad和MacBook Air曝光：京东方供货</a></li>
+                        {{list Module='article' CateId='{{qcms:Cate_CateId}} ' Row='10'}}
+                        <li class="mb-2 text-nowrap"><a href="{{qcms:List_Url}}"><span class="badge badge-{{if '{{qcms:List_i}}' < '4'}}primary{{else}}default{{/if}} mr-2 h6">{{qcms:List_i}}</span>{{Cut Len='20' Str='{{qcms:List_Title}}'}}</a></li>
+                        {{/list}}
+
                     </div>
 
                     <div class="h5 text-black py-2 font-weight-bold">下载中心</div>
