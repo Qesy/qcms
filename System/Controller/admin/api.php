@@ -72,7 +72,10 @@ class Api extends ControllersAdmin {
             DB::$s_db_obj->beginTransaction();
             $this->FileObj->SetCond(array('FileId' => $Ids))->ExecDelete();
             foreach($Arr as $v){
-                if(!@unlink(realpath(substr($v['Img'], 1)))) throw new PDOException('删除文件失败');
+                $FilePath = realpath(substr($v['Img'], 1));
+                if(file_exists($FilePath)){
+                    if(!@unlink($FilePath)) throw new PDOException('删除文件失败');
+                }                
             }
             DB::$s_db_obj->commit();
         }catch(PDOException $e){

@@ -33,6 +33,7 @@ class Content extends ControllersAdmin {
             $GET = $_GET;
             $GET['ModelId'] = $ModelRs['ModelId'];
             $GET['CateId'] = $v['CateId'];
+            $GET['Id'] = $v['Id'];
             $Attr = array();
             if($v['IsLink'] == 1) $Attr[] = '外链';
             if($v['IsSpuerRec'] == 1) $Attr[] = '特推';
@@ -50,7 +51,7 @@ class Content extends ControllersAdmin {
                 array('Desc' => '预览', 'Color' => 'success', 'Link' => $this->createUrl('detail', $v['Id'], $v['PinYin'], $v['PY'], $v['TsUpdate']), 'IsBlank' => 1),
             );
             if($ModelRs['KeyName'] == 'album'){
-                $Arr[$k]['BtnArr'][] = array('Desc' => '照片管理', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'photos')));
+                $Arr[$k]['BtnArr'][] = array('Desc' => '照片管理', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'photos')), 'Para' => $GET);
             }
         }
         
@@ -654,7 +655,7 @@ class Content extends ControllersAdmin {
         if($ModelRs['KeyName'] != 'album') $this->Err(1048);
         $Rs = $this->PhotosObj->SetCond(array('Id' => $TableRs['Id']))->ExecSelectOne();
         $Photos = empty($Rs['Photos']) ? array() : json_decode($Rs['Photos'], true);
-
+        
         if(!empty($_FILES)){
             try{
                 DB::$s_db_obj->beginTransaction();

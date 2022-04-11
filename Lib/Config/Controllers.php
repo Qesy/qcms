@@ -42,7 +42,7 @@ class Controllers extends Base {
     }
     
     public function tempRun($Type, $Index = '0'){
-        $this->initTmp($Type, $Index)->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->menu_Tmp();
+        $this->initTmp($Type, $Index)->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->photo_Tmp()->menu_Tmp();
         $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
         $this->substr_Tmp()->math_Tmp()->replace_Tmp();
         echo($this->Tmp['Compile']);
@@ -53,7 +53,7 @@ class Controllers extends Base {
         
         $this->Tmp['Compile'] = $this->Tmp['Html'] = $Html;
         //var_dump($this->Tmp['Compile']);exit;
-        $this->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->menu_Tmp();
+        $this->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->photo_Tmp()->menu_Tmp();
         $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
         $this->substr_Tmp()->math_Tmp()->replace_Tmp();
         echo($this->Tmp['Compile']);
@@ -350,6 +350,19 @@ class Controllers extends Base {
         return $this;
     }
     
+    public function photo_Tmp(){ //相册
+        if($this->Tmp['Type'] != 'detail' || $this->Tmp['ModelRs']['KeyName'] != 'album') return $this;
+        preg_match_all("/{{photo([\s\S.]*?)}}([\s\S.]*?){{\/photo}}/i", $this->Tmp['Compile'], $Matches);
+        $Search = array();
+        $Replace = array();
+        foreach($Matches[1] as $k => $v){
+            $Search[] = $Matches[0][$k];
+            $Replace[] = self::_replacePhoto($Matches[2][$k], 'Photo_');
+        }
+        $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
+        return $this;
+    }
+    
     public function list_Tmp(){ // 列表
         preg_match_all("/{{list([\s\S.]*?)}}([\s\S.]*?){{\/list}}/i", $this->Tmp['Compile'], $Matches);
         $Search = array();
@@ -495,6 +508,18 @@ class Controllers extends Base {
         return $Compile;
     }
     
+    private function _replacePhoto($Html, $Pre){
+        $Rs = $this->PhotosObj->SetCond(array('Id' => $this->Tmp['Index']))->ExecSelectOne();
+        $Photos = empty($Rs['Photos']) ? array() : json_decode($Rs['Photos'], true);
+        $Compile = '';
+        $Search = array('{{qcms:'.$Pre.'Name}}', '{{qcms:'.$Pre.'Path}}', '{{qcms:'.$Pre.'Size}}');
+        foreach($Photos as $k => $v){
+            $Replace = array($v['Name'], $v['Path'], $v['Size']);
+            $Compile .= str_replace($Search, $Replace, $Html);
+        }
+        return $Compile;
+    }
+    
     private function _replaceList($Ret, $Html, $Pre){
         $ModelRs = $this->ModelKv[$Ret['Model']];
         $CondArr = array();
@@ -573,6 +598,7 @@ class Controllers extends Base {
                     $TagArr = explode(',', $v[$sv]);
                     $TagStrArr = array();
                     foreach($TagArr as $tv){
+                        if(empty($tv)) continue;
                         $TagStrArr[] = '<a class="btn btn-default btn-sm mr-2" href="#">'.$tv.'</a>';
                     }
                     $Replace[] =  implode('', $TagStrArr);

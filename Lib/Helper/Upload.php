@@ -9,8 +9,7 @@ class Upload {
     private $_dir;
     private $_name;
     public $Ret = array('Code' => 0, 'Msg' => '', 'Url' => '');
-    function __construct() {
-        $this->_name = uniqid ( rand ( 100, 999 ) ) . rand ( 1, 9 );
+    function __construct() {        
         $this->_dir = 'Static/upload/' . date ( 'Ymd' ) . '/';
     }
     public static function get_instance() {
@@ -26,6 +25,7 @@ class Upload {
     }
     
     public function upload_file($fileRs) {
+        $this->_name = uniqid ( rand ( 100, 999 ) ) . rand ( 1, 9 );
         $ext = substr ( strrchr ( $fileRs ['name'], '.' ), 1 );
         if(! in_array ( strtolower($ext), $this->_type )){
             $this->Ret['Code'] = 1001;

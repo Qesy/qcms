@@ -13,12 +13,14 @@
     {{include filename='component_header.html'}}
     <div class=" mb-4">
         <div class="swiper mySwiper">
-            <a href="{{qcms:Slide_Link}}" class="swiper-wrapper" style="height: 560px;">
+            <div class="swiper-wrapper">
                 {{slide SwiperCateId='1'}}
-                <div class="swiper-slide" style="background-color: rgba(0, 0, 0, 0); background-repeat: no-repeat; background-image: url({{qcms:Slide_Pic}}); background-size: cover; background-position: center center; width: 100%; height: 100%; opacity: 1; visibility: inherit;">
+                <a href="{{qcms:Slide_Link}}" class="swiper-slide" style="height: 560px;">
+                <div class="" style="background-color: rgba(0, 0, 0, 0); background-repeat: no-repeat; background-image: url({{qcms:Slide_Pic}}); background-size: cover; background-position: center center; width: 100%; height: 100%; opacity: 1; visibility: inherit;">
                 </div>
+                </a>
                 {{/slide}}
-            </a>
+            </div>
         </div>
     </div>
 
