@@ -29,6 +29,7 @@ class Sys extends ControllersAdmin {
         $SysArr = $this->SysObj->getList();
         $FormArr = array();
         $TempList = $this->getTemplate('index_');
+        $TempSearchList = $this->getTemplate('search_');
         $UrlListDesc = '<span class="text-dark">
             <span class="mr-3 font-weight-bold">{CateId}</span>分类ID<br>
             <span class="mr-3 font-weight-bold">{PinYin}</span>拼音+分类ID<br>
@@ -53,6 +54,7 @@ class Sys extends ControllersAdmin {
             if($v['Name'] == 'TmpPath') $DataArr = $Folder;
             if($v['Name'] == 'Editor') $DataArr = $this->EditorArr;
             if($v['Name'] == 'TmpIndex') $DataArr = $TempList;
+            if($v['Name'] == 'TmpSearch') $DataArr = $TempSearchList;
             if($v['Name'] == 'WaterMaskType') $DataArr = array(1 => '图片', 2 => '文字');
             if($v['Name'] == 'WaterMaskPostion') $DataArr = array(
                 0 => '随机位置',

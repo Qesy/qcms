@@ -125,7 +125,6 @@ class Router {
 	    }
 	    
 	    if(strpos($Url, 'page/') !== false){
-
 	        $UrlPage = 'page/'.$SysObj->getOne('UrlPage')['AttrValue'];
 	        $UrlPageRep = '/^'.str_replace(array('/', '{PageId}', '{PinYin}', '{PY}'), array('\/', '(\d+)','([\w]*?)', '([\w]*?)'), $UrlPage).'$/';
 	        preg_match($UrlPageRep, $Url.$this->_SiteConfig['Extend'], $Matches);

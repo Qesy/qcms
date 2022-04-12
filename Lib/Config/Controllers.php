@@ -66,6 +66,9 @@ class Controllers extends Base {
             case 'index':
                 $Path = $this->SysRs['TmpIndex'];        
                 break;
+            case 'search':
+                $Path = $this->SysRs['TmpSearch'];
+                break;
             case 'cate':                
                 $CateRs = $this->CategoryObj->getOne($Index);                
                 if(empty($CateRs)) $this->DieErr(1001);
@@ -183,6 +186,11 @@ class Controllers extends Base {
             $Search[] = '{{qcms:'.$k.'}}';
             $Replace[] = $v;
         }
+
+        $Search[] = '{{qcms:Search}}';
+        $Replace[] = !empty($_GET['Search']) ? trim($_GET['Search']) : '';
+
+        
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
@@ -296,6 +304,9 @@ class Controllers extends Base {
             }elseif(strpos($v, '<') !== false){
                 $Arr = self::_getKv2If($v, '<');
                 $ok = ($Arr[0] < $Arr[1]) ? true : false;
+            }elseif(strpos($v, '!=') !== false){
+                $Arr = self::_getKv2If($v, '!=');
+                $ok = ($Arr[0] != $Arr[1]) ? true : false;
             }else{ // 匹配不到直接返回
                 return $this;
             }
@@ -393,6 +404,7 @@ class Controllers extends Base {
             $Ret['Sort'] = !isset($Para['Sort']) ? 'Id' : $Para['Sort'];
             $Ret['SortType'] = !isset($Para['SortType']) ? 'DESC' : $Para['SortType'];
             $Ret['Keyword'] = !isset($Para['Keyword']) ? '' : $Para['Keyword'];
+            $Ret['Search'] = !isset($Para['Search']) ? '' : $Para['Search'];
             $Ret['Ids'] = !isset($Para['Ids']) ? '' : $Para['Ids'];
             $Ret['Attr'] = !isset($Para['Attr']) ? '' : $Para['Attr'];
             $Ret['IsPage'] = !isset($Para['IsPage']) ? '-1' : intval($Para['IsPage']); //是否开启分页
@@ -594,6 +606,9 @@ class Controllers extends Base {
             if(in_array('il', $Attr)) $CondArr['IsLink'] = 1; //外链
             if(in_array('ib', $Attr)) $CondArr['IsBold'] = 1; //加粗
             if(in_array('ip', $Attr)) $CondArr['IsPic'] = 1; //带图
+        }
+        if(!empty($Ret['Search'])){
+            $CondArr['Title LIKE'] = $Ret['Search'];
         }
         
         $Limit = array(($this->PageTmp-1)*$Ret['Row'], $Ret['Row']);

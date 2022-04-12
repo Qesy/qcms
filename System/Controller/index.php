@@ -30,6 +30,11 @@ class Index extends Controllers {
         self::_statFlow();
     }
     
+    public function search_Action(){
+        $this->tempRun('search');
+        self::_statFlow();
+    }
+    
     public function down_Action($Id = 0){
         if(empty($Id)) $this->DieErr(1001);
         $TableRs = $this->TableObj->SetCond(array('Id' => $Id))->ExecSelectOne();

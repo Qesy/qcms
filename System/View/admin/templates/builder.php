@@ -84,11 +84,11 @@
                                         <textarea class="form-control text-dark mb-3 p-2" rows="15">{{qcms:WebName}}</textarea>
                                         <h5 >标签说明</h5>
                                         <div>
-                                            {{qcms:domain}} ： 网站域名<br>
-                                            {{qcms:static}} ： 静态文件夹路径 （/Static/）<br>
-                                            {{qcms:pathImg}} ： 图片文件夹路径 （/Static/images/）<br>
-                                            {{qcms:pathJs}} ： JS文件夹路径 （/Static/scripts/）<br>
-                                            {{qcms:pathCss}} ： CSS文件夹路径 （/Static/styles/）<br>
+                                            {{qcms:Domain}} ： 网站域名<br>
+                                            {{qcms:Static}} ： 静态文件夹路径 （/Static/）<br>
+                                            {{qcms:PathImg}} ： 图片文件夹路径 （/Static/images/）<br>
+                                            {{qcms:PathJs}} ： JS文件夹路径 （/Static/scripts/）<br>
+                                            {{qcms:PathCss}} ： CSS文件夹路径 （/Static/styles/）<br>
                                             {{qcms:Scheme}} ： 协议 （用于区分 http, https）<br>
                                             {{qcms:WebName}} ： 网站名字<br>
                                             {{qcms:Logo}} ： 网站LOGO图片地址<br>
@@ -101,7 +101,8 @@
                                             {{qcms:RegLenMin}} ： 注册最小长度<br>
                                             {{qcms:RegLenMax}} ： 注册最大长度<br>
                                             {{qcms:StatsCode}} ： 统计代码<br>
-                                            {{qcms:crumbs}} ： 面包屑地址<br>
+                                            {{qcms:Crumbs}} ： 面包屑地址<br>
+                                            {{qcms:Search}} ： 搜索关键字 ($_GET['Search'])<br>
                                         </div>
                                     </div>
                                     <div class="my-3 DemoDiv d-none" data="cate">
@@ -278,7 +279,8 @@
                                             Row：行数，默认：10<br>
                                             CateId : 分类ID， 默认：0 （模型下所有文章）<br>
                                             Sort ： 排序方式 (默认:Sort, ReadNum:点击数,TsUpdate:更新时间,Good:好评数)<br>
-                                            Keyword：关键字<br>
+                                            Keyword：关键字 (精准匹配Tag)<br>
+                                            Search：关键字 (模糊匹配标题)<br>
                                             Ids ： 文章ID (用 | 分割，例：12|23|33)<br>
                                             Attr：属性 (sr:特推、hl:头条、re:推荐、ip:带图, 例 ：sr,hl,re,ip hl)<br>
                                             IsPage：开启分页 （默认 0：关闭, 1：开启 ）<br>
@@ -398,7 +400,7 @@
 
                                     <div class="my-3 DemoDiv d-none" data="if">
                                         <h5 >if条件标签</h5>
-                                        <div class="mb-2">简单的IF判断，可用于简单判断 (可使用 >、>=、<、<=、== 这5种判断)</div>
+                                        <div class="mb-2">简单的IF判断，可用于简单判断 (可使用 >、>=、<、<=、==、!= 这6种判断)</div>
 
 <textarea class="form-control text-dark mb-3 p-2" rows="15">
 {{if '{{qcms:WebName}}' >= 'QCMS官网'}}

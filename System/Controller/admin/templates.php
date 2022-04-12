@@ -4,11 +4,12 @@ class Templates extends ControllersAdmin {
     
     public $TempType = array(
         'index' => '首页',
-        'list' => '列表',
-        'detail' => '详情',
-        'form' => '表单',
+        'list' => '列表 (分类页)',
+        'detail' => '详情 (文章详情)',
+        'form' => '表单 (自定义表单)',
         'component' => '组件',
         'page' => '单页',
+        'search' => '搜索页',
     );
     public $TempModelType = array(
         'article' => '文章',
