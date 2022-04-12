@@ -658,7 +658,7 @@ class Controllers extends Base {
                     $TagStrArr = array();
                     foreach($TagArr as $tv){
                         if(empty($tv)) continue;
-                        $TagStrArr[] = '<a class="btn btn-default btn-sm mr-2" href="#">'.$tv.'</a>';
+                        $TagStrArr[] = '<a class="btn btn-default btn-sm mr-2" href="'.$this->CommonObj->Url(array('index', 'search')).'?Search='.$tv.'">'.$tv.'</a>';
                     }
                     $Replace[] =  implode('', $TagStrArr);
                 }else{
