@@ -5,6 +5,7 @@ defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class Upload {
     private static $s_instance;
     private $_type = array ('jpg', 'jpeg', 'gif', 'png', 'webp', 'bmp');
+    private $_noType = array('php', 'inc');
     private $_size = 2048; // -- m --
     private $_dir;
     private $_name;
@@ -28,6 +29,11 @@ class Upload {
         $this->_name = uniqid ( rand ( 100, 999 ) ) . rand ( 1, 9 );
         $ext = substr ( strrchr ( $fileRs ['name'], '.' ), 1 );
         if(! in_array ( strtolower($ext), $this->_type )){
+            $this->Ret['Code'] = 1001;
+            $this->Ret['Msg'] = '不允许上传的文件类型';
+            return $this->Ret;
+        }
+        if(in_array ( strtolower($ext), $this->_noType )){
             $this->Ret['Code'] = 1001;
             $this->Ret['Msg'] = '不允许上传的文件类型';
             return $this->Ret;

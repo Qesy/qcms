@@ -162,6 +162,7 @@
                                             {{qcms:Detail_PY}} ： 拼音首字母<br>
                                             {{qcms:Detail_Prev}} : 上一篇<br>
                                             {{qcms:Detail_Next}} ： 下一篇<br>
+                                            {{qcms:Detail_DownAddress}} : 下载地址 (下载字段名必须为 Address)<br>
                                         </div>
                                     </div>
                                     <div class="my-3 DemoDiv d-none" data="page">
@@ -203,7 +204,7 @@
                                             {{qcms:Menu_Description}} ： SEO简介<br>
                                             {{qcms:Menu_Url}} ： 分类链接<br>
                                             {{qcms:Menu_HasSub}} ： 是否包含子分类 （1：是 0：否）<br>
-                                            {{qcms:Menu_i}} ： 自曾数（从0开始）<br>
+                                            {{qcms:Menu_i}} ： 自曾数（从1开始）<br>
                                         </div>
                                     </div>
 
@@ -231,7 +232,7 @@
                                             {{qcms:sMenu_Description}} ： SEO简介<br>
                                             {{qcms:sMenu_Url}} ： 分类链接<br>
                                             {{qcms:sMenu_HasSub}} ： 是否包含子分类 （1：是 0：否）<br>
-                                            {{qcms:sMenu_i}} ： 自曾数（从0开始）<br>
+                                            {{qcms:sMenu_i}} ： 自曾数（从1开始）<br>
                                         </div>
                                     </div>
                                     <div class="my-3 DemoDiv d-none" data="ssmenu">
@@ -258,7 +259,7 @@
                                             {{qcms:ssMenu_Description}} ： SEO简介<br>
                                             {{qcms:ssMenu_Url}} ： 分类链接<br>
                                             {{qcms:ssMenu_HasSub}} ： 是否包含子分类 （1：是 0：否）<br>
-                                            {{qcms:ssMenu_i}} ： 自曾数（从0开始）<br>
+                                            {{qcms:ssMenu_i}} ： 自曾数（从1开始）<br>
                                         </div>
                                     </div>
 
@@ -313,13 +314,40 @@
 {{qcms:List_IsRec}} ： 是否特推（1是， 2：不是）<br>
 {{qcms:List_PinYin}} ： 拼音全拼<br>
 {{qcms:List_PY}} ： 拼音首字母<br>
-{{qcms:List_i}} ： 自曾数（从0开始）<br>
+{{qcms:List_i}} ： 自曾数（从1开始）<br>
 {{qcms:List_Url}} ： 内容地址<br>
 {{qcms:List_CateId}} ： 分类ID<br>
 {{qcms:List_CateName}} ： 分类名<br>
 {{qcms:List_CatePic}} ： 分类图片<br>
 {{qcms:List_CateUrl}} ： 分类地址<br>
 {{qcms:List_PageBar}} ： 分页 (IsPage 必须是1 才生效)<br>
+                                        </div>
+                                    </div>
+
+<div class="my-3 DemoDiv d-none" data="link">
+                                        <h5 >友情链接</h5>
+                                        <div class="mb-2">列表形式调用友情链接数据</div>
+
+<textarea class="form-control text-dark mb-3 p-2" rows="15">
+{{link IsIndex='1'}}
+    <a target="_blank" href="{{qcms:Link_Link}}">{{qcms:Link_Name}}</a>
+{{/link}}
+</textarea>
+                                        <h5 >属性说明</h5>
+                                        <div class="mb-2">
+                                            LinkCateId : 分类ID<br>
+                                            IsIndex : 是否首页 (1:只选首页的链接，2：非首页)<br>
+                                            Row : 数量 (默认取100条)<br>
+                                        </div>
+                                        <h5 >标签说明</h5>
+                                        <div>
+                                            {{qcms:Link_Name}} ： 网站名字<br>
+                                            {{qcms:Link_Logo}} ： 网站Logo<br>
+                                            {{qcms:Link_Link}} ： 链接网站地址<br>
+                                            {{qcms:Link_Info}} ： 网站简介<br>
+                                            {{qcms:Link_Mail}} ： 站长邮箱<br>
+                                            {{qcms:Link_IsIndex}} ： 是否首页<br>
+                                            {{qcms:Link_i}} ： 自增编号 (从1开始)<br>
                                         </div>
                                     </div>
 
@@ -364,7 +392,7 @@
                                             {{qcms:Slide_Title}} ： 图片标题<br>
                                             {{qcms:Slide_Link}} ： 链接地址<br>
                                             {{qcms:Slide_Sort}} ： 排序<br>
-                                            {{qcms:Slide_i}} ： 自曾数（从0开始）<br>
+                                            {{qcms:Slide_i}} ： 自曾数（从1开始）<br>
                                         </div>
                                     </div>
 
@@ -450,6 +478,29 @@
                                             Search ： 替换前得字符串<br>
                                             Replace：替换后得字符串<br>
                                             Str ： 字符串内容<br>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="my-3 DemoDiv d-none" data="photo">
+                                        <h5 >相片标签</h5>
+                                        <div class="mb-2">相片循环列表,只能在相册详情页调用（相册模型专有）</div>
+
+<textarea class="form-control text-dark mb-3 p-2" rows="15">
+{{photo}}
+    <li class="swiper-slide"><img class="w-100 d-block" src="{{qcms:Photo_Path}}"></li>
+{{/photo}}
+</textarea>
+                                        <h5 >属性说明</h5>
+                                        <div class="mb-2">
+                                            无<br>
+
+                                            <h5 >标签说明</h5>
+                                        <div>
+                                            {{qcms:Photo_Path}} ： 图片地址<br>
+                                            {{qcms:Photo_Name}} ： 图片名称<br>
+                                            {{qcms:Photo_Size}} ： 图片大小<br>
+                                        </div>
                                         </div>
 
                                     </div>

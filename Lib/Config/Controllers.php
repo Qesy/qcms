@@ -43,7 +43,7 @@ class Controllers extends Base {
     
     public function tempRun($Type, $Index = '0'){
         $this->initTmp($Type, $Index)->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->photo_Tmp()->menu_Tmp();
-        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
+        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->link_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
         $this->substr_Tmp()->math_Tmp()->replace_Tmp();
         echo($this->Tmp['Compile']);
     }
@@ -54,7 +54,7 @@ class Controllers extends Base {
         $this->Tmp['Compile'] = $this->Tmp['Html'] = $Html;
         //var_dump($this->Tmp['Compile']);exit;
         $this->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->photo_Tmp()->menu_Tmp();
-        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
+        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->link_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
         $this->substr_Tmp()->math_Tmp()->replace_Tmp();
         echo($this->Tmp['Compile']);
     }
@@ -364,6 +364,22 @@ class Controllers extends Base {
         return $this;
     }
     
+    public function link_Tmp(){
+        preg_match_all("/{{link([\s\S.]*?)}}([\s\S.]*?){{\/link}}/i", $this->Tmp['Compile'], $Matches);
+        $Search = array();
+        $Replace = array();
+        foreach($Matches[1] as $k => $v){
+            $Para = self::_getKv($v);
+            if(!isset($Para['LinkCateId'])) $Ret['LinkCateId'] = $Para['LinkCateId'];
+            if(!isset($Para['IsIndex'])) $Ret['IsIndex'] = $Para['IsIndex'];       
+            $Ret['Row'] = !isset($Para['Row']) ? '100' : $Para['Row'];              
+            $Search[] = $Matches[0][$k];
+            $Replace[] = self::_replaceLink($Ret, $Matches[2][$k], 'Link_');
+        }
+        $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
+        return $this;
+    }
+    
     public function list_Tmp(){ // 列表
         preg_match_all("/{{list([\s\S.]*?)}}([\s\S.]*?){{\/list}}/i", $this->Tmp['Compile'], $Matches);
         $Search = array();
@@ -388,7 +404,6 @@ class Controllers extends Base {
             }
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
-        //var_dump($Matches);exit;
         return $this;
     }
     
@@ -516,6 +531,34 @@ class Controllers extends Base {
         $Search = array('{{qcms:'.$Pre.'Name}}', '{{qcms:'.$Pre.'Path}}', '{{qcms:'.$Pre.'Size}}');
         foreach($Photos as $k => $v){
             $Replace = array($v['Name'], $v['Path'], $v['Size']);
+            $Compile .= str_replace($Search, $Replace, $Html);
+        }
+        return $Compile;
+    }
+    
+    private function _replaceLink($Ret, $Html, $Pre){
+        $CondArr = array('State' => 1);
+        if(isset($Ret['LinkCateId'])) $CondArr['LinkCateId'] = $Ret['LinkCateId'];
+        if(isset($Ret['IsIndex'])) $CondArr['IsIndex'] = $Ret['IsIndex'];        
+        $Arr = $this->LinkObj->SetCond($CondArr)->SetSort(array('Sort' => 'ASC', 'LinkId' => 'ASC'))->SetCond($CondArr)->SetLimit(array(0, $Ret['Row']))->SetIsDebug(0)->ExecSelect();
+        $Compile = '';
+        $Search = array();
+        $Search[] =  '{{qcms:'.$Pre.'i}}';
+        $Search[] =  '{{qcms:'.$Pre.'Name}}';
+        $Search[] =  '{{qcms:'.$Pre.'Logo}}';
+        $Search[] =  '{{qcms:'.$Pre.'Link}}';
+        $Search[] =  '{{qcms:'.$Pre.'Info}}';
+        $Search[] =  '{{qcms:'.$Pre.'Mail}}';
+        $Search[] =  '{{qcms:'.$Pre.'IsIndex}}';
+        foreach($Arr as $k => $v){
+            $Replace = array();
+            $Replace[] =  ($k+1);
+            $Replace[] = $v['Name'];
+            $Replace[] = $v['Logo'];
+            $Replace[] = $v['Link'];
+            $Replace[] = $v['Info'];
+            $Replace[] = $v['Mail'];
+            $Replace[] = $v['IsIndex'];
             $Compile .= str_replace($Search, $Replace, $Html);
         }
         return $Compile;

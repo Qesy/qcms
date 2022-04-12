@@ -11,7 +11,7 @@
 {{include filename='component_meta.html'}}
 <body>
     {{include filename='component_header.html'}}
-    <div class=" mb-4">
+    <div class=" mb-40">
         <div class="swiper mySwiper">
             <div class="swiper-wrapper">
                 {{slide SwiperCateId='1'}}
@@ -24,252 +24,69 @@
         </div>
     </div>
 
-    <div class="py-5 text-center ">
+    <div class="text-center  mb-3">
         <div class=" h3 text-black font-weight-bold">产品中心</div>
-        <p class="text-secondary" >无线降噪无线降噪无线降噪无线降噪无线降噪</p>
+        <p class="text-secondary" >产品中心所有产品都是演示数据，非真实销售数据</p>
     </div >
-    <div class="container mb-4">
+    <div class="container mb-40">
         <div class="row text-center">
-            <div class="col-3 py-2 px-2 ">
-                <div class="bg-white p-4">
-                <img class="w-100 my-4 d-block" src="/Static/images/p1.jpg">
-                <div class="text-black mb-1">Xiaomi真无线降噪耳机3</div>
-                <div class="mb-2 text-secondary">静听好声音</div>
-                <p class="text-danger"><span class="mr-2">409 元</span><!----><del class="text-muted"><span class="num">499元</span></del></p>
+            {{list Model='product' Row='8'}}
+            <div class="col-3 p-2">
+                <a href="{{qcms:List_Url}}">
+                <div class="bg-white p-2">
+                <img class="w-100 mb-3 d-block" src="{{qcms:List_Pic}}">
+                <div class="text-black font-weight-bold">{{qcms:List_Title}}</div>
+                <div class="mb-1 text-secondary">{{qcms:List_STitle}}</div>
+                <p class="text-danger"><span class="mr-2">{{qcms:List_Price}} 万元</span><!----><del class="text-muted"><span class="num">{{qcms:List_Price}} 万元</span></del></p>
                 </div>
+                </a>
             </div>
-            <div class="col-3 py-2 px-2">
-                <div class="bg-white p-4">
-                <img class="w-100 my-4 d-block" src="/Static/images/p1.jpg">
-                <div class="text-black mb-1">Xiaomi真无线降噪耳机3</div>
-                <div class="mb-2 text-secondary">静听好声音</div>
-                <p class="text-danger"><span class="mr-2">409 元</span><!----><del class="text-muted"><span class="num">499元</span></del></p>
-                </div>
-            </div>
-            <div class="col-3 py-2 px-2">
-                <div class="bg-white p-4">
-                <img class="w-100 my-4 d-block" src="/Static/images/p1.jpg">
-                <div class="text-black mb-1">Xiaomi真无线降噪耳机3</div>
-                <div class="mb-2 text-secondary">静听好声音</div>
-                <p class="text-danger"><span class="mr-2">409 元</span><!----><del class="text-muted"><span class="num">499元</span></del></p>
-                </div>
-            </div>
-            <div class="col-3 py-2 px-2">
-                <div class="bg-white p-4">
-                <img class="w-100 my-4 d-block" src="/Static/images/p1.jpg">
-                <div class="text-black mb-1">Xiaomi真无线降噪耳机3</div>
-                <div class="mb-2 text-secondary">静听好声音</div>
-                <p class="text-danger"><span class="mr-2">409 元</span><!----><del class="text-muted"><span class="num">499元</span></del></p>
-                </div>
-            </div>
-            <div class="col-3 py-2 px-2">
-                <div class="bg-white p-4">
-                <img class="w-100 my-4 d-block" src="/Static/images/p1.jpg">
-                <div class="text-black mb-1">Xiaomi真无线降噪耳机3</div>
-                <div class="mb-2 text-secondary">静听好声音</div>
-                <p class="text-danger"><span class="mr-2">409 元</span><!----><del class="text-muted"><span class="num">499元</span></del></p>
-                </div>
-            </div>
-            <div class="col-3 py-2 px-2">
-                <div class="bg-white p-4">
-                <img class="w-100 my-4 d-block" src="/Static/images/p1.jpg">
-                <div class="text-black mb-1">Xiaomi真无线降噪耳机3</div>
-                <div class="mb-2 text-secondary">静听好声音</div>
-                <p class="text-danger"><span class="mr-2">409 元</span><!----><del class="text-muted"><span class="num">499元</span></del></p>
-                </div>
-            </div>
-            <div class="col-3 py-2 px-2">
-                <div class="bg-white p-4">
-                <img class="w-100 my-4 d-block" src="/Static/images/p1.jpg">
-                <div class="text-black mb-1">Xiaomi真无线降噪耳机3</div>
-                <div class="mb-2 text-secondary">静听好声音</div>
-                <p class="text-danger"><span class="mr-2">409 元</span><!----><del class="text-muted"><span class="num">499元</span></del></p>
-                </div>
-            </div>
-            <div class="col-3 py-2 px-2">
-                <div class="bg-white p-4">
-                <img class="w-100 my-4 d-block" src="/Static/images/p1.jpg">
-                <div class="text-black mb-1">Xiaomi真无线降噪耳机3</div>
-                <div class="mb-2 text-secondary">静听好声音</div>
-                <p class="text-danger"><span class="mr-2">409 元</span><!----><del class="text-muted"><span class="num">499元</span></del></p>
-                </div>
-            </div>
+            {{/list}}
         </div>
     </div>
 
-    <div class="container mb-4 px-2">
+    <div class="container mb-40 px-2">
         <div class="row">
             <div class="col-8" >
 
-                    <div class=" text-black py-2 font-weight-bold">新闻动态</div>
+                    <div class="h5 text-black py-2 font-weight-bold">新闻动态</div>
                     <div class="bg-white py-2" >
-                        <div class="p-4 border-bottom">
-                            <a class="d-flex" href="#">
-                            <div class="mr-3"><img class="d-block" src="/Static/images/p1.jpg" style="width:120px;"></div>
+                        {{list Model='article' Row='5'}}
+                        <div class="p-4 border-bottom d-flex">
+
+                            <div class="mr-3"><a href="{{qcms:List_Url}}"><img class="d-block " src="{{qcms:List_Pic}}" style="width:120px;"></a></div>
                             <div class="d-flex align-items-start flex-column">
-                                <div class="font-weight-bold mb-1" style="font-size: 1.2rem;">OLED屏新iPad和MacBook Air曝光：京东方供货</div>
-                                <div class="text-secondary">打入iPhone屏幕供应链，意味着京东方的显示品质、良率、产能等已经得到苹果这样苛刻巨头的认可。事实上，按照京东方董事长陈炎顺在2021年报致辞上..</div>
+                                <a href="{{qcms:List_Url}}">
+                                <div class="font-weight-bold mb-1" style="font-size: 1.2rem;">{{qcms:List_Title}}</div>
+                                <div class="text-secondary">{{qcms:List_Summary}}</div>
+                                </a>
                                 <div class="mt-auto">
-                                    <span class="btn btn-default btn-sm mr-2">iPadPro</span>
-                                    <span class="btn btn-default btn-sm mr-2">MacBookAir</span>
-                                    <span class="btn btn-default btn-sm mr-2">手机</span>
-                                    <span class="btn btn-default btn-sm mr-2">平板电脑</span>
-                                    <span class="text-secondary">15小时前</span>
+                                    {{qcms:List_Tag}}
+                                    <span class="text-secondary">{{Date format='special' time='{{qcms:List_TsUpdate}}'}}</span>
                                     </div>
                             </div>
-                            </a>
+
                         </div>
-                        <div class=" p-4 border-bottom">
-                            <a class="d-flex" href="#">
-                            <div class="mr-3"><img class="d-block" src="/Static/images/p1.jpg" style="width:120px;"></div>
-                            <div class="d-flex align-items-start flex-column">
-                                <div class="font-weight-bold mb-1" style="font-size: 1.2rem;">OLED屏新iPad和MacBook Air曝光：京东方供货</div>
-                                <div class="text-secondary">打入iPhone屏幕供应链，意味着京东方的显示品质、良率、产能等已经得到苹果这样苛刻巨头的认可。事实上，按照京东方董事长陈炎顺在2021年报致辞上..</div>
-                                <div class="mt-auto">
-                                    <span class="btn btn-default btn-sm mr-2">iPadPro</span>
-                                    <span class="btn btn-default btn-sm mr-2">MacBookAir</span>
-                                    <span class="btn btn-default btn-sm mr-2">手机</span>
-                                    <span class="btn btn-default btn-sm mr-2">平板电脑</span>
-                                    <span class="text-secondary">15小时前</span>
-                                    </div>
-                            </div>
-                            </a>
-                        </div>
-                        <div class="p-4 border-bottom">
-                            <a class="d-flex" href="#">
-                            <div class="mr-3"><img class="d-block" src="/Static/images/p1.jpg" style="width:120px;"></div>
-                            <div class="d-flex align-items-start flex-column">
-                                <div class="font-weight-bold mb-1" style="font-size: 1.2rem;">OLED屏新iPad和MacBook Air曝光：京东方供货</div>
-                                <div class="text-secondary">打入iPhone屏幕供应链，意味着京东方的显示品质、良率、产能等已经得到苹果这样苛刻巨头的认可。事实上，按照京东方董事长陈炎顺在2021年报致辞上..</div>
-                                <div class="mt-auto">
-                                    <span class="btn btn-default btn-sm mr-2">iPadPro</span>
-                                    <span class="btn btn-default btn-sm mr-2">MacBookAir</span>
-                                    <span class="btn btn-default btn-sm mr-2">手机</span>
-                                    <span class="btn btn-default btn-sm mr-2">平板电脑</span>
-                                    <span class="text-secondary">15小时前</span>
-                                    </div>
-                            </div>
-                            </a>
-                        </div>
-                        <div class="p-4 border-bottom">
-                            <a class="d-flex" href="#">
-                            <div class="mr-3"><img class="d-block" src="/Static/images/p1.jpg" style="width:120px;"></div>
-                            <div class="d-flex align-items-start flex-column">
-                                <div class="font-weight-bold mb-1" style="font-size: 1.2rem;">OLED屏新iPad和MacBook Air曝光：京东方供货</div>
-                                <div class="text-secondary">打入iPhone屏幕供应链，意味着京东方的显示品质、良率、产能等已经得到苹果这样苛刻巨头的认可。事实上，按照京东方董事长陈炎顺在2021年报致辞上..</div>
-                                <div class="mt-auto">
-                                    <span class="btn btn-default btn-sm mr-2">iPadPro</span>
-                                    <span class="btn btn-default btn-sm mr-2">MacBookAir</span>
-                                    <span class="btn btn-default btn-sm mr-2">手机</span>
-                                    <span class="btn btn-default btn-sm mr-2">平板电脑</span>
-                                    <span class="text-secondary">15小时前</span>
-                                    </div>
-                            </div>
-                            </a>
-                        </div>
+                        {{/list}}
                     </div>
-
-
-
             </div>
             <div class="col-4" >
 
-                    <div class="text-black py-2 font-weight-bold">下载中心</div>
+                    <div class="h5 text-black py-2 font-weight-bold">下载中心</div>
                     <div  class="bg-white" >
                         <div class="px-4 pt-4 pb-1">
-                            <div class="mb-3">
-                            <a class="d-flex align-items-center" href="#">
-                            <div class="mr-3"><img class="d-block" src="/Static/images/p1.jpg" style="width:40px; height: 40px;"></div>
+                            {{list Model='down' Row='10'}}
+                            <div class="mb-3 overflow-hidden">
+                            <a class="d-flex align-items-center" href="{{qcms:List_Url}}">
+                            <div class="mr-3"><img class="d-block" src="{{qcms:List_Pic}}" style="width:40px; height: 40px;"></div>
                             <div>
-                                <div style="font-size:1.1rem;">PHP云人才招聘系统网站源码</div>
-                                <div class="text-secondary">100%开源、自主研发、功能强大</div>
+                                <div class="text-nowrap" style="font-size:1.1rem;">{{qcms:List_Title}}</div>
+                                <div class="text-secondary">{{qcms:List_STitle}}</div>
                             </div>
                             </a>
                             </div>
+                            {{/list}}
 
-                            <div class="mb-3">
-                            <a class="d-flex align-items-center" href="#">
-                            <div class="mr-3"><img class="d-block" src="/Static/images/p1.jpg" style="width:40px; height: 40px;"></div>
-                            <div>
-                                <div style="font-size:1.1rem;">PHP云人才招聘系统网站源码</div>
-                                <div class="text-secondary">100%开源、自主研发、功能强大</div>
-                            </div>
-                            </a>
-                            </div>
-
-                            <div class="mb-3">
-                            <a class="d-flex align-items-center" href="#">
-                            <div class="mr-3"><img class="d-block" src="/Static/images/p1.jpg" style="width:40px; height: 40px;"></div>
-                            <div>
-                                <div style="font-size:1.1rem;">PHP云人才招聘系统网站源码</div>
-                                <div class="text-secondary">100%开源、自主研发、功能强大</div>
-                            </div>
-                            </a>
-                            </div>
-
-                            <div class="mb-3">
-                            <a class="d-flex align-items-center" href="#">
-                            <div class="mr-3"><img class="d-block" src="/Static/images/p1.jpg" style="width:40px; height: 40px;"></div>
-                            <div>
-                                <div style="font-size:1.1rem;">PHP云人才招聘系统网站源码</div>
-                                <div class="text-secondary">100%开源、自主研发、功能强大</div>
-                            </div>
-                            </a>
-                            </div>
-                            <div class="mb-3">
-                            <a class="d-flex align-items-center" href="#">
-                            <div class="mr-3"><img class="d-block" src="/Static/images/p1.jpg" style="width:40px; height: 40px;"></div>
-                            <div>
-                                <div style="font-size:1.1rem;">PHP云人才招聘系统网站源码</div>
-                                <div class="text-secondary">100%开源、自主研发、功能强大</div>
-                            </div>
-                            </a>
-                            </div>
-                            <div class="mb-3">
-                            <a class="d-flex align-items-center" href="#">
-                            <div class="mr-3"><img class="d-block" src="/Static/images/p1.jpg" style="width:40px; height: 40px;"></div>
-                            <div>
-                                <div style="font-size:1.1rem;">PHP云人才招聘系统网站源码</div>
-                                <div class="text-secondary">100%开源、自主研发、功能强大</div>
-                            </div>
-                            </a>
-                            </div>
-                            <div class="mb-3">
-                            <a class="d-flex align-items-center" href="#">
-                            <div class="mr-3"><img class="d-block" src="/Static/images/p1.jpg" style="width:40px; height: 40px;"></div>
-                            <div>
-                                <div style="font-size:1.1rem;">PHP云人才招聘系统网站源码</div>
-                                <div class="text-secondary">100%开源、自主研发、功能强大</div>
-                            </div>
-                            </a>
-                            </div>
-                            <div class="mb-3">
-                            <a class="d-flex align-items-center" href="#">
-                            <div class="mr-3"><img class="d-block" src="/Static/images/p1.jpg" style="width:40px; height: 40px;"></div>
-                            <div>
-                                <div style="font-size:1.1rem;">PHP云人才招聘系统网站源码</div>
-                                <div class="text-secondary">100%开源、自主研发、功能强大</div>
-                            </div>
-                            </a>
-                            </div>
-                            <div class="mb-3">
-                            <a class="d-flex align-items-center" href="#">
-                            <div class="mr-3"><img class="d-block" src="/Static/images/p1.jpg" style="width:40px; height: 40px;"></div>
-                            <div>
-                                <div style="font-size:1.1rem;">PHP云人才招聘系统网站源码</div>
-                                <div class="text-secondary">100%开源、自主研发、功能强大</div>
-                            </div>
-                            </a>
-                            </div>
-                            <div class="mb-3">
-                            <a class="d-flex align-items-center" href="#">
-                            <div class="mr-3"><img class="d-block" src="/Static/images/p1.jpg" style="width:40px; height: 40px;"></div>
-                            <div>
-                                <div style="font-size:1.1rem;">PHP云人才招聘系统网站源码</div>
-                                <div class="text-secondary">100%开源、自主研发、功能强大</div>
-                            </div>
-                            </a>
-                            </div>
                         </div>
 
                     </div>
@@ -278,69 +95,31 @@
         </div>
     </div>
 
-    <div class="py-5 text-center ">
+    <div class="mb-3 text-center ">
         <div class=" h3 text-black font-weight-bold">相册展示</div>
         <p class="text-secondary" >无线降噪无线降噪无线降噪无线降噪无线降噪</p>
     </div >
     <div class="container mb-4">
-        <div class="row px-2">
-            <div class="col-3 px-0">
-                <img class="w-100 d-block" src="/Static/images/p1.jpg">
+        <div class="row ">
+            {{list Model='album' Row='6'}}
+            <div class="col-4 p-2">
+                <a href="{{qcms:List_Url}}">
+                <img class="img-thumbnail w-100 d-block" src="{{qcms:List_Pic}}">
+                </a>
             </div>
-            <div class="col-3 px-0">
-                <img class="w-100 d-block" src="/Static/images/p2.jpg">
-            </div>
-            <div class="col-3 px-0">
-                <img class="w-100 d-block" src="/Static/images/p3.jpg">
-            </div>
-            <div class="col-3 px-0">
-                <img class="w-100 d-block" src="/Static/images/p1.jpg">
-            </div>
-            <div class="col-3 px-0">
-                <img class="w-100 d-block" src="/Static/images/p2.jpg">
-            </div>
-            <div class="col-3 px-0">
-                <img class="w-100 d-block" src="/Static/images/p3.jpg">
-            </div>
-            <div class="col-3 px-0">
-                <img class="w-100 d-block" src="/Static/images/p1.jpg">
-            </div>
-            <div class="col-3 px-0">
-                <img class="w-100 d-block" src="/Static/images/p2.jpg">
-            </div>
+            {{/list}}
+
         </div>
     </div>
 
-    <div class="container bg-white px-0 my-4" >
-        <div class="font-weight-bold border-bottom p-3" style="font-size: 1.2rem;">友情链接</div>
-        <div class="p-3">
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
-        <a class="mr-3 mb-2 inline-block" href="#">百度搜索</a>
+    <div class="container px-2 mb-40" >
+        <div class="bg-white">
+            <div class="font-weight-bold border-bottom px-3 py-2" style="font-size: 1.2rem;">友情链接</div>
+            <div class="p-3 bg-white">
+            {{link}}
+            <a class="mr-3 mb-2 inline-block" target="_blank" href="{{qcms:Link_Link}}">{{qcms:Link_Name}}</a>
+            {{/link}}
+            </div>
         </div>
     </div>
 {{include filename='component_footer.html'}}

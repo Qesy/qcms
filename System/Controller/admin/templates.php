@@ -112,6 +112,7 @@ class Templates extends ControllersAdmin {
             'smenu' => '二级菜单',
             'ssmenu' => '三级菜单',
             'list' => '列表标签',
+            'link' => '友情链接',
             'loop' => '万能标签',
             'slide' => '幻灯片',
             'if' => 'if条件标签',
@@ -119,6 +120,7 @@ class Templates extends ControllersAdmin {
             'substr' => '截取字符串',
             'math' => '数学标签',
             'replace' => '替换标签',
+            'photo' => '相片标签',
         );
         $tmp['LabelArr'] = $LabelArr;
         $this->LoadView('admin/templates/builder', $tmp);
