@@ -113,6 +113,11 @@ class common extends ControllersApi {
         $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
         if(empty($ModelRs)) $this->ApiErr(1001);
         $Rs = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $TableRs['Id']))->ExecSelectOne();
+        if($ModelRs['KeyName'] == 'album'){
+            $PhotoRs = $this->PhotosObj->SetCond(array('Id' => $TableRs['Id']))->ExecSelectOne();
+            $Photos = empty($PhotoRs['Photos']) ? array() : json_decode($PhotoRs['Photos'], true);
+            $Rs['Photo'] = $Photos;
+        }
         $this->ApiSuccess($Rs);
     }
     
