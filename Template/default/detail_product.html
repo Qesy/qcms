@@ -12,7 +12,7 @@
 <body>
     {{include filename='component_header.html'}}
     <div class="mb-40" style="height: 380px;">
-        <div style="height: 380px;background-color: rgba(0, 0, 0, 0); background-repeat: no-repeat; background-image: url(/Static/images/banner1.jpg); background-size: cover; background-position: center center; width: 100%; height: 100%; opacity: 1; visibility: inherit;"></div>
+        <div style="height: 380px;background-color: rgba(0, 0, 0, 0); background-repeat: no-repeat; background-image: url({{qcms:Cate_Pic}}); background-size: cover; background-position: center center; width: 100%; height: 100%; opacity: 1; visibility: inherit;"></div>
     </div>
     <div class="container text-dark mb-40">
         <div class="row">
@@ -46,13 +46,15 @@
             </div>
             <div class="col-3" >
                 <div class="bg-white">
-                    <div class="bg-white px-4 pt-4 pb-2">
-                        <div class="font-weight-bold mb-3">热门商品</div>
+                    <div class="bg-white px-4 pt-3 pb-2">
+                        <div class="font-weight-bold mb-2">热门商品</div>
                         {{list Model='product' Row='5'}}
                         <div class="mb-3">
+                            <a href="{{qcms:List_Url}}">
                             <img class="w-100 mb-2 d-block" src="{{qcms:List_Pic}}">
                             <div class="text-black ">{{qcms:List_Title}}</div>
                             <p class="text-danger"><span class="mr-2">{{qcms:List_Price}} 万元</span><!----><del class="text-muted"><span class="num">{{qcms:List_Price}} 万元</span></del></p>
+                            </a>
                         </div>
                         {{/list}}
                     </div>
