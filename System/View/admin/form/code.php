@@ -59,7 +59,7 @@ foreach($Rs['FieldJson'] as $v){
     $DataTmp = empty($v['Data']) ? array() : explode('|', $v['Data']);
     $Data = array();
     foreach($DataTmp as $dv) $Data[$dv] = $dv;
-    $FormRs = array('Name' => $v['Name'], 'Desc' => $v['Comment'],  'Type' => $v['Type'], 'Data' => $Data, 'Value' => $v['Content'], 'Required' => $v['NotNull'], 'Col' => 12);
+    $FormRs = array('Name' => $v['Name'], 'Desc' => $v['Comment'],  'Type' => $v['Type'], 'Data' => $Data, 'Value' => $v['Content'], 'Required' => $v['NotNull'], 'Col' => 12, 'Row' => 6);
     $Html .= $this->BuildObj->FormOne($FormRs).PHP_EOL;
 
 }
