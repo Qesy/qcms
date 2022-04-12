@@ -566,7 +566,7 @@ class Controllers extends Base {
     
     private function _replaceList($Ret, $Html, $Pre){
         $ModelRs = $this->ModelKv[$Ret['Model']];
-        $CondArr = array();
+        $CondArr = array('IsDelete' => 2, 'State' => 1);
         if(!empty($Ret['CateId'])){
             $CateIds = explode(',', $Ret['CateId']);
             $AllSubCateIdArr = array();
