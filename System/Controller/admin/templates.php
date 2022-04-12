@@ -122,6 +122,7 @@ class Templates extends ControllersAdmin {
             'math' => '数学标签',
             'replace' => '替换标签',
             'photo' => '相片标签',
+            'thumb' => '缩略图',
         );
         $tmp['LabelArr'] = $LabelArr;
         $this->LoadView('admin/templates/builder', $tmp);

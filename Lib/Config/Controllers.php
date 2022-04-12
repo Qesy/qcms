@@ -44,7 +44,7 @@ class Controllers extends Base {
     public function tempRun($Type, $Index = '0'){
         $this->initTmp($Type, $Index)->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->photo_Tmp()->menu_Tmp();
         $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->link_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
-        $this->substr_Tmp()->math_Tmp()->replace_Tmp();
+        $this->substr_Tmp()->math_Tmp()->replace_Tmp()->thumb_Tmp();
         echo($this->Tmp['Compile']);
     }
     
@@ -55,7 +55,7 @@ class Controllers extends Base {
         //var_dump($this->Tmp['Compile']);exit;
         $this->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->photo_Tmp()->menu_Tmp();
         $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->link_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
-        $this->substr_Tmp()->math_Tmp()->replace_Tmp();
+        $this->substr_Tmp()->math_Tmp()->replace_Tmp()->thumb_Tmp();
         echo($this->Tmp['Compile']);
     }
 
@@ -129,6 +129,30 @@ class Controllers extends Base {
             $Para = self::_getKv($v);       
             $Len = isset($Para['Len']) ? intval($Para['Len']) : 0;
             $Replace[] = ($Len > 0) ? mb_substr($Para['Str'], 0, $Len) : $Para['Str'];
+        }
+        $this->Tmp['Compile'] = str_replace($Matches[0], $Replace, $this->Tmp['Compile']);
+        return $this;
+    }
+    
+    public function thumb_Tmp(){ //缩略图
+        preg_match_all("/{{thumb([\w\W]*?)\/?}}/i",$this->Tmp['Compile'], $Matches);
+        if(!empty($Matches[1])){
+            $Search = array();
+            $Replace = array();
+            $SysThumbArr = explode('|', $this->SysRs['ThumbSize']);
+            foreach($Matches[1] as $v){
+                $Para = self::_getKv($v);
+                $Width = intval($Para['Width']);
+                $Height = intval($Para['Height']);
+                $Img = trim($Para['Img']);
+                if(!in_array($Width.'x'.$Height, $SysThumbArr) || strpos($Img, 'Static/upload/') === false){
+                    $Replace[] = $Img;
+                }else{
+                    $ext = substr ( strrchr ( $Img, '.' ), 1 );
+                    $NewPath = substr($Img, 0, -(strlen($ext)+1)).'_'.$Width.'_'.$Height.'.'.$ext;
+                    $Replace[] = str_replace('Static/upload/', 'Static/upload/thumb/', $NewPath);
+                }
+            }
         }
         $this->Tmp['Compile'] = str_replace($Matches[0], $Replace, $this->Tmp['Compile']);
         return $this;
@@ -241,7 +265,18 @@ class Controllers extends Base {
                 }
                 foreach($this->Tmp['TableRs'] as $k => $v){
                     $Search[] = '{{qcms:Detail_'.$k.'}}';
-                    $Replace[] = $v;
+                    if($k == 'Content' && $this->SysRs['IsOpenInLink'] == 1){
+                        $InlinkArr = $this->InlinkObj->getList();
+                        $InSearch = $InReplace = array();
+                        foreach($InlinkArr as $iKey => $iVal){
+                            if($iVal['State'] != 1) continue;
+                            $InSearch[] = $iVal['Name'];
+                            $InReplace[] = '<a class="Inlink" href="'.$iVal['Url'].'" '.(($iVal['IsBlank'] == 1) ? 'target="_blank"' : '').'>'.$iVal['Name'].'</a>';
+                        }
+                        $Replace[] = str_replace($InSearch, $InReplace, $v);
+                    }else{
+                        $Replace[] = $v;
+                    }                    
                 }
                 $PreRs = $this->Sys_modelObj->SetTbName('table_'.$this->Tmp['ModelRs']['KeyName'])->SetCond(' WHERE Id < '.$this->Tmp['Index'])->SetLimit(' ORDER BY Id DESC LIMIT 0, 1')->ExecSelectOne();
                 $NextRs = $this->Sys_modelObj->SetTbName('table_'.$this->Tmp['ModelRs']['KeyName'])->SetCond(' WHERE Id > '.$this->Tmp['Index'])->SetLimit(' ORDER BY Id ASC LIMIT 0, 1')->ExecSelectOne();
@@ -268,7 +303,7 @@ class Controllers extends Base {
     }
     
     public function label_Tmp(){ // 自定义标签
-        preg_match_all("/{{label:([\w]*?)\/?}}/i",$this->Tmp['Compile'], $Matches);  
+        preg_match_all("/{{label:([\w\W]*?)\/?}}/i",$this->Tmp['Compile'], $Matches);  
         if(!empty($Matches[1])){
             $Search = array();
             $Replace = array();

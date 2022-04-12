@@ -3,8 +3,8 @@ defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class Home extends Controllers {
 	public function err_Action() {	    
 	    $Url = substr($_SERVER['REQUEST_URI'], 1) ;
-	    $FileArr =  explode('/', $Url);
-	
+	    if(strpos($Url, 'Static/upload/') === false) self::err404();
+	    $FileArr =  explode('/', $Url);	
 	    $FileName = $FileArr[count($FileArr)-1];	
 	    $Ext = end(explode('.', $FileName));	    
 	    if(!in_array($Ext, explode('|', $this->SysRs['ImgViewType']))) self::err404();

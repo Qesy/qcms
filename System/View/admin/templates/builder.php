@@ -451,6 +451,22 @@
 
                                     </div>
 
+                                    <div class="my-3 DemoDiv d-none" data="thumb">
+                                        <h5 >缩略图</h5>
+                                        <div class="mb-2">生成缩略图(系统管理，基本设置，附件设置 里需设置要需要的尺寸)</div>
+
+<textarea class="form-control text-dark mb-3 p-2" rows="15">
+{{thumb Width='240' Height='180' Img='{{qcms:List_Pic}}'}}
+</textarea>
+                                        <h5 >属性说明</h5>
+                                        <div class="mb-2">
+                                            Width : 缩略图宽度<br>
+                                            Height : 缩略图高度<br>
+                                            Img ： 缩略图原图地址 (注：只适用于上传的图片)<br>
+                                        </div>
+
+                                    </div>
+
                                     <div class="my-3 DemoDiv d-none" data="math">
                                         <h5 >数学标签</h5>
                                         <div class="mb-2">实现了 加 减 乘 除 和 求余 功能</div>
