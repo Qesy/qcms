@@ -30,6 +30,20 @@ class Index extends Controllers {
         self::_statFlow();
     }
     
+    public function down_Action($Id = 0){
+        if(empty($Id)) $this->DieErr(1001);
+        $TableRs = $this->TableObj->SetCond(array('Id' => $Id))->ExecSelectOne();
+        if(empty($TableRs)) $this->DieErr(1001);
+        $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
+        $TableRs = $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $TableRs['Id']))->ExecSelectOne();
+
+        if(!empty($TableRs) && $ModelRs['KeyName'] == 'down'){
+            $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Id))->SetUpdate(array('ReadNum' => ($TableRs['ReadNum']+1)))->ExecUpdate();
+        }
+        header('HTTP/1.1 301 Moved Permanently');
+        header('Location: '.$TableRs['Address']);
+    }
+    
     public function muLogin_Action(){
         if($this->SysRs['MultistationIsOpen'] != 1) $this->Err(1055);
         if(!$this->VeriObj->VeriPara($_GET, array('Secret'))) $this->Err(1001);

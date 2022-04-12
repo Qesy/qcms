@@ -239,9 +239,10 @@ class Controllers extends Base {
                 $NextRs = $this->Sys_modelObj->SetTbName('table_'.$this->Tmp['ModelRs']['KeyName'])->SetCond(' WHERE Id > '.$this->Tmp['Index'])->SetLimit(' ORDER BY Id ASC LIMIT 0, 1')->ExecSelectOne();
                 $Search[] = '{{qcms:Detail_Prev}}';
                 $Search[] = '{{qcms:Detail_Next}}';
+                $Search[] = '{{qcms:Detail_DownAddress}}';
                 $Replace[] = empty($PreRs) ? '没有了' : '<a href="'.$this->createUrl('detail', $PreRs['Id'], $PreRs['PinYin'], $PreRs['PY']).'">'.$PreRs['Title'].'</a>';
                 $Replace[] = empty($NextRs) ? '没有了' : '<a href="'.$this->createUrl('detail', $NextRs['Id'], $NextRs['PinYin'], $NextRs['PY']).'">'.$NextRs['Title'].'</a>';
-                
+                $Replace[] = $this->CommonObj->Url(array('index', 'down', $this->Tmp['Index']));
                 break;
             case 'page':
                 $Search = array('{{qcms:crumbs}}');
