@@ -75,7 +75,7 @@ class RedisManage extends ControllersAdmin {
     }
     
     public function empty_Action(){
-        if(Redis::$s_IsOpen != 1) $this->ApiSuccess();
+        if(Redis::$s_IsOpen != 1) $this->Err(1002);
         $Keys = Redis::keys(RedisKey::$s_projectKey.'_*');
         foreach($Keys as $v)Redis::del($v);
         $this->Jump(array('admin', 'redisManage', 'index'), 1888);

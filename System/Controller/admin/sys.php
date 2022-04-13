@@ -135,6 +135,26 @@ class Sys extends ControllersAdmin {
         $this->LoadView('admin/common/edit');
     }
     
+    public function redis_Action(){
+        $Rs = Config::DbConfig('RedisConfig');
+        if(!empty($_POST)){
+            if(!$this->VeriObj->VeriPara($_POST, array('Host', 'Port', 'IsOpen'))) $this->Err(1001);
+            $Ret = $this->setRedis($_POST['Host'], $_POST['Password'], $_POST['Port'], $_POST['IsOpen']);
+            if($Ret['Code'] != 0) $this->Err(1000, $Ret['Msg']);
+            $this->Jump(array('admin', 'sys', 'redis'), 1888);
+        }
+        $Rs['Port'] = empty($Rs['Port']) ? '6379' : $Rs['Port'];
+        $this->BuildObj->Arr = array(
+            array('Name' =>'Host', 'Desc' => '主机Host',  'Type' => 'input', 'Value' => $Rs['Host'], 'Required' => 1, 'Col' => 12),
+            array('Name' =>'Password', 'Desc' => '密码',  'Type' => 'input', 'Value' => $Rs['Password'], 'Required' => 1, 'Col' => 12),
+            array('Name' =>'Port', 'Desc' => '端口',  'Type' => 'input', 'Value' => $Rs['Port'], 'Required' => 1, 'Col' => 12),
+            array('Name' =>'IsOpen', 'Desc' => '开启',  'Type' => 'select', 'Data' => $this->IsArr, 'Value' => $Rs['IsOpen'], 'Required' => 1, 'Col' => 12),
+            //array('Name' =>'Value', 'Desc' => '标签默认值',  'Type' => 'input', 'Value' => '', 'Col' => 12),
+        );
+        $this->BuildObj->Form('post', 'form-row');
+        $this->LoadView('admin/common/edit');
+    }
+    
     public function check_Action(){
         $ModuleArr = array(
             'curl', 'gd', 'mbstring', 'pdo_mysql', 'iconv', 'date', 'hash', 'json', 'session', 'zip', 'PDO', 'SimpleXML' //'redis',

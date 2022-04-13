@@ -853,6 +853,7 @@ class ControllersAdmin extends Controllers {
             'admin/sys/index' => array('Name' => '基本设置', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sys', 'index'))),
             'admin/sys/license' => array('Name' => '系统授权', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sys', 'license'))),
             'admin/sys/check' => array('Name' => '环境检测', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sys', 'check'))),
+            'admin/sys/redis' => array('Name' => 'Redis设置', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sys', 'redis'))),
             'admin/admin/index' => array('Name' => '管理员管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'admin', 'index'))),
             'admin/admin/add' => array('Name' => '添加管理员', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'admin', 'add'))),
             'admin/admin/edit' => array('Name' => '修改管理员', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'admin', 'edit'))),
@@ -1062,6 +1063,7 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/sys/index'),
                 array('Key' => 'admin/sys/license'),
                 array('Key' => 'admin/sys/check'),
+                array('Key' => 'admin/sys/redis'),
                 array('Key' => 'admin/site/index'),
                 array('Key' => 'admin/admin/index'),
                 array('Key' => 'admin/groupAdmin/index'),
@@ -1129,6 +1131,45 @@ class ControllersAdmin extends Controllers {
         $Rs = array('Token' => $Token, 'Domain' => URL_DOMAIN);
         $key = $this->_sslEncrypt(json_encode($Rs) , $pk, 'public');
         return $key;
+    }
+    
+    public function setRedis($Host, $Password, $Port, $IsOpen){ //设置Redis服务接口
+        $Ret = array('Code' => 0, 'Data' => array(), 'Msg' => '');
+        $Extensions = get_loaded_extensions();
+        if($IsOpen == 1){
+            if(!in_array('redis', $Extensions)) {
+                $Ret['Code'] = '1001';
+                $Ret['Msg'] = 'Redis extension does not exist';
+                return $Ret;
+            }
+            try {
+                $redisObj = new \Redis();
+                $redisObj->connect ($Host, $Port);
+                $redisObj->auth ($Password);
+                $redisObj->ping();
+            } catch ( Exception $e ) {
+                $Msg = iconv('gbk', 'utf-8', $e->getMessage());
+                $Ret['Code'] = '1002';
+                $Ret['Msg'] = $e->getMessage();
+                return $Ret;
+            }
+        }
+        $RedisConfig = array(
+            'Host' => $Host,
+            'Password' => $Password,
+            'Port' => $Port,
+            'IsOpen' => $IsOpen,
+        );
+        $ConfIniPath = PATH_LIB.'Config/Config.ini';
+        $ConfRs = parse_ini_file($ConfIniPath, true);
+        $ConfRs['RedisConfig'] = $RedisConfig;
+        $Ret = $this->CommonObj->writeIni($ConfIniPath, $ConfRs, true);
+        if($Ret === false) {
+            $Ret['Code'] = '1001';
+            $Ret['Msg'] = '写入配置文件失败';
+            return $Ret;
+        }
+        return $Ret;
     }
     
     private function _postKey(){

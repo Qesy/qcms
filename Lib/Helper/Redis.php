@@ -18,7 +18,7 @@ class Redis {
 	public static $s_IsOpen = 2;
 	const CACHETIME = 1209600; // 缓存2周
 	private static function __getRedis() {
-	    if (empty( self::$_redis )) {
+	    if (!isset( self::$_redis )) {
 			try {
 			    $RedisConfig = \Config::DbConfig('RedisConfig');			    
 			    self::$s_IsOpen = ($RedisConfig['IsOpen'] == 1) ? 1 : 2;

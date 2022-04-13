@@ -29,40 +29,6 @@ class Config {
     
 }
 
-/* function DbConfig(){ //接口配置
-    $DevArr = array (
-        'Host' => '192.168.1.55',
-        'Accounts' => 'root',
-        'Password' => 'Rongyi1234!@#$',
-        'Name' => 'qcms',
-        'Port' => '3306',
-        'Prefix' => 'qc_',
-        'Charset' => 'utf8'
-    );
-    $ReleaseArr = array (
-        'Host' => '192.168.1.55',
-        'Accounts' => 'Rongyi',
-        'Password' => 'Rongyi1234!@#$',
-        'Name' => 'qcms',
-        'Port' => '3306',
-        'Prefix' => 'qc_',
-        'Charset' => 'utf8'
-    );
-    return (WEB_MODE == 'Dev') ? $DevArr : $ReleaseArr;
-} */
-
-function redisConfig(){
-    $DevArr = array(
-        'Host' => '127.0.0.1',
-        'Pwd'  => '123456',
-    );
-    $ReleaseArr = array(
-        'Host' => '127.0.0.1',
-        'Pwd'  => '123456',
-    );
-    return (WEB_MODE == 'Dev') ? $DevArr : $ReleaseArr;
-}
-
 function SiteConfig() {
     return array (
         'UrlType' => '1',
