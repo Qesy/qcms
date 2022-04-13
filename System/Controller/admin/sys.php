@@ -88,7 +88,7 @@ class Sys extends ControllersAdmin {
                 'Form' => $FormArr[4]
             )
         );
-        if(count($FormArr[10]) > 0){
+        if(isset($FormArr[10]) && count($FormArr[10]) > 0){
             $this->BuildObj->Arr[] = array(
                 'Title' => '自定义变量',
                 'Form' => $FormArr[10]
