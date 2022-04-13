@@ -19,8 +19,10 @@ class Form extends ControllersAdmin {
             $Arr[$k]['StateDefaultView'] = ($v['StateDefault'] == 1) ? '已审核' : '未审核';
             $Arr[$k]['DataView'] = '<a class="btn btn-primary btn-outline btn-sm" href="'.$this->CommonObj->Url(array('admin', 'formData', 'index')).'?'.http_build_query($GET).'">数据管理</a>'; 
             $Arr[$k]['BtnArr'] = array(
-                array('Desc' => '字段管理', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'formField', 'index')), 'Para' => $GET),
+                array('Desc' => '预览地址', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('form', $v['KeyName'])), 'Para' => array(), 'IsBlank' => 1),
                 array('Desc' => '获取代码', 'Color' => 'info', 'Link' => $this->CommonObj->Url(array('admin', 'form', 'code')), 'Para' => $GET),
+                array('Desc' => '字段管理', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'formField', 'index')), 'Para' => $GET),
+                
             );
         }
         $KeyArr = array(

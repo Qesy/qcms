@@ -1,7 +1,7 @@
 <?php
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class Templates extends ControllersAdmin {
-    
+
     public $TempType = array(
         'index' => '首页',
         'list' => '列表 (分类页)',
@@ -20,7 +20,7 @@ class Templates extends ControllersAdmin {
         'main' => '主要',
         'cover' => '封面',
     );
-    
+
     public function index_Action(){
         $TempList = $this->getTemplate();
         $Arr = array();
@@ -29,9 +29,9 @@ class Templates extends ControllersAdmin {
         foreach($TempList as $v){
             $i++;
             $FileArr = explode('_', substr($v, 0, -5));
-            $Desc = $this->TempType[$FileArr[0]];            
+            $Desc = $this->TempType[$FileArr[0]];
             $Desc2 = isset($this->TempModelType[$FileArr[1]]) ? $this->TempModelType[$FileArr[1]] : '未知';
-            $Desc3 = isset($FileArr[2]) ? $FileArr[2] : '';      
+            $Desc3 = isset($FileArr[2]) ? $FileArr[2] : '';
             $FilePath = PATH_TEMPLATE.$this->SysRs['TmpPath'].'/'.$v;
             $Size = $this->CommonObj->Size(filesize($FilePath));
             $Ts = filemtime($FilePath);
@@ -42,13 +42,13 @@ class Templates extends ControllersAdmin {
             'Name' => array('Name' => '文件名', 'Td' => 'th'),
             'Desc' => array('Name' => '描述'),
             'Size' => array('Name' => '大小'),
-            'TsView' => array('Name' => '修改时间'),           
+            'TsView' => array('Name' => '修改时间'),
         );
         $this->BuildObj->PrimaryKey = 'Name';
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, '', 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }
-    
+
     public function add_Action(){
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Type', 'KeyName'))) $this->Err(1001);
@@ -60,13 +60,13 @@ class Templates extends ControllersAdmin {
         }
         $this->BuildObj->Arr = array(
             array('Name' =>'Type', 'Desc' => '模板类型',  'Type' => 'select', 'Data' => $this->TempType, 'Value' => 'index', 'Required' => 1, 'Col' => 6),
-            array('Name' =>'KeyName', 'Desc' => '模板名字 (article_diy) 不需要写.Html',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),  
-            array('Name' =>'Html', 'Desc' => '模板HTML',  'Type' => 'textarea', 'Value' => '', 'Required' => 1, 'Col' => 12, 'Row' => 20),  
+            array('Name' =>'KeyName', 'Desc' => '模板名字 (article_diy) 不需要写.Html',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
+            array('Name' =>'Html', 'Desc' => '模板HTML',  'Type' => 'textarea', 'Value' => '', 'Required' => 1, 'Col' => 12, 'Row' => 20),
         );
         $this->BuildObj->Form('post', 'form-row');
         $this->LoadView('admin/common/edit');
     }
-    
+
     public function edit_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Name'))) $this->Err(1001);
         $FilePath = PATH_TEMPLATE.$this->SysRs['TmpPath'].'/'.trim($_GET['Name']);
@@ -91,7 +91,7 @@ class Templates extends ControllersAdmin {
         $this->BuildObj->Form('post', 'form-row');
         $this->LoadView('admin/common/edit');
     }
-    
+
     public function del_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Name'))) $this->Err(1001);
         $FilePath = PATH_TEMPLATE.$this->SysRs['TmpPath'].'/'.trim($_GET['Name']);
@@ -100,7 +100,7 @@ class Templates extends ControllersAdmin {
         @unlink($FilePath);
         $this->Jump(array('admin', 'templates', 'index'), 1888);
     }
-    
+
     public function builder_Action(){
         $LabelArr = array(
             'include' => '引入页面',
@@ -127,29 +127,29 @@ class Templates extends ControllersAdmin {
         $tmp['LabelArr'] = $LabelArr;
         $this->LoadView('admin/templates/builder', $tmp);
     }
-    
+
     public function test_Action(){
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Html', 'Type'))) $this->DieErr(1001);
             switch ($_POST['Type']){
-                case 'index':                    
-                    $this->tempRunTest($_POST['Type'], 0, $_POST['Html']);
+                case 'index':
+                    echo $this->tempRunTest($_POST['Type'], 0, $_POST['Html']);
                     break;
                 case 'cate':
-                    $this->tempRunTest($_POST['Type'], $_POST['Index'], $_POST['Html']);
+                    echo $this->tempRunTest($_POST['Type'], $_POST['Index'], $_POST['Html']);
                     break;
                 case 'detail':
-                    $this->tempRunTest($_POST['Type'], $_POST['Index'], $_POST['Html']);
+                    echo $this->tempRunTest($_POST['Type'], $_POST['Index'], $_POST['Html']);
                     break;
                 case 'page':
-                    $this->tempRunTest($_POST['Type'], $_POST['Index'], $_POST['Html']);
+                    echo $this->tempRunTest($_POST['Type'], $_POST['Index'], $_POST['Html']);
                     break;
             }
             return;
         }
         $this->LoadView('admin/templates/test');
     }
-    
+
     public function api_Action(){ // 接口演示
         $ApiArr = array(
             'sys' => array('Name' => '获取系统信息', 'Path' => 'api/common/sys', 'Para' => array()),
@@ -191,11 +191,11 @@ class Templates extends ControllersAdmin {
             'swiper' => array('Name' => '获取幻灯片', 'Path' => 'api/common/swiper', 'Para' => array(
                 array('Key' => 'SwiperCateId', 'IsMust' => 1, 'Default' => '1', 'Desc' => '幻灯片ID'),
             )),
-                       
+
         );
-        
+
         $tmp['ApiArr'] = $ApiArr;
         $this->LoadView('admin/templates/api', $tmp);
     }
-    
+
 }

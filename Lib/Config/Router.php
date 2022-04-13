@@ -128,7 +128,6 @@ class Router {
 	    if(strpos($Url, 'page/') !== false){
 	        $UrlPage = 'page/'.$SysObj->getOne('UrlPage')['AttrValue'];
 	        $UrlPageRep = '/^'.str_replace(array('/', '{PageId}', '{PinYin}', '{PY}'), array('\/', '(\d+)','([\w]*?)', '([\w]*?)'), $UrlPage).'$/';
-	        preg_match($UrlPageRep, $Url.$this->_SiteConfig['Extend'], $Matches);
 	        if(preg_match($UrlPageRep, $Url.$this->_SiteConfig['Extend'], $Matches)){ //匹配详情
 	            preg_match_all("/\{([a-zA-Z0-9]+)\}/",$UrlPage, $MatchesSort);
 	            $PageId = 0;
@@ -136,6 +135,19 @@ class Router {
 	                $$v = $Matches[$k+1];
 	            }
 	            return 'index/page/'.$PageId;
+	        }
+	    }
+	    
+	    if(strpos($Url, 'form/') !== false){
+	        $UrlPage = 'form/'.$SysObj->getOne('UrlForm')['AttrValue'];	        
+	        $UrlPageRep = '/^'.str_replace(array('/', '{KeyName}'), array('\/', '([\w\W]*?)'), $UrlPage).'$/';
+	        if(preg_match($UrlPageRep, $Url.$this->_SiteConfig['Extend'], $Matches)){ //匹配详情
+	            preg_match_all("/\{([a-zA-Z0-9]+)\}/",$UrlPage, $MatchesSort);
+	            $KeyName = 0;
+	            foreach($MatchesSort[1] as $k => $v){
+	                $$v = $Matches[$k+1];
+	            }
+	            return 'index/form/'.$KeyName;
 	        }
 	    }
 	    

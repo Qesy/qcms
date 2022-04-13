@@ -1,5 +1,5 @@
-﻿# Host: 192.168.1.55  (Version 5.7.34)
-# Date: 2022-04-13 13:33:21
+﻿# Host: localhost  (Version 5.7.26)
+# Date: 2022-04-13 17:36:36
 # Generator: MySQL-Front 6.1  (Build 1.26)
 
 
@@ -85,7 +85,6 @@ CREATE TABLE `qc_form_form1` (
 # Data for table "qc_form_form1"
 #
 
-INSERT INTO `qc_form_form1` VALUES (10000,11,0,1,1648111577,'老钱','15618323440',''),(10001,11,0,1,1648111581,'老钱','15618323440',''),(10003,11,0,1,1648112214,'777','888',''),(10005,11,0,1,1648885068,'111','222',''),(10006,11,0,1,1648889813,'yyy99','15699',''),(10007,11,0,1,1649752204,'ddd','fff','ddd'),(10008,11,0,1,1649762816,'laoqian','15618323440','123456');
 
 #
 # Structure for table "qc_group_admin"
@@ -104,7 +103,7 @@ CREATE TABLE `qc_group_admin` (
 # Data for table "qc_group_admin"
 #
 
-INSERT INTO `qc_group_admin` VALUES (1,'超级管理员','',1),(2,'频道管理员','/admin/index.html|/admin/sys/license.html|/admin/admin/index.html|/admin/admin/edit.html|/admin/groupAdmin/index.html|/admin/category/index.html|/admin/category/del.html|/admin/category/move.html|/admin/content/view.html|/admin/user/edit.html|/admin/data/highReplace.html|/admin/other.html',1),(3,'信息发布员','admin/sys|admin/sys/index|admin/sys/license|admin/sys/check|admin/admin/index|admin/admin/add|admin/admin/edit|admin/admin/del|admin/groupAdmin/index|admin/groupAdmin/add|admin/groupAdmin/edit|admin/groupAdmin/del|admin/log/operate|admin/log/login|admin/site/index|admin/site/add|admin/site/edit|admin/site/del|admin/category|admin/category/index|admin/category/add|admin/category/edit|admin/page/del|admin/labelCate/index|admin/content|admin/content/recovery|admin/content/view|admin/content/restore|admin/content/tDelete|admin/content/index?ModelId=1|admin/content/add?ModelId=1|admin/content/edit?ModelId=1|admin/content/del?ModelId=3|admin/index/index',1),(7,'ggg','/admin/index.html|/admin/category/index.html|/admin/content/view.html|/admin/user/edit.html',2),(10,'空数据测试','/admin/index.html|/admin/sys/index.html|/admin/sys/check.html|/admin/admin/add.html|/admin/groupAdmin/index.html|/admin/groupAdmin/edit.html',2),(11,'有数据测试','/admin/index.html|/admin/index/qrCode.html|/admin/admin/add.html|/admin/groupAdmin/index.html|/admin/groupAdmin/edit.html',2),(12,'111','',2);
+INSERT INTO `qc_group_admin` VALUES (1,'超级管理员','',1),(2,'频道管理员','/admin/index.html|/admin/sys/license.html|/admin/admin/index.html|/admin/admin/edit.html|/admin/groupAdmin/index.html|/admin/category/index.html|/admin/category/del.html|/admin/category/move.html|/admin/content/view.html|/admin/user/edit.html|/admin/data/highReplace.html|/admin/other.html',1),(3,'信息发布员','admin/sys|admin/sys/index|admin/sys/license|admin/sys/check|admin/admin/index|admin/admin/add|admin/admin/edit|admin/admin/del|admin/groupAdmin/index|admin/groupAdmin/add|admin/groupAdmin/edit|admin/groupAdmin/del|admin/log/operate|admin/log/login|admin/site/index|admin/site/add|admin/site/edit|admin/site/del|admin/category|admin/category/index|admin/category/add|admin/category/edit|admin/page/del|admin/labelCate/index|admin/content|admin/content/recovery|admin/content/view|admin/content/restore|admin/content/tDelete|admin/content/index?ModelId=1|admin/content/add?ModelId=1|admin/content/edit?ModelId=1|admin/content/del?ModelId=3|admin/index/index',1);
 
 #
 # Structure for table "qc_group_user"
@@ -122,7 +121,7 @@ CREATE TABLE `qc_group_user` (
 # Data for table "qc_group_user"
 #
 
-INSERT INTO `qc_group_user` VALUES (1,'注册会员',1),(2,'中级会员',1),(3,'高级会员',1),(4,'新建会员组',2);
+INSERT INTO `qc_group_user` VALUES (1,'注册会员',1),(2,'中级会员',1),(3,'高级会员',1);
 
 #
 # Structure for table "qc_inlink"
@@ -138,7 +137,7 @@ CREATE TABLE `qc_inlink` (
   `State` tinyint(3) NOT NULL DEFAULT '0',
   `Sort` int(11) NOT NULL DEFAULT '99',
   PRIMARY KEY (`InlinkId`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "qc_inlink"
@@ -155,7 +154,7 @@ CREATE TABLE `qc_inlink_cate` (
   `Name` varchar(50) NOT NULL DEFAULT '',
   `Sort` int(9) NOT NULL DEFAULT '0',
   PRIMARY KEY (`InlinkCateId`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "qc_inlink_cate"
@@ -184,7 +183,7 @@ CREATE TABLE `qc_label` (
 # Data for table "qc_label"
 #
 
-INSERT INTO `qc_label` VALUES (1,1,'标签测试','ltexst','<p>12<strong>345</strong>55</p><p>sdsdfs</p>',2,98,2),(4,1,'ere','eee','<p>ertert</p>',2,99,2),(5,2,'yyy','yyy','',2,100,2);
+INSERT INTO `qc_label` VALUES (1,1,'标签测试','ltexst','<p>12<strong>345</strong>55</p><p>sdsdfs</p>',1,98,2);
 
 #
 # Structure for table "qc_label_cate"
@@ -240,7 +239,7 @@ CREATE TABLE `qc_link_cate` (
   `Name` varchar(50) NOT NULL DEFAULT '',
   `Sort` int(9) NOT NULL DEFAULT '0',
   PRIMARY KEY (`LinkCateId`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "qc_link_cate"
@@ -260,13 +259,12 @@ CREATE TABLE `qc_log_login` (
   `Ts` bigint(20) NOT NULL DEFAULT '0',
   `Ip` varchar(20) NOT NULL DEFAULT '',
   PRIMARY KEY (`LogLoginId`)
-) ENGINE=InnoDB AUTO_INCREMENT=32 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=33 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "qc_log_login"
 #
 
-INSERT INTO `qc_log_login` VALUES (1,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36',1647324652,'127.0.0.1'),(2,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36',1647324668,'127.0.0.1'),(3,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36',1647324698,'127.0.0.1'),(4,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36',1647324787,'127.0.0.1'),(5,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36',1647324814,'127.0.0.1'),(6,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36',1647324817,'127.0.0.1'),(7,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36',1647326253,'127.0.0.1'),(8,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36',1647326287,'127.0.0.1'),(9,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36',1647326361,'127.0.0.1'),(10,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36',1647326488,'127.0.0.1'),(11,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36',1647326656,'127.0.0.1'),(12,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36',1647414917,'127.0.0.1'),(13,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36',1647840840,'127.0.0.1'),(14,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.51 Safari/537.36',1647840859,'127.0.0.1'),(15,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36',1648279429,'127.0.0.1'),(16,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36',1648800813,'127.0.0.1'),(17,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36',1648801078,'127.0.0.1'),(18,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36',1648801232,'127.0.0.1'),(19,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36',1649052429,'127.0.0.1'),(20,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36',1649052446,'127.0.0.1'),(21,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36',1649053857,'127.0.0.1'),(22,2,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36',1649056364,'127.0.0.1'),(23,2,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36',1649056825,'127.0.0.1'),(24,2,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36',1649056845,'127.0.0.1'),(25,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36',1649126917,'127.0.0.1'),(26,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/99.0.4844.82 Safari/537.36',1649132298,'127.0.0.1'),(27,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36',1649318634,'127.0.0.1'),(28,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36',1649471891,'127.0.0.1'),(29,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36',1649471991,'127.0.0.1'),(30,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36',1649471992,'127.0.0.1'),(31,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36',1649820118,'127.0.0.1');
 
 #
 # Structure for table "qc_log_operate"
@@ -290,7 +288,6 @@ CREATE TABLE `qc_log_operate` (
 # Data for table "qc_log_operate"
 #
 
-INSERT INTO `qc_log_operate` VALUES (1,1,'admin/sys/index.html','GET','','127.0.0.1',1647432204,0.00,''),(2,1,'admin/admin/index.html','GET','','127.0.0.1',1647432205,0.00,''),(3,1,'admin/groupAdmin/index.html','GET','','127.0.0.1',1647432205,0.00,''),(4,1,'admin/admin/index.html','GET','','127.0.0.1',1647432217,0.00,''),(5,1,'admin/admin/edit.html','GET','UserId=2','127.0.0.1',1647432219,0.00,''),(6,1,'admin/admin/edit.html','GET','UserId=2','127.0.0.1',1647432593,0.00,''),(7,1,'admin/log/operate.html','GET','','127.0.0.1',1647432603,0.00,''),(8,1,'admin/log/operate.html','GET','','127.0.0.1',1647432640,0.00,''),(9,1,'admin/log/operate.html','GET','','127.0.0.1',1647432645,0.00,''),(10,1,'admin/log/operate.html','GET','','127.0.0.1',1647432740,0.00,''),(11,1,'admin/log/operate.html','GET','','127.0.0.1',1647432749,0.00,''),(12,1,'admin/log/login.html','GET','','127.0.0.1',1647432806,0.00,''),(13,1,'admin/log/login.html','GET','','127.0.0.1',1647432845,0.00,''),(14,1,'admin/log/login.html','GET','','127.0.0.1',1647432855,0.00,''),(15,1,'admin/log/login.html','GET','','127.0.0.1',1647432901,0.00,''),(16,1,'admin/log/login.html','GET','','127.0.0.1',1647432913,0.00,''),(17,1,'admin/log/login.html','GET','','127.0.0.1',1647432931,0.00,''),(18,1,'admin/log/login.html','GET','','127.0.0.1',1647432933,0.00,''),(19,1,'admin/log/login.html','GET','','127.0.0.1',1647432980,0.00,''),(20,1,'admin/log/operate.html','GET','','127.0.0.1',1647433695,0.00,''),(21,1,'admin/log/operate.html','GET','','127.0.0.1',1647433711,0.00,''),(22,1,'admin/log/login.html','GET','','127.0.0.1',1647433712,0.00,''),(23,1,'admin/log/operate.html','GET','','127.0.0.1',1647433716,0.00,''),(24,1,'admin/log/operate.html','GET','P=2','127.0.0.1',1647433718,0.00,''),(25,1,'admin/sys/index.html','GET','','127.0.0.1',1647433721,0.00,''),(26,1,'admin/sys/index.html','POST','','127.0.0.1',1647433724,0.00,'');
 
 #
 # Structure for table "qc_page"
@@ -312,7 +309,7 @@ CREATE TABLE `qc_page` (
   `PY` varchar(50) NOT NULL DEFAULT '',
   `Pic` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`PageId`)
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "qc_page"
@@ -374,7 +371,6 @@ CREATE TABLE `qc_site` (
 # Data for table "qc_site"
 #
 
-INSERT INTO `qc_site` VALUES (4,'ddd','http://q6.demo.com/','123456',101,1649132258);
 
 #
 # Structure for table "qc_stat_flow"
@@ -391,7 +387,7 @@ CREATE TABLE `qc_stat_flow` (
 # Data for table "qc_stat_flow"
 #
 
-INSERT INTO `qc_stat_flow` VALUES ('2022-04-01',8),('2022-04-02',29),('2022-04-03',2),('2022-04-04',2),('2022-04-07',198),('2022-04-08',397),('2022-04-09',324),('2022-04-10',278),('2022-04-11',179),('2022-04-12',376),('2022-04-13',2);
+INSERT INTO `qc_stat_flow` VALUES ('2022-04-01',8),('2022-04-02',29),('2022-04-03',2),('2022-04-04',2),('2022-04-07',198),('2022-04-08',397),('2022-04-09',324),('2022-04-10',278),('2022-04-11',179),('2022-04-12',376),('2022-04-13',9);
 
 #
 # Structure for table "qc_swiper"
@@ -425,7 +421,7 @@ CREATE TABLE `qc_swiper_cate` (
   `Code` text NOT NULL,
   `Sort` int(11) NOT NULL DEFAULT '99',
   PRIMARY KEY (`SwiperCateId`)
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "qc_swiper_cate"
@@ -453,7 +449,7 @@ CREATE TABLE `qc_sys` (
 # Data for table "qc_sys"
 #
 
-INSERT INTO `qc_sys` VALUES ('AllowAdminSpace','允许访问管理员空间','1',9,'radio',2006,1),('AllowReg','是否允许注册','1',9,'radio',2001,1),('AllowUploadType','允许上传类型','jpg|jpeg|gif|png|webp|bmp|svg',3,'input',3000,1),('AuditMode','会员注册自动审核','1',9,'radio',2008,1),('CdnHost','Cdn地址','http://www.baidu.com/',3,'input',3013,1),('CdnIsOpen','是否开启CDN','2',3,'radio',3012,1),('Copyright','版权信息','©CopyRight 2002-2022 Q-cms.Cn, All Rights Reserved。',1,'textarea',1009,1),('Description','SEO简介','QCMS网站管理系统',1,'input',1008,1),('Editor','富文本编辑器','ckeditor',2,'select',2011,1),('Email','站长邮箱','admin@admin.com',1,'input',1004,1),('Icp','备案号','沪ICP备08080808号',1,'input',1005,1),('ImgViewType','图片浏览类型','jpg|gif|png',3,'input',3001,1),('IsOpenInLink','是否开启内链','2',2,'radio',2001,1),('Keywords','SEO关键字','QCMS网站管理系统',1,'input',1007,1),('License','授权码','mWhFTP9QxmpzlcKREk9qXx9k36z03q1wnKWjeXa1jzjlnjAOf3bbLtlde+YLrmWw4PkH7RL2vj3pZ1IaJ/5dh7XEP8eCa4lHUj18hDhGS6vaxUCdGz9wvZlLf7P3X2lL7JFup8EDwmtElkMN2hIb++Wskp57ZvFYndJweRbr7FQA4raAMkPIsf1oJaNYaHf7VXamH7gOIT3r3zyB68hFBldodrsMA9sY1H+KYtdVEPDoIpgQei59OyPeax5tpKVKTh319lK2MB4AdBNf3KZYPvzOHcaJeNe4zz8uCmahynL5rGOkBOHzxeACJiE1dp6Cx/DGd9QsyyuE3fUzqHVeTA==',9,'input',9002,1),('Logo','网站Logo','/Static/images/logo.svg',1,'upload',1001,1),('MultistationIsOpen','开启站点管理','1',4,'radio',4001,1),('NotAllowReg','不允许注册名','www,bbs,ftp,mail,user,users,admin,administrator,qcms',9,'input',2005,1),('OpenLog','开启日志','2',2,'radio',2014,1),('OpenRecycle','开启回收站','1',9,'radio',2013,1),('OpenRegDetails','注册需要完成详细资料','2',9,'radio',2002,1),('RegLenMax','注册最大长度','',9,'input',2004,1),('RegLenMin','注册最小长度','',9,'input',2003,1),('Secret','站点秘钥(用于多站点管理和接口API)','123456',4,'input',4002,1),('StatsCode','统计代码','<script type=\"text/javascript\">document.write(unescape(\"%3Cspan id=\'cnzz_stat_icon_1281045441\'%3E%3C/span%3E%3Cscript src=\'https://v1.cnzz.com/stat.php%3Fid%3D1281045441%26show%3Dpic\' type=\'text/javascript\'%3E%3C/script%3E\"));</script>',2,'textarea',2012,1),('ThumbSize','允许缩略图尺寸(240x180|360x120)','240x180',3,'input',3003,1),('TmpIndex','首页模板','index_main.html',1,'select',1002,1),('TmpPath','模板路径','default',2,'select',2010,1),('TmpSearch','搜索页模板','search_default.html',1,'select',1003,1),('UrlDetail','详情地址命名规则','{Id}.html',2,'input',2061,1),('UrlList','分类地址命名规则','list_{CateId}.html',2,'input',2060,1),('UrlPage','单页地址命名规则','page_{PageId}.html',2,'input',2062,1),('Version','版本号','6.0.0',9,'input',9001,1),('WaBeian','网安备案号','',1,'input',1006,1),('WaterMaskFontColor','水印文字颜色','0,0,0',3,'input',3009,1),('WaterMaskFontOpacity','水印透明度','50',3,'input',3010,1),('WaterMaskFontSize','水印文字大小','20',3,'input',3008,1),('WaterMaskIsOpen','是否开启水印','2',3,'radio',3004,1),('WaterMaskPic','水印图片','',3,'upload',3006,1),('WaterMaskPostion','水印位置','5',3,'select',3011,1),('WaterMaskTxt','水印文字','www.q-cms.cn',3,'input',3007,1),('WaterMaskType','水印图片类型','2',3,'radio',3005,1),('WebName','网站名字','QCMS网站管理系统',1,'input',1000,1),('WebOpen','开启网站','1',1,'radio',1010,1);
+INSERT INTO `qc_sys` VALUES ('AllowAdminSpace','允许访问管理员空间','1',9,'radio',2006,1),('AllowReg','是否允许注册','1',9,'radio',2001,1),('AllowUploadType','允许上传类型','jpg|jpeg|gif|png|webp|bmp|svg',3,'input',3000,1),('AuditMode','会员注册自动审核','1',9,'radio',2008,1),('CdnHost','Cdn地址','http://www.baidu.com/',3,'input',3013,1),('CdnIsOpen','是否开启CDN','2',3,'radio',3012,1),('Copyright','版权信息','©CopyRight 2002-2022 Q-cms.Cn, All Rights Reserved。',1,'textarea',1009,1),('Description','SEO简介','QCMS网站管理系统',1,'input',1008,1),('Editor','富文本编辑器','ckeditor',2,'select',2011,1),('Email','站长邮箱','admin@admin.com',1,'input',1004,1),('Icp','备案号','沪ICP备08080808号',1,'input',1005,1),('ImgViewType','图片浏览类型','jpg|gif|png',3,'input',3001,1),('IsOpenInLink','是否开启内链','2',2,'radio',2001,1),('Keywords','SEO关键字','QCMS网站管理系统',1,'input',1007,1),('License','授权码','mWhFTP9QxmpzlcKREk9qXx9k36z03q1wnKWjeXa1jzjlnjAOf3bbLtlde+YLrmWw4PkH7RL2vj3pZ1IaJ/5dh7XEP8eCa4lHUj18hDhGS6vaxUCdGz9wvZlLf7P3X2lL7JFup8EDwmtElkMN2hIb++Wskp57ZvFYndJweRbr7FQA4raAMkPIsf1oJaNYaHf7VXamH7gOIT3r3zyB68hFBldodrsMA9sY1H+KYtdVEPDoIpgQei59OyPeax5tpKVKTh319lK2MB4AdBNf3KZYPvzOHcaJeNe4zz8uCmahynL5rGOkBOHzxeACJiE1dp6Cx/DGd9QsyyuE3fUzqHVeTA==',9,'input',9002,1),('Logo','网站Logo','/Static/images/logo.svg',1,'upload',1001,1),('MultistationIsOpen','开启站点管理','1',4,'radio',4001,1),('NotAllowReg','不允许注册名','www,bbs,ftp,mail,user,users,admin,administrator,qcms',9,'input',2005,1),('OpenLog','开启日志','2',2,'radio',2014,1),('OpenRecycle','开启回收站','1',9,'radio',2013,1),('OpenRegDetails','注册需要完成详细资料','2',9,'radio',2002,1),('RegLenMax','注册最大长度','',9,'input',2004,1),('RegLenMin','注册最小长度','',9,'input',2003,1),('Secret','站点秘钥(用于多站点管理和接口API)','123456',4,'input',4002,1),('StatsCode','统计代码','<script type=\"text/javascript\">document.write(unescape(\"%3Cspan id=\'cnzz_stat_icon_1281045441\'%3E%3C/span%3E%3Cscript src=\'https://v1.cnzz.com/stat.php%3Fid%3D1281045441%26show%3Dpic\' type=\'text/javascript\'%3E%3C/script%3E\"));</script>',2,'textarea',2012,1),('ThumbSize','允许缩略图尺寸(240x180|360x120)','240x180',3,'input',3003,1),('TmpIndex','首页模板','index_main.html',1,'select',1002,1),('TmpPath','模板路径','default',2,'select',2010,1),('TmpSearch','搜索页模板','search_default.html',1,'select',1003,1),('UrlDetail','详情地址命名规则','{Id}.html',2,'input',2061,1),('UrlForm','表单地址命名规则','1',2,'input',2063,1),('UrlList','分类地址命名规则','list_{CateId}.html',2,'input',2060,1),('UrlPage','单页地址命名规则','page_{PageId}.html',2,'input',2062,1),('Version','版本号','6.0.0',9,'input',9001,1),('WaBeian','网安备案号','',1,'input',1006,1),('WaterMaskFontColor','水印文字颜色','0,0,0',3,'input',3009,1),('WaterMaskFontOpacity','水印透明度','50',3,'input',3010,1),('WaterMaskFontSize','水印文字大小','20',3,'input',3008,1),('WaterMaskIsOpen','是否开启水印','2',3,'radio',3004,1),('WaterMaskPic','水印图片','',3,'upload',3006,1),('WaterMaskPostion','水印位置','5',3,'select',3011,1),('WaterMaskTxt','水印文字','www.q-cms.cn',3,'input',3007,1),('WaterMaskType','水印图片类型','2',3,'radio',3005,1),('WebName','网站名字','QCMS网站管理系统',1,'input',1000,1),('WebOpen','开启网站','1',1,'radio',1010,1);
 
 #
 # Structure for table "qc_sys_attr"
@@ -488,13 +484,13 @@ CREATE TABLE `qc_sys_form` (
   `Sort` int(11) NOT NULL DEFAULT '99',
   `State` tinyint(3) NOT NULL DEFAULT '1',
   PRIMARY KEY (`FormId`)
-) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=12 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "qc_sys_form"
 #
 
-INSERT INTO `qc_sys_form` VALUES (11,'测试表单','form1','form_default.html',2,1,'[{\"Name\":\"Name\",\"Comment\":\"\\u540d\\u5b57\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"Data\":\"\"},{\"Name\":\"Phone\",\"Comment\":\"\\u7535\\u8bdd\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"Data\":\"\"},{\"Name\":\"Message\",\"Comment\":\"\\u7559\\u8a00\",\"Type\":\"textarea\",\"Content\":\"\",\"NotNull\":\"1\",\"Data\":\"\"}]',99,1);
+INSERT INTO `qc_sys_form` VALUES (11,'留言反馈','form1','form_default.html',2,1,'[{\"Name\":\"Name\",\"Comment\":\"\\u540d\\u5b57\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"Data\":\"\"},{\"Name\":\"Phone\",\"Comment\":\"\\u7535\\u8bdd\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"Data\":\"\"},{\"Name\":\"Message\",\"Comment\":\"\\u7559\\u8a00\",\"Type\":\"textarea\",\"Content\":\"\",\"NotNull\":\"1\",\"Data\":\"\"}]',99,1);
 
 #
 # Structure for table "qc_sys_model"
@@ -508,7 +504,7 @@ CREATE TABLE `qc_sys_model` (
   `IsSys` tinyint(3) NOT NULL DEFAULT '2',
   `FieldJson` text NOT NULL,
   PRIMARY KEY (`ModelId`)
-) ENGINE=InnoDB AUTO_INCREMENT=15 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "qc_sys_model"
@@ -582,7 +578,7 @@ CREATE TABLE `qc_table_album` (
 # Data for table "qc_table_album"
 #
 
-INSERT INTO `qc_table_album` VALUES (38,0,16,'宝马X5  xDrive 40Li 尊享型M运动套装','','','/Static/upload/20220410/3556252e923c01503.jpg','','',99,'','',1649167983,1649167977,0,0,0,0,'',1,0,0,1,'<p>宝马X5 &nbsp;xDrive 40Li 尊享型M运动套装</p>',2,'',2,1,2,2,2,1,2,'baomax5xdrive40lizunxiangxingmyundongtaozhuang','bmx5xdrive40lizxxmydtz',''),(68,0,16,'梅赛德斯-AMG GT Concept','','','/Static/upload/20220411/55762539082e4fc35.jpg','','',99,'','',1649643635,1649643622,0,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'meisaidesiamggtconcept','msdsamggtconcept',''),(69,0,16,'迈凯伦 Artura  2021款 澳大利亚版','','','/Static/upload/20220411/453625391de3ccfc5.jpg','','',99,'','',1649643983,1649643971,0,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'maikailunartura2021kuanaodaliyaban','mklartura2021kadlyb',''),(70,0,16,'保时捷911  2021款 GT3 澳大利亚版','','','/Static/upload/20220411/3346253932eeda272.jpg','','',99,'','',1649644320,1649644315,3,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'baoshijie9112021kuangt3aodaliyaban','bsj9112021kgt3adlyb',''),(71,0,16,'玛莎拉蒂 总裁  2021款 3.0T S Q4 豪华版','','','/Static/upload/20220411/19262539412b6ab35.jpg','','',99,'','',1649644543,1649644534,0,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'mashaladizongcai2021kuan30tsq4haohuaban','msldzc2021k30tsq4hhb',''),(72,0,16,'宾利 欧陆  2018款 6.0T GT W12','','','/Static/upload/20220411/6166253963c50f731.jpg','','',99,'','',1649644953,1649644942,0,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'binlioulu2018kuan60tgtw12','blol2018k60tgtw12',''),(73,0,16,'兰博基尼 Murcielago  2007款 LP 640','','','/Static/upload/20220411/9166253978d7d2297.jpg','','',99,'','',1649645438,1649645434,0,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'lanbojinimurcielago2007kuanlp640','lbjnmurcielago2007klp640',''),(74,0,16,'特斯拉 Roadster  2019款 创始人系列','','','/Static/upload/20220411/2746253a206c503f4.jpg','','',99,'','',1649648116,1649648111,2,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'tesilaroadster2019kuanchuangshirenxilie','tslroadster2019kcsrxl',''),(75,0,16,'路特斯 Evija  2020款 基本型','','','/Static/upload/20220411/7186253e93431b687.jpg','','',99,'','',1649666338,1649666333,0,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'lutesievija2020kuanjibenxing','ltsevija2020kjbx',''),(76,0,16,'劳斯莱斯 幻影  2018款 6.7T 长轴距版','','','/Static/upload/20220411/8396253ea1eaddb66.jpg','','',99,'','',1649666444,1649666428,1,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'laosilaisihuanying2018kuan67tchangzhoujuban','lslshy2018k67tczjb',''),(77,0,16,'路虎卫士新能源  2022款 110 P400e','','','/Static/upload/20220411/3556253eb27ce9244.jpg','','',99,'','',1649666841,1649666836,3,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'luhuweishixinnengyuan2022kuan110p400e','lhwsxny2022k110p400e',''),(78,0,16,'凯迪拉克XT6  2021款 2.0T 六座四驱豪华型','','','/Static/upload/20220411/1616253ecc9e06668.jpg','','',99,'','',1649667258,1649667252,69,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'kaidilakext62021kuan20tliuzuosiquhaohuaxing','kdlkxt62021k20tlzsqhhx','');
+INSERT INTO `qc_table_album` VALUES (38,0,16,'宝马X5  xDrive 40Li 尊享型M运动套装','','','/Static/upload/20220410/3556252e923c01503.jpg','','',99,'','',1649167983,1649167977,0,0,0,0,'',1,0,0,1,'<p>宝马X5 &nbsp;xDrive 40Li 尊享型M运动套装</p>',2,'',2,1,2,2,2,1,2,'baomax5xdrive40lizunxiangxingmyundongtaozhuang','bmx5xdrive40lizxxmydtz',''),(68,0,16,'梅赛德斯-AMG GT Concept','','','/Static/upload/20220411/55762539082e4fc35.jpg','','',99,'','',1649643635,1649643622,0,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'meisaidesiamggtconcept','msdsamggtconcept',''),(69,0,16,'迈凯伦 Artura  2021款 澳大利亚版','','','/Static/upload/20220411/453625391de3ccfc5.jpg','','',99,'','',1649643983,1649643971,0,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'maikailunartura2021kuanaodaliyaban','mklartura2021kadlyb',''),(70,0,16,'保时捷911  2021款 GT3 澳大利亚版','','','/Static/upload/20220411/3346253932eeda272.jpg','','',99,'','',1649644320,1649644315,3,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'baoshijie9112021kuangt3aodaliyaban','bsj9112021kgt3adlyb',''),(71,0,16,'玛莎拉蒂 总裁  2021款 3.0T S Q4 豪华版','','','/Static/upload/20220411/19262539412b6ab35.jpg','','',99,'','',1649644543,1649644534,0,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'mashaladizongcai2021kuan30tsq4haohuaban','msldzc2021k30tsq4hhb',''),(72,0,16,'宾利 欧陆  2018款 6.0T GT W12','','','/Static/upload/20220411/6166253963c50f731.jpg','','',99,'','',1649644953,1649644942,0,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'binlioulu2018kuan60tgtw12','blol2018k60tgtw12',''),(73,0,16,'兰博基尼 Murcielago  2007款 LP 640','','','/Static/upload/20220411/9166253978d7d2297.jpg','','',99,'','',1649645438,1649645434,3,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'lanbojinimurcielago2007kuanlp640','lbjnmurcielago2007klp640',''),(74,0,16,'特斯拉 Roadster  2019款 创始人系列','','','/Static/upload/20220411/2746253a206c503f4.jpg','','',99,'','',1649648116,1649648111,2,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'tesilaroadster2019kuanchuangshirenxilie','tslroadster2019kcsrxl',''),(75,0,16,'路特斯 Evija  2020款 基本型','','','/Static/upload/20220411/7186253e93431b687.jpg','','',99,'','',1649666338,1649666333,0,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'lutesievija2020kuanjibenxing','ltsevija2020kjbx',''),(76,0,16,'劳斯莱斯 幻影  2018款 6.7T 长轴距版','','','/Static/upload/20220411/8396253ea1eaddb66.jpg','','',99,'','',1649666444,1649666428,1,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'laosilaisihuanying2018kuan67tchangzhoujuban','lslshy2018k67tczjb',''),(77,0,16,'路虎卫士新能源  2022款 110 P400e','','','/Static/upload/20220411/3556253eb27ce9244.jpg','','',99,'','',1649666841,1649666836,3,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'luhuweishixinnengyuan2022kuan110p400e','lhwsxny2022k110p400e',''),(78,0,16,'凯迪拉克XT6  2021款 2.0T 六座四驱豪华型','','','/Static/upload/20220411/1616253ecc9e06668.jpg','','',99,'','',1649667258,1649667252,69,0,0,0,'',1,0,0,1,'',2,'',2,1,2,2,2,1,2,'kaidilakext62021kuan20tliuzuosiquhaohuaxing','kdlkxt62021k20tlzsqhhx','');
 
 #
 # Structure for table "qc_table_article"
@@ -774,7 +770,6 @@ CREATE TABLE `qc_tag` (
 # Data for table "qc_tag"
 #
 
-INSERT INTO `qc_tag` VALUES (6,'牛头人',1,0,0),(7,'鲁班大师',1,0,0),(10,'你坏',1,0,0),(11,'德鲁伊',1,0,0),(12,'宝马',2,0,1649513031),(13,'旅行车',1,0,1649513031),(14,'国产',1,0,1649513031),(15,'奔驰',2,0,1649560021),(16,'荷尔蒙',1,0,1649560021),(17,'X5',1,0,1649560229),(18,'大众',2,0,1649560414),(19,'凌渡L',1,0,1649560414),(20,'沃尔沃',1,0,1649560564),(21,'进口',1,0,1649560564),(22,'XC90',1,0,1649560564),(23,'途昂X',1,0,1649560666),(24,'领克06',1,0,1649560833),(25,'风光MINIEV',1,0,1649561019),(26,'GLB',1,0,1649561259),(27,'五菱',1,0,1649561399),(28,'凯捷280T',1,0,1649561399),(29,'宾利',2,0,1649561557),(30,'飞驰',1,0,1649561557),(31,'奥迪',1,0,1649582443),(32,'奥迪A7L',1,0,1649582443),(33,'阿斯顿·马丁',1,0,1649584049),(34,'阿尔法·罗密欧',1,0,1649584255),(35,'Giulia',1,0,1649584255),(36,'梅赛德斯',1,0,1649587678),(37,'奔驰GLC',1,0,1649587678),(38,'AMG',1,0,1649587678),(39,'轿跑',1,0,1649587678),(40,'比亚迪',1,0,1649588041),(41,'驱逐舰05',1,0,1649588041),(42,'宝马Z4',1,0,1649588705),(43,'东风本田',1,0,1649589178),(44,'本田CR-V',1,0,1649589178),(45,'上汽通用',1,0,1649589422),(46,'别克',1,0,1649589422),(47,'昂科威',1,0,1649589422),(48,'保时捷',1,0,1649589709),(49,'Panamera',1,0,1649589709),(50,'欧陆',1,0,1649590074),(51,'上汽大众',1,0,1649590315),(52,'朗逸',1,0,1649590315),(53,'丰田86',1,0,1649590641),(54,'长安福特',1,0,1649591011),(55,'蒙迪欧',1,0,1649591011),(56,'Adobe',1,0,1649678420),(57,'Photoshop',1,0,1649678420),(58,'VMware',1,0,1649682358),(59,'虚拟机',1,0,1649682358),(60,'腾讯',1,0,1649684688),(61,'QQ',1,0,1649684688),(62,'谷歌',1,0,1649684770),(63,'Chrome',1,0,1649684770),(64,'vscode',1,0,1649684879),(65,'微软',1,0,1649684879),(66,'迅雷',1,0,1649685712),(67,'wps',1,0,1649685778),(68,'office',1,0,1649685778),(69,'爱奇艺',1,0,1649685856),(70,'360安全卫士',1,0,1649685926),(71,'酷狗音乐',1,0,1649685996),(72,'播放器',1,0,1649685996),(73,'抖音',1,0,1649686070),(74,'FileZilla',1,0,1649686262),(75,'ftp客户端',1,0,1649686262);
 
 #
 # Structure for table "qc_tag_map"
@@ -793,7 +788,6 @@ CREATE TABLE `qc_tag_map` (
 # Data for table "qc_tag_map"
 #
 
-INSERT INTO `qc_tag_map` VALUES (12,6,37,1),(13,10,37,1),(14,7,37,1),(15,11,37,1),(16,12,44,1),(17,13,44,1),(18,14,44,1),(19,15,45,1),(20,16,45,1),(21,12,46,1),(22,17,46,1),(23,18,47,1),(24,19,47,1),(25,20,48,1),(26,21,48,1),(27,22,48,1),(28,18,49,1),(29,23,49,1),(30,24,50,1),(31,25,51,1),(32,15,52,1),(33,26,52,1),(34,27,53,1),(35,28,53,1),(36,29,54,1),(37,30,54,1),(38,31,55,2),(39,32,55,2),(40,33,56,2),(41,34,57,2),(42,35,57,2),(43,36,58,2),(44,37,58,2),(45,38,58,2),(46,39,58,2),(47,40,59,2),(48,41,59,2),(49,42,60,2),(50,43,61,2),(51,44,61,2),(52,45,62,2),(53,46,62,2),(54,47,62,2),(55,48,63,2),(56,49,63,2),(57,29,64,2),(58,50,64,2),(59,51,65,2),(60,52,65,2),(61,53,66,2),(62,54,67,2),(63,55,67,2),(64,56,43,4),(65,57,43,4),(66,58,79,4),(67,59,79,4),(68,60,81,4),(69,61,81,4),(70,62,82,4),(71,63,82,4),(72,64,83,4),(73,65,83,4),(74,66,84,4),(75,67,85,4),(76,68,85,4),(77,69,86,4),(78,70,87,4),(79,71,88,4),(80,72,88,4),(81,73,89,4),(82,74,80,4),(83,75,80,4);
 
 #
 # Structure for table "qc_token"
@@ -813,7 +807,6 @@ CREATE TABLE `qc_token` (
 # Data for table "qc_token"
 #
 
-INSERT INTO `qc_token` VALUES ('30f09893fe57a4c30746452fa254f784db4cb1af',1,'muLogin',1649471992,0),('6c574b9d3067bf6e15e7c9faebb1427d393842c6',1,'Web',1649820118,0),('cd55acd1df44e077c7538013dc1cc5b27a45e564',2,'Web',1649056845,0);
 
 #
 # Structure for table "qc_user"
@@ -842,10 +835,9 @@ CREATE TABLE `qc_user` (
   `TsLast` bigint(20) NOT NULL DEFAULT '0',
   `IpLast` varchar(16) NOT NULL DEFAULT '',
   PRIMARY KEY (`UserId`)
-) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "qc_user"
 #
 
-INSERT INTO `qc_user` VALUES (1,18888888888,'管理员','','e10adc3949ba59abbe56e057f20f883e','','',1,'',2,0.00,0,1,0,'',1,1,1,1649820118,'127.0.0.1'),(2,16666666666,'老钱','/Static/upload/20220318/6676234295eb6ebb4.jpg','e10adc3949ba59abbe56e057f20f883e','','',1,'',2,0.00,0,1,0,'',1,3,1,1649056845,'127.0.0.1'),(3,15555555555,'小钱','','e10adc3949ba59abbe56e057f20f883e','','',1,'',2,0.00,0,1,0,'',1,3,1,0,''),(6,15656565656,'会员测试','3','e10adc3949ba59abbe56e057f20f883e','1','4',1,'2',2,0.00,0,2,0,'',3,0,2,0,''),(7,14545454545,'232323','','37693cfc748049e45d87b8c7d8b9aacd','','',2,'',2,0.00,0,1,1647836298,'127.0.0.1',1,0,2,0,'');

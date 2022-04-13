@@ -8,7 +8,9 @@ class Install extends ControllersInstall {
             echo '系统已经安装, 请直接 <a href="'.$this->CommonObj->Url(array('index')).'">登录</a> ！';exit;
         }
         if(!empty($_POST)){
-            if(!$this->VeriObj->VeriPara($_POST, array('Host', 'Name', 'Accounts', 'Password', 'Port'))) $this->Err(1001);
+            if(!$this->VeriObj->VeriPara($_POST, array('Host', 'Name', 'Accounts', 'Password', 'Port', 'Phone', 'RegPassword'))) $this->Err(1001);
+            if(!$this->VeriObj->VeriMobile(trim($_POST['Phone']))) $this->Err(1048);
+            if(trim($_POST['RegPassword']) != trim($_POST['RegPassword2'])) $this->Err(1048);
             try{
                 $ConnRet   = new PDO ( 'mysql:dbname=' . $_POST['Name'] . ';host=' . $_POST['Host'] . ';port='.$_POST['Port'], $_POST['Accounts'], $_POST['Password'],
                     array (PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
@@ -51,7 +53,7 @@ class Install extends ControllersInstall {
                     'Phone' => $_POST['Phone'],
                     'NickName' => '管理员',
                     'Head' => '',
-                    'Password' => md5(trim($_POST['Password'])),
+                    'Password' => md5(trim($_POST['RegPassword'])),
                     'GroupAdminId' => 1,
                     'GroupUserId' => 1,
                     'IsAdmin' => 1,

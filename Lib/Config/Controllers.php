@@ -21,6 +21,7 @@ class Controllers extends Base {
         'TableRs' => array(),
         'PageRs' => array(),
         'ModelRs' => array(),
+        'FormRs' => array(),
     
     );
     public $ModelKv = array();
@@ -45,18 +46,17 @@ class Controllers extends Base {
         $this->initTmp($Type, $Index)->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->photo_Tmp()->menu_Tmp();
         $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->link_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
         $this->substr_Tmp()->math_Tmp()->replace_Tmp()->thumb_Tmp();
-        echo($this->Tmp['Compile']);
+        return $this->Tmp['Compile'];
     }
     
     public function tempRunTest($Type, $Index = '0', $Html = ''){
-        $this->initTmp($Type, $Index);
-        
+        $this->initTmp($Type, $Index);        
         $this->Tmp['Compile'] = $this->Tmp['Html'] = $Html;
         //var_dump($this->Tmp['Compile']);exit;
         $this->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->photo_Tmp()->menu_Tmp();
         $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->link_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
         $this->substr_Tmp()->math_Tmp()->replace_Tmp()->thumb_Tmp();
-        echo($this->Tmp['Compile']);
+        return $this->Tmp['Compile'];
     }
 
     public function initTmp($Type, $Index = '0'){
@@ -68,6 +68,12 @@ class Controllers extends Base {
                 break;
             case 'search':
                 $Path = $this->SysRs['TmpSearch'];
+                break;
+            case 'form':
+                $Rs = $this->Sys_formObj->getOne(trim($Index));
+                if(empty($Rs)) $this->DieErr(1001);
+                $this->Tmp['FormRs'] = $Rs;
+                $Path = $Rs['TempDetail'];
                 break;
             case 'cate':                
                 $CateRs = $this->CategoryObj->getOne($Index);                
@@ -245,6 +251,10 @@ class Controllers extends Base {
                     $Search[] = '{{qcms:Cate_'.$k.'}}';
                     $Replace[] = $v;
                 }                
+                break;
+            case 'form':
+                $Search[] = '{{qcms:FormName}}';
+                $Replace[] = $this->Tmp['FormRs']['Name'];
                 break;
             case 'detail':                
                 $Search = array('{{qcms:crumbs}}');

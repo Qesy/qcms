@@ -53,7 +53,7 @@
 <a href="<?=$this->CommonObj->url(array('admin', 'form', 'index'))?>" class="btn btn-default btn-sm">返回</a>
 
 <?
-$Html = '<form method="post" action="'.$_SERVER['REQUEST_SCHEME'].'://'.URL_DOMAIN.'/index/form.html?KeyName='.$Rs['KeyName'].'">';
+$Html = '<form method="post" action="/index/form/'.$Rs['KeyName'].'.html">';
 
 foreach($Rs['FieldJson'] as $v){
     $DataTmp = empty($v['Data']) ? array() : explode('|', $v['Data']);
