@@ -1,5 +1,4 @@
 <?php
-use Model\QC_Category;
 use Model\QC_Sys;
 
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
