@@ -13,21 +13,21 @@
 
 </head>
 
-<body class="d-flex align-items-center">
-    <div class="container  p-3 install-w" >
+<body class="d-flex align-items-center" style="height: 100vh;">
+    <div class="container  p-3 install-w" style="width: 600px; " >
         <div class="rounded bg-white px-3 py-4">
             <form class="form-signin " method="post" id="InstallForm">
-                <div class="text-center mb-3">
+                <div class="text-center mb-3 mt-4">
                     <svg class="logo mx-3" style="fill: #1572E8!important;width: 98px;height: 24px;" >
                       <use xlink:href="/Static/images/logo.svg#layer"/>
                     </svg>
                 </div>
-                <div class=" mb-3 text-muted text-center install-br">
+                <div class=" mb-4 text-muted text-center install-br">
                     欢迎使用 QCMS V<?=VERSION?> ！现在进行安装
                 </div>
                 <div class="Setp" data-step="0">
 
-                    <div id="CheckList" class="border overflow-auto p-4 install-write scrollbar">
+                    <div id="CheckList" class="border overflow-auto p-3 mb-4 install-write scrollbar" style="height: 400px; ">
 
                     </div>
                     <button type="button" class="btn btn-block my-3 NextBtn" data-step="1" ></button>
