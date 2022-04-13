@@ -120,7 +120,7 @@ class Index extends Controllers {
 	        if(isset($_SERVER['HTTP_REFERER'])) $this->CommonObj->ExecScript('alert("提交成功");location.href="'.$_SERVER['HTTP_REFERER'].'";');
 	        $this->CommonObj->ExecScript('alert("提交成功"); history.back();');
 	    }
-	    $this->ApiErr(1001);
+	    $this->Err(1001);
 	}
 	
 	public function admin_Action(){ //管理员登录
