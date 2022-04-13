@@ -21,7 +21,7 @@ class QC_Swiper extends \Db_pdo {
 	
 	public function getOneByCateId($SwiperId, $SwiperCateId){
 	    $Arr = self::getList($SwiperCateId);
-	    foreach($SwiperCateId as $k => $v){
+	    foreach($Arr as $k => $v){
 	        if($v['SwiperId'] == $SwiperId) return $v;
 	    }
 	    return array();
