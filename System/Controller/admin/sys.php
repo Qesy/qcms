@@ -70,8 +70,7 @@ class Sys extends ControllersAdmin {
             );
             $FormArr[$v['GroupId']][] = array('Name' => $v['Name'], 'Desc' => $v['Info'],  'Type' => $v['AttrType'], 'Data' => $DataArr, 'Value' => $v['AttrValue'], 'Col' => 12);;
         }
-        $this->BuildObj->Arr = array(
-            
+        $this->BuildObj->Arr = array(            
             array(
                 'Title' => '核心设置',
                 'Form' => $FormArr[1]                
@@ -89,6 +88,14 @@ class Sys extends ControllersAdmin {
                 'Form' => $FormArr[4]
             )
         );
+        if(count($FormArr[10]) > 0){
+            $this->BuildObj->Arr[] = array(
+                'Title' => '自定义变量',
+                'Form' => $FormArr[10]
+            );
+        }
+        
+        
         $this->BuildObj->Arr[1]['Form'][] = array('Desc' => '列表地址规则说明',  'Type' => 'html', 'Value' => $UrlListDesc, 'Required' => 1, 'Col' => 4);
         $this->BuildObj->Arr[1]['Form'][] = array('Desc' => '文章地址规则说明',  'Type' => 'html', 'Value' => $UrlDetailDesc, 'Required' => 1, 'Col' => 4);
         $this->BuildObj->Arr[1]['Form'][] = array('Desc' => '单页地址规则说明',  'Type' => 'html', 'Value' => $UrlPageDesc, 'Required' => 1, 'Col' => 4);

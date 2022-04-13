@@ -184,7 +184,7 @@ class Db_pdo extends Db {
 		$update_str = parent::get_sql_update ( $update_arr );
 		$cond_str = parent::get_sql_cond ( $cond_arr );
 		$sql = "UPDATE " . $this->p_dbConfig ['Prefix'] . $tb_name . " SET " . $update_str . $cond_str . "";
-		! $isDebug || var_dump ( $sql );
+		! $isDebug || var_dump ( $sql, $update_arr );
 		$getUpdateArr = !is_array($update_arr) ? array() : self::get_execute_arr($update_arr);
 		$getCondArr = !is_array($update_arr) ? array() : self::get_execute_arr($cond_arr);
 		$getArr = array_merge($getUpdateArr, $getCondArr);
