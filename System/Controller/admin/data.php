@@ -41,9 +41,10 @@ class Data extends ControllersAdmin {
     }
     
     public function highReplace_Action(){
-        $DbConfig = DbConfig();
+        $DbConfig = Config::DbConfig();
         if(!empty($_POST)){
-            if(!$this->VeriObj->VeriPara($_POST, array('TableName', 'Field', 'Search', 'Replace'))) $this->Err(1001);            
+            if(!$this->VeriObj->VeriPara($_POST, array('TableName', 'Field', 'Search', 'Replace'))) $this->Err(1001); 
+            if(in_array($_POST['TableName'], array('qc_user', 'qc_token'))) $this->Err(1048); 
             $Ret = $this->Table_articleObj->SetTbName(substr(trim($_POST['TableName']), strlen($DbConfig['Prefix'])))->SetUpdate('`'.$_POST['Field'].'` = replace (`'.$_POST['Field'].'`, \''.$_POST['Search'].'\', \''.$_POST['Replace'].'\')')->ExecUpdate();
             if($Ret === false) $this->Err(1002);
             $this->Jump(array('admin', 'data', 'highReplace'), 1888);
@@ -51,7 +52,8 @@ class Data extends ControllersAdmin {
         $TableArr = $this->SysObj->query('show tables', array());
         $TableKv = array();
         
-        foreach($TableArr as $v){            
+        foreach($TableArr as $v){       
+            if(in_array($v['Tables_in_'.$DbConfig['Name']], array('qc_user', 'qc_token'))) continue;
             $TableKv[$v['Tables_in_'.$DbConfig['Name']]] = $v['Tables_in_'.$DbConfig['Name']];
         }
         $this->BuildObj->Arr = array(
