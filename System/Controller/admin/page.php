@@ -93,7 +93,8 @@ class Page extends ControllersAdmin {
                         array('Name' =>'Name', 'Desc' => '单页名字',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
                         array('Name' =>'PageCateId', 'Desc' => '分类',  'Type' => 'select', 'Data' => $CateKV, 'Value' => $CateDefaultId, 'Required' => 1, 'Col' => 6),                        
                     array('Name' =>'Pic', 'Desc' => '分类图片',  'Type' => 'upload', 'Value' => '', 'Required' => 0, 'Col' => 12),
-                    array('Name' =>'Content', 'Desc' => '单页内容',  'Type' => 'editor', 'Value' => '', 'Required' => 0, 'Col' => 12),
+                    array('Name' =>'Content', 'Desc' => '单页内容',  'Type' => 'textarea', 'Value' => '', 'Required' => 0, 'Col' => 12, 'Row' => 22, 'Class' => 'Content'),
+                    array('Name' =>'IsEditor', 'Desc' => '加载编辑器',  'Type' => 'hidden', 'Value' => '2', 'Required' => 0, 'Col' => 12),
                 )
             ),
             array(
@@ -109,7 +110,7 @@ class Page extends ControllersAdmin {
             )
             
         );
-        
+        $this->BuildObj->FormFooterBtnArr[] = array('Name' => 'Editor', 'Desc' => '加载编辑器', 'Type' => 'button', 'Class' => 'success');
         $this->PageTitle2 = $this->BuildObj->FormMultipleTitle();
         $this->BuildObj->FormMultiple('post', 'form-row');
         $this->LoadView('admin/common/edit');
@@ -157,7 +158,8 @@ class Page extends ControllersAdmin {
                     array('Name' =>'Name', 'Desc' => '单页名字',  'Type' => 'input', 'Value' => $Rs['Name'], 'Required' => 1, 'Col' => 6),
                     array('Name' =>'PageCateId', 'Desc' => '分类',  'Type' => 'select', 'Data' => $CateKV, 'Value' => $Rs['PageCateId'], 'Required' => 1, 'Col' => 6),
                     array('Name' =>'Pic', 'Desc' => '分类图片',  'Type' => 'upload', 'Value' => $Rs['Pic'], 'Required' => 0, 'Col' => 12),
-                    array('Name' =>'Content', 'Desc' => '单页内容',  'Type' => 'editor', 'Value' => $Rs['Content'], 'Required' => 0, 'Col' => 12),
+                    array('Name' =>'Content', 'Desc' => '单页内容',  'Type' => 'textarea', 'Value' => $Rs['Content'], 'Required' => 0, 'Col' => 12, 'Row' => 22, 'Class' => 'Content'),
+                    array('Name' =>'IsEditor', 'Desc' => '加载编辑器',  'Type' => 'hidden', 'Value' => '2', 'Required' => 0, 'Col' => 12),
                 )
             ),
             array(
@@ -173,7 +175,7 @@ class Page extends ControllersAdmin {
             )
             
         );
-        
+        $this->BuildObj->FormFooterBtnArr[] = array('Name' => 'Editor', 'Desc' => '加载编辑器', 'Type' => 'button', 'Class' => 'success');
         $this->PageTitle2 = $this->BuildObj->FormMultipleTitle();
         $this->BuildObj->FormMultiple('post', 'form-row');
         $this->LoadView('admin/common/edit');
