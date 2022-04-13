@@ -212,7 +212,7 @@ class Db_pdo extends Db {
 	    try{
 	        foreach($Result as $key => $value){
 	            $value=trim($value);
-	            //var_dump($value);
+	            if(ord($value[0]) == 239 && ord($value[1]) == 187 && ord($value[2]) == 191 && $key == 0) $value = substr($value, 3);
 	            if(empty($value) || $value[0]=='#' || $value[0]=='-') continue;
 	            if(preg_match("/\;$/i",$value)){
 	                $query.=$value;
@@ -228,7 +228,7 @@ class Db_pdo extends Db {
 	                $query='';
 	            }else{
 	                $query.= $value;
-	            }	            
+	            }        
 	        }
 	    }catch (PDOException $e){
 	        echo 'Connection failed: ' . $e->getMessage();exit();

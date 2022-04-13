@@ -29,7 +29,7 @@ abstract class Db {
 	 * Name : 构造函数
 	 */
 	public function __construct() {
-	    $this->p_dbConfig = DbConfig ();
+	    $this->p_dbConfig = Config::DbConfig();
 		self::_get_db_config ();
 	}
 	/*
@@ -46,14 +46,10 @@ abstract class Db {
 			return self::$s_db_obj;
 		}
 		try {
-		    if($this->p_dbConfig ['SqlType'] == 'SQLite'){
-		        self::$s_db_obj   = new PDO('sqlite:'.PATH_LIB.'Config/'.$this->p_dbConfig ['Name'].'.db');
-		    }else{
-		          self::$s_db_obj  = new PDO ( 'mysql:dbname=' . $this->p_dbConfig ['Name'] . ';host=' . $this->p_dbConfig ['Host'] . '', $this->p_dbConfig ['Accounts'], $this->p_dbConfig ['Password'], array (
-					PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION 
-			      ) );
-		          self::$s_db_obj ->exec ( "SET NAMES " . $this->p_dbConfig ['Charset'] );
-		    }
+		    self::$s_db_obj  = new PDO ('mysql:dbname=' . $this->p_dbConfig ['Name'] . ';host=' . $this->p_dbConfig ['Host'] . '', $this->p_dbConfig ['Accounts'], $this->p_dbConfig ['Password'], array (
+		        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+		    ));
+		    self::$s_db_obj ->exec ( "SET NAMES utf8" );
 		} catch ( PDOException $e ) {
 			echo 'Connection failed: ' . $e->getMessage ();
 			exit ();

@@ -33,6 +33,73 @@ class Common {
 	    $Query[$Key] = $Val;
 	    return $Query;
 	}
+	
+	public function rrmdir($src) { //删除文件夹
+	    $dir = opendir($src);
+	    while(false !== ( $file = readdir($dir)) ) {
+	        if (( $file != '.' ) && ( $file != '..' )) {
+	            $full = $src . '/' . $file;
+	            if ( is_dir($full) ) {
+	                self::rrmdir($full);
+	            }
+	            else {
+	                unlink($full);
+	            }
+	        }
+	    }
+	    closedir($dir);
+	    return @rmdir($src);
+	}
+	
+	public function readAll ($dir, $Filter = array()){
+	    if(!is_dir($dir)) return false;
+	    $handle = opendir($dir);
+	    $Arr = array();
+	    if($handle){
+	        while(($fl = readdir($handle)) !== false){	 
+	            $temp = $dir.DIRECTORY_SEPARATOR.$fl;
+	            //如果不加  $fl!='.' && $fl != '..'  则会造成把$dir的父级目录也读取出来
+	            if(is_dir($temp) && $fl!='.' && $fl != '..' && !in_array($fl, $Filter)){
+	                $Arr[] = $temp;
+	                $SubArr = self::readAll($temp);
+	                $Arr = array_merge($Arr, $SubArr);
+	            }else{
+	                if($fl!='.' && $fl != '..' && !in_array($fl, $Filter)){
+	                    $Arr[] = $temp;
+	                    //echo '文件：'.$temp.'<br>';
+	                }
+	            }
+	        }
+	    }
+	    return $Arr;
+	}
+	
+	public function writeIni($Path, $Data, $HasSections = false){
+	    $Arr = array();
+	    if($HasSections){
+	        foreach($Data as $k => $v){
+	            $Arr[] = '['.$k.']'.PHP_EOL;
+	            foreach($v as $sk => $sv){
+	                $Arr[] = $sk.'=\''.$sv.'\''.PHP_EOL;
+	            }
+	        }
+	        $Str = implode('', $Arr);
+	        return @file_put_contents($Path, $Str);
+	    }
+	    foreach($Data as $k => $v) $Arr[] = $k.'='.$v.PHP_EOL;
+	    $Str = implode('', $Arr);
+	    return @file_put_contents($Path, $Str);
+	}
+	
+	public function delBOM($Content){	    
+	    $charset[1] = substr($Content, 0, 1);	    
+	    $charset[2] = substr($Content, 1, 1);	    
+	    $charset[3] = substr($Content, 2, 1);	    
+	    if (ord($charset[1]) == 239 && ord($charset[2]) == 187 && ord($charset[3]) == 191) {
+	        return substr($Content, 3);	        
+	    }
+	    return $Content;
+	}
 
 	public function Err($Str){
 	    self::ExecScript('alert("'.$Str.'");window.history.go(-1);');

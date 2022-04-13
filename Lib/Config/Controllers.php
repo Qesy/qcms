@@ -1187,4 +1187,19 @@ class ControllersApi extends Base {
         }
     }
 }
+
+class ControllersInstall extends Base {
+    
+    public function __construct(){
+        $this->CodeObj = \Helper\Code::get_instance();
+        $this->BuildObj = \Helper\Build::get_instance();
+        $this->CookieObj = \Helper\Cookie::get_instance();
+        $this->CurlObj = \Helper\CurlQ::get_instance();
+        $this->VeriObj = \Helper\Veri::get_instance();
+        $this->CommonObj = \Helper\Common::get_instance();
+        $this->UploadObj = \Helper\Upload::get_instance();
+        $this->LanguageArr = require_once PATH_LIB .'Language/Cn/Error'.EXTEND;
+    }
+    
+}
 ?>

@@ -97,6 +97,7 @@ class Router {
 	}
 	
 	private function _UrlConvent($Url){
+	    if(strpos($Url, 'install') === 0) return $Url; //安装文件不处理
 	    $SysObj = QC_Sys::get_instance();
 	    if(strpos($Url, 'cate/') !== false){
 	        $ListUrl = 'cate/'.$SysObj->getOne('UrlList')['AttrValue'];

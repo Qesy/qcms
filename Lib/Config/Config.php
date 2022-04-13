@@ -11,7 +11,25 @@ defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
  * (̅_̅_̅(̲̅(̅_̅_̅_̅_̅_̅_̅_̅()ڪے
  *
  */
-function DbConfig(){ //接口配置
+
+class Config {
+    private static $s_ConfRs = array();
+    
+    public static function DbConfig($GetType = 'DbConfig'){ //接口配置
+        if(!empty(self::$s_ConfRs)) return self::$s_ConfRs[$GetType];
+        $ConfIniPath = PATH_LIB.'Config/Config.ini';    
+        if(!file_exists($ConfIniPath)){
+            Header("HTTP/1.1 303 See Other");
+            Header("Location: /install/index.html");
+            return;
+        }
+        self::$s_ConfRs = parse_ini_file($ConfIniPath, true);
+        return self::$s_ConfRs[$GetType];
+    }
+    
+}
+
+/* function DbConfig(){ //接口配置
     $DevArr = array (
         'Host' => '192.168.1.55',
         'Accounts' => 'root',
@@ -31,7 +49,7 @@ function DbConfig(){ //接口配置
         'Charset' => 'utf8'
     );
     return (WEB_MODE == 'Dev') ? $DevArr : $ReleaseArr;
-}
+} */
 
 function redisConfig(){
     $DevArr = array(
@@ -70,6 +88,6 @@ function autoload($classname) { // -- 自动加载类 --
 }
 
 const WEB_MODE = 'Dev'; //Dev ,Release
-const WEB_TITLE = 'Qesy Framework';
-const VERSION = '1.0.0';
+const WEB_TITLE = 'QCMS';
+const VERSION = '6.0.0';
 ?>
