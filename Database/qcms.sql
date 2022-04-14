@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 14/04/2022 19:25:32
+ Date: 14/04/2022 19:55:31
 */
 
 SET NAMES utf8mb4;
@@ -538,7 +538,7 @@ CREATE TABLE `qc_site`  (
 -- ----------------------------
 DROP TABLE IF EXISTS `qc_stat_flow`;
 CREATE TABLE `qc_stat_flow`  (
-  `Date` date NOT NULL DEFAULT '0000-00-00',
+  `Date` date NOT NULL DEFAULT '1970-01-01',
   `FlowNum` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`Date`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
@@ -1021,7 +1021,7 @@ CREATE TABLE `qc_table_product`  (
   `level` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '级别',
   `energy` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '能源类型',
   `environment` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '环保标准',
-  `marketTime` date NOT NULL DEFAULT '0000-00-00' COMMENT '上市时间',
+  `marketTime` date NOT NULL DEFAULT '1970-01-01' COMMENT '上市时间',
   `maxpower` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '最大功率(kW)',
   `maxtorque` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '最大扭矩(N·m)',
   `engine` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' COMMENT '发动机',
