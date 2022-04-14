@@ -11,8 +11,8 @@
 {{include filename='component_meta.html'}}
 <body>
     {{include filename='component_header.html'}}
-    <div class="mb-40" style="height: 380px;">
-        <div style="height: 380px;background-color: rgba(0, 0, 0, 0); background-repeat: no-repeat; background-image: url({{qcms:Cate_Pic}}); background-size: cover; background-position: center center; width: 100%; height: 100%; opacity: 1; visibility: inherit;"></div>
+    <div class="mb-40 CateBannerPic" >
+        <div style="background-color: rgba(0, 0, 0, 0); background-repeat: no-repeat; background-image: url({{qcms:Cate_Pic}}); background-size: cover; background-position: center center; width: 100%; height: 100%; opacity: 1; visibility: inherit;"></div>
     </div>
     <div class=" text-center mb-3">
         <div class=" h3 text-black font-weight-bold">{{qcms:Cate_Name}}</div>
@@ -21,7 +21,7 @@
     <div class="container mb-40">
         <div class="row px-2">
             {{list Model='album' CateId='{{qcms:Cate_CateId}}' Row='12' IsPage='1'}}
-            <div class="col-4 p-2">
+            <div class="col-12 col-md-4 p-2">
                 <a href="{{qcms:List_Url}}">
                 <img class="img-thumbnail w-100 d-block" src="{{qcms:List_Pic}}">
                 </a>
