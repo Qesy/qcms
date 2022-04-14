@@ -1,7 +1,7 @@
 <?php
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class ModelField extends ControllersAdmin {
-        
+
     public function index_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('ModelId'))) $this->Err(1001);
         $Rs = $this->Sys_modelObj->getOne($_GET['ModelId']);
@@ -28,7 +28,7 @@ class ModelField extends ControllersAdmin {
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, '', 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }
-    
+
     public function add_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('ModelId'))) $this->Err(1001);
         $Rs = $this->Sys_modelObj->SetCond(array('ModelId' => $_GET['ModelId']))->ExecSelectOne();
@@ -41,7 +41,7 @@ class ModelField extends ControllersAdmin {
             if(in_array($_POST['Name'], $this->DefaultField)) $this->Err(1053);
             $NameArr = array_column($Arr, 'Name');
             if(in_array(trim($_POST['Name']), $NameArr)) $this->Err(1004);
-            $DbConfig = DbConfig();
+            $DbConfig = Config::DbConfig();
             $AddField = array('Name' => trim($_POST['Name']), 'Comment' => trim($_POST['Comment']), 'Type' => trim($_POST['Type']), 'Content' => trim($_POST['Content']), 'NotNull' => $_POST['NotNull'], 'IsList' => $_POST['IsList'], 'Data' => trim($_POST['Data']));
             $Arr[] = $AddField;
             $FieldType = 'varchar(255)';
@@ -71,7 +71,7 @@ class ModelField extends ControllersAdmin {
             $this->Sys_modelObj->cleanList();
             $this->Jump(array('admin', 'modelField', 'index'), 1888);
         }
-        
+
         $this->BuildObj->Arr = array(
             array('Name' =>'Comment', 'Desc' => '字段说明',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
             array('Name' =>'Name', 'Desc' => '字段名 (只能英文和数字)',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 3),
@@ -87,7 +87,7 @@ class ModelField extends ControllersAdmin {
         $this->BuildObj->Form('post', 'form-row');
         $this->LoadView('admin/common/edit');
     }
-    
+
     public function edit_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('ModelId'))) $this->Err(1001);
         if(!isset($_GET['Index'])) $this->Err(1001);
@@ -97,7 +97,7 @@ class ModelField extends ControllersAdmin {
         $Index = intval($_GET['Index']);
         $FieldRs = $Arr[$Index];
         if(!isset($Arr[$Index])) $this->Err(1048);
-        $DbConfig = DbConfig();
+        $DbConfig = Config::DbConfig();
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Comment', 'Type'))) $this->Err(1001);
             $AddField = array('Name' => trim($FieldRs['Name']), 'Comment' => trim($_POST['Comment']), 'Type' => trim($_POST['Type']), 'Content' => trim($_POST['Content']), 'NotNull' => $_POST['NotNull'], 'IsList' => $_POST['IsList'], 'Data' => trim($_POST['Data']));
@@ -133,7 +133,7 @@ class ModelField extends ControllersAdmin {
         $this->BuildObj->Arr = array(
             array('Name' =>'Comment', 'Desc' => '字段说明',  'Type' => 'input', 'Value' => $FieldRs['Comment'], 'Required' => 1, 'Col' => 6),
             array('Name' =>'Name', 'Desc' => '字段名 (只能英文和数字)',  'Type' => 'input', 'Value' => $FieldRs['Name'], 'Disabled' => 1, 'Col' => 3),
-            
+
             array('Name' =>'Type', 'Desc' => '字段类型',  'Type' => 'select', 'Data' => $this->FieldArr, 'Value' => $FieldRs['Type'], 'Required' => 1, 'Col' => 3),
             array('Name' =>'Content', 'Desc' => '默认值',  'Type' => 'textarea', 'Value' => $FieldRs['Content'], 'Required' => 0, 'Col' => 12, 'Row' => 4, 'Class' => 'Content'),
             array('Name' =>'Data', 'Desc' => '选择值(数据类型为select、radio、checkbox 时填写)',  'Type' => 'input', 'Value' => $FieldRs['Data'], 'Required' => 0, 'Col' => 12),
@@ -146,7 +146,7 @@ class ModelField extends ControllersAdmin {
         $this->BuildObj->Form('post', 'form-row');
         $this->LoadView('admin/common/edit');
     }
-    
+
     public function del_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('ModelId'))) $this->Err(1001);
         if(!isset($_GET['Index'])) $this->Err(1001);
@@ -155,7 +155,7 @@ class ModelField extends ControllersAdmin {
         $Arr = empty($Rs['FieldJson']) ? array() : json_decode($Rs['FieldJson'], true);
         $Index = intval($_GET['Index']);
         if(!isset($Arr[$Index])) $this->Err(1048);
-        $DbConfig = DbConfig();
+        $DbConfig = Config::DbConfig();
         $FieldRs = $Arr[$Index];
         array_splice($Arr, $Index, 1);
         $FieldArr = $this->Sys_modelObj->query('SHOW FULL COLUMNS FROM `'.$DbConfig['Prefix'].'table_'.$Rs['KeyName'].'`', array());
@@ -175,6 +175,6 @@ class ModelField extends ControllersAdmin {
         $this->Sys_modelObj->cleanList();
         $this->Jump(array('admin', 'modelField', 'index'), 1888);
     }
-    
-    
+
+
 }

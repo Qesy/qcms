@@ -17,7 +17,7 @@ class Db_pdo extends Db {
     public $TableName;
     public $PrimaryKey;
 	public static $_instance = array ();
-	
+
 	public static function get_instance() {
 		$classFullName = get_called_class();
 		if (! isset ( self::$_instance [$classFullName] ) ) {
@@ -26,7 +26,7 @@ class Db_pdo extends Db {
 		}
 		return self::$_instance [$classFullName];
 	}
-	
+
 	public function getOne($PrimaryId){
 	    $key = RedisKey::Table_HM($this->TableName, $PrimaryId);
 	    if(Redis::$s_IsOpen == 1 && Redis::exists($key)) return Redis::hGetAll($key);
@@ -34,13 +34,13 @@ class Db_pdo extends Db {
 	    if(Redis::$s_IsOpen == 1 && !empty($Rs)) Redis::hMset($key, $Rs);
 	    return $Rs;
 	}
-	
+
 	public function clean($PrimaryId){
 	    if(Redis::$s_IsOpen != 1) return;
 	    $key = RedisKey::Table_HM($this->TableName, $PrimaryId);
 	    Redis::del($key);
 	}
-	
+
 	public function SetCond($Cond = array()) {
 		$this->sqlSetArr ['Cond'] = $Cond;
 		return $this;
@@ -56,7 +56,7 @@ class Db_pdo extends Db {
 	public function SetTable(){
 	    $this->sqlSetArr ['TbName'] = $this->TableName;
 	    return $this;
-	}	
+	}
 	public function SetTbName($TbName) {
 		$this->sqlSetArr ['TbName'] = $TbName;
 		return $this;
@@ -91,7 +91,7 @@ class Db_pdo extends Db {
 	public function ExecSelectAll(&$count = 0) {
 		return self::selectAll ( $this->sqlSetArr ['Cond'], $this->sqlSetArr ['Field'], $this->sqlSetArr ['TbName'], $this->sqlSetArr ['Index'], $this->sqlSetArr ['Limit'], $this->sqlSetArr ['Sort'], $this->sqlSetArr ['IsDebug'], $count );
 	}
-	public function ExecSelect() {	    
+	public function ExecSelect() {
 		return self::select ( $this->sqlSetArr ['Cond'], $this->sqlSetArr ['Field'], $this->sqlSetArr ['TbName'], $this->sqlSetArr ['Index'], $this->sqlSetArr ['Limit'], $this->sqlSetArr ['Sort'], 0, $this->sqlSetArr ['IsDebug'] );
 	}
 	public function ExecInsert() {
@@ -125,7 +125,7 @@ class Db_pdo extends Db {
 		    }
 		}
 		$sql = "SELECT " . $field . " FROM " . $this->p_dbConfig ['Prefix'] . $tb_name . $this->get_sql_cond ( $cond_arr ) . $sort_str . $limit_str . "";
-		$getArr = is_array($cond_arr) ? $this->get_execute_arr($cond_arr) : array();		
+		$getArr = is_array($cond_arr) ? $this->get_execute_arr($cond_arr) : array();
 		if($isDebug){
 		    var_dump ( $sql );
 		    var_dump($getArr);
@@ -205,7 +205,7 @@ class Db_pdo extends Db {
 		$getArr = $this->get_execute_arr($cond_arr);
 		return $this->exec ( $sql, $getArr );
 	}
-	
+
 	public function ImportSql($SqlPath){ //导入库
 	    $Result = file($SqlPath);
 	    $query = '';
@@ -223,21 +223,21 @@ class Db_pdo extends Db {
 	                    $query .= $extra;
 	                }elseif(preg_match("/^INSERT/i",$query)){
 	                    $query='REPLACE '.substr($query,6);
-	                }	
+	                }
 	                self::exec($query, array());
 	                $query='';
 	            }else{
 	                $query.= $value;
-	            }        
+	            }
 	        }
 	    }catch (PDOException $e){
 	        echo 'Connection failed: ' . $e->getMessage();exit();
 	    }
 	    return true;
 	}
-	
+
 	public function ExportSql(){ //导出库
-	    $DbConf = DbConfig();
+	    $DbConf = Config::DbConfig();
 	    $Tables = $this->query('SHOW tables', array());
 	    $TableArr = array();
 	    $Sql = '';
@@ -247,9 +247,9 @@ class Db_pdo extends Db {
 	    }
 	    return $Sql;
 	}
-	
+
 	public function Data2Sql($Table, $Prefix){ //导出表
-	    $DbConf = DbConfig();
+	    $DbConf = Config::DbConfig();
 	    $TableFullName = $Prefix.$Table;
 	    $tabledump = "DROP TABLE IF EXISTS `".$TableFullName."`;\n";
 	    $createtable = self::query("SHOW CREATE TABLE $TableFullName", array(), 1);
@@ -259,7 +259,7 @@ class Db_pdo extends Db {
 	    foreach($Arr as $v){
 	        $tabledump .= "INSERT INTO `".$TableFullName."` VALUES('".implode('\',\'', $v)."');\n";
 	    }
-	    return $tabledump."\n";	    
+	    return $tabledump."\n";
 	}
 }
 ?>

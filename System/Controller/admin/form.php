@@ -17,12 +17,12 @@ class Form extends ControllersAdmin {
             $Arr[$k]['SortView'] = '<input class="form-control SortInput" type="text" data-type="form" data-index="'.$v['FormId'].'" value="'.$v['Sort'].'"/>';
             $Arr[$k]['IsLoginView'] = ($v['IsLogin'] == 1) ? '需登录' : '无需登录';
             $Arr[$k]['StateDefaultView'] = ($v['StateDefault'] == 1) ? '已审核' : '未审核';
-            $Arr[$k]['DataView'] = '<a class="btn btn-primary btn-outline btn-sm" href="'.$this->CommonObj->Url(array('admin', 'formData', 'index')).'?'.http_build_query($GET).'">数据管理</a>'; 
+            $Arr[$k]['DataView'] = '<a class="btn btn-primary btn-outline btn-sm" href="'.$this->CommonObj->Url(array('admin', 'formData', 'index')).'?'.http_build_query($GET).'">数据管理</a>';
             $Arr[$k]['BtnArr'] = array(
                 array('Desc' => '预览地址', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('form', $v['KeyName'])), 'Para' => array(), 'IsBlank' => 1),
                 array('Desc' => '获取代码', 'Color' => 'info', 'Link' => $this->CommonObj->Url(array('admin', 'form', 'code')), 'Para' => $GET),
                 array('Desc' => '字段管理', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'formField', 'index')), 'Para' => $GET),
-                
+
             );
         }
         $KeyArr = array(
@@ -30,7 +30,7 @@ class Form extends ControllersAdmin {
             'Name' => array('Name' => '标签名', 'Td' => 'th'),
             'IsLoginView' => array('Name' => '是否需登录', 'Td' => 'th'),
             'StateDefaultView' => array('Name' => '数据默认状态', 'Td' => 'th'),
-            
+
             //'Url' => array('Name' => '访问地址', 'Td' => 'th', 'Style' => 'width:400px;'),
             'State' => array('Name' => '状态', 'Td' => 'th', 'Type' => 'Switch'),
             'DataView' => array('Name' => '数据管理', 'Td' => 'th'),
@@ -52,7 +52,7 @@ class Form extends ControllersAdmin {
             if(!$this->VeriObj->IsPassword($_POST['KeyName'], 1, 30)) $this->Err(1048);
             $Count = $this->Sys_formObj->SetCond(array('KeyName' => trim($_POST['KeyName'])))->SetField('COUNT(*) AS c')->ExecSelectOne();
             if($Count['c'] > 0) $this->Err(1004);
-            $DbConfig = DbConfig();
+            $DbConfig = Config::DbConfig();
             try{
                 DB::$s_db_obj->beginTransaction();
                 $this->Sys_formObj->SetInsert(array(
@@ -75,7 +75,6 @@ class Form extends ControllersAdmin {
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
                 DB::$s_db_obj->rollBack();
-                var_dump($e->getMessage());exit;
                 $this->Err(1002);
             }
 
@@ -127,7 +126,7 @@ class Form extends ControllersAdmin {
         if(!$this->VeriObj->VeriPara($_GET, array('FormId'))) $this->Err(1001);
         $Rs = $this->Sys_formObj->SetCond(array('FormId' => $_GET['FormId']))->ExecSelectOne();
         if(empty($Rs)) $this->Err(1003);
-        $DbConfig = DbConfig();
+        $DbConfig = Config::DbConfig();
         $TableArr = $this->SysObj->query('show tables', array());
         $TableNameArr = array_column($TableArr, 'Tables_in_'.$DbConfig['Name']);
         if(in_array($DbConfig['Prefix'].'form_'.$Rs['KeyName'], $TableNameArr)){
