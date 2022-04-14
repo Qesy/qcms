@@ -13,6 +13,9 @@ class PageCate extends ControllersAdmin {
             'SortView' => array('Name' => '排序', 'Td' => 'th', 'Style' => 'width:100px;'),
         );
         $this->BuildObj->PrimaryKey = 'PageCateId';
+        $this->BuildObj->TableTopBtnArr = array(
+            array('Desc' => '返回', 'Link' => $this->CommonObj->Url(array('admin', 'page', 'index')), 'Class' => 'default'),
+        );
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, '', 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }

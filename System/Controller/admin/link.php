@@ -70,10 +70,10 @@ class Link extends ControllersAdmin {
         }
         $CateArr = $this->Link_cateObj->getList();
         $CateKV = array_column($CateArr, 'Name', 'LinkCateId');
-
+        $CateDefaultId = $CateArr[0]['LinkCateId'];
         $this->BuildObj->Arr = array(
             array('Name' =>'Name', 'Desc' => '网站名字',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
-            array('Name' =>'LinkCateId', 'Desc' => '分类',  'Type' => 'select', 'Data' => $CateKV, 'Value' => '', 'Required' => 1, 'Col' => 3),
+            array('Name' =>'LinkCateId', 'Desc' => '分类',  'Type' => 'select', 'Data' => $CateKV, 'Value' => $CateDefaultId, 'Required' => 1, 'Col' => 3),
             array('Name' =>'Mail', 'Desc' => '站长邮箱',  'Type' => 'input', 'Value' => '', 'Required' => 0, 'Col' => 3),
             array('Name' =>'Link', 'Desc' => '网站地址',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 12),
             array('Name' =>'Logo', 'Desc' => '网站Logo',  'Type' => 'upload', 'Value' => '', 'Required' => 0, 'Col' => 12),            
