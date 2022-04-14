@@ -5,7 +5,7 @@ class Install extends ControllersInstall {
     public function index_Action(){
         $ConfIniPath = PATH_LIB.'Config/Config.ini';
         if(file_exists($ConfIniPath)){
-            echo '系统已经安装, 请直接 <a href="'.$this->CommonObj->Url(array('index')).'">登录</a> ！';exit;
+            echo '系统已经安装, 请直接 <a href="'.$this->CommonObj->Url(array('index', 'admin')).'">登录</a> ！';exit;
         }
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Host', 'Name', 'Accounts', 'Password', 'Port', 'Phone', 'RegPassword'))) $this->Err(1001);

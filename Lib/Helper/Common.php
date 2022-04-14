@@ -105,7 +105,7 @@ class Common {
 	    self::ExecScript('alert("'.$Str.'");window.history.go(-1);');
 	}
 
-	public function Success($Url, $Str = ''){
+	public function Success($Url, $Str = ''){	    
 	    $GetStr = empty($_GET) ? '' : '?'.http_build_query($_GET);
 	    if(!empty($Str)){
 	        self::ExecScript('alert("'.$Str.'"); window.location.href="'.$Url.$GetStr.'"');
