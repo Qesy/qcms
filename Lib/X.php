@@ -11,6 +11,7 @@ defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
  * (̅_̅_̅(̲̅(̅_̅_̅_̅_̅_̅_̅_̅()ڪے
  *
  */
+if(version_compare ( PHP_VERSION, "5.6", "<" ) || version_compare ( PHP_VERSION, "7.4", ">=" )) die ( "Version error : PHP7.4 > QCMS > PHP5.6 !!!" );
 require PATH_LIB . 'Config/Base' . EXTEND;
 require PATH_LIB . 'Config/Controllers' . EXTEND;
 require PATH_LIB . 'Config/Db' . EXTEND;
@@ -22,8 +23,6 @@ header("Content-type: text/html; charset=utf-8");
 header("Server: QCMS", true);
 session_set_cookie_params ( 24 * 3600 );
 session_start ();
-if(version_compare ( PHP_VERSION, "5.6", "<" ) || version_compare ( PHP_VERSION, "7.4", ">=" )){
-    die ( "Version error : PHP7.4 > QCMS > PHP5.6 !!!" );
-}
+
 Router::get_instance ();
 ?>
