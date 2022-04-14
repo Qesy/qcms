@@ -257,7 +257,7 @@ class Db_pdo extends Db {
 	    $tabledump .= $createtable['Create Table'].";\n\n";
 	    $Arr = self::SetTbName($Table)->ExecSelect();
 	    foreach($Arr as $v){
-	        $tabledump .= "INSERT INTO `".$TableFullName."` VALUES('".implode('\',\'', $v)."');\n";
+	        $tabledump .= "INSERT INTO `".$TableFullName."` VALUES('".implode('\',\'', str_replace(array('\'', '"'), array('\\\'', '\"'), $v) )."');\n";
 	    }
 	    return $tabledump."\n";
 	}
