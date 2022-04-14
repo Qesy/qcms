@@ -38,6 +38,7 @@ class Home extends Controllers {
 	}
 	
     public function build_Action(){
+        if(WEB_MODE != 'Dev') return;
         $DbConfig = DbConfig ();
 	    $Pre = $DbConfig['Prefix'];
 	    $PdoObj = Db_pdo::get_instance();
