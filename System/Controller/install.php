@@ -32,10 +32,7 @@ class Install extends ControllersInstall {
                     'Host' => '',
                     'Password' => '',
                     'Port' => '',
-                ),
-                'Version' => array(
-                    'Number' => VERSION
-                ),
+                )
             );
             $Ret = $this->CommonObj->writeIni($ConfIniPath, $Data, true);
             if($Ret === false) $this->Err(1002);
