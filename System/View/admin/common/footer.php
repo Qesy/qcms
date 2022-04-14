@@ -13,7 +13,7 @@
             </ul>
         </div>
         <div class="col-sm-7 text-right">
-            <p>Copyright &copy; 2022 RedCms.Net All rights reserved.</p>
+            <p>Copyright &copy; 2022 <?=WEB_TITLE?> All rights reserved.</p>
             <span class="d-none"><script type="text/javascript" src="https://v1.cnzz.com/z_stat.php?id=1281045441&web_id=1281045441"></script></span>
         </div>
     </div>

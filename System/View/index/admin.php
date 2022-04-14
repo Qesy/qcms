@@ -53,7 +53,7 @@
 
             </form>
         </div>
-        <p class="my-4 text-white" style="text-align: center;"> Copyrignt &copy; 2022 RedCms
+        <p class="my-4 text-white" style="text-align: center;"> Copyrignt &copy; 2022 <?=WEB_TITLE?>
         </p>
     </div>
 </body>
