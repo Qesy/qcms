@@ -106,10 +106,11 @@ class Common {
 	}
 
 	public function Success($Url, $Str = ''){
+	    $GetStr = empty($_GET) ? '' : '?'.http_build_query($_GET);
 	    if(!empty($Str)){
-	        self::ExecScript('alert("'.$Str.'"); window.location.href="'.$Url.'?'.http_build_query($_GET).'"');
+	        self::ExecScript('alert("'.$Str.'"); window.location.href="'.$Url.$GetStr.'"');
 	    }else{
-	        self::ExecScript('window.location.href="'.$Url.'?'.http_build_query($_GET).'"');
+	        self::ExecScript('window.location.href="'.$Url.$GetStr.'"');
 	    }
 	}
 

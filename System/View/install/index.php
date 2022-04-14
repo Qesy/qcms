@@ -8,8 +8,6 @@
     </title>
     <link href="<?=URL_BOOT?>css/jasny-bootstrap.min.css" rel="stylesheet" type="text/css">
     <link href="<?=URL_BOOT?>css/style-init.css" rel="stylesheet" type="text/css">
-    <!-- install安装完毕后，可删除install.css -->
-    <link rel="stylesheet" href="<?=URL_CSS?>/install.css" rel="stylesheet">
 
 </head>
 

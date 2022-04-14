@@ -64,7 +64,7 @@ class Install extends ControllersInstall {
                 unlink($ConfIniPath);
                 $this->Err(1000, $e->getMessage());
             }
-            $this->Jump(array('index'), 1888);
+            $this->Jump(array('index', 'admin'), 1888);
         }
         $tmp['Step1'] = array(
             array('Name' =>'Host', 'Desc' => '数据库IP',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 12),
@@ -96,6 +96,7 @@ class Install extends ControllersInstall {
     public function checkPermission_Action(){ //检测环境        
         $TempArr = $this->CommonObj->readAll(substr(PATH_TEMPLATE, 0, -1) );
         $TempArr[] = PATH_STATIC.'upload';
+        $TempArr[] = PATH_STATIC.'backups';
         $TempArr[] = PATH_LIB.'Config';
         /* var_dump(PATH_STATIC.'upload');
         var_dump($TempArr);exit; */

@@ -106,14 +106,14 @@ class Sys extends ControllersAdmin {
     
     public function license_Action(){ //授权码
         if(!empty($_POST)){
-            if(!$this->VeriObj->VeriPara($_POST, array('License'))) $this->Err(1001);
+            //if(!$this->VeriObj->VeriPara($_POST, array('License'))) $this->Err(1001);
             $Ret = $this->SysObj->SetCond(array('Name' => 'License'))->SetUpdate(array('AttrValue' => trim($_POST['License'])))->ExecUpdate();
             if($Ret === false) $this->Err(1002);
             $this->SysObj->clean('License');
             $this->Jump(array('admin', 'sys', 'license'), 1888);
         }
         $this->BuildObj->Arr = array(
-            array('Name' =>'License', 'Desc' => '授权码',  'Type' => 'textarea', 'Value' => $this->SysRs['License'], 'Required' => 1, 'Col' => 12, 'Row' => 4),           
+            array('Name' =>'License', 'Desc' => '授权码',  'Type' => 'textarea', 'Value' => $this->SysRs['License'], 'Required' => 2, 'Col' => 12, 'Row' => 4),           
         );
         if(!empty($this->SysRs['License'])){
             $LicenseJson = $this->getLicense($this->SysRs['License']);            
@@ -176,7 +176,7 @@ class Sys extends ControllersAdmin {
             'opcache' => 'OPcache 通过将 PHP 脚本预编译的字节码存储到共享内存中来提升 PHP 的性能， 存储预编译字节码的好处就是 省去了每次加载和解析 PHP 脚本的开销。'
             
         );
-        $is_writeabl = is_writeable(PATH_STATIC.'upload/');
+
         $Extensions = get_loaded_extensions();
         $Arr = array();
         foreach($ModuleArr as $k => $v){
@@ -185,8 +185,12 @@ class Sys extends ControllersAdmin {
             $Arr[$k]['State'] = $State;
             $Arr[$k]['Desc'] = $DescArr[$v];
         }
-        $State = !$is_writeabl ? '<span class="label label-danger font-weight-100"><i class="bi bi-x-lg"></i> 不可写</span>' : '<span class="label label-success font-weight-100"><i class="bi bi-check-lg"></i> 可写</span>';
-        $Arr [] = array('Name' => 'upload/', 'Desc' => '检测上传文件夹是否有可写权限', 'State' => $State);
+        $uploadState = !is_writeable(PATH_STATIC.'upload/') ? '<span class="label label-danger font-weight-100"><i class="bi bi-x-lg"></i> 不可写</span>' : '<span class="label label-success font-weight-100"><i class="bi bi-check-lg"></i> 可写</span>';
+        $Arr [] = array('Name' => '/Static/upload/', 'Desc' => '检测上传文件夹是否有可写权限', 'State' => $uploadState);
+        $backupsState = !is_writeable(PATH_STATIC.'backups/') ? '<span class="label label-danger font-weight-100"><i class="bi bi-x-lg"></i> 不可写</span>' : '<span class="label label-success font-weight-100"><i class="bi bi-check-lg"></i> 可写</span>';
+        $Arr [] = array('Name' => '/Static/backups/', 'Desc' => '检测上传文件夹是否有可写权限', 'State' => $backupsState);
+        $configState = !is_writeable(PATH_LIB.'Config/') ? '<span class="label label-danger font-weight-100"><i class="bi bi-x-lg"></i> 不可写</span>' : '<span class="label label-success font-weight-100"><i class="bi bi-check-lg"></i> 可写</span>';
+        $Arr [] = array('Name' => '/Lib/Config/', 'Desc' => '检测上传文件夹是否有可写权限', 'State' => $configState);
         $KeyArr = array(
             'Name' => array('Name' => '名称', 'Td' => 'th'),
             'Desc' => array('Name' => '说明', 'Td' => 'th'),

@@ -84,7 +84,7 @@ class Category extends ControllersAdmin {
                 'Keywords' => trim($_POST['Keywords']),
                 'Description' => trim($_POST['Description']),
                 'Content' => trim($_POST['Content']),
-                'IsCross' => trim($_POST['IsCross']),
+                'IsCross' => 2,
                 'Sort' => 99,
                 'PinYin' => $this->PinYinObj->str2pys(trim($_POST['Name'])),
                 'PY' => $this->PinYinObj->str2py(trim($_POST['Name'])),
@@ -189,7 +189,7 @@ class Category extends ControllersAdmin {
                 'Keywords' => trim($_POST['Keywords']),
                 'Description' => trim($_POST['Description']),
                 'Content' => trim($_POST['Content']),
-                'IsCross' => trim($_POST['IsCross']),
+                'IsCross' => 2,
                 'PinYin' => $this->PinYinObj->str2pys(trim($_POST['Name'])),
                 'PY' => $this->PinYinObj->str2py(trim($_POST['Name'])),
             );

@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 14/04/2022 10:20:02
+ Date: 14/04/2022 10:37:32
 */
 
 SET NAMES utf8mb4;
@@ -558,6 +558,7 @@ INSERT INTO `qc_stat_flow` VALUES ('2022-04-10', 278);
 INSERT INTO `qc_stat_flow` VALUES ('2022-04-11', 179);
 INSERT INTO `qc_stat_flow` VALUES ('2022-04-12', 376);
 INSERT INTO `qc_stat_flow` VALUES ('2022-04-13', 126);
+INSERT INTO `qc_stat_flow` VALUES ('2022-04-14', 7);
 
 -- ----------------------------
 -- Table structure for qc_swiper
@@ -630,7 +631,7 @@ INSERT INTO `qc_sys` VALUES ('Icp', '备案号', '沪ICP备08080808号', 1, 'inp
 INSERT INTO `qc_sys` VALUES ('ImgViewType', '图片浏览类型', 'jpg|gif|png', 3, 'input', 3001, 1);
 INSERT INTO `qc_sys` VALUES ('IsOpenInLink', '是否开启内链', '2', 2, 'radio', 2001, 1);
 INSERT INTO `qc_sys` VALUES ('Keywords', 'SEO关键字', 'QCMS网站管理系统', 1, 'input', 1007, 1);
-INSERT INTO `qc_sys` VALUES ('License', '授权码', 'WW9aWfyaugFMguBUs0CQ5AnPUIq0dN+0/LNn4FIufZlEnOtNPLzh9qWaL6DGKW+akL/mZ9eoOcOQBMauVtaoszZZXRLsiru85dlA/H8g5soBgW5UC0by4EH26WsV+PSbUDQMrejl/6GRVl2ooTxr2ZPGl5sIg+z4HY1nNyTdtYQR6bC1/itocb85q9ZVR/wKk69Qan3fw3rmR83npKcASLumbFrSJX5cccu326kmcqxNE5bPLhVodtZU2YOSOP/hfbT1S+JQSIMQEHiPhnlYOlH6jjXBxJw7ek91VDZC1CQ+ssPqQGzMOBJtAsQTT8wc9YJ/CJYgjpD+WjBKeRaboA==', 9, 'input', 9002, 1);
+INSERT INTO `qc_sys` VALUES ('License', '授权码', '', 9, 'input', 9002, 1);
 INSERT INTO `qc_sys` VALUES ('Logo', '网站Logo', '/Static/images/logo.svg', 1, 'upload', 1001, 1);
 INSERT INTO `qc_sys` VALUES ('MultistationIsOpen', '开启站点管理', '1', 4, 'radio', 4001, 1);
 INSERT INTO `qc_sys` VALUES ('NotAllowReg', '不允许注册名', 'www,bbs,ftp,mail,user,users,admin,administrator,qcms', 9, 'input', 2005, 1);
@@ -1125,11 +1126,12 @@ CREATE TABLE `qc_user`  (
   `TsLast` bigint(20) NOT NULL DEFAULT 0,
   `IpLast` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`UserId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qc_user
 -- ----------------------------
 INSERT INTO `qc_user` VALUES (1, 16666666666, '管理员', '', 'e10adc3949ba59abbe56e057f20f883e', '', '', 1, '', 2, 0.00, 0, 1, 1649843283, '127.0.0.1', 1, 1, 1, 1649843330, '127.0.0.1');
+INSERT INTO `qc_user` VALUES (2, 18888888888, '管理员', '', 'e10adc3949ba59abbe56e057f20f883e', '', '', 1, '', 2, 0.00, 0, 1, 1649903228, '127.0.0.1', 1, 1, 1, 0, '');
 
 SET FOREIGN_KEY_CHECKS = 1;
