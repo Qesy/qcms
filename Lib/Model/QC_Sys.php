@@ -71,14 +71,16 @@ class QC_Sys extends \Db_pdo {
 	
 	public function GetStat(){
 	    $key = RedisKey::Statistics_HM();
-	    if(Redis::exists($key)) return Redis::hGetAll($key);
+	    if(Redis::$s_IsOpen == 1 && Redis::exists($key)) return Redis::hGetAll($key);
 	    $UserCount = $this->SetTbName('user')->SetField('COUNT(*) AS c')->ExecSelectOne();
 	    $TableCount = $this->SetTbName('table')->SetField('COUNT(*) AS c')->ExecSelectOne();
 	    $FileSum = $this->SetTbName('file')->SetField('SUM(Size) AS s')->ExecSelectOne();
 	    $CateCount = $this->SetTbName('category')->SetField('COUNT(*) AS c')->ExecSelectOne();
 	    $Rs = array('UserCount' => $UserCount['c'], 'TableCount' => $TableCount['c'], 'FileSum' => $FileSum['s'], 'CateCount' => $CateCount['c']);
-	    Redis::hMset($key, $Rs);
-	    Redis::expire($key, 86400);
+	    if(Redis::$s_IsOpen == 1){
+	        Redis::hMset($key, $Rs);
+	        Redis::expire($key, 86400);
+	    }	    
 	    return $Rs;
 	}
 }

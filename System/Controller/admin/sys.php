@@ -118,7 +118,7 @@ class Sys extends ControllersAdmin {
         if(!empty($this->SysRs['License'])){
             $LicenseJson = $this->getLicense($this->SysRs['License']);            
             $LicenseRs = empty($LicenseJson) ? array() : json_decode($LicenseJson, true);
-            if(empty($LicenseRs)){
+            if(empty($LicenseRs) || strpos(URL_DOMAIN, $LicenseRs['Domain']) === false){
                 $Desc = '授权失败';
                 $Content = '系统未经授权，请到官方购买授权。';
             }else{

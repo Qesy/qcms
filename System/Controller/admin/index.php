@@ -2,11 +2,13 @@
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class Index extends ControllersAdmin {
     
-    public function index_Action(){
-        $LicenseRs = array();        
+    public function index_Action(){  
         if(!empty($this->SysRs['License'])){
             $LicenseJson = $this->getLicense($this->SysRs['License']);
-            if(!empty($LicenseJson)) $LicenseRs = json_decode($LicenseJson, true);
+            $LicenseRs = empty($LicenseJson) ? array() : json_decode($LicenseJson, true);
+            if(empty($LicenseRs) || strpos(URL_DOMAIN, $LicenseRs['Domain']) === false){
+                $LicenseRs = array();
+            }
         }        
         $FlowDataKV = $this->Stat_flowObj->GetIndexChart();
         $MaxDay = date('t');
