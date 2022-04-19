@@ -64,7 +64,7 @@
                         <div class="panel panel-default card-view pa-0 mb-4">
                             <div class="panel-wrapper ">
                                 <div class="panel-body pa-0">
-                                    <div class="sm-data-box bg-yellow">
+                                    <div class="sm-data-box bg-green">
                                         <div class="row ma-0">
                                             <div class="col-5 text-center pa-0 icon-wrap-left">
                                                 <i class="bi bi-file-text text-white"></i>
@@ -79,27 +79,7 @@
                             </div>
                         </div></a>
                     </div>
-                    <div class="col-12 col-md-3">
-                        <a href="<?=$this->CommonObj->Url(array('admin', 'user', 'index'))?>">
-                        <div class="panel panel-default card-view pa-0 mb-4">
-                            <div class="panel-wrapper ">
-                                <div class="panel-body pa-0">
-                                    <div class="sm-data-box bg-primary">
-                                        <div class="row ma-0">
-                                            <div class="col-5 text-center pa-0 icon-wrap-left">
-                                                <i class="bi bi-people txt-light"></i>
-                                            </div>
-                                            <div class="col-7 text-center data-wrap-right">
-                                                <h6 class="txt-light">用户数量</h6>
-                                                <span class="txt-light counter counter-anim"><?=$Stat['UserCount']?>个</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        </a>
-                    </div>
+
                     <div class="col-12 col-md-3">
                         <a href="<?=$this->CommonObj->Url(array('admin', 'category', 'index'))?>">
                         <div class="panel panel-default card-view pa-0 mb-4">
@@ -121,6 +101,29 @@
                         </div>
                         </a>
                     </div>
+
+                    <div class="col-12 col-md-3">
+                        <a href="<?=$this->CommonObj->Url(array('admin', 'user', 'index'))?>">
+                        <div class="panel panel-default card-view pa-0 mb-4">
+                            <div class="panel-wrapper ">
+                                <div class="panel-body pa-0">
+                                    <div class="sm-data-box bg-primary">
+                                        <div class="row ma-0">
+                                            <div class="col-5 text-center pa-0 icon-wrap-left">
+                                                <i class="bi bi-people txt-light"></i>
+                                            </div>
+                                            <div class="col-7 text-center data-wrap-right">
+                                                <h6 class="txt-light">用户数量</h6>
+                                                <span class="txt-light counter counter-anim"><?=$Stat['UserCount']?>个</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        </a>
+                    </div>
+
                     <div class="col-12 col-md-3">
                         <a href="<?=$this->CommonObj->Url(array('admin', 'file', 'index'))?>">
                         <div class="panel panel-default card-view pa-0 mb-4">
