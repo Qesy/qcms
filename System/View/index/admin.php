@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>注册 ——
+    <title>管理后台登录 ——
         <?=WEB_TITLE?>
     </title>
     <!-- vector map CSS -->
@@ -28,7 +28,7 @@
                   <use xlink:href="/Static/images/logo.svg#layer"/>
                 </svg>
 
-                <div class=" mb-3 text-muted">登录用户中心</div>
+                <div class=" mb-3 text-muted">登录管理后台</div>
                 <div class="input-group mb-2">
                     <input type="text" class="form-control" name="Phone" id="inputPhone" placeholder="输入手机号码" required>
                     <div class="input-group-append">

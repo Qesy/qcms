@@ -11,7 +11,7 @@ defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
  * (̅_̅_̅(̲̅(̅_̅_̅_̅_̅_̅_̅_̅()ڪے
  *
  */
-if(version_compare ( PHP_VERSION, "5.6", "<" ) || version_compare ( PHP_VERSION, "7.4", ">=" )) die ( "Version error : PHP7.4 > QCMS > PHP5.6 !!!" );
+if(version_compare ( PHP_VERSION, "5.6", "<" ) || version_compare ( PHP_VERSION, "8.0", ">=" )) die ( "Version error : PHP7.4 > QCMS > PHP5.6 !!!" );
 require PATH_LIB . 'Config/Base' . EXTEND;
 require PATH_LIB . 'Config/Controllers' . EXTEND;
 require PATH_LIB . 'Config/Db' . EXTEND;

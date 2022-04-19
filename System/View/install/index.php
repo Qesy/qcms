@@ -3,7 +3,7 @@
 
 <head>
     <title>
-        <?=$this->SysRs['WebName']?>
+       QCMS V<?=VERSION?> 安装
 
     </title>
     <link href="<?=URL_BOOT?>css/jasny-bootstrap.min.css" rel="stylesheet" type="text/css">
