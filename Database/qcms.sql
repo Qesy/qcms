@@ -543,21 +543,7 @@ CREATE TABLE `qc_stat_flow`  (
   PRIMARY KEY (`Date`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
--- ----------------------------
--- Records of qc_stat_flow
--- ----------------------------
-INSERT INTO `qc_stat_flow` VALUES ('2022-04-01', 8);
-INSERT INTO `qc_stat_flow` VALUES ('2022-04-02', 29);
-INSERT INTO `qc_stat_flow` VALUES ('2022-04-03', 2);
-INSERT INTO `qc_stat_flow` VALUES ('2022-04-04', 2);
-INSERT INTO `qc_stat_flow` VALUES ('2022-04-07', 198);
-INSERT INTO `qc_stat_flow` VALUES ('2022-04-08', 397);
-INSERT INTO `qc_stat_flow` VALUES ('2022-04-09', 324);
-INSERT INTO `qc_stat_flow` VALUES ('2022-04-10', 278);
-INSERT INTO `qc_stat_flow` VALUES ('2022-04-11', 179);
-INSERT INTO `qc_stat_flow` VALUES ('2022-04-12', 376);
-INSERT INTO `qc_stat_flow` VALUES ('2022-04-13', 126);
-INSERT INTO `qc_stat_flow` VALUES ('2022-04-14', 95);
+
 
 -- ----------------------------
 -- Table structure for qc_swiper
