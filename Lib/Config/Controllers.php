@@ -1176,7 +1176,7 @@ class ControllersAdmin extends Controllers {
         $pTime = $this->CookieObj->get('Ts', 'User');
         if(empty($pTime) || time() - $pTime > 3600){            
             $key = self::getKey();
-            $this->CurlObj->SetUrl('https://www.q-cms.cn/client/updata.html')->SetPara(array('Key' => $key, 'Domain' => URL_DOMAIN))->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
+            $this->CurlObj->SetUrl('https://www.q-cms.cn/client/updata.html')->SetPara(array('Key' => $key, 'Domain' => $_SERVER['REQUEST_SCHEME'].'://'.URL_DOMAIN.'/'))->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
             $this->CookieObj->set(array('Ts' => time()), 'User');
         }
         
