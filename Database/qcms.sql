@@ -1127,11 +1127,5 @@ CREATE TABLE `qc_user`  (
   PRIMARY KEY (`UserId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
--- ----------------------------
--- Records of qc_user
--- ----------------------------
-INSERT INTO `qc_user` VALUES (1, 16666666666, '管理员', '', 'e10adc3949ba59abbe56e057f20f883e', '', '', 1, '', 2, 0.00, 0, 1, 1649843283, '127.0.0.1', 1, 1, 1, 1649931302, '127.0.0.1');
-INSERT INTO `qc_user` VALUES (2, 18888888888, '管理员', '', 'e10adc3949ba59abbe56e057f20f883e', '', '', 1, '', 2, 0.00, 0, 1, 1649903228, '127.0.0.1', 1, 1, 1, 0, '');
-INSERT INTO `qc_user` VALUES (3, 16666666666, '管理员', '', 'e10adc3949ba59abbe56e057f20f883e', '', '', 1, '', 2, 0.00, 0, 1, 1649931288, '127.0.0.1', 1, 1, 1, 0, '');
 
 SET FOREIGN_KEY_CHECKS = 1;
