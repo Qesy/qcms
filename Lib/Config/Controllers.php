@@ -210,7 +210,7 @@ class Controllers extends Base {
     }
     
     public function global_Tmp(){ // 全局标签
-        $Search = array('{{qcms:domain}}', '{{qcms:static}}', '{{qcms:pathImg}}', '{{qcms:pathJs}}', '{{qcms:pathCss}}', '{{qcms:Scheme}}');
+        $Search = array('{{qcms:Domain}}', '{{qcms:Static}}', '{{qcms:PathImg}}', '{{qcms:PathJs}}', '{{qcms:PathCss}}', '{{qcms:Scheme}}');
         $Replace = array(URL_DOMAIN, URL_STATIC, URL_IMG, URL_JS, URL_CSS, $_SERVER['REQUEST_SCHEME']);
         foreach($this->SysRs as $k => $v){
             $Search[] = '{{qcms:'.$k.'}}';
@@ -230,13 +230,13 @@ class Controllers extends Base {
         $Replace = array();
         switch($this->Tmp['Type']){
             case 'index':
-                $Search = array('{{qcms:crumbs}}');
+                $Search = array('{{qcms:Crumbs}}');
                 $Replace = array('<nav aria-label="breadcrumb"><ol class="breadcrumb">
                     <li class="breadcrumb-item active">首页</li>
                 </ol></nav>');
                 break;
             case 'cate':
-                $Search = array('{{qcms:crumbs}}');
+                $Search = array('{{qcms:Crumbs}}');
                 $this->CategoryObj->getCrumbs($this->Tmp['Index']);
                 $CrumbsArr = array('<li class="breadcrumb-item"><a href="/">首页</a></li>');
                 foreach($this->CategoryObj->CateCrumbsArr as $k => $v){
@@ -257,7 +257,7 @@ class Controllers extends Base {
                 $Replace[] = $this->Tmp['FormRs']['Name'];
                 break;
             case 'detail':                
-                $Search = array('{{qcms:crumbs}}');
+                $Search = array('{{qcms:Crumbs}}');
                 $this->CategoryObj->getCrumbs($this->Tmp['CateRs']['CateId']);
                 $CrumbsArr = array('<li class="breadcrumb-item"><a href="/">首页</a></li>');
                 foreach($this->CategoryObj->CateCrumbsArr as $k => $v){
@@ -298,7 +298,7 @@ class Controllers extends Base {
                 $Replace[] = $this->CommonObj->Url(array('index', 'down', $this->Tmp['Index']));
                 break;
             case 'page':
-                $Search = array('{{qcms:crumbs}}');
+                $Search = array('{{qcms:Crumbs}}');
                 $CrumbsArr = array('<li class="breadcrumb-item"><a href="/">首页</a></li>');
                 $CrumbsArr[] = '<li class="breadcrumb-item active">'.$this->Tmp['PageRs']['Name'].'</li>';
                 $Replace = array('<nav aria-label="breadcrumb"><ol class="breadcrumb">'.implode('', $CrumbsArr).'</ol></nav>');
