@@ -274,9 +274,9 @@ class Category extends ControllersAdmin {
         $CateRs = $this->CategoryObj->getOne($_GET['CateId']);
         if(empty($CateRs)) $this->Err(1003);
         $HaveSub = $this->CategoryObj->SetCond(array('PCateId' => $CateRs['CateId']))->SetField('COUNT(*) AS c')->ExecSelectOne();
+        if($HaveSub['c'] > 0) $this->Err(1044);
         $ModelRs = $this->Sys_modelObj->getOne($CateRs['ModelId']);
-        if($ModelRs !== false){
-            if($HaveSub['c'] > 0) $this->Err(1044);
+        if($ModelRs !== false){            
             $HaveDetail = $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('CateId' => $CateRs['CateId']))->SetField('COUNT(*) AS c')->ExecSelectOne();
             if($HaveDetail['c'] > 0) $this->Err(1045);
         }        
