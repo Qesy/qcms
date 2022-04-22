@@ -107,10 +107,11 @@ class QC_Category extends \Db_pdo {
 	}
 	
 	private function _TreeDetail($PCateId, $Level, $PIndex = 0){ // 后台分类列表页展示
-	    
 	    foreach($this->CateArr as $k => $v){
 	        if($v['PCateId'] == $PCateId){
-	            $this->CateTreeDetail[$PIndex]['HasSub'] = 1; //设置父分类有子分类
+	            if($Level != 0){
+	                $this->CateTreeDetail[$PIndex]['HasSub'] = 1; //设置父分类有子分类
+	            }	            
 	            $CateRs = $this->getOne($v['CateId']);
 	            $CateRs['Level'] = $Level;
 	            $CateRs['HasSub'] = 0;
@@ -122,7 +123,6 @@ class QC_Category extends \Db_pdo {
 	            self::_TreeDetail($v['CateId'], $NewLevel, $Index);
 	        }
 	    }
-	    //var_dump($this->CateTreeDetail);exit;
 	}
 	
 	private function _TreeSelectHtml($PCateId, $Level, $SelectCateId){ 
