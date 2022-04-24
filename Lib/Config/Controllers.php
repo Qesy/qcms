@@ -32,7 +32,8 @@ class Controllers extends Base {
     function __construct(){
         parent::__construct();
         $this->SysRs = $this->SysObj->getKv();
-        $this->TmpPath = PATH_TEMPLATE.$this->SysRs['TmpPath'].'/';
+        $TmPath = ($this->CommonObj->isMobile() && !empty($this->SysRs['TmpPathMobile'])) ? $this->SysRs['TmpPathMobile'] : $this->SysRs['TmpPath'];
+        $this->TmpPath = PATH_TEMPLATE.$TmPath.'/';
         $this->CategoryObj->getTreeDetal();
         foreach($this->CategoryObj->CateArr as $v) $this->CateKv[$v['CateId']] = $v;
         $ModelArr = $this->Sys_modelObj->getList();
@@ -98,8 +99,7 @@ class Controllers extends Base {
                 $this->Tmp['PageRs'] = $PageRs;
                 $Path = $PageRs['TempDetail'];    
                 break;
-        }
-        
+        }        
         if(!file_exists($this->TmpPath.$Path) || !is_file( $this->TmpPath.$Path)) $this->DieErr(1054);
         $this->Tmp['Compile'] = $this->Tmp['Html'] = file_get_contents($this->TmpPath.$Path);        
         return $this;
@@ -1105,7 +1105,10 @@ class ControllersAdmin extends Controllers {
             }
         }
         $this->SiteArr = $this->SiteObj->getList();
-        
+        if(!isset($this->SysRs['TmpPathMobile'])){
+            $this->SysObj->SetInsert(array('Name' => 'TmpPathMobile', 'Info' => '手机模板路径', 'AttrValue' => '', 'GroupId' => 2, 'AttrType' => 'select', 'Sort' => '2010', 'IsSys' => 1))->ExecInsert();
+            $this->SysObj->cleanList();
+        }
     }
     
     public function getTemplate($Prefix = ''){
