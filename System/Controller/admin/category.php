@@ -131,7 +131,7 @@ class Category extends ControllersAdmin {
             'Title' => '核心设置',
             'Form' => array(                
                 array('Name' =>'Name', 'Desc' => '分类名称',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
-                array('Name' =>'ModelId', 'Desc' => '内容模型',  'Type' => 'select', 'Data' => $ModelKV, 'Value' => '1', 'Required' => 1, 'Col' => 3),
+                array('Name' =>'ModelId', 'Desc' => '内容模型',  'Type' => 'select', 'Data' => $ModelKV, 'Value' => $ModelId, 'Required' => 1, 'Col' => 3),
                 array('Name' =>'Attr', 'Desc' => '属性',  'Type' => 'checkbox', 'Data' => $AttrArr, 'Value' => implode('|', $AttrValArr), 'Required' => 1, 'Col' => 3),
                 //array('Name' =>'IsLink', 'Desc' => '是否外链',  'Type' => 'radio', 'Data' => $this->IsArr, 'Value' => 2, 'Required' => 1, 'Col' => 2),
                 array('Name' =>'Pic', 'Desc' => '分类图片',  'Type' => 'upload', 'Value' => '', 'Required' => 0, 'Col' => 12),
