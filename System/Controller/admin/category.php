@@ -56,10 +56,12 @@ class Category extends ControllersAdmin {
     }
     
     public function add_Action(){
-        $PCateId = intval($_GET['CateId']);        
+        $PCateId = intval($_GET['CateId']);
+        $ModelId = 1;
         if(!empty($PCateId)){
             $Rs = $this->CategoryObj->getOne($PCateId);
             if(empty($Rs)) $this->Err(1001);
+            $ModelId = $Rs['ModelId'];
         }        
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name', 'ModelId'))) $this->Err(1001);
