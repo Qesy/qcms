@@ -286,6 +286,14 @@ class Controllers extends Base {
                             $InReplace[] = '<a class="Inlink" href="'.$iVal['Url'].'" '.(($iVal['IsBlank'] == 1) ? 'target="_blank"' : '').'>'.$iVal['Name'].'</a>';
                         }
                         $Replace[] = str_replace($InSearch, $InReplace, $v);
+                    }elseif($k == 'Tag'){
+                        $TagArr = explode(',', $v);
+                        $TagStrArr = array();
+                        foreach($TagArr as $tv){
+                            if(empty($tv)) continue;
+                            $TagStrArr[] = '<a class="btn btn-default btn-sm mr-2" href="'.$this->CommonObj->Url(array('index', 'search')).'?Search='.$tv.'">'.$tv.'</a>';
+                        }
+                        $Replace[] =  implode('', $TagStrArr);
                     }else{
                         $Replace[] = $v;
                     }                    
