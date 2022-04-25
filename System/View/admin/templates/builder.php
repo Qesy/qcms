@@ -65,11 +65,16 @@
                                     ?>
                                     </div>
                                     <div class="my-3 DemoDiv d-none" data="include">
-                                        <h5 >引入页面</h5>
+                                        <h5 >引入组件</h5>
                                         <div class="mb-2">引入一些通用代码页面，比如一个网站的导航和底部都是一样的，就单独做一个组件，通过include标签引入</div>
                                         <textarea class="form-control text-dark mb-3 p-2" rows="15">{{include  filename='component_header.html'/}}</textarea>
-                                        <h5 >标签说明</h5>
-                                        <div>filename : 文件名</div>
+                                        <h5 >标签说明 <span class="text-sm text-secondary">filename : 文件名</span></h5>
+
+                                        <?
+                                        foreach($componentList as $v){
+                                            echo "{{include filename='".$v."'}}<br>";
+                                        }
+                                        ?>
                                     </div>
                                     <div class="my-3 DemoDiv d-none" data="label">
                                         <h5 >自定义标签</h5>

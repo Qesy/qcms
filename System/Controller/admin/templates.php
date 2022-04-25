@@ -103,7 +103,7 @@ class Templates extends ControllersAdmin {
 
     public function builder_Action(){
         $LabelArr = array(
-            'include' => '引入页面',
+            'include' => '引入组件',
             'label' => '自定义标签',
             'global' => '全局标签',
             'cate' => '分类标签',
@@ -127,6 +127,7 @@ class Templates extends ControllersAdmin {
         $tmp['LabelArr'] = $LabelArr;
         $tmp['DiyLabelArr'] = $this->LabelObj->ExecSelect();
         $tmp['DiyField'] = $this->SysObj->SetCond(array('IsSys' => 2))->SetSort(array('Sort' => 'ASC'))->ExecSelect();
+        $tmp['componentList'] = $this->getTemplate('component_');
         $this->LoadView('admin/templates/builder', $tmp);
     }
 
