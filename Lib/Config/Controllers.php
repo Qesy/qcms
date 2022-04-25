@@ -742,7 +742,7 @@ class Controllers extends Base {
             '{{qcms:'.$Pre.'i}}',
         );
         foreach($CateArr as $k => $v){
-            $Url = ($v['IsLink'] == 1) ? $v['LinkUrl'] : $v['UrlList'];
+            $Url = ($v['IsLink'] == 1) ? $v['LinkUrl'] : self::createUrl('cate', $v['CateId'], $v['PinYin'], $v['PY']);
             $Replace = array(
                 $v['CateId'],
                 $v['PCateId'],
@@ -752,7 +752,7 @@ class Controllers extends Base {
                 $v['SeoTitle'],
                 $v['Keywords'],
                 $v['Description'],
-                self::createUrl('cate', $v['CateId'], $v['PinYin'], $v['PY']),//$Url,
+                $Url,//$Url,
                 $v['HasSub'],
                 ($k+1),
             );
