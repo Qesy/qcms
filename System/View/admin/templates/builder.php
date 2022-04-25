@@ -203,6 +203,97 @@
                                         </div>
                                     </div>
 
+                                    <div class="my-3 DemoDiv d-none" data="get">
+                                        <h5 >获取单条数据</h5>
+                                        <div class="mb-2">任何页面调用 分类，单页，文章详情 的数据调用</div>
+
+<textarea class="form-control text-dark mb-3 p-2" rows="15">
+// 分类数据单条调用例子
+{{get Type='cate' Index='1'}}
+    <a href="{{qcms:Get_Url}}">{{qcms:Get_Name}}</a>
+{{/get}}
+
+// 单页数据单条调用例子
+{{get Type='page' Index='1'}}
+    <a href="{{qcms:Get_Url}}">{{qcms:Get_Name}}</a>
+{{/get}}
+
+// 详情数据单条调用例子
+{{get Type='detail' Index='1'}}
+    <a href="{{qcms:Get_Url}}">{{qcms:Get_Title}}</a>
+{{/get}}
+</textarea>
+                                        <h5 >属性说明</h5>
+                                        <div class="mb-2">
+                                            Type : 调用类型 (cate:分类, page:单页, detail:内容详情)
+                                            Index : 索引ID (分类：分类的ID，单页：单页ID，内容：详情ID)
+                                        </div>
+                                        <h5 >标签说明</h5>
+                                        <div class="d-flex">
+                                            <div class="mr-3">
+                                                <h6 class="py-2 font-weight-bold">分类字段</h6>
+                                                {{qcms:Get_CateId}} ： 分类ID<br>
+                                                {{qcms:Get_PCateId}} ： 分类上级ID<br>
+                                                {{qcms:Get_Name}} ： 分类名<br>
+                                                {{qcms:Get_Pic}} ： 分类图片<br>
+                                                {{qcms:Get_IsShow}} ： 分类显示（1：显示，2：不显示）<br>
+                                                {{qcms:Get_IsLink}} ： 是否外链 （1：外链， 2 不是外链）<br>
+                                                {{qcms:Get_LinkUrl}} ： 外链地址<br>
+                                                {{qcms:Get_SeoTitle}} ： SEO标题<br>
+                                                {{qcms:Get_Keywords}} ： SEO关键字<br>
+                                                {{qcms:Get_Description}} ： SEO简介<br>
+                                                {{qcms:Get_Content}} ： 分类内容详情<br>
+                                                {{qcms:Get_PinYin}} ： 全拼<br>
+                                                {{qcms:Get_PY}} ： 拼音首字母<br>
+                                                {{qcms:Get_Url}} ： 链接地址<br>
+                                            </div>
+                                            <div class="mr-3">
+                                                <h6 class="py-2 font-weight-bold">单页字段</h6>
+                                                {{qcms:Get_PageId}} ： 单页ID<br>
+                                                {{qcms:Get_Name}} ： 单页名字<br>
+                                                {{qcms:Get_SeoTitle}} ： SEO标题<br>
+                                                {{qcms:Get_Keywords}} ： SEO关键字<br>
+                                                {{qcms:Get_Description}} ： SEO简介<br>
+                                                {{qcms:Get_Content}} ： 内容<br>
+                                                {{qcms:Get_Url}} ： 链接地址<br>
+                                            </div>
+                                            <div class="mr-3">
+                                                <h6 class="py-2 font-weight-bold">详情字段</h6>
+                                                {{qcms:Get_Id}} ： 详情ID<br>
+                                                {{qcms:Get_CateId}} ： 分类ID<br>
+                                                {{qcms:Get_Title}} ： 标题<br>
+                                                {{qcms:Get_STitle}} ：短标题<br>
+                                                {{qcms:Get_Tag}}： Tag<br>
+                                                {{qcms:Get_Pic}} ：图片<br>
+                                                {{qcms:Get_Source}} ： 来源<br>
+                                                {{qcms:Get_Author}} ： 作者<br>
+                                                {{qcms:Get_Keywords}} ： SEO关键字<br>
+                                                {{qcms:Get_Description}} ： SEO简介<br>
+                                                {{qcms:Get_TsAdd}} ： 添加时间（UNIX时间戳）<br>
+                                                {{qcms:Get_TsUpdate}} ： 最后更新时间（UNIX时间戳）<br>
+                                                {{qcms:Get_ReadNum}} ： 浏览次数<br>
+                                                {{qcms:Get_Coins}} ： 所需金币<br>
+                                                {{qcms:Get_Money}} ： 所需费用<br>
+                                                {{qcms:Get_Color}} ： 标题颜色<br>
+                                                {{qcms:Get_UserId}} ： 发布人ID<br>
+                                                {{qcms:Get_Good}} ： 好评数<br>
+                                                {{qcms:Get_Bad}} ： 差评数<br>
+                                                {{qcms:Get_Content}} ： 内容详情<br>
+                                                {{qcms:Get_IsLink}}  ： 是否外链 （1：外链， 2：不是外链）<br>
+                                                {{qcms:Get_LinkUrl}} ： 外链地址<br>
+                                                {{qcms:Get_IsBold}} ： 是否加粗 （1：加粗， 2：不加粗）<br>
+                                                {{qcms:Get_IsPic}} ： 是否有缩略图 （1：有， 2 没有）<br>
+                                                {{qcms:Get_IsSpuerRec}} ： 是否特推（1是， 2：不是）<br>
+                                                {{qcms:Get_IsHeadlines}} ： 是否头条（1是， 2：不是）<br>
+                                                {{qcms:Get_IsRec}} ： 是否推荐（1是， 2：不是）<br>
+                                                {{qcms:Get_PinYin}} ： 全拼<br>
+                                                {{qcms:Get_PY}} ： 拼音首字母<br>
+                                                {{qcms:Get_Url}} ： 链接地址<br>
+                                            </div>
+
+                                        </div>
+                                    </div>
+
                                     <div class="my-3 DemoDiv d-none" data="menu">
                                         <h5 >一级菜单列表</h5>
                                         <div class="mb-2">一级菜单列表，循环列表</div>

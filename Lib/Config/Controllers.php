@@ -44,7 +44,7 @@ class Controllers extends Base {
     }
     
     public function tempRun($Type, $Index = '0'){
-        $this->initTmp($Type, $Index)->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->photo_Tmp()->menu_Tmp();
+        $this->initTmp($Type, $Index)->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->get_Tmp()->photo_Tmp()->menu_Tmp();
         $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->link_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
         $this->substr_Tmp()->math_Tmp()->replace_Tmp()->thumb_Tmp();
         return $this->Tmp['Compile'];
@@ -54,7 +54,7 @@ class Controllers extends Base {
         $this->initTmp($Type, $Index);        
         $this->Tmp['Compile'] = $this->Tmp['Html'] = $Html;
         //var_dump($this->Tmp['Compile']);exit;
-        $this->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->photo_Tmp()->menu_Tmp();
+        $this->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->get_Tmp()->photo_Tmp()->menu_Tmp();
         $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->link_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
         $this->substr_Tmp()->math_Tmp()->replace_Tmp()->thumb_Tmp();
         return $this->Tmp['Compile'];
@@ -308,6 +308,91 @@ class Controllers extends Base {
                 }
                 break;
         }
+        $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
+        return $this;
+    }
+    
+    public function get_Tmp(){ //获取单条数据详情
+        preg_match_all("/{{get([\s\S.]*?)}}([\s\S.]*?){{\/get}}/i", $this->Tmp['Compile'], $Matches);
+        $Search = array();
+        $Replace = array();
+        $CateIds = $PageIds = $DetailIds = array();
+        foreach($Matches[1] as $k => $v){ //一次性把数据全提取出来
+            $Para = self::_getKv($v);
+            $Type = isset($Para['Type']) ? $Para['Type'] : 'cate';
+            $Index = isset($Para['Index']) ? $Para['Index'] : 0;
+            if($Index == 0) continue;
+            switch($Type){
+                case 'cate':
+                    $CateIds[] = $Index;
+                    break;
+                case 'page':
+                    $PageIds[] = $Index;
+                    break;
+                case 'detail':
+                    $DetailIds[] = $Index;
+                    break;
+            }
+            $CateArr = $PageArr = $DetailArr = array();
+            if(!empty($CateIds)){
+                $CateArr = $this->CategoryObj->SetCond(array('CateId' => $CateIds))->SetIndex('CateId')->ExecSelect();
+            }
+            if(!empty($PageIds)){
+                $PageArr = $this->PageObj->SetCond(array('PageId' => $PageIds))->SetIndex('PageId')->ExecSelect();
+            }
+            if(!empty($DetailIds)){
+                $ModleArr = $this->Sys_modelObj->getList();
+                $TablesArr = $this->TableObj->SetCond(array('Id' => $DetailIds))->ExecSelect();
+                $TableKV = array();
+                foreach($TablesArr as $v){
+                    if(!isset($TableKV[$v['ModelId']])){
+                        $TableKV[$v['ModelId']] = array($v['Id']);
+                    }else{
+                        $TableKV[$v['ModelId']][] = $v['Id'];
+                    }
+                }
+                foreach($TableKV as $ModleId => $Ids){
+                    $DataArr = $this->Sys_modelObj->SetTbName('table_'.$ModleArr[$ModleId]['KeyName'])->SetCond(array('Id' => $Ids))->ExecSelect();
+                    foreach($DataArr as $v){
+                        $DetailArr[$v['Id']] = $v;
+                    }
+                }                
+            }
+        }
+        foreach($Matches[1] as $k => $v){
+            $Para = self::_getKv($v);
+            $Type = isset($Para['Type']) ? $Para['Type'] : 'cate';
+            $Index = isset($Para['Index']) ? $Para['Index'] : 0;
+            $Search[] = $Matches[0][$k];
+            switch($Type){
+                case 'cate':
+                    if(!isset($CateArr[$Index])){
+                        $Replace[] = '';
+                    }else{
+                        $Replace[] = self::_replaceOne($Type, $CateArr[$Index], $Matches[2][$k], 'Get_');
+                    }                    
+                    break;
+                case 'detail':
+                    
+                    if(!isset($DetailArr[$Index])){
+                        $Replace[] = '';
+                    }else{
+                        $Replace[] = self::_replaceOne($Type, $DetailArr[$Index], $Matches[2][$k], 'Get_');
+                    }                    
+                    break;
+                case 'page':
+                    if(!isset($PageArr[$Index])){
+                        $Replace[] = '';
+                    }else{
+                        $Replace[] = self::_replaceOne($Type, $PageArr[$Index], $Matches[2][$k], 'Get_');
+                    }                    
+                    break;
+                default:
+                    $Replace[] = '';
+                    break;
+            }            
+        }
+        
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
@@ -760,6 +845,33 @@ class Controllers extends Base {
         }
         return $Compile;
     }
+    
+    private function _replaceOne($Type, $Rs, $Html, $Pre){
+        $Search = $Replace = array();
+        foreach($Rs as $k => $v){
+            $Search[] = '{{qcms:'.$Pre.$k.'}}';
+            $Replace[] = $v;
+        }        
+        switch($Type){
+            case 'cate':
+                $Search[] = '{{qcms:'.$Pre.'Url}}';
+                $Url = ($Rs['IsLink'] == 1) ? $Rs['LinkUrl'] : self::createUrl('cate', $Rs['CateId'], $Rs['PinYin'], $Rs['PY']);
+                $Replace[] = $Url;
+                break;
+            case 'page':
+                $Search[] = '{{qcms:'.$Pre.'Url}}';
+                $Replace[] = self::createUrl('page', $Rs['PageId'], $Rs['PinYin'], $Rs['PY']);
+                break;
+            case 'detail':
+                $Search[] = '{{qcms:'.$Pre.'Url}}';
+                $Url = ($Rs['IsLink'] == 1) ? $Rs['LinkUrl'] : self::createUrl('detail', $Rs['Id'], $Rs['PinYin'], $Rs['PY']);//$Url,
+                $Replace[] = $Url;
+                break;
+        }
+        $Compile = str_replace($Search, $Replace, $Html);
+        return $Compile;
+    }
+    
     
     private function _getKv($Str){
         preg_match_all("/([\w]*?)=\'([\w\W]*?)\'/i",$Str, $Matches); 
