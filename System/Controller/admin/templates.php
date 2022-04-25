@@ -125,6 +125,8 @@ class Templates extends ControllersAdmin {
             'thumb' => '缩略图',
         );
         $tmp['LabelArr'] = $LabelArr;
+        $tmp['DiyLabelArr'] = $this->LabelObj->ExecSelect();
+        $tmp['DiyField'] = $this->SysObj->SetCond(array('IsSys' => 2))->SetSort(array('Sort' => 'ASC'))->ExecSelect();
         $this->LoadView('admin/templates/builder', $tmp);
     }
 

@@ -75,8 +75,16 @@
                                         <h5 >自定义标签</h5>
                                         <div class="mb-2">后台自定义一些文字，列表等代码，在网站任意地方调用，通常用于广告代码，特殊JS统计代码等</div>
                                         <textarea class="form-control text-dark mb-3 p-2" rows="15">{{label:testlabel}}</textarea>
-                                        <h5 >标签说明</h5>
-                                        <div>label : 标签调用名 （后台创建的时候命名）</div>
+                                        <h5 >标签说明 <span class="text-sm text-secondary">label : 标签调用名 （后台创建的时候命名）</span></h5>
+                                        <div>
+                                            <?
+                                            if(empty($DiyLabelArr)) echo '没有自定义标签';
+                                            foreach($DiyLabelArr as $v){
+                                                echo '{{label:'.$v['KeyName'].'}} : '.$v['Name'].'<br>';
+                                            }
+                                            ?>
+                                        </div>
+
                                     </div>
                                     <div class="my-3 DemoDiv d-none" data="global">
                                         <h5 >全局标签</h5>
@@ -103,6 +111,15 @@
                                             {{qcms:StatsCode}} ： 统计代码<br>
                                             {{qcms:Crumbs}} ： 面包屑地址<br>
                                             {{qcms:Search}} ： 搜索关键字 ($_GET['Search'])<br>
+
+                                            <?
+                                            if(!empty($DiyField)){
+                                                echo '<span class="text-danger">以下是自定义系统变量</span><br>';
+                                            }
+                                            foreach($DiyField as $v){
+                                                echo '{{qcms:'.$v['Name'].'}} ： '.$v['Info'].'<br>';
+                                            }
+                                            ?>
                                         </div>
                                     </div>
                                     <div class="my-3 DemoDiv d-none" data="cate">
@@ -490,6 +507,9 @@
 
 <textarea class="form-control text-dark mb-3 p-2" rows="15">
 {{replace Search='刘德华' Replace='张学友' Str='我是刘德华'}}  //结果为 ： 我是张学友
+
+//高级一点，批量替换
+{{replace Search='刘德华|张学友' Replace='关之琳|小犹太' Str='我看到刘德华和张学友在一起拍电影'}}  //结果为 ： 我看到关之琳和小犹太在一起拍电影
 </textarea>
                                         <h5 >属性说明</h5>
                                         <div class="mb-2">

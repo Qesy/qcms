@@ -260,6 +260,11 @@ class Api extends ControllersAdmin {
             if($Ret === false) $this->ApiErr(1002);
             $this->SiteObj->cleanList();
             $this->ApiSuccess();
+        }elseif($_POST['Type'] == 'sys'){
+            $Ret = $this->SysObj->SetCond(array('Name' => $_POST['Index']))->SetUpdate(array('Sort' => intval($_POST['Sort'])))->ExecUpdate();
+            if($Ret === false) $this->ApiErr(1002);
+            $this->SysObj->clean($_POST['Index']);
+            $this->ApiSuccess();
         }
         
     }

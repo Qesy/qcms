@@ -11,7 +11,7 @@ class SysField extends ControllersAdmin {
         }
         foreach($FieldArr as $k => $v){
             $FieldArr[$k]['AttrTypeView'] = $this->FieldArr[$v['AttrType']];
-            $FieldArr[$k]['SortView'] = '<input class="form-control SortInput" type="text" data-type="page" data-index="'.$v['Name'].'" value="'.$v['Sort'].'"/>';
+            $FieldArr[$k]['SortView'] = '<input class="form-control SortInput" type="text" data-type="sys" data-index="'.$v['Name'].'" value="'.$v['Sort'].'"/>';
             $FieldArr[$k]['callView'] = '<input class="form-control" disabled="disabled" type="text" value="{{qcms:'.$v['Name'].'}}"/>';
         }
         $KeyArr = array(

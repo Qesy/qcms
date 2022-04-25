@@ -134,7 +134,7 @@ class Controllers extends Base {
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);       
             $Len = isset($Para['Len']) ? intval($Para['Len']) : 0;
-            $Replace[] = ($Len > 0) ? mb_substr($Para['Str'], 0, $Len) : $Para['Str'];
+            $Replace[] = ($Len > 0) ? mb_substr(strip_tags($Para['Str']), 0, $Len) : $Para['Str'];
         }
         $this->Tmp['Compile'] = str_replace($Matches[0], $Replace, $this->Tmp['Compile']);
         return $this;
@@ -170,8 +170,8 @@ class Controllers extends Base {
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);   
             $SubStr = $Para['Str'];
-            $SubSearch = $Para['Search'];
-            $SubReplace = $Para['Replace'];
+            $SubSearch = explode('|', $Para['Search']) ;
+            $SubReplace = explode('|', $Para['Replace']) ;
             $Replace[] = str_replace($SubSearch, $SubReplace, $SubStr);
         }
         $this->Tmp['Compile'] = str_replace($Matches[0], $Replace, $this->Tmp['Compile']);
