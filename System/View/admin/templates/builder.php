@@ -618,7 +618,7 @@
 
                                     <div class="my-3 DemoDiv d-none" data="photo">
                                         <h5 >相片标签</h5>
-                                        <div class="mb-2">相片循环列表,只能在相册详情页调用（相册模型专有）</div>
+                                        <div class="mb-2">相片循环列表（相册模型专有）</div>
 
 <textarea class="form-control text-dark mb-3 p-2" rows="15">
 {{photo}}
@@ -627,13 +627,14 @@
 </textarea>
                                         <h5 >属性说明</h5>
                                         <div class="mb-2">
-                                            无<br>
+                                            Index : 索引ID （默认当前文章的ID）<br>
 
                                             <h5 >标签说明</h5>
                                         <div>
                                             {{qcms:Photo_Path}} ： 图片地址<br>
                                             {{qcms:Photo_Name}} ： 图片名称<br>
                                             {{qcms:Photo_Size}} ： 图片大小<br>
+                                            {{qcms:Photo_i}} ： 自曾数（从1开始）<br>
                                         </div>
                                         </div>
 

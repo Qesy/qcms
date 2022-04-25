@@ -239,8 +239,9 @@ class Controllers extends Base {
                 $Search = array('{{qcms:Crumbs}}');
                 $this->CategoryObj->getCrumbs($this->Tmp['Index']);
                 $CrumbsArr = array('<li class="breadcrumb-item"><a href="/">首页</a></li>');
-                foreach($this->CategoryObj->CateCrumbsArr as $k => $v){
-                    if($k+1 < count($this->CategoryObj->CateCrumbsArr)){
+                foreach($this->CategoryObj->CateCrumbsArr as $k => $v){                    
+                    if($k+1 < count($this->CategoryObj->CateCrumbsArr)){                        
+                        if( $v['IsLink'] == 1) continue;
                         $CrumbsArr[] = '<li class="breadcrumb-item"><a href="'.$this->createUrl('cate', $v['CateId'], $v['PinYin'], $v['PY']).'">'.$v['Name'].'</a></li>';
                     }else{
                         $CrumbsArr[] = '<li class="breadcrumb-item active">'.$v['Name'].'</li>';
@@ -262,6 +263,7 @@ class Controllers extends Base {
                 $CrumbsArr = array('<li class="breadcrumb-item"><a href="/">首页</a></li>');
                 foreach($this->CategoryObj->CateCrumbsArr as $k => $v){
                     if($k+1 < count($this->CategoryObj->CateCrumbsArr)){
+                        if( $v['IsLink'] == 1) continue;
                         $CrumbsArr[] = '<li class="breadcrumb-item"><a href="'.$this->createUrl('cate', $v['CateId'], $v['PinYin'], $v['PY']).'">'.$v['Name'].'</a></li>';
                     }else{
                         $CrumbsArr[] = '<li class="breadcrumb-item active">'.$v['Name'].'</li>';
@@ -498,8 +500,10 @@ class Controllers extends Base {
         $Search = array();
         $Replace = array();
         foreach($Matches[1] as $k => $v){
+            $Para = self::_getKv($v);
+            $Index = isset($Para['Index']) ? $Para['Index'] : $this->Tmp['Index'];
             $Search[] = $Matches[0][$k];
-            $Replace[] = self::_replacePhoto($Matches[2][$k], 'Photo_');
+            $Replace[] = self::_replacePhoto($Index, $Matches[2][$k], 'Photo_');
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
@@ -666,13 +670,13 @@ class Controllers extends Base {
         return $Compile;
     }
     
-    private function _replacePhoto($Html, $Pre){
-        $Rs = $this->PhotosObj->SetCond(array('Id' => $this->Tmp['Index']))->ExecSelectOne();
+    private function _replacePhoto($Index, $Html, $Pre){
+        $Rs = $this->PhotosObj->SetCond(array('Id' => $Index))->ExecSelectOne();
         $Photos = empty($Rs['Photos']) ? array() : json_decode($Rs['Photos'], true);
         $Compile = '';
-        $Search = array('{{qcms:'.$Pre.'Name}}', '{{qcms:'.$Pre.'Path}}', '{{qcms:'.$Pre.'Size}}');
+        $Search = array('{{qcms:'.$Pre.'Name}}', '{{qcms:'.$Pre.'Path}}', '{{qcms:'.$Pre.'Size}}', '{{qcms:'.$Pre.'i}}');
         foreach($Photos as $k => $v){
-            $Replace = array($v['Name'], $v['Path'], $v['Size']);
+            $Replace = array($v['Name'], $v['Path'], $v['Size'], ($k+1));
             $Compile .= str_replace($Search, $Replace, $Html);
         }
         return $Compile;
