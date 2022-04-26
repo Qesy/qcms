@@ -2,13 +2,34 @@
 var IsEditorCreat = false;
 var URL_ROOT = "/";
 var UploadBtn = {}, interval;
-
 var UploadFilePathArr = [];
+var SelectUploadName = '';
+var FileViewArr = [];
+var Limit = 24;
 $(function(){
+    $('.browseBtn').on('click', function(){
+        SelectUploadName = $(this).attr('data-name')
+        $('#FileBrowseTitleView').html(`<a class="browseBackBtn" data-name="`+SelectUploadName+`" href="javascript:void(0);">根目录</a>`);
+        browseFile('')
+
+    })
+    $('#FileBrowseView').on('dblclick', '.subBrowseBtn', function(){
+        let Path = $(this).attr('data-path');
+        $('#FileBrowseTitleView').html(`<a class="browseBackBtn" data-name="`+SelectUploadName+`" href="javascript:void(0);">根目录</a> > `+Path);
+        browseFile(Path)
+    })
+    $('#FileBrowseTitleView').on('click', '.browseBackBtn', function(){
+        $('#FileBrowseTitleView').html(`<a class="browseBackBtn" data-name="`+SelectUploadName+`" href="javascript:void(0);">根目录</a>`);
+        browseFile('')
+    })
+
+    $('#FileBrowseView').on('dblclick', '.selectFileBtn', function(){
+        $('#Img_'+SelectUploadName).val($(this).attr('src'));
+        $('#FileBrowseModel').modal('hide');
+    })
+
     $('#SelectAllBtn').change(function(){
         $('.CheckBoxOne').prop('checked' , $(this).prop('checked'))
-
-        //if($(this).prop(true))
     })
     $('.colorpicker').colorpicker();
 	$('.StateBtn').click(function(){
@@ -107,6 +128,45 @@ $(function(){
     })
 
 })
+
+var browseFilePage = function(Page){
+    $('#FileBrowseView').html('');
+    let Start = ((Page-1)*Limit)
+    let End = (Start+Limit) > FileViewArr.length ? FileViewArr.length : (Start+Limit);
+    for(let i = Start; i< End; i++){
+        let Val = FileViewArr[i];
+        if(Val.Type == 'folder'){
+            $('#FileBrowseView').append(`
+                <div class="col-4 col-md-2 text-center"><image class="img-fluid subBrowseBtn" data-path="`+Val.Name+`" src="/Static/images/folder.png" ><div class="text-dark py-2 overflow-hidden">`+Val.Name+`</div></div>
+            `);
+        }else{
+            $('#FileBrowseView').append(`
+                <div class="col-4 col-md-2 text-center"><image class="img-fluid selectFileBtn" src="`+Val.Path+`" ><div class="text-dark py-2 overflow-hidden">`+Val.Name+`</div></div>
+            `);
+        }
+    }
+}
+
+var browseFile = function(Path){
+     $.post('/admin/api/fileBrowse', {'Path':Path}, function(Res){
+        if(Res.Code != 0){
+            alert(Res.Msg);return;
+        }
+
+        FileViewArr = Res.Data;
+        browseFilePage(1);
+       $("#FileBrowsePageModel").Pagination({
+            page:1,
+            count:Res.Data.length,
+            limit:Limit,
+            groups: 5,
+            onPageChange:function (page) {
+                browseFilePage(page);
+            }
+        });
+        $('#FileBrowseModel').modal();
+    }, 'json')
+}
 
 var contentState = function(Key, Val){
     let Ids = getAllChecked();
@@ -237,6 +297,7 @@ function EditorDestroy(){
         console.log( error );
     });
 }
+
 
 function EditorCreate(Dom){
     IsEditorCreat = true;

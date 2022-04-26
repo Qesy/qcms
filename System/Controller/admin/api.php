@@ -46,6 +46,24 @@ class Api extends ControllersAdmin {
         echo json_encode($msg);
     }
     
+    public function fileBrowse_Action(){
+        //if(!$this->VeriObj->VeriPara($_POST, array('Path'))) $this->ApiErr(1001);
+        $Path = empty($_POST['Path']) ? '' : $_POST['Path'].'/';
+        $Files = scandir(PATH_STATIC.'upload/'.$Path);
+        $Folder = array();
+        foreach($Files as $v){
+            if(in_array($v, array('.', '..'))) continue;            
+            $Type = is_dir(PATH_STATIC.'upload/'.$Path.$v) ? 'folder' : 'file';
+            if($Type == 'file'){
+                $ext = substr ( strrchr ( $v, '.' ), 1 );
+                if($ext == 'html') continue;
+            }
+            
+            $Folder[] = array('Name' => $v, 'Type' => $Type, 'Path' => URL_STATIC.'upload/'.$Path.$v);
+        }
+        $this->ApiSuccess($Folder);
+    }
+    
     public function fileClean_Action(){
         $Arr = $this->FileObj->SetCond(array('IsDel' => 1))->ExecSelect();
         try{

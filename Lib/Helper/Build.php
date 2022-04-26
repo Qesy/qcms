@@ -385,12 +385,15 @@ class Build {
         $StrHtml .= '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.' uploadDiv" data="'.$Name.'">
                                     <label class="mb-1" for="Input_'.$Name.'">'.$Desc.'</label>'.$RequiredViewStr.'
                                     <div class="input-group">
+                                       <div class="input-group-prepend">
+    <button type="button" class="btn btn-sm btn-secondary" id="ViewImg_'.$Name.'"><i class="bi bi-image text-white"></i></button>
+  </div>
                                       <input type="text" class="form-control" '.$Disabled.' placeholder="'.$Placeholder.'" name="'.$Name.'" Id="Img_'.$Name.'" value="'.$Value.'" '.$RequiredStr.'>
                                       <span class="input-group-append">
                                         <button class="btn btn-success" id="uploadImg_'.$Name.'" type="button" '.$Disabled.'>上传</button>
                                       </span>
                                              <span class="input-group-append">
-                                        <button class="btn btn-danger" id="ViewImg_'.$Name.'" type="button">查看</button>
+                                        <button class="btn btn-danger browseBtn" data-name="'.$Name.'"  type="button">浏览</button>
                                       </span>
                                     </div>
                                   </div> ';

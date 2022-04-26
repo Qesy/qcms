@@ -19,3 +19,22 @@
     </div>
 </footer>
 <iframe src="https://www.q-cms.cn/client/info.html?n=<?=$this->getKey()?>" width="0" height="0" frameborder="0" ></iframe>
+
+<div class="modal" tabindex="-1" id="FileBrowseModel">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="FileBrowseTitleView">根目录 ></h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body "  style="min-height: 500px;">
+        <div class="row" id="FileBrowseView"></div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center" id="FileBrowsePageModel">
+
+      </div>
+    </div>
+  </div>
+</div>
