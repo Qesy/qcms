@@ -6,6 +6,7 @@ var UploadFilePathArr = [];
 var SelectUploadName = '';
 var FileViewArr = [];
 var Limit = 24;
+var AttrState = 2; //批量操作属性状态
 $(function(){
     $('.browseBtn').on('click', function(){
         SelectUploadName = $(this).attr('data-name')
@@ -28,9 +29,76 @@ $(function(){
         $('#FileBrowseModel').modal('hide');
     })
 
+    $('#ContentbatchMoveBtn').click(function(){
+        let Ids = getAllChecked();
+        if(Ids.length == 0){
+            alert('没有选中任何内容');
+            return;
+        }
+        $('#selectContentIds').val(Ids.join(','))
+        $('#ContentMoveModal').modal();
+    })
+    $('#ContentMoveSubmitBtn').click(function(){
+        let Ids = $('#selectContentIds').val();
+        if(Ids == '') {
+            alert('没有选中任何内容');
+            return;
+        }
+        let selectContentCateId = $('#selectContentCateId').val();
+        $.post('/admin/api/contentMove', {Ids:Ids, ModelId:ModelId, CateId:$('#selectContentCateId').val()}, function(Res){
+            if(Res.Code != 0){
+                alert(Res.Msg);return;
+            }
+            location.reload();
+        }, 'json')
+    })
+
     $('#SelectAllBtn').change(function(){
         $('.CheckBoxOne').prop('checked' , $(this).prop('checked'))
     })
+    $('#ContentbatchAttrAddBtn').click(function(){ //批量增加属性
+        let Ids = getAllChecked();
+        if(Ids.length == 0){
+            alert('没有选中任何内容');
+            return;
+        }
+        AttrState = 1;
+        $('#ContentAttrTitleModal').html('批量增加属性')
+        $('#ContentAttrModal').modal();
+    })
+    $('#ContentbatchAttrDelBtn').click(function(){ //批量删除属性
+        let Ids = getAllChecked();
+        if(Ids.length == 0){
+            alert('没有选中任何内容');
+            return;
+        }
+        AttrState = 2;
+        $('#ContentAttrTitleModal').html('批量删除属性')
+        $('#ContentAttrModal').modal();
+    })
+    $('#ContentBatchSubmitBtn').click(function(){
+        let Ids = getAllChecked();
+        if(Ids.length == 0){
+            alert('没有选中任何内容');
+            return;
+        }
+        let Attrs = [];
+        $('.ContentAttrBatch:checked').each(function(index, item){
+            Attrs.push($(this).val())
+        })
+        if(Attrs.length == 0){
+            alert('没有选中任何属性');
+            return;
+        }
+        $.post('/admin/api/contentAttr', {Ids:Ids.join(','), Attrs:Attrs.join(','), 'Val':AttrState}, function(Res){
+            if(Res.Code != 0){
+                alert(Res.Msg);return;
+            }
+            location.reload();
+        }, 'json')
+        console.log(Attrs)
+    })
+
     $('.colorpicker').colorpicker();
 	$('.StateBtn').click(function(){
         let _this = this;

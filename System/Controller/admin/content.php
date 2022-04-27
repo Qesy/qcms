@@ -72,13 +72,16 @@ class Content extends ControllersAdmin {
         $this->BuildObj->TableFooterBtnArr = array(
             array('Name' => 'ContentState1Btn', 'Desc' => '批量发布', 'Class' => 'primary'),
             array('Name' => 'ContentState2Btn', 'Desc' => '取消发布', 'Class' => 'primary'),
+            array('Name' => 'ContentbatchMoveBtn', 'Desc' => '批量移动', 'Class' => 'primary'),
             array('Name' => 'ContentbatchDel1Btn', 'Desc' => '批量删除', 'Class' => 'primary'),
-            array('Name' => 'ContentbatchSR1Btn', 'Desc' => '批量特推', 'Class' => 'primary'),
+            array('Name' => 'ContentbatchAttrAddBtn', 'Desc' => '增加属性', 'Class' => 'primary'),
+            array('Name' => 'ContentbatchAttrDelBtn', 'Desc' => '删除属性', 'Class' => 'primary'),
+            /* array('Name' => 'ContentbatchSR1Btn', 'Desc' => '批量特推', 'Class' => 'primary'),
             array('Name' => 'ContentbatchSR2Btn', 'Desc' => '取消特推', 'Class' => 'primary'),
             array('Name' => 'ContentbatchHL1Btn', 'Desc' => '批量头条', 'Class' => 'primary'),
             array('Name' => 'ContentbatchHL2Btn', 'Desc' => '取消头条', 'Class' => 'primary'),
             array('Name' => 'ContentbatchRE1Btn', 'Desc' => '批量推荐', 'Class' => 'primary'),
-            array('Name' => 'ContentbatchRE2Btn', 'Desc' => '取消推荐', 'Class' => 'primary'),
+            array('Name' => 'ContentbatchRE2Btn', 'Desc' => '取消推荐', 'Class' => 'primary'), */
         );
 
         $this->BuildObj->PrimaryKey = 'Id';
@@ -101,8 +104,8 @@ class Content extends ControllersAdmin {
         );
         $this->BuildObj->Form('get', 'form-inline');
         $this->HeadHtml = $this->BuildObj->Html;
-        
-        $this->LoadView('admin/common/list', $tmp);
+        $tmp['CateHtml'] = $this->CategoryObj->CateTreeModelSelectHtml;
+        $this->LoadView('admin/content/list', $tmp);
     }
 
     public function add_Action(){

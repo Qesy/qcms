@@ -190,6 +190,33 @@ class Api extends ControllersAdmin {
         $this->ApiSuccess();
     }
     
+    public function contentAttr_Action(){ //批量设置属性
+        if(!$this->VeriObj->VeriPara($_POST, array('Ids', 'Attrs', 'Val'))) $this->ApiErr(1001);
+        $AllowArr = array('IsSpuerRec', 'IsHeadlines', 'IsRec', 'IsBold');
+        $NameArr = explode(',', $_POST['Attrs']);
+        $Ids = explode(',', $_POST['Ids']);
+        $UpdateArr = array();
+        foreach($NameArr as $v){
+            if(!in_array($v, $AllowArr)) continue;
+            $UpdateArr[$v] = intval($_POST['Val']);
+        }
+        $TableRs = $this->TableObj->SetCond(array('Id' => $Ids[0]))->ExecSelectOne();
+        $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
+        
+        $Ret = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Ids))->SetUpdate($UpdateArr)->ExecUpdate();
+        if($Ret === false) $this->ApiErr(1002);
+        $this->ApiSuccess();
+    }
+    
+    public function contentMove_Action(){ //移动内容
+        if(!$this->VeriObj->VeriPara($_POST, array('Ids', 'CateId', 'ModelId'))) $this->ApiErr(1001);
+        $Ids = explode(',', $_POST['Ids']);
+        $ModelRs = $this->Sys_modelObj->getOne($_POST['ModelId']);
+        $Ret = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Ids))->SetUpdate(array('CateId' => $_POST['CateId']))->ExecUpdate();
+        if($Ret === false) $this->ApiErr(1002);
+        $this->ApiSuccess();
+    }
+    
     public function deleteRec_Action(){ // 彻底删除
         if(!$this->VeriObj->VeriPara($_POST, array('Ids'))) $this->ApiErr(1001);
         $Ids = explode(',', $_POST['Ids']);        
