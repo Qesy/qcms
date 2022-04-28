@@ -1314,7 +1314,7 @@ class ControllersAdmin extends Controllers {
     }
     
     public function getVerUpdate(){
-        $Json = $this->CurlObj->SetUrl('http://qweb.demo.com/client/getUpdate.html')->SetPara(array('Domain' => URL_DOMAIN, 'Version' => $this->SysRs['Version']))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Json = $this->CurlObj->SetUrl('https://www.q-cms.cn/client/getUpdate.html')->SetPara(array('Domain' => URL_DOMAIN, 'Version' => $this->SysRs['Version']))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
     }
