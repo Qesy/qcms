@@ -46,7 +46,9 @@ class Index extends ControllersAdmin {
             if($UnZipRet === false) $this->Err(1018);
             $CopyRet = $this->CommonObj->DirCopy($CmsUpdatePath, './');
             if($CopyRet === false) $this->Err(1019);
-            require_once './System/upgrade/upgrade_'.$Ret['Data']['Version'].'.php';
+            $upgradeFile = './System/upgrade/upgrade_'.$Ret['Data']['Version'].'.php';
+            if(!file_exists($upgradeFile)) $this->Err(1035);
+            require_once $upgradeFile;
             $UpgradeObj = new Upgrade();
             try{
                 DB::$s_db_obj->beginTransaction();
