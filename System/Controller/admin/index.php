@@ -29,4 +29,38 @@ class Index extends ControllersAdmin {
         $this->LoadView('admin/index/index', $tmp);
     }
     
+    public function verUpdate_Action(){       
+        $Ret = $this->getVerUpdate();
+        //var_dump($Ret);exit;
+        if(!empty($_POST)){
+            $DownRet = @file_get_contents($Ret['Data']['AddressPatch']);
+            if($DownRet === false) $this->ApiErr(1016);
+            $Path = './Static/tmp/';
+            $FileName = 'QCms_v'.$Ret['Data']['Version'].'_update.zip';
+            var_dump($Path.$FileName);
+            $WriteRet = @file_put_contents($Path.$FileName, $DownRet);
+            if($WriteRet === false) $this->ApiErr(1017);
+            $CmsUpdatePath = $Path.'QCms_v'.$Ret['Data']['Version'].'_update';
+            $UnZipRet = $this->CommonObj->UnZip($Path.$FileName, $CmsUpdatePath);
+            if($UnZipRet === false) $this->ApiErr(1018);
+            $CopyRet = $this->CommonObj->DirCopy($CmsUpdatePath, './');
+            if($CopyRet === false) $this->ApiErr(1019);
+            exit;
+        }
+        if(empty($Ret['Data'])){
+            $VersionUpdate = '无更新版本';
+        }else{
+            $VersionUpdate = $Ret['Data']['Version'];
+        }        
+        $this->BuildObj->Arr = array(
+            array('Name' =>'Version', 'Desc' => '当前版本',  'Type' => 'input', 'Value' => $this->SysRs['Version'], 'Required' => 1, 'Col' => 6),
+            array('Type' =>'htmlFill', 'Col' => 6),
+            array('Name' =>'VersionUpdate', 'Desc' => '升级版本',  'Type' => 'input', 'Value' => $VersionUpdate, 'Required' => 1, 'Col' => 6),             
+            array('Type' =>'htmlFill', 'Col' => 6),            
+        );
+        $this->BuildObj->NameSubmit = '立即升级';
+        $this->BuildObj->Form('post', 'form-row');
+        $this->LoadView('admin/common/edit');
+    }
+    
 }

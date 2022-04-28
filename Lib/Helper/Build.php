@@ -31,6 +31,7 @@ class Build {
     public $NameAdd = '添加';
     public $NameEdit = '修改';
     public $NameDel = '删除';
+    public $NameSubmit = '提交';
     public $UploadUrl;
     public $UploadEditUrl;
     public $UploadEditFileUrl;
@@ -166,7 +167,7 @@ class Build {
         }
         if($Class != 'form-inline') $Col = 12;
         $ButtonArr = array();
-        if($this->IsSubmit) $ButtonArr[] = array('Name' => 'submit', 'Type' => 'submit', 'Desc' => '提交');
+        if($this->IsSubmit) $ButtonArr[] = array('Name' => 'submit', 'Type' => 'submit', 'Desc' => $this->NameSubmit);
         if($this->IsBack) $ButtonArr[] = array('Name' => 'back', 'Type' => 'button', 'Desc' => '返回');
         foreach($this->FormFooterBtnArr as $v) $ButtonArr[] = $v;
         $this->Html .= self::_FromButtonGroup($ButtonArr, $Class);  

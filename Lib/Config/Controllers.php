@@ -951,6 +951,7 @@ class ControllersAdmin extends Controllers {
     function __construct(){
         parent::__construct();
         self::_postKey();
+        self::_getUpdate();
         $Token = $this->CookieObj->get('Token', 'User');
         $TokenRs = $this->TokenObj->getOne($Token);
         if(empty($TokenRs)) $this->Jump(array('index', 'adminLogout'), 1007);
@@ -973,6 +974,7 @@ class ControllersAdmin extends Controllers {
             'admin/templates' => array('Name' => '模板管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates'))),
             // 用户首页
             'admin/index/index' => array('Name' => '用户首页', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'index', 'index'))),
+            'admin/index/verUpdate' => array('Name' => '系统升级', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'index', 'verUpdate'))),
             // 系统管理
             'admin/sys/index' => array('Name' => '基本设置', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sys', 'index'))),
             'admin/sys/license' => array('Name' => '系统授权', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sys', 'license'))),
@@ -1298,6 +1300,21 @@ class ControllersAdmin extends Controllers {
             $Ret['Msg'] = '写入配置文件失败';
             return $Ret;
         }
+        return $Ret;
+    }
+    
+    private function _getUpdate(){
+        $pTime = $this->CookieObj->get('UpdateTs', 'User');
+        if(empty($pTime) || time() - $pTime > 3600){     
+            $Ret = self::getVerUpdate();
+            $IsUpdate = empty($Ret['Data']) ? 2 : 1;
+            $this->CookieObj->set(array('UpdateTs' => time(), 'IsUpdate' => $IsUpdate), 'User');
+        }
+    }
+    
+    public function getVerUpdate(){
+        $Json = $this->CurlObj->SetUrl('http://qweb.demo.com/client/getUpdate.html')->SetPara(array('Domain' => URL_DOMAIN, 'Version' => $this->SysRs['Version']))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Ret = json_decode($Json, true);
         return $Ret;
     }
     

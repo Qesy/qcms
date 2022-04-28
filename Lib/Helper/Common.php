@@ -276,7 +276,99 @@ class Common {
 	    }
 	    return URL_ROOT . implode ( '/', $Url ) . '.html';
 	}
+	
+	/**
+	 * 压缩文件
+	 * @param array $files 待压缩文件 array('d:/test/1.txt'，'d:/test/2.jpg');【文件地址为绝对路径】
+	 * @param string $filePath 输出文件路径 【绝对文件地址】 如 d:/test/new.zip
+	 * @return string|bool
+	 */
+	public function Zip($files, $filePath) {
+	    //检查参数
+	    if (empty($files) || empty($filePath)) {
+	        return false;
+	    }
+	    
+	    //压缩文件
+	    $zip = new \ZipArchive();
+	    $zip->open($filePath, \ZipArchive::CREATE);
+	    foreach ($files as $key => $file) {
+	        //检查文件是否存在
+	        if (!file_exists($file)) {
+	            return false;
+	        }
+	        $zip->addFile($file, basename($file));
+	    }
+	    $zip->close();
+	    
+	    return true;
+	}
+	
+	/**
+	 * zip解压方法
+	 * @param string $filePath 压缩包所在地址 【绝对文件地址】d:/test/123.zip
+	 * @param string $path 解压路径 【绝对文件目录路径】d:/test
+	 * @return bool
+	 */
+	public function UnZip($filePath, $path) {
+	    if (empty($path) || empty($filePath)) {
+	        return false;
+	    }
+	    
+	    $zip = new \ZipArchive();
+	    
+	    if ($zip->open($filePath) === true) {
+	        $zip->extractTo($path);
+	        $zip->close();
+	        return true;
+	    } else {
+	        return false;
+	    }
+	}
 
+	/**
+	 * 文件夹文件拷贝
+	 *
+	 * @param string $src 来源文件夹
+	 * @param string $dst 目的地文件夹
+	 * @return bool
+	 */
+	public function DirCopy($Src = '', $Dst = ''){
+	    if (empty($Src) || empty($Dst)){
+	        return false;
+	    }
+	    $Dir = opendir($Src);
+	    $this->DirMkDir($Dst);
+	    while (false !== ($file = readdir($Dir))){
+	        if (($file != '.') && ($file != '..')){
+	            if (is_dir($Src . '/' . $file)){
+	                $this->DirCopy($Src . '/' . $file, $Dst . '/' . $file);
+	            }else{
+	                copy($Src . '/' . $file, $Dst . '/' . $file);
+	            }
+	        }
+	    }
+	    closedir($Dir);
+	    return true;
+	}
+	
+	/**
+	 * 创建文件夹
+	 *
+	 * @param string $path 文件夹路径
+	 * @param int $mode 访问权限
+	 * @param bool $recursive 是否递归创建
+	 * @return bool
+	 */
+	public function DirMkDir($path = '', $mode = 0777, $recursive = true){
+	    clearstatcache();
+	    if (!is_dir($path)){
+	        mkdir($path, $mode, $recursive);
+	        return chmod($path, $mode);
+	    }
+	    return true;
+	}
+	
 	public function PageBar($Count, $Size) { // -- 分页 --
 	    $Num = 9;
 	    $PageNum = !empty($_GET['Page']) ? intval($_GET['Page']) : 1;
