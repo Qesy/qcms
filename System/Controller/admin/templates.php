@@ -101,6 +101,16 @@ class Templates extends ControllersAdmin {
         $this->Jump(array('admin', 'templates', 'index'), 1888);
     }
 
+    public function market_Action(){
+        $Page = intval($_GET['Page']);
+        if($Page < 1) $Page = 1;
+        $PageNum = 10;
+        $Ret = $this->getTemplaites($Page, $PageNum);
+        $tmp['Arr'] = $Ret['Data']['List'];
+        $tmp['Page'] = $this->CommonObj->PageBar($Ret['Data']['Count'], $PageNum);
+        $this->LoadView('admin/templates/market', $tmp);
+    }
+    
     public function builder_Action(){
         $LabelArr = array(
             'include' => '引入组件',

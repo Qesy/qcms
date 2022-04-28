@@ -239,6 +239,37 @@ class Api extends ControllersAdmin {
         $this->ApiSuccess();
     }
     
+    public function installTemplate_Action(){
+        if(!$this->VeriObj->VeriPara($_GET, array('TemplatesId'))) $this->ApiErr(1001);
+        $Ret = $this->getTemplateInfo($_GET['TemplatesId']);
+        $DownRet = @file_get_contents($Ret['Data']['Address']);
+        if($DownRet === false) $this->ApiErr(1016);
+        $Path = './Static/tmp/';
+        $FileName = 'QCms_'.$Ret['Data']['Key'].'_template.zip';
+        $WriteRet = @file_put_contents($Path.$FileName, $DownRet);
+        if($WriteRet === false) $this->ApiErr(1017);
+        $CmsUpdatePath = $Path.'QCms_'.$Ret['Data']['Key'].'_template';
+        $UnZipRet = $this->CommonObj->UnZip($Path.$FileName, $CmsUpdatePath);
+        if($UnZipRet === false) $this->ApiErr(1018);
+        $TempPath = './Template/'.$Ret['Data']['Key'];
+        $TempStaticPath = './Static/'.$Ret['Data']['Key'];
+        $CopyRet = $this->CommonObj->DirCopy($CmsUpdatePath.'/html', $TempPath);
+        $CopyRet2 = $this->CommonObj->DirCopy($CmsUpdatePath.'/static', $TempStaticPath);
+        if($CopyRet === false || $CopyRet2 === false) $this->ApiErr(1019);
+        if(file_exists($CmsUpdatePath.'/data.sql')){
+            try{
+                DB::$s_db_obj->beginTransaction();
+                $this->SysObj->ImportSql($CmsUpdatePath.'/data.sql');
+                DB::$s_db_obj->commit();
+            }catch (PDOException $e){
+                DB::$s_db_obj->rollBack();
+                $this->ApiErr(1002);
+            }
+            
+        }
+        $this->ApiSuccess();
+    }
+    
     public function sort_Action(){ // 排序
         if(!$this->VeriObj->VeriPara($_POST, array('Index', 'Type', 'Sort'))) $this->ApiErr(1001);
         if($_POST['Type'] == 'category'){

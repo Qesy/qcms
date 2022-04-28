@@ -1118,6 +1118,7 @@ class ControllersAdmin extends Controllers {
             'admin/templates/builder' => array('Name' => '代码生成器', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'builder'))),
             'admin/templates/test' => array('Name' => '模板标签测试', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'test'))),
             'admin/templates/api' => array('Name' => 'API接口调试', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'api'))),
+            'admin/templates/market' => array('Name' => '模板市场', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'market'))),
             // API
             'admin/api/ajaxUpload' => array('Name' => 'AJAX上传', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'ajaxUpload'))),
             'admin/api/batchUpload' => array('Name' => '批量上传', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'batchUpload'))),
@@ -1139,6 +1140,7 @@ class ControllersAdmin extends Controllers {
             'admin/api/fileBrowse' => array('Name' => '浏览上传目录', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'fileBrowse'))),
             'admin/api/contentAttr' => array('Name' => '批量操作内容属性', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'contentAttr'))),
             'admin/api/contentMove' => array('Name' => '批量移动内容', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'contentMove'))),
+            'admin/api/installTemplate' => array('Name' => '安装模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'installTemplate'))),
             'index/adminLogout' => array('Name' => '安全退出', 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(array('index', 'adminLogout'))),
 
         );
@@ -1183,6 +1185,7 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/file/index'),
             )),
             array('Key' => 'admin/templates', 'subCont' => array('templates'), 'Icon' => 'bi bi-code-slash', 'Sub' => array(
+                array('Key' => 'admin/templates/market'),
                 array('Key' => 'admin/templates/index'),
                 array('Key' => 'admin/templates/builder'),
                 array('Key' => 'admin/templates/test'),
@@ -1304,6 +1307,24 @@ class ControllersAdmin extends Controllers {
         return $Ret;
     }
     
+    public function getTemplaites($Page, $PageNum){        
+        $Json = $this->CurlObj->SetUrl('http://qweb.demo.com/client/templates.html')->SetPara(array('Domain' => URL_DOMAIN, 'Page' => $Page, 'PageNum' => $PageNum))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Ret = json_decode($Json, true);
+        return $Ret;
+    }
+    
+    public function getVerUpdate(){
+        $Json = $this->CurlObj->SetUrl('https://www.q-cms.cn/client/getUpdate.html')->SetPara(array('Domain' => URL_DOMAIN, 'Version' => $this->SysRs['Version']))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Ret = json_decode($Json, true);
+        return $Ret;
+    }
+    
+    public function getTemplateInfo($TemplatesId){
+        $Json = $this->CurlObj->SetUrl('http://qweb.demo.com/client/getTemplate.html')->SetPara(array('Domain' => URL_DOMAIN, 'TemplatesId' => $TemplatesId, 'License' => $this->SysRs['License']))->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Ret = json_decode($Json, true);
+        return $Ret;
+    }
+    
     private function _getUpdate(){
         $pTime = $this->CookieObj->get('UpdateTs', 'User');
         if(empty($pTime) || time() - $pTime > 3600){     
@@ -1311,12 +1332,6 @@ class ControllersAdmin extends Controllers {
             $IsUpdate = empty($Ret['Data']) ? 2 : 1;
             $this->CookieObj->set(array('UpdateTs' => time(), 'IsUpdate' => $IsUpdate), 'User');
         }
-    }
-    
-    public function getVerUpdate(){
-        $Json = $this->CurlObj->SetUrl('https://www.q-cms.cn/client/getUpdate.html')->SetPara(array('Domain' => URL_DOMAIN, 'Version' => $this->SysRs['Version']))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
-        $Ret = json_decode($Json, true);
-        return $Ret;
     }
     
     private function _postKey(){
