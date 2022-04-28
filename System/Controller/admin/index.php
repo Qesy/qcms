@@ -30,22 +30,22 @@ class Index extends ControllersAdmin {
     }
     
     public function verUpdate_Action(){       
-        $Ret = $this->getVerUpdate();
-        //var_dump($Ret);exit;
-        if(!empty($_POST)){
+        $Ret = $this->getVerUpdate();        
+        if(!empty($_POST) && !empty($Ret['Data'])){
             $DownRet = @file_get_contents($Ret['Data']['AddressPatch']);
-            if($DownRet === false) $this->ApiErr(1016);
+            if($DownRet === false) $this->Err(1016);
             $Path = './Static/tmp/';
             $FileName = 'QCms_v'.$Ret['Data']['Version'].'_update.zip';
-            var_dump($Path.$FileName);
             $WriteRet = @file_put_contents($Path.$FileName, $DownRet);
-            if($WriteRet === false) $this->ApiErr(1017);
+            if($WriteRet === false) $this->Err(1017);
             $CmsUpdatePath = $Path.'QCms_v'.$Ret['Data']['Version'].'_update';
             $UnZipRet = $this->CommonObj->UnZip($Path.$FileName, $CmsUpdatePath);
-            if($UnZipRet === false) $this->ApiErr(1018);
+            if($UnZipRet === false) $this->Err(1018);
             $CopyRet = $this->CommonObj->DirCopy($CmsUpdatePath, './');
-            if($CopyRet === false) $this->ApiErr(1019);
-            exit;
+            if($CopyRet === false) $this->Err(1019);
+            $Ret = $this->SysObj->SetCond(array('Name' => 'Version'))->SetUpdate(array('AttrValue' => $Ret['Data']['Version']))->ExecUpdate();
+            if($Ret === false) $this->Err(1002);
+            $this->Jump(array('admin', 'index', 'verUpdate'), 1888);
         }
         if(empty($Ret['Data'])){
             $VersionUpdate = '无更新版本';

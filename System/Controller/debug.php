@@ -2,8 +2,14 @@
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class Debug extends Controllers {
     
-    public function w_Action(){
-        
+    public function testUp_Action(){
+
+        require_once './System/Upgrade/upgrade_6.0.1.php';
+        $UpgradeObj = new Upgrade();
+        $UpgradeObj->Exec();
+    }
+    
+    public function w_Action(){        
         $this->WaterMaskObj->waterType = 1;
         $this->WaterMaskObj->waterImg = realpath('./Static/images/mark.png');
         $this->WaterMaskObj->fontFile = realpath('./Static/fonts/msyh.ttc');
