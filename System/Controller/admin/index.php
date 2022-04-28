@@ -1,4 +1,7 @@
 <?php
+use Helper\RedisKey;
+use Helper\Redis;
+
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class Index extends ControllersAdmin {
     
@@ -43,8 +46,21 @@ class Index extends ControllersAdmin {
             if($UnZipRet === false) $this->Err(1018);
             $CopyRet = $this->CommonObj->DirCopy($CmsUpdatePath, './');
             if($CopyRet === false) $this->Err(1019);
-            $Ret = $this->SysObj->SetCond(array('Name' => 'Version'))->SetUpdate(array('AttrValue' => $Ret['Data']['Version']))->ExecUpdate();
-            if($Ret === false) $this->Err(1002);
+            require_once './System/upgrade/upgrade_'.$Ret['Data']['Version'].'.php';
+            $UpgradeObj = new Upgrade();
+            try{
+                DB::$s_db_obj->beginTransaction();
+                $this->SysObj->SetCond(array('Name' => 'Version'))->SetUpdate(array('AttrValue' => $Ret['Data']['Version']))->ExecUpdate();
+                $UpgradeObj->Exec();
+                DB::$s_db_obj->commit();
+            }catch(PDOException $e){
+                DB::$s_db_obj->rollBack();
+                $this->Err(1002);
+            }            
+            if(Redis::$s_IsOpen == 1){ //清空缓存      
+                $Keys = Redis::keys(RedisKey::$s_projectKey.'_*');
+                foreach($Keys as $v)Redis::del($v);
+            }             
             $this->Jump(array('admin', 'index', 'verUpdate'), 1888);
         }
         if(empty($Ret['Data'])){
