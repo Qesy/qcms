@@ -283,7 +283,12 @@ class Build {
             $Class = isset($v['Class']) ? $v['Class'] : 'primary';
             $Type = isset($v['Type']) ? $v['Type'] : 'submit';
             $IsBack = ($v['Name'] == 'back') ? 'onclick="history.go(-1)"' : '';
-            $Html .= '<button type="'.$Type.'" '.$IsBack.' class="mr-2 btn btn-'.$Class.' " id="Button_'.$v['Name'].'">'.$v['Desc'].'</button>';
+            if(isset($v['Type']) && $v['Type'] == 'Link'){
+                $Html .= '<a href="'.$v['Url'].'" class="mr-2 btn btn-'.$Class.' " id="Button_'.$v['Name'].'">'.$v['Desc'].'</a>';
+            }else{
+                $Html .= '<button type="'.$Type.'" '.$IsBack.' class="mr-2 btn btn-'.$Class.' " id="Button_'.$v['Name'].'">'.$v['Desc'].'</button>';
+            }
+            
         }
         return '<div class="form-group '.(($FormClass == 'form-inline') ? '' : 'col-'.$SubCol.'  col-lg-'.$Col).'">'.$Html.'</div>';
     }

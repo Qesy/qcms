@@ -38,6 +38,18 @@
             <i class="bi bi-chat-text "></i> 官网论坛
             </a>
         </li>
+        <li>
+            <a href="<?=$this->CommonObj->Url(array('admin', 'index', 'upgrade'))?>" >
+            <?
+            if($this->CookieObj->get('IsUpdate', 'User') == '1'){
+                echo '<i class="bi bi-shift-fill text-primary"></i>';
+            }else{
+                echo '<i class="bi bi-shift"></i>';
+            }
+            ?>
+             系统升级
+            </a>
+        </li>
         <li class="dropdown">
             <a href="#" class="pr-0" data-toggle="dropdown"><img src="<?= (empty($this->LoginUserRs['Head']) ? URL_IMG . 'head.png' : $this->LoginUserRs['Head']) ?>" alt="user_auth" class="user-auth-img rounded-circle"></a>
             <ul class="dropdown-menu " data-dropdown-in="fadeIn" data-dropdown-out="fadeOut">

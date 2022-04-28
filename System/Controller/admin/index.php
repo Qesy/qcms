@@ -32,7 +32,7 @@ class Index extends ControllersAdmin {
         $this->LoadView('admin/index/index', $tmp);
     }
     
-    public function verUpdate_Action(){       
+    public function upgrade_Action(){       
         $Ret = $this->getVerUpdate();        
         if(!empty($_POST) && !empty($Ret['Data'])){
             $DownRet = @file_get_contents($Ret['Data']['AddressPatch']);
@@ -57,11 +57,12 @@ class Index extends ControllersAdmin {
                 DB::$s_db_obj->rollBack();
                 $this->Err(1002);
             }            
+            $this->CookieObj->del(array('UpdateTs' => '', 'IsUpdate' => ''), 'User');
             if(Redis::$s_IsOpen == 1){ //清空缓存      
                 $Keys = Redis::keys(RedisKey::$s_projectKey.'_*');
                 foreach($Keys as $v)Redis::del($v);
             }             
-            $this->Jump(array('admin', 'index', 'verUpdate'), 1888);
+            $this->Jump(array('admin', 'index', 'upgrade'), 1888);
         }
         if(empty($Ret['Data'])){
             $VersionUpdate = '无更新版本';
@@ -72,11 +73,37 @@ class Index extends ControllersAdmin {
             array('Name' =>'Version', 'Desc' => '当前版本',  'Type' => 'input', 'Value' => $this->SysRs['Version'], 'Required' => 1, 'Col' => 6),
             array('Type' =>'htmlFill', 'Col' => 6),
             array('Name' =>'VersionUpdate', 'Desc' => '升级版本',  'Type' => 'input', 'Value' => $VersionUpdate, 'Required' => 1, 'Col' => 6),             
-            array('Type' =>'htmlFill', 'Col' => 6),            
+            array('Type' =>'htmlFill', 'Col' => 6),         
+        );
+        $this->BuildObj->FormFooterBtnArr = array(
+            array('Name' => 'Update', 'Desc' => '手动升级', 'Class' => 'default', 'Type' => 'Link', 'Url' => $this->CommonObj->Url(array('admin', 'index', 'upgradeManual'))),
         );
         $this->BuildObj->NameSubmit = '立即升级';
         $this->BuildObj->Form('post', 'form-row');
         $this->LoadView('admin/common/edit');
+    }
+    
+    public function upgradeManual_Action(){
+        $Ret = $this->getVerUpdate();        
+        $upgradeFile = './System/upgrade/upgrade_'.$Ret['Data']['Version'].'.php';
+        if(!file_exists($upgradeFile)) $this->Err(1035);
+        require_once $upgradeFile;
+        $UpgradeObj = new Upgrade();
+        try{
+            DB::$s_db_obj->beginTransaction();
+            $this->SysObj->SetCond(array('Name' => 'Version'))->SetUpdate(array('AttrValue' => $Ret['Data']['Version']))->ExecUpdate();
+            $UpgradeObj->Exec();
+            DB::$s_db_obj->commit();
+        }catch(PDOException $e){
+            DB::$s_db_obj->rollBack();
+            $this->Err(1002);
+        }
+        $this->CookieObj->del(array('UpdateTs' => '', 'IsUpdate' => ''), 'User');
+        if(Redis::$s_IsOpen == 1){ //清空缓存
+            $Keys = Redis::keys(RedisKey::$s_projectKey.'_*');
+            foreach($Keys as $v)Redis::del($v);
+        }
+        $this->Jump(array('admin', 'index', 'upgrade'), 1888);
     }
     
 }

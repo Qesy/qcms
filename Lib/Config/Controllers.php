@@ -974,7 +974,8 @@ class ControllersAdmin extends Controllers {
             'admin/templates' => array('Name' => '模板管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates'))),
             // 用户首页
             'admin/index/index' => array('Name' => '用户首页', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'index', 'index'))),
-            'admin/index/verUpdate' => array('Name' => '系统升级', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'index', 'verUpdate'))),
+            'admin/index/upgrade' => array('Name' => '系统升级', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'index', 'upgrade'))),
+            'admin/index/upgradeManual' => array('Name' => '系统升级', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'index', 'upgradeManual'))),
             // 系统管理
             'admin/sys/index' => array('Name' => '基本设置', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sys', 'index'))),
             'admin/sys/license' => array('Name' => '系统授权', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sys', 'license'))),
