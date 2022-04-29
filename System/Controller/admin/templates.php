@@ -18,7 +18,7 @@ class Templates extends ControllersAdmin {
         'down' => '下载',
         'default' => '默认',
         'main' => '主要',
-        'cover' => '封面',
+        'page' => '封面',
     );
 
     public function index_Action(){
@@ -30,7 +30,7 @@ class Templates extends ControllersAdmin {
             $i++;
             $FileArr = explode('_', substr($v, 0, -5));
             $Desc = $this->TempType[$FileArr[0]];
-            $Desc2 = isset($this->TempModelType[$FileArr[1]]) ? $this->TempModelType[$FileArr[1]] : '未知';
+            $Desc2 = isset($this->TempModelType[$FileArr[1]]) ? $this->TempModelType[$FileArr[1]] : $FileArr[1];
             $Desc3 = isset($FileArr[2]) ? $FileArr[2] : '';
             $FilePath = PATH_TEMPLATE.$this->SysRs['TmpPath'].'/'.$v;
             $Size = $this->CommonObj->Size(filesize($FilePath));
