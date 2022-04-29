@@ -630,6 +630,7 @@ INSERT INTO `qc_sys` VALUES ('StatsCode', '统计代码', '<script type=\"text/j
 INSERT INTO `qc_sys` VALUES ('ThumbSize', '允许缩略图尺寸(240x180|360x120)', '240x180', 3, 'input', 3003, 1);
 INSERT INTO `qc_sys` VALUES ('TmpIndex', '首页模板', 'index_main.html', 1, 'select', 1002, 1);
 INSERT INTO `qc_sys` VALUES ('TmpPath', '模板路径', 'default', 2, 'select', 2010, 1);
+INSERT INTO `qc_sys` VALUES ('TmpPathMobile','手机模板路径','',2,'select',2010,1);
 INSERT INTO `qc_sys` VALUES ('TmpSearch', '搜索页模板', 'search_default.html', 1, 'select', 1003, 1);
 INSERT INTO `qc_sys` VALUES ('UrlDetail', '详情地址命名规则', '{Id}.html', 2, 'input', 2061, 1);
 INSERT INTO `qc_sys` VALUES ('UrlForm', '表单地址命名规则', '{KeyName}.html', 9, 'input', 2063, 1);

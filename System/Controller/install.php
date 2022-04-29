@@ -57,7 +57,8 @@ class Install extends ControllersInstall {
                     'State' => 1,
                     'TsAdd' => $Ts,
                     'IpAdd' => $this->CommonObj->ip(),
-                ))->ExecInsert();                
+                ))->ExecInsert();  
+                $this->SysObj->SetCond(array('Name' => 'Version'))->SetUpdate(array('AttrValue' => VERSION))->ExecUpdate();
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
                 DB::$s_db_obj->rollBack();
