@@ -245,14 +245,14 @@ class Api extends ControllersAdmin {
         $DownRet = @file_get_contents($Ret['Data']['Address']);
         if($DownRet === false) $this->ApiErr(1016);
         $Path = './Static/tmp/';
-        $FileName = 'QCms_'.$Ret['Data']['Key'].'_template.zip';
+        $FileName = 'QCms_'.$Ret['Data']['NameKey'].'_template.zip';
         $WriteRet = @file_put_contents($Path.$FileName, $DownRet);
         if($WriteRet === false) $this->ApiErr(1017);
-        $CmsUpdatePath = $Path.'QCms_'.$Ret['Data']['Key'].'_template';
+        $CmsUpdatePath = $Path.'QCms_'.$Ret['Data']['NameKey'].'_template';
         $UnZipRet = $this->CommonObj->UnZip($Path.$FileName, $CmsUpdatePath);
         if($UnZipRet === false) $this->ApiErr(1018);
-        $TempPath = './Template/'.$Ret['Data']['Key'];
-        $TempStaticPath = './Static/'.$Ret['Data']['Key'];
+        $TempPath = './Template/'.$Ret['Data']['NameKey'];
+        $TempStaticPath = './Static/'.$Ret['Data']['NameKey'];
         $CopyRet = $this->CommonObj->DirCopy($CmsUpdatePath.'/html', $TempPath);
         $CopyRet2 = $this->CommonObj->DirCopy($CmsUpdatePath.'/static', $TempStaticPath);
         if($CopyRet === false || $CopyRet2 === false) $this->ApiErr(1019);

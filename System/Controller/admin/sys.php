@@ -19,13 +19,14 @@ class Sys extends ControllersAdmin {
             $this->SysObj->cleanList();
             $this->Jump(array('admin', 'sys', 'index'), 1888);
         }
-        $Files = scandir(PATH_TEMPLATE);
+        /* $Files = scandir(PATH_TEMPLATE);
         $Folder = array();
         foreach($Files as $v){
             if(in_array($v, array('.', '..'))) continue;
             if(!is_dir(PATH_TEMPLATE.$v)) continue;
             $Folder[$v] = $v;
-        }
+        } */
+        $Folder = $this->getTempFolder();
         $SysArr = $this->SysObj->getList();
         $FormArr = array();
         $TempList = $this->getTemplate('index_');

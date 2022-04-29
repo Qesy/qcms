@@ -61,6 +61,11 @@
                                         foreach($Arr as $k => $v){
                                         ?>
                                         <div class="col-lg-2 mb-4">
+                                            <?
+                                            if(isset($TempFolder[$v['NameKey']])){
+                                            ?>
+                                            <span class="position-absolute btn btn-danger btn-sm" style="right:1rem;top:0px;">已安装</span>
+                                            <? } ?>
                                             <a href="javascript:void(0);" class="tempViewBtn" data-index="<?=$k?>">
                                                         <div class="border mb-2" >
                                                             <img alt="image" class="img-fluid" src="<?=$v['Pic']?>">
@@ -113,23 +118,38 @@
     <?=$this->LoadView('admin/common/js')?>
     <script type="text/javascript">
         var TemplateArr = <?=json_encode($Arr)?>;
+        var TempFolder = <?=json_encode($TempFolder)?>;
         var SelectIndex = -1;
         $(function(){
             $('.tempViewBtn').click(function(){
                 SelectIndex = $(this).attr('data-index');
+                let NameKey = TemplateArr[SelectIndex]['NameKey'];
                 $('#tempViewModal .modal-title').html(TemplateArr[SelectIndex]['Name']);
                 $('#tempViewModal .modal-body').html(`
                     <img class="img-fluid" src="`+TemplateArr[SelectIndex]['Pic']+`"/>
                 `);
+                if(typeof TempFolder[NameKey] == 'undefined'){
+                    $('#installBtn').html('安装');
+                    $('#installBtn').addClass('btn-primary').removeClass('btn-danger').removeAttr("disabled");
+                }else{
+                    $('#installBtn').html('已安装');
+                    $('#installBtn').addClass('btn-danger').removeClass('btn-primary').attr("disabled", "disabled");
+                }
                 $('#tempViewModal').modal();
             })
             $('#installBtn').click(function(){
+                if(!confirm("安装模板覆盖数据库，请先备份数据库，再安装")) return;
+                let NameKey = TemplateArr[SelectIndex]['NameKey'];
+                if(typeof TempFolder[NameKey] != 'undefined'){
+                    alert('已安装，请先删除，再安装');return;
+                }
                 $.get('/admin/api/installTemplate', {TemplatesId:TemplateArr[SelectIndex]['TemplatesId']}, function(Res){
                     if(Res.Code != 0){
                         alert(Res.Msg);return;
                     }
                     alert('安装成功');
                     $('#tempViewModal').modal('hide');
+                    location.reload();
                 }, 'json')
             })
         })

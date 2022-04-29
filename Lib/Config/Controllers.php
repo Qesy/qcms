@@ -1255,6 +1255,17 @@ class ControllersAdmin extends Controllers {
         return $Template;
     }
     
+    public function getTempFolder(){ // 获取模板文件夹
+        $Files = scandir(PATH_TEMPLATE);
+        $Folder = array();
+        foreach($Files as $v){
+            if(in_array($v, array('.', '..'))) continue;
+            if(!is_dir(PATH_TEMPLATE.$v)) continue;
+            $Folder[$v] = $v;
+        }
+        return $Folder;
+    }
+    
     public function getLicense($LicenseStr){
         $pk = self::_pvKey();
         return $this->_sslDecrypt($LicenseStr, $pk, 'public');

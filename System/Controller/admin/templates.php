@@ -108,6 +108,7 @@ class Templates extends ControllersAdmin {
         $Ret = $this->getTemplaites($Page, $PageNum);
         $tmp['Arr'] = $Ret['Data']['List'];
         $tmp['Page'] = $this->CommonObj->PageBar($Ret['Data']['Count'], $PageNum);
+        $tmp['TempFolder'] = $this->getTempFolder();
         $this->LoadView('admin/templates/market', $tmp);
     }
     
