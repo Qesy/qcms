@@ -1319,7 +1319,7 @@ class ControllersAdmin extends Controllers {
     }
     
     public function getTemplaites($Page, $PageNum){        
-        $Json = $this->CurlObj->SetUrl('http://qweb.demo.com/client/templates.html')->SetPara(array('Domain' => URL_DOMAIN, 'Page' => $Page, 'PageNum' => $PageNum))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Json = $this->CurlObj->SetUrl('https://www.q-cms.cn/client/templates.html')->SetPara(array('Domain' => URL_DOMAIN, 'Page' => $Page, 'PageNum' => $PageNum))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
     }
@@ -1331,7 +1331,7 @@ class ControllersAdmin extends Controllers {
     }
     
     public function getTemplateInfo($TemplatesId){
-        $Json = $this->CurlObj->SetUrl('http://qweb.demo.com/client/getTemplate.html')->SetPara(array('Domain' => URL_DOMAIN, 'TemplatesId' => $TemplatesId, 'License' => $this->SysRs['License']))->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Json = $this->CurlObj->SetUrl('https://www.q-cms.cn/client/getTemplate.html')->SetPara(array('Domain' => URL_DOMAIN, 'TemplatesId' => $TemplatesId, 'License' => $this->SysRs['License']))->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
     }
