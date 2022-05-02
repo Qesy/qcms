@@ -5,13 +5,13 @@
  Source Server Type    : MySQL
  Source Server Version : 50726
  Source Host           : localhost:3306
- Source Schema         : qcmsv6
+ Source Schema         : qcms
 
  Target Server Type    : MySQL
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 14/04/2022 19:55:31
+ Date: 02/05/2022 20:58:31
 */
 
 SET NAMES utf8mb4;
@@ -24,6 +24,7 @@ DROP TABLE IF EXISTS `qc_category`;
 CREATE TABLE `qc_category`  (
   `CateId` int(11) NOT NULL AUTO_INCREMENT,
   `PCateId` int(11) NOT NULL DEFAULT 0 COMMENT '上级栏目',
+  `TCateId` int(11) NOT NULL DEFAULT 0 COMMENT '顶级分类',
   `Name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `Pic` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `ModelId` int(11) NOT NULL DEFAULT 0 COMMENT '名字标识',
@@ -48,15 +49,15 @@ CREATE TABLE `qc_category`  (
 -- ----------------------------
 -- Records of qc_category
 -- ----------------------------
-INSERT INTO `qc_category` VALUES (1, 0, '新闻动态', '/Static/images/banner1.jpg', 1, 1, 1, 0, 2, '', 'list_article.html', 'detail_article.html', '', '', '', '', 0, 91, 'xinwendongtai', 'xwdt');
-INSERT INTO `qc_category` VALUES (16, 0, '相册展示', '/Static/images/banner1.jpg', 3, 1, 1, 0, 2, '', 'list_album.html', 'detail_album.html', '产品展示例子，图片摘自互联网', '', '', '', 0, 93, 'xiangcezhanshi', 'xczs');
-INSERT INTO `qc_category` VALUES (22, 0, '联系我们', '/Static/images/banner1.jpg', -1, 1, 1, 0, 2, '', 'list_contact.html', 'detail_page.html', '', '', '', '', 0, 95, 'lianxiwomen', 'lxwm');
-INSERT INTO `qc_category` VALUES (23, 0, '产品中心', '/Static/images/banner1.jpg', 2, 1, 1, 0, 2, '', 'list_product.html', 'detail_product.html', '产品中心所有产品都是演示数据，非真实销售数据', '', '', '', 0, 92, 'chanpinzhongxin', 'cpzx');
-INSERT INTO `qc_category` VALUES (24, 0, '软件下载', '/Static/images/banner1.jpg', 4, 1, 1, 0, 2, '', 'list_down.html', 'detail_down.html', '', '', '', '', 0, 94, 'ruanjianxiazai', 'rjxz');
-INSERT INTO `qc_category` VALUES (26, 0, '公司介绍', '/Static/images/banner1.jpg', -1, 1, 1, 0, 2, '', 'list_page.html', 'detail_page.html', '', '', '', '', 0, 90, 'gongsijieshao', 'gsjs');
-INSERT INTO `qc_category` VALUES (27, 26, '公司简介', '/Static/images/banner1.jpg', -1, 1, 1, 0, 2, '', 'list_page.html', 'detail_page.html', '', '', '', '<figure class=\"image\"><img src=\"/Static/images/about.jpg\"></figure><p>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。</p>', 0, 99, 'gongsijianjie', 'gsjj');
-INSERT INTO `qc_category` VALUES (28, 26, '公司荣誉', '/Static/images/banner1.jpg', -1, 1, 1, 0, 2, '', 'list_page.html', 'detail_page.html', '', '', '', '<figure class=\"image\"><img src=\"/Static/images/about.jpg\"></figure><p>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。</p>', 0, 99, 'gongsirongyu', 'gsry');
-INSERT INTO `qc_category` VALUES (29, 26, '关于我们', '/Static/images/banner1.jpg', -1, 1, 1, 0, 2, '', 'list_page.html', 'detail_page.html', '', '', '', '<figure class=\"image\"><img src=\"/Static/images/about.jpg\"></figure><p>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。</p>', 0, 99, 'guanyuwomen', 'gywm');
+INSERT INTO `qc_category` VALUES (1, 0, 0, '新闻动态', '/Static/images/banner1.jpg', 1, 1, 1, 0, 2, '', 'list_article.html', 'detail_article.html', '', '', '', '', 0, 91, 'xinwendongtai', 'xwdt');
+INSERT INTO `qc_category` VALUES (16, 0, 0, '相册展示', '/Static/images/banner1.jpg', 3, 1, 1, 0, 2, '', 'list_album.html', 'detail_album.html', '产品展示例子，图片摘自互联网', '', '', '', 0, 93, 'xiangcezhanshi', 'xczs');
+INSERT INTO `qc_category` VALUES (22, 0, 0, '联系我们', '/Static/images/banner1.jpg', -1, 1, 1, 0, 2, '', 'list_contact.html', 'detail_page.html', '', '', '', '', 0, 95, 'lianxiwomen', 'lxwm');
+INSERT INTO `qc_category` VALUES (23, 0, 0, '产品中心', '/Static/images/banner1.jpg', 2, 1, 1, 0, 2, '', 'list_product.html', 'detail_product.html', '产品中心所有产品都是演示数据，非真实销售数据', '', '', '', 0, 92, 'chanpinzhongxin', 'cpzx');
+INSERT INTO `qc_category` VALUES (24, 0, 0, '软件下载', '/Static/images/banner1.jpg', 4, 1, 1, 0, 2, '', 'list_down.html', 'detail_down.html', '', '', '', '', 0, 94, 'ruanjianxiazai', 'rjxz');
+INSERT INTO `qc_category` VALUES (26, 0, 0, '公司介绍', '/Static/images/banner1.jpg', -1, 1, 1, 0, 2, '', 'list_page.html', 'detail_page.html', '', '', '', '', 0, 90, 'gongsijieshao', 'gsjs');
+INSERT INTO `qc_category` VALUES (27, 26, 26, '公司简介', '/Static/images/banner1.jpg', -1, 1, 1, 0, 2, '', 'list_page.html', 'detail_page.html', '', '', '', '<figure class=\"image\"><img src=\"/Static/images/about.jpg\"></figure><p>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。</p>', 0, 99, 'gongsijianjie', 'gsjj');
+INSERT INTO `qc_category` VALUES (28, 26, 26, '公司荣誉', '/Static/images/banner1.jpg', -1, 1, 1, 0, 2, '', 'list_page.html', 'detail_page.html', '', '', '', '<figure class=\"image\"><img src=\"/Static/images/about.jpg\"></figure><p>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。</p>', 0, 99, 'gongsirongyu', 'gsry');
+INSERT INTO `qc_category` VALUES (29, 26, 26, '关于我们', '/Static/images/banner1.jpg', -1, 1, 1, 0, 2, '', 'list_page.html', 'detail_page.html', '', '', '', '<figure class=\"image\"><img src=\"/Static/images/about.jpg\"></figure><p>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。<br>公司创立于2008年12月，是国内**企业端信息管理系统整体解决方案供应商，具备深厚的专业咨询服务能力。<br><br>公司自成立以来，一直以“IT+T（信息化+管理服务）”的创新服务模式戮力前行，专注于企业端的信息管理信息化系统建设，为客户提供大企业集团信息管理体系设计与搭建专业咨询、企业端信息管理系统定制化应用开发与系统集成、现有业务系统涉税改造IT咨询、信息管理系统部署实施、专业培训等一站式整体解决方案。</p>', 0, 99, 'guanyuwomen', 'gywm');
 
 -- ----------------------------
 -- Table structure for qc_file
@@ -348,7 +349,7 @@ CREATE TABLE `qc_label_cate`  (
   `Name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `Sort` int(9) NOT NULL DEFAULT 0,
   PRIMARY KEY (`LabelCateId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qc_label_cate
@@ -418,13 +419,14 @@ CREATE TABLE `qc_log_login`  (
   `Ts` bigint(20) NOT NULL DEFAULT 0,
   `Ip` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`LogLoginId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qc_log_login
 -- ----------------------------
 INSERT INTO `qc_log_login` VALUES (1, 1, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36', 1649843330, '127.0.0.1');
 INSERT INTO `qc_log_login` VALUES (2, 1, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36', 1649931302, '127.0.0.1');
+INSERT INTO `qc_log_login` VALUES (3, 1, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36', 1651496170, '127.0.0.1');
 
 -- ----------------------------
 -- Table structure for qc_log_operate
@@ -482,7 +484,7 @@ CREATE TABLE `qc_page_cate`  (
   `Name` varchar(50) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `Sort` int(9) NOT NULL DEFAULT 0,
   PRIMARY KEY (`PageCateId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qc_page_cate
@@ -543,7 +545,9 @@ CREATE TABLE `qc_stat_flow`  (
   PRIMARY KEY (`Date`) USING BTREE
 ) ENGINE = InnoDB CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
-
+-- ----------------------------
+-- Records of qc_stat_flow
+-- ----------------------------
 
 -- ----------------------------
 -- Table structure for qc_swiper
@@ -630,13 +634,13 @@ INSERT INTO `qc_sys` VALUES ('StatsCode', '统计代码', '<script type=\"text/j
 INSERT INTO `qc_sys` VALUES ('ThumbSize', '允许缩略图尺寸(240x180|360x120)', '240x180', 3, 'input', 3003, 1);
 INSERT INTO `qc_sys` VALUES ('TmpIndex', '首页模板', 'index_main.html', 1, 'select', 1002, 1);
 INSERT INTO `qc_sys` VALUES ('TmpPath', '模板路径', 'default', 2, 'select', 2010, 1);
-INSERT INTO `qc_sys` VALUES ('TmpPathMobile','手机模板路径','',2,'select',2010,1);
+INSERT INTO `qc_sys` VALUES ('TmpPathMobile', '手机模板路径', '', 2, 'select', 2010, 1);
 INSERT INTO `qc_sys` VALUES ('TmpSearch', '搜索页模板', 'search_default.html', 1, 'select', 1003, 1);
 INSERT INTO `qc_sys` VALUES ('UrlDetail', '详情地址命名规则', '{Id}.html', 2, 'input', 2061, 1);
 INSERT INTO `qc_sys` VALUES ('UrlForm', '表单地址命名规则', '{KeyName}.html', 9, 'input', 2063, 1);
 INSERT INTO `qc_sys` VALUES ('UrlList', '分类地址命名规则', 'list_{CateId}.html', 2, 'input', 2060, 1);
 INSERT INTO `qc_sys` VALUES ('UrlPage', '单页地址命名规则', 'page_{PageId}.html', 2, 'input', 2062, 1);
-INSERT INTO `qc_sys` VALUES ('Version', '版本号', '6.0.0', 9, 'input', 9001, 1);
+INSERT INTO `qc_sys` VALUES ('Version', '版本号', '6.0.1', 9, 'input', 9001, 1);
 INSERT INTO `qc_sys` VALUES ('WaBeian', '网安备案号', '', 1, 'input', 1006, 1);
 INSERT INTO `qc_sys` VALUES ('WaterMaskFontColor', '水印文字颜色', '0,0,0', 3, 'input', 3009, 1);
 INSERT INTO `qc_sys` VALUES ('WaterMaskFontOpacity', '水印透明度', '50', 3, 'input', 3010, 1);
@@ -1084,7 +1088,7 @@ CREATE TABLE `qc_token`  (
 -- ----------------------------
 -- Records of qc_token
 -- ----------------------------
-INSERT INTO `qc_token` VALUES ('3d8dbc0d6fde42dc29487e9768a181228f6f125a', 1, 'Web', 1649931302, 0);
+INSERT INTO `qc_token` VALUES ('6489722cf1bb81f611d6223bfa079436527e596b', 1, 'Web', 1651496170, 0);
 
 -- ----------------------------
 -- Table structure for qc_user
@@ -1112,7 +1116,11 @@ CREATE TABLE `qc_user`  (
   `TsLast` bigint(20) NOT NULL DEFAULT 0,
   `IpLast` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`UserId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
+-- ----------------------------
+-- Records of qc_user
+-- ----------------------------
+INSERT INTO `qc_user` VALUES (1, 18888888888, '管理员', '', 'e10adc3949ba59abbe56e057f20f883e', '', '', 1, '', 2, 0.00, 0, 1, 1651496157, '127.0.0.1', 1, 1, 1, 1651496170, '127.0.0.1');
 
 SET FOREIGN_KEY_CHECKS = 1;

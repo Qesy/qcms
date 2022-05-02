@@ -35,7 +35,7 @@ class QC_Category extends \Db_pdo {
 	        $Json = Redis::get($key);
 	        return json_decode($Json, true);
 	    }
-	    $Arr = $this->SetSort(array('Sort' => 'ASC', 'CateId' => 'ASC'))->SetField('CateId, PCateId, Name, Pic, ModelId, SeoTitle, Keywords, Description, IsShow, IsLink, LinkUrl, TempList, TempDetail, Sort')->ExecSelect();
+	    $Arr = $this->SetSort(array('Sort' => 'ASC', 'CateId' => 'ASC'))->SetField('CateId, PCateId, TCateId, Name, Pic, ModelId, SeoTitle, Keywords, Description, IsShow, IsLink, LinkUrl, TempList, TempDetail, Sort')->ExecSelect();
 	    if(!empty($Arr) && Redis::$s_IsOpen == 1) Redis::set($key, json_encode($Arr));
 	    return $Arr;
 	}
@@ -201,7 +201,7 @@ class QC_Category extends \Db_pdo {
 	    foreach($this->CateArr as $k => $v){
 	        if($v['PCateId'] == $PCateId){
 	            $CateRs = $this->getOne($v['CateId']);	            
-	            if($ModelId == $CateRs['ModelId']){
+	            if($ModelId == $CateRs['ModelId'] || $ModelId == -1){
 	                $this->AllSubCateIdArr[] = $CateRs['CateId'];
 	            }	            
 	            unset($this->CateArr[$k]);

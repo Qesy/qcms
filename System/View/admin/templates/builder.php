@@ -115,6 +115,7 @@
                                             {{qcms:RegLenMax}} ： 注册最大长度<br>
                                             {{qcms:StatsCode}} ： 统计代码<br>
                                             {{qcms:Crumbs}} ： 面包屑地址<br>
+                                            {{qcms:PathTemplate}} ： 模板静态文件路径<br>
                                             {{qcms:Search}} ： 搜索关键字 ($_GET['Search'])<br>
 
                                             <?
@@ -135,6 +136,7 @@
                                         <div>
                                             {{qcms:Cate_CateId}} ： 分类ID<br>
                                             {{qcms:Cate_PCateId}} ： 分类上级ID<br>
+                                            {{qcms:Cate_TCateId}} ： 顶级分类ID<br>
                                             {{qcms:Cate_Name}} ： 分类名<br>
                                             {{qcms:Cate_Pic}} ： 分类图片<br>
                                             {{qcms:Cate_IsShow}} ： 分类显示（1：显示，2：不显示）<br>
@@ -319,6 +321,7 @@
                                             {{qcms:Menu_Url}} ： 分类链接<br>
                                             {{qcms:Menu_HasSub}} ： 是否包含子分类 （1：是 0：否）<br>
                                             {{qcms:Menu_i}} ： 自曾数（从1开始）<br>
+                                            {{qcms:Menu_n}} ： 自曾数（从0开始）<br>
                                         </div>
                                     </div>
 
@@ -347,6 +350,7 @@
                                             {{qcms:sMenu_Url}} ： 分类链接<br>
                                             {{qcms:sMenu_HasSub}} ： 是否包含子分类 （1：是 0：否）<br>
                                             {{qcms:sMenu_i}} ： 自曾数（从1开始）<br>
+                                            {{qcms:sMenu_n}} ： 自曾数（从0开始）<br>
                                         </div>
                                     </div>
                                     <div class="my-3 DemoDiv d-none" data="ssmenu">
@@ -374,6 +378,7 @@
                                             {{qcms:ssMenu_Url}} ： 分类链接<br>
                                             {{qcms:ssMenu_HasSub}} ： 是否包含子分类 （1：是 0：否）<br>
                                             {{qcms:ssMenu_i}} ： 自曾数（从1开始）<br>
+                                            {{qcms:ssMenu_n}} ： 自曾数（从0开始）<br>
                                         </div>
                                     </div>
 
@@ -430,6 +435,7 @@
 {{qcms:List_PinYin}} ： 拼音全拼<br>
 {{qcms:List_PY}} ： 拼音首字母<br>
 {{qcms:List_i}} ： 自曾数（从1开始）<br>
+{{qcms:List_n}} ： 自曾数（从0开始）<br>
 {{qcms:List_Url}} ： 内容地址<br>
 {{qcms:List_CateId}} ： 分类ID<br>
 {{qcms:List_CateName}} ： 分类名<br>
@@ -463,6 +469,7 @@
                                             {{qcms:Link_Mail}} ： 站长邮箱<br>
                                             {{qcms:Link_IsIndex}} ： 是否首页<br>
                                             {{qcms:Link_i}} ： 自增编号 (从1开始)<br>
+                                            {{qcms:Link_n}} ： 自增编号 (从0开始)<br>
                                         </div>
                                     </div>
 
@@ -508,6 +515,7 @@
                                             {{qcms:Slide_Link}} ： 链接地址<br>
                                             {{qcms:Slide_Sort}} ： 排序<br>
                                             {{qcms:Slide_i}} ： 自曾数（从1开始）<br>
+                                            {{qcms:Slide_n}} ： 自曾数（从0开始）<br>
                                         </div>
                                     </div>
 
@@ -635,6 +643,7 @@
                                             {{qcms:Photo_Name}} ： 图片名称<br>
                                             {{qcms:Photo_Size}} ： 图片大小<br>
                                             {{qcms:Photo_i}} ： 自曾数（从1开始）<br>
+                                            {{qcms:Photo_n}} ： 自曾数（从0开始）<br>
                                         </div>
                                         </div>
 

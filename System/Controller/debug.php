@@ -10,6 +10,8 @@ class Debug extends Controllers {
     }
     
     public function w_Action(){        
+        $this->CategoryObj->getAllCateId(31, -1);
+        var_dump($this->CategoryObj->AllSubCateIdArr);exit;
         $this->WaterMaskObj->waterType = 1;
         $this->WaterMaskObj->waterImg = realpath('./Static/images/mark.png');
         $this->WaterMaskObj->fontFile = realpath('./Static/fonts/msyh.ttc');

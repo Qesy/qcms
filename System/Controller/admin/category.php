@@ -58,8 +58,10 @@ class Category extends ControllersAdmin {
     public function add_Action(){
         $PCateId = intval($_GET['CateId']);
         $ModelId = 1;
+        $TCateId = 0;
         if(!empty($PCateId)){
             $Rs = $this->CategoryObj->getOne($PCateId);
+            $TCateId = ($Rs['TCateId'] == 0) ? $Rs['CateId'] : $Rs['TCateId'];
             if(empty($Rs)) $this->Err(1001);
             $ModelId = $Rs['ModelId'];
         }        
@@ -70,6 +72,7 @@ class Category extends ControllersAdmin {
             $IsLink = isset($_POST['Attr']['IsLink']) ? 1 : 2;
             $InsertArr = array(
                 'PCateId' => $PCateId,
+                'TCateId' => $TCateId,
                 'Name' =>trim($_POST['Name']),
                 'ModelId' => intval($_POST['ModelId']),
                 'Pic' => trim($_POST['Pic']),
@@ -294,15 +297,33 @@ class Category extends ControllersAdmin {
         if(!$this->VeriObj->VeriPara($_GET, array('CateId'))) $this->Err(1001);
         $CateRs = $this->CategoryObj->getOne($_GET['CateId']);
         if(empty($CateRs)) $this->Err(1003);
+        $this->CategoryObj->getAllCateId($CateRs['CateId'], -1);
         if(!empty($_POST)){
-            $_POST['PCateId'] = intval($_POST['PCateId']);
+            $PCateId = intval($_POST['PCateId']);
+            $ModelId = 1;
+            $TCateId = 0;
+            if(!empty($PCateId)){
+                $Rs = $this->CategoryObj->getOne($PCateId);
+                $TCateId = ($Rs['TCateId'] == 0) ? $Rs['CateId'] : $Rs['TCateId'];
+                if(empty($Rs)) $this->Err(1001);
+            }
             //if(!$this->VeriObj->VeriPara($_POST, array('CateId'))) $this->Err(1001);
             $this->CategoryObj->getTreeSelectArr($CateRs['CateId']);
-            if(in_array($_POST['PCateId'], $this->CategoryObj->CateTreeSelectArr)) $this->Err(1046);
-            $Ret = $this->CategoryObj->SetCond(array('CateId' => $CateRs['CateId']))->SetUpdate(array('PCateId' => $_POST['PCateId']))->ExecUpdate();
-            if($Ret === false) $this->Err(1002);
+            if(in_array($PCateId, $this->CategoryObj->CateTreeSelectArr)) $this->Err(1046);
+            try{
+                DB::$s_db_obj->beginTransaction();
+                $this->CategoryObj->SetCond(array('CateId' => $CateRs['CateId']))->SetUpdate(array('PCateId' => $PCateId, 'TCateId' => $TCateId))->ExecUpdate();
+                $this->CategoryObj->SetCond(array('CateId' => $this->CategoryObj->AllSubCateIdArr))->SetUpdate(array('TCateId' => $TCateId))->ExecUpdate();
+                DB::$s_db_obj->commit();
+            }catch(PDOException $e){
+                DB::$s_db_obj->rollBack();
+                $this->Err(1002);
+            }
+
             $this->CategoryObj->cleanList();
-            $this->CategoryObj->clean($CateRs['CateId']);
+            foreach($this->CategoryObj->AllSubCateIdArr as $v){
+                $this->CategoryObj->clean($v);
+            }            
             unset($_GET['CateId']);
             $this->Jump(array('admin', 'category', 'index'));
         }

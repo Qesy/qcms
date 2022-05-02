@@ -24,16 +24,23 @@ class Controllers extends Base {
         'FormRs' => array(),
     
     );
+    
     public $ModelKv = array();
     public $CateKv = array();
-    public $TmpPath;
+    public $TmpPath; //模板路径
+    public $TmpName; //模板名称 （为了调用静态文件路径）
     public $PageTmp = 1;
     public $CountTmp = 0; //分页用
     function __construct(){
         parent::__construct();
         $this->SysRs = $this->SysObj->getKv();
-        $TmPath = ($this->CommonObj->isMobile() && !empty($this->SysRs['TmpPathMobile'])) ? $this->SysRs['TmpPathMobile'] : $this->SysRs['TmpPath'];
-        $this->TmpPath = PATH_TEMPLATE.$TmPath.'/';
+        if($this->CommonObj->isMobile() && !empty($this->SysRs['TmpPathMobile'])){
+            $TmpName = $this->SysRs['TmpPathMobile'];
+        }else{
+            $TmpName = $this->SysRs['TmpPath'];
+        }
+        $this->TmpName = $TmpName;
+        $this->TmpPath = PATH_TEMPLATE.$TmpName.'/';
         $this->CategoryObj->getTreeDetal();
         foreach($this->CategoryObj->CateArr as $v) $this->CateKv[$v['CateId']] = $v;
         $ModelArr = $this->Sys_modelObj->getList();
@@ -210,8 +217,8 @@ class Controllers extends Base {
     }
     
     public function global_Tmp(){ // 全局标签
-        $Search = array('{{qcms:Domain}}', '{{qcms:Static}}', '{{qcms:PathImg}}', '{{qcms:PathJs}}', '{{qcms:PathCss}}', '{{qcms:Scheme}}');
-        $Replace = array(URL_DOMAIN, URL_STATIC, URL_IMG, URL_JS, URL_CSS, $_SERVER['REQUEST_SCHEME']);
+        $Search = array('{{qcms:Domain}}', '{{qcms:Static}}', '{{qcms:PathImg}}', '{{qcms:PathJs}}', '{{qcms:PathCss}}', '{{qcms:Scheme}}', '{{qcms:PathTemplate}}');
+        $Replace = array(URL_DOMAIN, URL_STATIC, URL_IMG, URL_JS, URL_CSS, $_SERVER['REQUEST_SCHEME'], URL_STATIC.$this->TmpName.'/');
         foreach($this->SysRs as $k => $v){
             $Search[] = '{{qcms:'.$k.'}}';
             $Replace[] = $v;
@@ -646,6 +653,7 @@ class Controllers extends Base {
             '{{qcms:'.$Pre.'Link}}',
             '{{qcms:'.$Pre.'Sort}}',
             '{{qcms:'.$Pre.'i}}',
+            '{{qcms:'.$Pre.'n}}',
         );
         foreach($Arr as $k => $v){
             $Replace = array(
@@ -655,6 +663,7 @@ class Controllers extends Base {
                 $v['Link'],
                 $v['Sort'],                
                 ($k+1),
+                $k,
             );
             $Compile .= str_replace($Search, $Replace, $Html);
         }
@@ -682,9 +691,9 @@ class Controllers extends Base {
         $Rs = $this->PhotosObj->SetCond(array('Id' => $Index))->ExecSelectOne();
         $Photos = empty($Rs['Photos']) ? array() : json_decode($Rs['Photos'], true);
         $Compile = '';
-        $Search = array('{{qcms:'.$Pre.'Name}}', '{{qcms:'.$Pre.'Path}}', '{{qcms:'.$Pre.'Size}}', '{{qcms:'.$Pre.'i}}');
+        $Search = array('{{qcms:'.$Pre.'Name}}', '{{qcms:'.$Pre.'Path}}', '{{qcms:'.$Pre.'Size}}', '{{qcms:'.$Pre.'i}}', '{{qcms:'.$Pre.'n}}');
         foreach($Photos as $k => $v){
-            $Replace = array($v['Name'], $v['Path'], $v['Size'], ($k+1));
+            $Replace = array($v['Name'], $v['Path'], $v['Size'], ($k+1), $k);
             $Compile .= str_replace($Search, $Replace, $Html);
         }
         return $Compile;
@@ -698,6 +707,7 @@ class Controllers extends Base {
         $Compile = '';
         $Search = array();
         $Search[] =  '{{qcms:'.$Pre.'i}}';
+        $Search[] =  '{{qcms:'.$Pre.'n}}';
         $Search[] =  '{{qcms:'.$Pre.'Name}}';
         $Search[] =  '{{qcms:'.$Pre.'Logo}}';
         $Search[] =  '{{qcms:'.$Pre.'Link}}';
@@ -707,6 +717,7 @@ class Controllers extends Base {
         foreach($Arr as $k => $v){
             $Replace = array();
             $Replace[] =  ($k+1);
+            $Replace[] =  $k;
             $Replace[] = $v['Name'];
             $Replace[] = $v['Logo'];
             $Replace[] = $v['Link'];
@@ -784,6 +795,7 @@ class Controllers extends Base {
             $Search[] =  '{{qcms:'.$Pre.$v.'}}';
         }
         $Search[] =  '{{qcms:'.$Pre.'i}}';
+        $Search[] =  '{{qcms:'.$Pre.'n}}';
         $Search[] =  '{{qcms:'.$Pre.'CateName}}';
         $Search[] =  '{{qcms:'.$Pre.'CatePic}}';
         $Search[] =  '{{qcms:'.$Pre.'CateUrl}}';        
@@ -808,6 +820,7 @@ class Controllers extends Base {
                 }                
             }
             $Replace[] =  ($k+1);
+            $Replace[] =  $k;
             $Replace[] = $CateRs['Name'];
             $Replace[] = $CateRs['Pic'];
             $Replace[] = ($CateRs['IsLink'] == 1) ? $CateRs['LinkUrl'] : $UrlCate; // 分类地址
@@ -837,6 +850,7 @@ class Controllers extends Base {
             '{{qcms:'.$Pre.'Url}}', 
             '{{qcms:'.$Pre.'HasSub}}',
             '{{qcms:'.$Pre.'i}}',
+            '{{qcms:'.$Pre.'n}}',
         );
         foreach($CateArr as $k => $v){
             $Url = ($v['IsLink'] == 1) ? $v['LinkUrl'] : self::createUrl('cate', $v['CateId'], $v['PinYin'], $v['PY']);
@@ -852,6 +866,7 @@ class Controllers extends Base {
                 $Url,//$Url,
                 $v['HasSub'],
                 ($k+1),
+                $k,
             );
             $Compile .= str_replace($Search, $Replace, $Html);
         }
