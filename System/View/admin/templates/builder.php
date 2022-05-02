@@ -117,6 +117,7 @@
                                             {{qcms:Crumbs}} ： 面包屑地址<br>
                                             {{qcms:PathTemplate}} ： 模板静态文件路径<br>
                                             {{qcms:Search}} ： 搜索关键字 ($_GET['Search'])<br>
+                                            {{qcms:Method}} ： 当前页方法 (首页:index, 分类:cate, 详情页:detail, 单页:page, 搜索页:search) <br>
 
                                             <?
                                             if(!empty($DiyField)){
