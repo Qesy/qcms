@@ -87,7 +87,7 @@ class Index extends ControllersAdmin {
     
     public function upgradeManual_Action(){
         $Ret = $this->getVerUpdate();        
-        $upgradeFile = './System/upgrade/upgrade_'.$Ret['Data']['Version'].'.php';
+        $upgradeFile = './System/Upgrade/upgrade_'.$Ret['Data']['Version'].'.php';
         if(!file_exists($upgradeFile)) $this->Err(1035);
         require_once $upgradeFile;
         $UpgradeObj = new Upgrade();
