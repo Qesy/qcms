@@ -35,7 +35,8 @@ class QC_Category extends \Db_pdo {
 	        $Json = Redis::get($key);
 	        return json_decode($Json, true);
 	    }
-	    $Arr = $this->SetSort(array('Sort' => 'ASC', 'CateId' => 'ASC'))->SetField('CateId, PCateId, TCateId, Name, Pic, ModelId, SeoTitle, Keywords, Description, IsShow, IsLink, LinkUrl, TempList, TempDetail, Sort')->ExecSelect();
+	    // 'CateId, PCateId, TCateId, Name, Pic, ModelId, SeoTitle, Keywords, Description, IsShow, IsLink, LinkUrl, TempList, TempDetail, Sort'
+	    $Arr = $this->SetSort(array('Sort' => 'ASC', 'CateId' => 'ASC'))->SetField('*')->ExecSelect();
 	    if(!empty($Arr) && Redis::$s_IsOpen == 1) Redis::set($key, json_encode($Arr));
 	    return $Arr;
 	}
