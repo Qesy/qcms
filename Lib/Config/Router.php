@@ -76,8 +76,10 @@ class Router {
 	}
 	private function ViewController() {
 		$Url = URL_CURRENT;
-		$Extend = stripos($Url, $this->_SiteConfig['Extend']);
-		if ($Extend) $Url = substr($Url, 0, $Extend);
+		$HtnlExtend = stripos($Url, $this->_SiteConfig['Extend']);
+		$XmlExtend = stripos($Url, '.xml');
+		if($HtnlExtend !== false) $Url = substr($Url, 0, $HtnlExtend);
+		if($XmlExtend !== false) $Url = substr($Url, 0, $XmlExtend);
 		if($this->_SiteConfig['UrlType'] == 1) $Url = self::_UrlConvent($Url);
 		$RouterArr = self::_FetchUrl ($Url);
 		require $RouterArr ['Url'];
