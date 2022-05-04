@@ -237,10 +237,10 @@ class Controllers extends Base {
         $Replace = array();
         switch($this->Tmp['Type']){
             case 'index':
-                $Search = array('{{qcms:Crumbs}}');
+                $Search = array('{{qcms:Crumbs}}', '{{qcms:Cate_TCateId}}');
                 $Replace = array('<nav aria-label="breadcrumb"><ol class="breadcrumb">
                     <li class="breadcrumb-item active">首页</li>
-                </ol></nav>');
+                </ol></nav>', '0');
                 break;
             case 'cate':
                 $Search = array('{{qcms:Crumbs}}');
@@ -256,13 +256,16 @@ class Controllers extends Base {
                 }
                 $Replace = array('<nav aria-label="breadcrumb"><ol class="breadcrumb">'.implode('', $CrumbsArr).'</ol></nav>');
                 foreach($this->Tmp['CateRs'] as $k => $v){
+                    if($k == 'TCateId'){
+                        $v = empty($v) ? $this->Tmp['CateRs']['CateId'] : $v;
+                    }
                     $Search[] = '{{qcms:Cate_'.$k.'}}';
                     $Replace[] = $v;
                 }                
                 break;
             case 'form':
-                $Search[] = '{{qcms:FormName}}';
-                $Replace[] = $this->Tmp['FormRs']['Name'];
+                $Search = array('{{qcms:FormName}}', '{{qcms:Cate_TCateId}}');
+                $Replace = array($this->Tmp['FormRs']['Name'], -1);
                 break;
             case 'detail':                
                 $Search = array('{{qcms:Crumbs}}');
@@ -279,6 +282,9 @@ class Controllers extends Base {
                 $Replace = array('<nav aria-label="breadcrumb"><ol class="breadcrumb">'.implode('', $CrumbsArr).'</ol></nav>');
                 //$CateRs = $this->CategoryObj->getOne($Rs['CateId']); 
                 foreach($this->Tmp['CateRs'] as $k => $v){
+                    if($k == 'TCateId'){
+                        $v = empty($v) ? $this->Tmp['CateRs']['CateId'] : $v;
+                    }
                     $Search[] = '{{qcms:Cate_'.$k.'}}';
                     $Replace[] = $v;
                 }
@@ -315,10 +321,10 @@ class Controllers extends Base {
                 $Replace[] = $this->CommonObj->Url(array('index', 'down', $this->Tmp['Index']));
                 break;
             case 'page':
-                $Search = array('{{qcms:Crumbs}}');
+                $Search = array('{{qcms:Crumbs}}', '{{qcms:Cate_TCateId}}');
                 $CrumbsArr = array('<li class="breadcrumb-item"><a href="/">首页</a></li>');
                 $CrumbsArr[] = '<li class="breadcrumb-item active">'.$this->Tmp['PageRs']['Name'].'</li>';
-                $Replace = array('<nav aria-label="breadcrumb"><ol class="breadcrumb">'.implode('', $CrumbsArr).'</ol></nav>');
+                $Replace = array('<nav aria-label="breadcrumb"><ol class="breadcrumb">'.implode('', $CrumbsArr).'</ol></nav>', -1);
                 foreach($this->Tmp['PageRs'] as $k => $v){
                     $Search[] = '{{qcms:Page_'.$k.'}}';
                     $Replace[] = $v;
@@ -473,8 +479,9 @@ class Controllers extends Base {
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);
             $PCateId = isset($Para['PCateId']) ? $Para['PCateId'] : '0';
+            $Row = isset($Para['Row']) ? $Para['Row'] : '0';
             $Search[] = $Matches[0][$k];
-            $Replace[] = self::_replaceCate($PCateId, $Matches[2][$k], 'Menu_');
+            $Replace[] = self::_replaceCate($PCateId, $Row, $Matches[2][$k], 'Menu_');
         }
         
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
@@ -488,8 +495,9 @@ class Controllers extends Base {
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);
             $PCateId = isset($Para['PCateId']) ? $Para['PCateId'] : '0';
+            $Row = isset($Para['Row']) ? $Para['Row'] : '0';
             $Search[] = $Matches[0][$k];
-            $Replace[] = self::_replaceCate($PCateId, $Matches[2][$k], 'sMenu_');
+            $Replace[] = self::_replaceCate($PCateId, $Row, $Matches[2][$k], 'sMenu_');
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
@@ -502,8 +510,9 @@ class Controllers extends Base {
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);
             $PCateId = isset($Para['PCateId']) ? $Para['PCateId'] : '0';
+            $Row = isset($Para['Row']) ? $Para['Row'] : '0';
             $Search[] = $Matches[0][$k];
-            $Replace[] = self::_replaceCate($PCateId, $Matches[2][$k], 'ssMenu_');
+            $Replace[] = self::_replaceCate($PCateId, $Row, $Matches[2][$k], 'ssMenu_');
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
@@ -830,7 +839,7 @@ class Controllers extends Base {
         return $Compile;
     }
     
-    private function _replaceCate($PCateId, $Html, $Pre){
+    private function _replaceCate($PCateId, $Row, $Html, $Pre){
         $Arr = $this->CategoryObj->CateTreeDetail;
         $CateArr = array();
         foreach($Arr as $k => $v){
@@ -854,11 +863,13 @@ class Controllers extends Base {
             '{{qcms:'.$Pre.'n}}',
         );
         foreach($CateArr as $k => $v){
+            if($Row >0 && $k >= $Row) continue;
             $Url = ($v['IsLink'] == 1) ? $v['LinkUrl'] : self::createUrl('cate', $v['CateId'], $v['PinYin'], $v['PY']);
+            $TCateId = empty($v['TCateId']) ? $v['CateId'] : $v['TCateId'];
             $Replace = array(
                 $v['CateId'],
                 $v['PCateId'],
-                $v['TCateId'],
+                $TCateId,
                 $v['Name'],
                 $v['ModelId'],
                 $v['Pic'],

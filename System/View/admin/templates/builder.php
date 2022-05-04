@@ -308,7 +308,8 @@
 </textarea>
                                         <h5 >属性说明</h5>
                                         <div class="mb-2">
-                                            PCateId : 上级分类ID （不填默认为0）
+                                            PCateId : 上级分类ID （不填默认为0）<br>
+                                            Row : 调用数量<br>
                                         </div>
                                         <h5 >标签说明</h5>
                                         <div>
@@ -337,7 +338,8 @@
 </textarea>
                                         <h5 >属性说明</h5>
                                         <div class="mb-2">
-                                            PCateId : 上级分类ID （不填默认为0）
+                                            PCateId : 上级分类ID （不填默认为0）<br>
+                                            Row : 调用数量<br>
                                         </div>
                                         <h5 >标签说明</h5>
                                         <div>
@@ -365,7 +367,8 @@
 </textarea>
                                         <h5 >属性说明</h5>
                                         <div class="mb-2">
-                                            PCateId : 上级分类ID （不填默认为0）
+                                            PCateId : 上级分类ID （不填默认为0）<br>
+                                            Row : 调用数量<br>
                                         </div>
                                         <h5 >标签说明</h5>
                                         <div>
@@ -388,13 +391,13 @@
                                         <div class="mb-2">列表形式调用内容数据</div>
 
 <textarea class="form-control text-dark mb-3 p-2" rows="15">
-{{list Module='article' CateId='1' Row='10'}}
+{{list Model='article' CateId='1' Row='10'}}
     <a href="{{qcms:List_Url}}">{{qcms:List_Title}}</a>
 {{/list}}
 </textarea>
                                         <h5 >属性说明</h5>
                                         <div class="mb-2">
-                                            Module : 模型调用名，默认 ：article （article：文章, product:产品， album：相册， down：下载 ）<br>
+                                            Model : 模型调用名，默认 ：article （article：文章, product:产品， album：相册， down：下载 ）<br>
                                             Row：行数，默认：10<br>
                                             CateId : 分类ID， 默认：0 （模型下所有文章）<br>
                                             Sort ： 排序方式 (默认:Sort, ReadNum:点击数,TsUpdate:更新时间,Good:好评数)<br>

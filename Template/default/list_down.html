@@ -68,7 +68,7 @@
 
                     <div class="h5 text-black py-2 font-weight-bold">热门新闻</div>
                     <div  class="bg-white p-4" >
-                        {{list Module='article'  'Row='10'}}
+                        {{list Model='article'  'Row='10'}}
                         <li class="mb-2 text-nowrap"><span class="badge badge-{{if '{{qcms:List_i}}' < '4'}}primary{{else}}default{{/if}} mr-2 h6">{{qcms:List_i}}</span><a href="{{qcms:List_Url}}">{{qcms:List_Title}}</a></li>
                         {{/list}}
                     </div>
