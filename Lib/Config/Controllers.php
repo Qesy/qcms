@@ -841,6 +841,7 @@ class Controllers extends Base {
         $Search = array(
             '{{qcms:'.$Pre.'CateId}}',
             '{{qcms:'.$Pre.'PCateId}}',
+            '{{qcms:'.$Pre.'TCateId}}',
             '{{qcms:'.$Pre.'Name}}',
             '{{qcms:'.$Pre.'ModelId}}',
             '{{qcms:'.$Pre.'Pic}}',
@@ -857,6 +858,7 @@ class Controllers extends Base {
             $Replace = array(
                 $v['CateId'],
                 $v['PCateId'],
+                $v['TCateId'],
                 $v['Name'],
                 $v['ModelId'],
                 $v['Pic'],
