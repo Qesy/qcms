@@ -273,6 +273,10 @@ class Controllers extends Base {
                 $Search = array('{{qcms:FormName}}', '{{qcms:Cate_TCateId}}');
                 $Replace = array($this->Tmp['FormRs']['Name'], -1);
                 break;
+            case 'search':
+                $Search = array('{{qcms:Cate_TCateId}}');
+                $Replace = array(-1);
+                break;
             case 'detail':                
                 $Search = array('{{qcms:Crumbs}}');
                 $this->CategoryObj->getCrumbs($this->Tmp['CateRs']['CateId']);
