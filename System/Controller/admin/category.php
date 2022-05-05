@@ -312,8 +312,9 @@ class Category extends ControllersAdmin {
             if(in_array($PCateId, $this->CategoryObj->CateTreeSelectArr)) $this->Err(1046);
             try{
                 DB::$s_db_obj->beginTransaction();
-                $this->CategoryObj->SetCond(array('CateId' => $CateRs['CateId']))->SetUpdate(array('PCateId' => $PCateId, 'TCateId' => $TCateId))->ExecUpdate();
                 $this->CategoryObj->SetCond(array('CateId' => $this->CategoryObj->AllSubCateIdArr))->SetUpdate(array('TCateId' => $TCateId))->ExecUpdate();
+                $this->CategoryObj->SetCond(array('CateId' => $CateRs['CateId']))->SetUpdate(array('PCateId' => $PCateId, 'TCateId' => $TCateId))->ExecUpdate();
+                
                 DB::$s_db_obj->commit();
             }catch(PDOException $e){
                 DB::$s_db_obj->rollBack();
