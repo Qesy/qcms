@@ -30,6 +30,7 @@ class SwiperCate extends ControllersAdmin {
             $Ret = $this->Swiper_cateObj->SetInsert(array(
                 'Name' => $_POST['Name'],
                 'Sort' => 99,
+                'Code' => '',
             ))->ExecInsert();
             if($Ret === false) $this->Err(1002);
             $this->Jump(array('admin', 'swiperCate', 'index'), 1888);
