@@ -84,7 +84,9 @@ class Controllers extends Base {
                 $Path = $Rs['TempDetail'];
                 break;
             case 'cate':                
-                $CateRs = $this->CategoryObj->getOne($Index);                
+                $CateRs = $this->CategoryObj->getOne($Index);        
+                $CateRsT = $this->CateKv[$Index];
+                $CateRs['HasSub'] = $CateRsT['HasSub'];
                 if(empty($CateRs)) $this->DieErr(1001);
                 $this->Tmp['CateRs'] = $CateRs;
                 $Path = $CateRs['TempList'];    
@@ -95,6 +97,8 @@ class Controllers extends Base {
                 $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
                 $TableRs = $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $TableRs['Id']))->ExecSelectOne();
                 $CateRs = $this->CategoryObj->getOne($TableRs['CateId']); 
+                $CateRsT = $this->CateKv[$TableRs['CateId']];
+                $CateRs['HasSub'] = $CateRsT['HasSub'];
                 $Path = $CateRs['TempDetail'];    
                 $this->Tmp['ModelRs'] = $ModelRs;
                 $this->Tmp['CateRs'] = $CateRs;
@@ -261,7 +265,9 @@ class Controllers extends Base {
                     }
                     $Search[] = '{{qcms:Cate_'.$k.'}}';
                     $Replace[] = $v;
-                }                
+                }              
+                $Search[] = '{{qcms:Cate_Url}}';
+                $Replace[] = $this->createUrl('cate', $this->Tmp['CateRs']['CateId'], $this->Tmp['CateRs']['PinYin'], $this->Tmp['CateRs']['PY']);
                 break;
             case 'form':
                 $Search = array('{{qcms:FormName}}', '{{qcms:Cate_TCateId}}');
@@ -316,9 +322,14 @@ class Controllers extends Base {
                 $Search[] = '{{qcms:Detail_Prev}}';
                 $Search[] = '{{qcms:Detail_Next}}';
                 $Search[] = '{{qcms:Detail_DownAddress}}';
+                $Search[] = '{{qcms:Detail_Url}}';
+                $Search[] = '{{qcms:Cate_Url}}';
+                //$Search[] = '{{qcms:Cate_HasSub}}';
                 $Replace[] = empty($PreRs) ? '没有了' : '<a href="'.$this->createUrl('detail', $PreRs['Id'], $PreRs['PinYin'], $PreRs['PY']).'">'.$PreRs['Title'].'</a>';
                 $Replace[] = empty($NextRs) ? '没有了' : '<a href="'.$this->createUrl('detail', $NextRs['Id'], $NextRs['PinYin'], $NextRs['PY']).'">'.$NextRs['Title'].'</a>';
                 $Replace[] = $this->CommonObj->Url(array('index', 'down', $this->Tmp['Index']));
+                $Replace[] = self::createUrl('detail', $this->Tmp['TableRs']['Id'], $this->Tmp['TableRs']['PinYin'], $this->Tmp['TableRs']['PY']);//$Url,
+                $Replace[] = self::createUrl('cate', $this->Tmp['CateRs']['CateId'], $this->Tmp['CateRs']['PinYin'], $this->Tmp['CateRs']['PY']);//$Url,
                 break;
             case 'page':
                 $Search = array('{{qcms:Crumbs}}', '{{qcms:Cate_TCateId}}');

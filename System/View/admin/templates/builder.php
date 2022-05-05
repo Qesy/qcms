@@ -139,6 +139,7 @@
                                             {{qcms:Cate_PCateId}} ： 分类上级ID<br>
                                             {{qcms:Cate_TCateId}} ： 顶级分类ID<br>
                                             {{qcms:Cate_Name}} ： 分类名<br>
+                                            {{qcms:Cate_Url}} ： 链接地址<br>
                                             {{qcms:Cate_Pic}} ： 分类图片<br>
                                             {{qcms:Cate_IsShow}} ： 分类显示（1：显示，2：不显示）<br>
                                             {{qcms:Cate_IsLink}} ： 是否外链 （1：外链， 2 不是外链）<br>
@@ -149,6 +150,7 @@
                                             {{qcms:Cate_Content}} ： 分类内容详情<br>
                                             {{qcms:Cate_PinYin}} ： 全拼<br>
                                             {{qcms:Cate_PY}} ： 拼音首字母<br>
+                                            {{qcms:Cate_HasSub}} ： 是否有子类<br>
                                         </div>
                                     </div>
                                     <div class="my-3 DemoDiv d-none" data="detail">
@@ -161,6 +163,7 @@
                                             {{qcms:Detail_CateId}} ： 分类ID<br>
                                             {{qcms:Detail_Title}} ： 标题<br>
                                             {{qcms:Detail_STitle}} ：短标题<br>
+                                            {{qcms:Detail_Url}} ： 链接地址<br>
                                             {{qcms:Detail_Tag}}： Tag<br>
                                             {{qcms:Detail_Pic}} ：图片<br>
                                             {{qcms:Detail_Source}} ： 来源<br>
@@ -189,6 +192,7 @@
                                             {{qcms:Detail_Prev}} : 上一篇<br>
                                             {{qcms:Detail_Next}} ： 下一篇<br>
                                             {{qcms:Detail_DownAddress}} : 下载地址 (下载字段名必须为 Address)<br>
+
                                         </div>
                                     </div>
                                     <div class="my-3 DemoDiv d-none" data="page">
