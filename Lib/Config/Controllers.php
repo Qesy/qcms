@@ -41,9 +41,8 @@ class Controllers extends Base {
         }
         $this->TmpName = $TmpName;
         $this->TmpPath = PATH_TEMPLATE.$TmpName.'/';
-        //$this->CategoryObj->getTreeDetal();
-        //var_dump($this->CategoryObj->CateArr);exit;
-        foreach($this->CategoryObj->getList() as $v) $this->CateKv[$v['CateId']] = $v;
+        $this->CategoryObj->getTreeDetal();
+        foreach($this->CategoryObj->CateTreeDetail as $v) $this->CateKv[$v['CateId']] = $v;
         $ModelArr = $this->Sys_modelObj->getList();
         foreach($ModelArr as $v){
             $this->ModelKv[$v['KeyName']] = $v;
