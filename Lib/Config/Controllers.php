@@ -681,6 +681,7 @@ class Controllers extends Base {
             '{{qcms:'.$Pre.'Sort}}',
             '{{qcms:'.$Pre.'i}}',
             '{{qcms:'.$Pre.'n}}',
+            '{{qcms:'.$Pre.'m}}',
         );
         foreach($Arr as $k => $v){
             $Replace = array(
@@ -691,6 +692,7 @@ class Controllers extends Base {
                 $v['Sort'],                
                 ($k+1),
                 $k,
+                $k%2,
             );
             $Compile .= str_replace($Search, $Replace, $Html);
         }
@@ -718,9 +720,9 @@ class Controllers extends Base {
         $Rs = $this->PhotosObj->SetCond(array('Id' => $Index))->ExecSelectOne();
         $Photos = empty($Rs['Photos']) ? array() : json_decode($Rs['Photos'], true);
         $Compile = '';
-        $Search = array('{{qcms:'.$Pre.'Name}}', '{{qcms:'.$Pre.'Path}}', '{{qcms:'.$Pre.'Size}}', '{{qcms:'.$Pre.'i}}', '{{qcms:'.$Pre.'n}}');
+        $Search = array('{{qcms:'.$Pre.'Name}}', '{{qcms:'.$Pre.'Path}}', '{{qcms:'.$Pre.'Size}}', '{{qcms:'.$Pre.'i}}', '{{qcms:'.$Pre.'n}}', '{{qcms:'.$Pre.'m}}');
         foreach($Photos as $k => $v){
-            $Replace = array($v['Name'], $v['Path'], $v['Size'], ($k+1), $k);
+            $Replace = array($v['Name'], $v['Path'], $v['Size'], ($k+1), $k, $k%2);
             $Compile .= str_replace($Search, $Replace, $Html);
         }
         return $Compile;
@@ -735,6 +737,7 @@ class Controllers extends Base {
         $Search = array();
         $Search[] =  '{{qcms:'.$Pre.'i}}';
         $Search[] =  '{{qcms:'.$Pre.'n}}';
+        $Search[] =  '{{qcms:'.$Pre.'m}}';
         $Search[] =  '{{qcms:'.$Pre.'Name}}';
         $Search[] =  '{{qcms:'.$Pre.'Logo}}';
         $Search[] =  '{{qcms:'.$Pre.'Link}}';
@@ -745,6 +748,7 @@ class Controllers extends Base {
             $Replace = array();
             $Replace[] =  ($k+1);
             $Replace[] =  $k;
+            $Replace[] =  $k%2;
             $Replace[] = $v['Name'];
             $Replace[] = $v['Logo'];
             $Replace[] = $v['Link'];
@@ -823,6 +827,7 @@ class Controllers extends Base {
         }
         $Search[] =  '{{qcms:'.$Pre.'i}}';
         $Search[] =  '{{qcms:'.$Pre.'n}}';
+        $Search[] =  '{{qcms:'.$Pre.'m}}';
         $Search[] =  '{{qcms:'.$Pre.'CateName}}';
         $Search[] =  '{{qcms:'.$Pre.'CatePic}}';
         $Search[] =  '{{qcms:'.$Pre.'CateUrl}}';        
@@ -848,6 +853,7 @@ class Controllers extends Base {
             }
             $Replace[] =  ($k+1);
             $Replace[] =  $k;
+            $Replace[] =  $k%2;
             $Replace[] = $CateRs['Name'];
             $Replace[] = $CateRs['Pic'];
             $Replace[] = ($CateRs['IsLink'] == 1) ? $CateRs['LinkUrl'] : $UrlCate; // 分类地址
@@ -879,6 +885,7 @@ class Controllers extends Base {
             '{{qcms:'.$Pre.'HasSub}}',
             '{{qcms:'.$Pre.'i}}',
             '{{qcms:'.$Pre.'n}}',
+            '{{qcms:'.$Pre.'m}}',
         );
         foreach($CateArr as $k => $v){
             if($Row >0 && $k >= $Row) continue;
@@ -898,6 +905,7 @@ class Controllers extends Base {
                 $v['HasSub'],
                 ($k+1),
                 $k,
+                $k%2,
             );
             $Compile .= str_replace($Search, $Replace, $Html);
         }
