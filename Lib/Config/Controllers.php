@@ -121,7 +121,7 @@ class Controllers extends Base {
         $Replace = array();
         foreach($Matches[1] as $k => $v){
             $Data = self::_getKv($v);
-            $Replace[] = @file_get_contents($this->TmpPath.$Data['filename']);         
+            $Replace[] = @file_get_contents($this->TmpPath.trim($Data['filename']));         
         }
         $this->Tmp['Compile'] = str_replace($Matches[0], $Replace, $this->Tmp['Compile']);
         return $this;
@@ -357,8 +357,8 @@ class Controllers extends Base {
         $CateIds = $PageIds = $DetailIds = array();
         foreach($Matches[1] as $k => $v){ //一次性把数据全提取出来
             $Para = self::_getKv($v);
-            $Type = isset($Para['Type']) ? $Para['Type'] : 'cate';
-            $Index = isset($Para['Index']) ? $Para['Index'] : 0;
+            $Type = isset($Para['Type']) ? trim($Para['Type']) : 'cate';
+            $Index = isset($Para['Index']) ? intval($Para['Index']) : 0;
             if($Index == 0) continue;
             switch($Type){
                 case 'cate':
@@ -493,8 +493,8 @@ class Controllers extends Base {
         $Replace = array();
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);
-            $PCateId = isset($Para['PCateId']) ? $Para['PCateId'] : '0';
-            $Row = isset($Para['Row']) ? $Para['Row'] : '0';
+            $PCateId = isset($Para['PCateId']) ? intval($Para['PCateId']) : '0';
+            $Row = isset($Para['Row']) ? intval($Para['Row']) : '0';
             $Search[] = $Matches[0][$k];
             $Replace[] = self::_replaceCate($PCateId, $Row, $Matches[2][$k], 'Menu_');
         }
@@ -509,8 +509,8 @@ class Controllers extends Base {
         $Replace = array();
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);
-            $PCateId = isset($Para['PCateId']) ? $Para['PCateId'] : '0';
-            $Row = isset($Para['Row']) ? $Para['Row'] : '0';
+            $PCateId = isset($Para['PCateId']) ? intval($Para['PCateId']) : '0';
+            $Row = isset($Para['Row']) ? intval($Para['Row']) : '0';
             $Search[] = $Matches[0][$k];
             $Replace[] = self::_replaceCate($PCateId, $Row, $Matches[2][$k], 'sMenu_');
         }
@@ -524,8 +524,8 @@ class Controllers extends Base {
         $Replace = array();
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);
-            $PCateId = isset($Para['PCateId']) ? $Para['PCateId'] : '0';
-            $Row = isset($Para['Row']) ? $Para['Row'] : '0';
+            $PCateId = isset($Para['PCateId']) ? intval($Para['PCateId']) : '0';
+            $Row = isset($Para['Row']) ? intval($Para['Row']) : '0';
             $Search[] = $Matches[0][$k];
             $Replace[] = self::_replaceCate($PCateId, $Row, $Matches[2][$k], 'ssMenu_');
         }
@@ -540,7 +540,7 @@ class Controllers extends Base {
         $Replace = array();
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);
-            $Index = isset($Para['Index']) ? $Para['Index'] : $this->Tmp['Index'];
+            $Index = isset($Para['Index']) ? intval($Para['Index']) : $this->Tmp['Index'];
             $Search[] = $Matches[0][$k];
             $Replace[] = self::_replacePhoto($Index, $Matches[2][$k], 'Photo_');
         }
@@ -554,9 +554,9 @@ class Controllers extends Base {
         $Replace = array();
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);
-            if(!isset($Para['LinkCateId'])) $Ret['LinkCateId'] = $Para['LinkCateId'];
-            if(!isset($Para['IsIndex'])) $Ret['IsIndex'] = $Para['IsIndex'];       
-            $Ret['Row'] = !isset($Para['Row']) ? '100' : $Para['Row'];              
+            if(!isset($Para['LinkCateId'])) $Ret['LinkCateId'] = intval($Para['LinkCateId']);
+            if(!isset($Para['IsIndex'])) $Ret['IsIndex'] = intval($Para['IsIndex']);       
+            $Ret['Row'] = !isset($Para['Row']) ? '100' : intval($Para['Row']);              
             $Search[] = $Matches[0][$k];
             $Replace[] = self::_replaceLink($Ret, $Matches[2][$k], 'Link_');
         }
@@ -571,9 +571,9 @@ class Controllers extends Base {
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);
             $Ret['Model'] = !isset($Para['Model']) ? 'article' : $Para['Model'];
-            $Ret['Row'] = !isset($Para['Row']) ? '10' : $Para['Row'];
+            $Ret['Row'] = !isset($Para['Row']) ? '10' : intval($Para['Row']);
             if($Ret['Row'] > 100) $Ret['Row'] = 100;
-            $Ret['CateId'] = !isset($Para['CateId']) ? '0' : $Para['CateId'];
+            $Ret['CateId'] = !isset($Para['CateId']) ? '0' : intval($Para['CateId']);
             $Ret['Sort'] = !isset($Para['Sort']) ? 'Id' : $Para['Sort'];
             $Ret['SortType'] = !isset($Para['SortType']) ? 'DESC' : $Para['SortType'];
             $Ret['Keyword'] = !isset($Para['Keyword']) ? '' : $Para['Keyword'];
@@ -612,7 +612,7 @@ class Controllers extends Base {
         $Replace = array();
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);
-            $Ret['SwiperCateId'] = !isset($Para['SwiperCateId']) ? '0' : $Para['SwiperCateId'];
+            $Ret['SwiperCateId'] = !isset($Para['SwiperCateId']) ? '0' : intval($Para['SwiperCateId']);
             $Search[] = $Matches[0][$k];
             $Replace[] = self::_replaceSlide($Ret['SwiperCateId'], $Matches[2][$k], 'Slide_');
         }
