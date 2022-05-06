@@ -199,6 +199,12 @@ class Category extends ControllersAdmin {
                 'PY' => $this->PinYinObj->str2py(trim($_POST['Name'])),
             );
             $Ret = $this->CategoryObj->SetCond(array('CateId' => $CateRs['CateId']))->SetUpdate($UpdateArr)->ExecUpdate();
+            
+            if(isset($_POST['SyncSubColumn']) && $_POST['SyncSubColumn'] == 1){
+                $this->CategoryObj->getAllCateId($CateRs['CateId'], $CateRs['ModelId']);
+                $SubRet = $this->CategoryObj->SetCond(array('CateId' => $this->CategoryObj->AllSubCateIdArr))->SetUpdate(array('TempList' => trim($_POST['TempList']), 'TempDetail' => trim($_POST['TempDetail'])))->ExecUpdate();
+                foreach($this->CategoryObj->AllSubCateIdArr as $v) $this->CategoryObj->clean($v);
+            }
             if($Ret === false) $this->Err(1002);
             $this->CategoryObj->cleanList();
             $this->CategoryObj->clean($CateRs['CateId']);
@@ -257,6 +263,7 @@ class Category extends ControllersAdmin {
                 'Form' => array(
                     array('Name' =>'TempList', 'Desc' => '列表模板',  'Type' => 'select', 'Data' => $TempList, 'Value' => $CateRs['TempList'], 'Required' => 0, 'Col' => 6),
                     array('Name' =>'TempDetail', 'Desc' => '详情模板',  'Type' => 'select', 'Data' => $TempDetail, 'Value' => $CateRs['TempDetail'], 'Required' => 0, 'Col' => 6),
+                    array('Name' =>'SyncSubColumn', 'Desc' => '同步子分类模板',  'Type' => 'radio', 'Data' => $this->IsArr, 'Value' => 2, 'Required' => 0, 'Col' => 6),
                     /* array('Name' =>'UrlList', 'Desc' => '列表命名规则',  'Type' => 'input', 'Value' => $CateRs['UrlList'], 'Required' => 0, 'Col' => 6, 'Help' => '撒旦法安防'),
                     array('Name' =>'UrlDetail', 'Desc' => '详情命名规则',  'Type' => 'input', 'Value' => $CateRs['UrlDetail'], 'Required' => 0, 'Col' => 6),
                     array('Desc' => '规则说明',  'Type' => 'html', 'Value' => $UrlListDesc, 'Required' => 1, 'Col' => 6),
@@ -297,7 +304,7 @@ class Category extends ControllersAdmin {
         if(!$this->VeriObj->VeriPara($_GET, array('CateId'))) $this->Err(1001);
         $CateRs = $this->CategoryObj->getOne($_GET['CateId']);
         if(empty($CateRs)) $this->Err(1003);
-        $this->CategoryObj->getAllCateId($CateRs['CateId'], -1);
+        $this->CategoryObj->getAllCateId($CateRs['CateId'], -99);
         if(!empty($_POST)){
             $PCateId = intval($_POST['PCateId']);
             $ModelId = 1;

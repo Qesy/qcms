@@ -202,7 +202,7 @@ class QC_Category extends \Db_pdo {
 	    foreach($this->CateArr as $k => $v){
 	        if($v['PCateId'] == $PCateId){
 	            $CateRs = $this->getOne($v['CateId']);	            
-	            if($ModelId == $CateRs['ModelId'] || $ModelId == -1){
+	            if($ModelId == $CateRs['ModelId'] || $ModelId == -99){
 	                $this->AllSubCateIdArr[] = $CateRs['CateId'];
 	            }	            
 	            unset($this->CateArr[$k]);
