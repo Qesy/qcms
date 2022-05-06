@@ -328,6 +328,7 @@
                                             {{qcms:Menu_HasSub}} ： 是否包含子分类 （1：是 0：否）<br>
                                             {{qcms:Menu_i}} ： 自曾数（从1开始）<br>
                                             {{qcms:Menu_n}} ： 自曾数（从0开始）<br>
+                                            {{qcms:Menu_m}} ： 隔行数（第一行0，第二行1，第三行0 以此类推）<br>
                                         </div>
                                     </div>
 
@@ -358,6 +359,7 @@
                                             {{qcms:sMenu_HasSub}} ： 是否包含子分类 （1：是 0：否）<br>
                                             {{qcms:sMenu_i}} ： 自曾数（从1开始）<br>
                                             {{qcms:sMenu_n}} ： 自曾数（从0开始）<br>
+                                            {{qcms:sMenu_m}} ： 隔行数（第一行0，第二行1，第三行0 以此类推）<br>
                                         </div>
                                     </div>
                                     <div class="my-3 DemoDiv d-none" data="ssmenu">
@@ -387,6 +389,7 @@
                                             {{qcms:ssMenu_HasSub}} ： 是否包含子分类 （1：是 0：否）<br>
                                             {{qcms:ssMenu_i}} ： 自曾数（从1开始）<br>
                                             {{qcms:ssMenu_n}} ： 自曾数（从0开始）<br>
+                                            {{qcms:ssMenu_m}} ： 隔行数（第一行0，第二行1，第三行0 以此类推）<br>
                                         </div>
                                     </div>
 
@@ -444,6 +447,7 @@
 {{qcms:List_PY}} ： 拼音首字母<br>
 {{qcms:List_i}} ： 自曾数（从1开始）<br>
 {{qcms:List_n}} ： 自曾数（从0开始）<br>
+{{qcms:List_m}} ： 隔行数（第一行0，第二行1，第三行0 以此类推）<br>
 {{qcms:List_Url}} ： 内容地址<br>
 {{qcms:List_CateId}} ： 分类ID<br>
 {{qcms:List_CateName}} ： 分类名<br>
@@ -478,6 +482,7 @@
                                             {{qcms:Link_IsIndex}} ： 是否首页<br>
                                             {{qcms:Link_i}} ： 自增编号 (从1开始)<br>
                                             {{qcms:Link_n}} ： 自增编号 (从0开始)<br>
+                                            {{qcms:Link_m}} ： 隔行数（第一行0，第二行1，第三行0 以此类推）<br>
                                         </div>
                                     </div>
 
@@ -524,6 +529,7 @@
                                             {{qcms:Slide_Sort}} ： 排序<br>
                                             {{qcms:Slide_i}} ： 自曾数（从1开始）<br>
                                             {{qcms:Slide_n}} ： 自曾数（从0开始）<br>
+                                            {{qcms:Slide_m}} ： 隔行数（第一行0，第二行1，第三行0 以此类推）<br>
                                         </div>
                                     </div>
 
@@ -652,6 +658,7 @@
                                             {{qcms:Photo_Size}} ： 图片大小<br>
                                             {{qcms:Photo_i}} ： 自曾数（从1开始）<br>
                                             {{qcms:Photo_n}} ： 自曾数（从0开始）<br>
+                                            {{qcms:Photo_m}} ： 隔行数（第一行0，第二行1，第三行0 以此类推）<br>
                                         </div>
                                         </div>
 
