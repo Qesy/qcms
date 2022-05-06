@@ -554,8 +554,8 @@ class Controllers extends Base {
         $Replace = array();
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);
-            if(!isset($Para['LinkCateId'])) $Ret['LinkCateId'] = intval($Para['LinkCateId']);
-            if(!isset($Para['IsIndex'])) $Ret['IsIndex'] = intval($Para['IsIndex']);       
+            if(!empty($Para['LinkCateId'])) $Ret['LinkCateId'] = intval($Para['LinkCateId']);
+            if(!empty($Para['IsIndex'])) $Ret['IsIndex'] = intval($Para['IsIndex']);       
             $Ret['Row'] = !isset($Para['Row']) ? '100' : intval($Para['Row']);              
             $Search[] = $Matches[0][$k];
             $Replace[] = self::_replaceLink($Ret, $Matches[2][$k], 'Link_');
