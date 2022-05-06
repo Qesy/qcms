@@ -274,8 +274,11 @@ class Controllers extends Base {
                 $Replace = array($this->Tmp['FormRs']['Name'], -1);
                 break;
             case 'search':
-                $Search = array('{{qcms:Cate_TCateId}}');
-                $Replace = array(-1);
+                $Search = array('{{qcms:Crumbs}}', '{{qcms:Cate_TCateId}}');
+                $Replace = array('<nav aria-label="breadcrumb"><ol class="breadcrumb">
+                    <li class="breadcrumb-item"><a href="/">首页</a></li>
+                    <li class="breadcrumb-item active">搜索页</li>
+                </ol></nav>', -1);
                 break;
             case 'detail':                
                 $Search = array('{{qcms:Crumbs}}');
