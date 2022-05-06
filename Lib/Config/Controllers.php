@@ -570,7 +570,7 @@ class Controllers extends Base {
         $Replace = array();
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);
-            $Ret['Model'] = !isset($Para['Model']) ? 'article' : $Para['Model'];
+            $Ret['Model'] = empty($Para['Model']) ? 'article' : $Para['Model'];
             $Ret['Row'] = !isset($Para['Row']) ? '10' : intval($Para['Row']);
             if($Ret['Row'] > 100) $Ret['Row'] = 100;
             $Ret['CateId'] = !isset($Para['CateId']) ? '0' : intval($Para['CateId']);
