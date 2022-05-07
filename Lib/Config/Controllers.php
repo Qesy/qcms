@@ -811,7 +811,7 @@ class Controllers extends Base {
             $CondArr['Title LIKE'] = $Ret['Search'];
         }
         
-        $Limit = array(($this->PageTmp-1)*$Ret['Row'], $Ret['Row']);
+        $Limit = ($Ret['IsPage'] != 1) ? array(0, $Ret['Row']) : array(($this->PageTmp-1)*$Ret['Row'], $Ret['Row']);
 
         $Count = 0;
         $Sort = array('Sort' => 'ASC', 'Id' => 'DESC');
