@@ -151,6 +151,22 @@
                                             {{qcms:Cate_PinYin}} ： 全拼<br>
                                             {{qcms:Cate_PY}} ： 拼音首字母<br>
                                             {{qcms:Cate_HasSub}} ： 是否有子类<br>
+
+                                            {{qcms:TopCate_CateId}} ： 顶级分类ID<br>
+                                            {{qcms:TopCate_PCateId}} ： 顶级分类上级ID<br>
+                                            {{qcms:TopCate_TCateId}} ： 顶级分类ID<br>
+                                            {{qcms:TopCate_Name}} ： 顶级分类名<br>
+                                            {{qcms:TopCate_Url}} ： 顶级链接地址<br>
+                                            {{qcms:TopCate_Pic}} ： 顶级分类图片<br>
+                                            {{qcms:TopCate_IsShow}} ： 顶级分类显示（1：显示，2：不显示）<br>
+                                            {{qcms:TopCate_IsLink}} ： 顶级是否外链 （1：外链， 2 不是外链）<br>
+                                            {{qcms:TopCate_LinkUrl}} ： 顶级外链地址<br>
+                                            {{qcms:TopCate_SeoTitle}} ： 顶级SEO标题<br>
+                                            {{qcms:TopCate_Keywords}} ： 顶级SEO关键字<br>
+                                            {{qcms:TopCate_Description}} ： 顶级SEO简介<br>
+                                            {{qcms:TopCate_Content}} ： 顶级分类内容详情<br>
+                                            {{qcms:TopCate_PinYin}} ： 顶级全拼<br>
+                                            {{qcms:TopCate_PY}} ： 顶级拼音首字母<br>
                                         </div>
                                     </div>
                                     <div class="my-3 DemoDiv d-none" data="detail">
