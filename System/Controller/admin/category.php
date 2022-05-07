@@ -74,6 +74,7 @@ class Category extends ControllersAdmin {
                 'PCateId' => $PCateId,
                 'TCateId' => $TCateId,
                 'Name' =>trim($_POST['Name']),
+                'NameEn' => trim($_POST['NameEn']),
                 'ModelId' => intval($_POST['ModelId']),
                 'Pic' => trim($_POST['Pic']),
                 'IsPost' => $IsPost,
@@ -133,7 +134,8 @@ class Category extends ControllersAdmin {
             array(
             'Title' => '核心设置',
             'Form' => array(                
-                array('Name' =>'Name', 'Desc' => '分类名称',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
+                array('Name' =>'Name', 'Desc' => '分类名称',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 4),
+                array('Name' =>'NameEn', 'Desc' => '英文别名',  'Type' => 'input', 'Value' => '', 'Required' => 0, 'Col' => 2),
                 array('Name' =>'ModelId', 'Desc' => '内容模型',  'Type' => 'select', 'Data' => $ModelKV, 'Value' => $ModelId, 'Required' => 1, 'Col' => 3),
                 array('Name' =>'Attr', 'Desc' => '属性',  'Type' => 'checkbox', 'Data' => $AttrArr, 'Value' => implode('|', $AttrValArr), 'Required' => 1, 'Col' => 3),
                 //array('Name' =>'IsLink', 'Desc' => '是否外链',  'Type' => 'radio', 'Data' => $this->IsArr, 'Value' => 2, 'Required' => 1, 'Col' => 2),
@@ -179,6 +181,7 @@ class Category extends ControllersAdmin {
             $UpdateArr = array(
                 //'PCateId' => $PCateId,
                 'Name' =>trim($_POST['Name']),
+                'NameEn' => trim($_POST['NameEn']),
                 //'ModelId' => intval($_POST['ModelId']),
                 'Pic' => trim($_POST['Pic']),
                 'IsPost' => $IsPost,
@@ -248,7 +251,8 @@ class Category extends ControllersAdmin {
             array(
                 'Title' => '核心设置',
                 'Form' => array(
-                    array('Name' =>'Name', 'Desc' => '分类名称',  'Type' => 'input', 'Value' => $CateRs['Name'], 'Required' => 1, 'Col' => 6),
+                    array('Name' =>'Name', 'Desc' => '分类名称',  'Type' => 'input', 'Value' => $CateRs['Name'], 'Required' => 1, 'Col' => 4),
+                    array('Name' =>'NameEn', 'Desc' => '英文别名',  'Type' => 'input', 'Value' => $CateRs['NameEn'], 'Required' => 0, 'Col' => 2),
                     array('Name' =>'ModelId', 'Desc' => '内容模型',  'Type' => 'select', 'Data' => $ModelKV, 'Value' => $CateRs['ModelId'], 'Disabled' => 1, 'Col' => 3),
                     array('Name' =>'Attr', 'Desc' => '属性',  'Type' => 'checkbox', 'Data' => $AttrArr, 'Value' => implode('|', $AttrValArr), 'Required' => 1, 'Col' => 3),
                     array('Name' =>'Pic', 'Desc' => '分类图片',  'Type' => 'upload', 'Value' => $CateRs['Pic'], 'Required' => 0, 'Col' => 12),
