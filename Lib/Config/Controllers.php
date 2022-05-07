@@ -259,15 +259,23 @@ class Controllers extends Base {
                     }                    
                 }
                 $Replace = array('<nav aria-label="breadcrumb"><ol class="breadcrumb">'.implode('', $CrumbsArr).'</ol></nav>');
+                if(empty($this->Tmp['CateRs']['TCateId'])) $this->Tmp['CateRs']['TCateId'] = $this->Tmp['CateRs']['CateId'];
                 foreach($this->Tmp['CateRs'] as $k => $v){
-                    if($k == 'TCateId'){
-                        $v = empty($v) ? $this->Tmp['CateRs']['CateId'] : $v;
-                    }
                     $Search[] = '{{qcms:Cate_'.$k.'}}';
                     $Replace[] = $v;
-                }              
+                }      
+                $TopCateRs = $this->CategoryObj->getOne($this->Tmp['CateRs']['TCateId']);
+                $TopCateRs['TCateId'] = $TopCateRs['CateId'];
+                foreach($TopCateRs as $k => $v){
+                    $Search[] = '{{qcms:TopCate_'.$k.'}}';
+                    $Replace[] = $v;
+                } 
+                //当前分类地址
                 $Search[] = '{{qcms:Cate_Url}}';
                 $Replace[] = $this->createUrl('cate', $this->Tmp['CateRs']['CateId'], $this->Tmp['CateRs']['PinYin'], $this->Tmp['CateRs']['PY']);
+                //顶级分类地址
+                $Search[] = '{{qcms:TopCate_Url}}';
+                $Replace[] = $this->createUrl('cate', $TopCateRs['CateId'], $TopCateRs['PinYin'], $TopCateRs['PY']);
                 break;
             case 'form':
                 $Search = array('{{qcms:FormName}}', '{{qcms:Cate_TCateId}}');
@@ -294,13 +302,18 @@ class Controllers extends Base {
                 }
                 $Replace = array('<nav aria-label="breadcrumb"><ol class="breadcrumb">'.implode('', $CrumbsArr).'</ol></nav>');
                 //$CateRs = $this->CategoryObj->getOne($Rs['CateId']); 
+                if(empty($this->Tmp['CateRs']['TCateId'])) $this->Tmp['CateRs']['TCateId'] = $this->Tmp['CateRs']['CateId'];
                 foreach($this->Tmp['CateRs'] as $k => $v){
-                    if($k == 'TCateId'){
-                        $v = empty($v) ? $this->Tmp['CateRs']['CateId'] : $v;
-                    }
                     $Search[] = '{{qcms:Cate_'.$k.'}}';
                     $Replace[] = $v;
                 }
+                $TopCateRs = $this->CategoryObj->getOne($this->Tmp['CateRs']['TCateId']);
+                $TopCateRs['TCateId'] = $TopCateRs['CateId'];
+                foreach($TopCateRs as $k => $v){
+                    $Search[] = '{{qcms:TopCate_'.$k.'}}';
+                    $Replace[] = $v;
+                } 
+                
                 foreach($this->Tmp['TableRs'] as $k => $v){
                     $Search[] = '{{qcms:Detail_'.$k.'}}';
                     if($k == 'Content' && $this->SysRs['IsOpenInLink'] == 1){
@@ -331,12 +344,15 @@ class Controllers extends Base {
                 $Search[] = '{{qcms:Detail_DownAddress}}';
                 $Search[] = '{{qcms:Detail_Url}}';
                 $Search[] = '{{qcms:Cate_Url}}';
+                $Search[] = '{{qcms:TopCate_Url}}';
+                
                 //$Search[] = '{{qcms:Cate_HasSub}}';
                 $Replace[] = empty($PreRs) ? '没有了' : '<a href="'.$this->createUrl('detail', $PreRs['Id'], $PreRs['PinYin'], $PreRs['PY']).'">'.$PreRs['Title'].'</a>';
                 $Replace[] = empty($NextRs) ? '没有了' : '<a href="'.$this->createUrl('detail', $NextRs['Id'], $NextRs['PinYin'], $NextRs['PY']).'">'.$NextRs['Title'].'</a>';
                 $Replace[] = $this->CommonObj->Url(array('index', 'down', $this->Tmp['Index']));
                 $Replace[] = self::createUrl('detail', $this->Tmp['TableRs']['Id'], $this->Tmp['TableRs']['PinYin'], $this->Tmp['TableRs']['PY']);//$Url,
                 $Replace[] = self::createUrl('cate', $this->Tmp['CateRs']['CateId'], $this->Tmp['CateRs']['PinYin'], $this->Tmp['CateRs']['PY']);//$Url,
+                $Replace[] = $this->createUrl('cate', $TopCateRs['CateId'], $TopCateRs['PinYin'], $TopCateRs['PY']);
                 break;
             case 'page':
                 $Search = array('{{qcms:Crumbs}}', '{{qcms:Cate_TCateId}}');
