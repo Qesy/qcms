@@ -139,6 +139,7 @@
                                             {{qcms:Cate_PCateId}} ： 分类上级ID<br>
                                             {{qcms:Cate_TCateId}} ： 顶级分类ID<br>
                                             {{qcms:Cate_Name}} ： 分类名<br>
+                                            {{qcms:Cate_NameEn}} ： 分类英文别名<br>
                                             {{qcms:Cate_Url}} ： 链接地址<br>
                                             {{qcms:Cate_Pic}} ： 分类图片<br>
                                             {{qcms:Cate_IsShow}} ： 分类显示（1：显示，2：不显示）<br>
@@ -156,6 +157,7 @@
                                             {{qcms:TopCate_PCateId}} ： 顶级分类上级ID<br>
                                             {{qcms:TopCate_TCateId}} ： 顶级分类ID<br>
                                             {{qcms:TopCate_Name}} ： 顶级分类名<br>
+                                            {{qcms:TopCate_NameEn}} ： 分类英文别名<br>
                                             {{qcms:TopCate_Url}} ： 顶级链接地址<br>
                                             {{qcms:TopCate_Pic}} ： 顶级分类图片<br>
                                             {{qcms:TopCate_IsShow}} ： 顶级分类显示（1：显示，2：不显示）<br>
@@ -219,6 +221,7 @@
                                         <div>
                                             {{qcms:Page_PageId}} ： 单页ID<br>
                                             {{qcms:Page_Name}} ： 单页名字<br>
+                                            {{qcms:Page_NameEn}} ： 单页英文别名<br>
                                             {{qcms:Page_SeoTitle}} ： SEO标题<br>
                                             {{qcms:Page_Keywords}} ： SEO关键字<br>
                                             {{qcms:Page_Description}} ： SEO简介<br>
@@ -258,6 +261,7 @@
                                                 {{qcms:Get_CateId}} ： 分类ID<br>
                                                 {{qcms:Get_PCateId}} ： 分类上级ID<br>
                                                 {{qcms:Get_Name}} ： 分类名<br>
+                                                {{qcms:Get_NameEn}} ： 分类英文别名<br>
                                                 {{qcms:Get_Pic}} ： 分类图片<br>
                                                 {{qcms:Get_IsShow}} ： 分类显示（1：显示，2：不显示）<br>
                                                 {{qcms:Get_IsLink}} ： 是否外链 （1：外链， 2 不是外链）<br>
@@ -274,6 +278,7 @@
                                                 <h6 class="py-2 font-weight-bold">单页字段</h6>
                                                 {{qcms:Get_PageId}} ： 单页ID<br>
                                                 {{qcms:Get_Name}} ： 单页名字<br>
+                                                {{qcms:Get_NameEn}} ： 分类英文别名<br>
                                                 {{qcms:Get_SeoTitle}} ： SEO标题<br>
                                                 {{qcms:Get_Keywords}} ： SEO关键字<br>
                                                 {{qcms:Get_Description}} ： SEO简介<br>
@@ -336,6 +341,7 @@
                                             {{qcms:Menu_CateId}} ： 分类ID<br>
                                             {{qcms:Menu_PCateId}} ： 上级分类ID<br>
                                             {{qcms:Menu_Name}} ： 分类名字<br>
+                                            {{qcms:Menu_NameEn}} ： 分类英文别名<br>
                                             {{qcms:Menu_Pic}} ： 分类图片<br>
                                             {{qcms:Menu_SeoTitle}} ： SEO标题<br>
                                             {{qcms:Menu_Keywords}} ： SEO关键字<br>
@@ -367,6 +373,7 @@
                                             {{qcms:sMenu_CateId}} ： 分类ID<br>
                                             {{qcms:sMenu_PCateId}} ： 上级分类ID<br>
                                             {{qcms:sMenu_Name}} ： 分类名字<br>
+                                            {{qcms:sMenu_NameEn}} ： 分类英文别名<br>
                                             {{qcms:sMenu_Pic}} ： 分类图片<br>
                                             {{qcms:sMenu_SeoTitle}} ： SEO标题<br>
                                             {{qcms:sMenu_Keywords}} ： SEO关键字<br>
@@ -397,6 +404,7 @@
                                             {{qcms:ssMenu_CateId}} ： 分类ID<br>
                                             {{qcms:ssMenu_PCateId}} ： 上级分类ID<br>
                                             {{qcms:ssMenu_Name}} ： 分类名字<br>
+                                            {{qcms:ssMenu_NameEn}} ： 分类英文别名<br>
                                             {{qcms:ssMenu_Pic}} ： 分类图片<br>
                                             {{qcms:ssMenu_SeoTitle}} ： SEO标题<br>
                                             {{qcms:ssMenu_Keywords}} ： SEO关键字<br>
@@ -467,6 +475,7 @@
 {{qcms:List_Url}} ： 内容地址<br>
 {{qcms:List_CateId}} ： 分类ID<br>
 {{qcms:List_CateName}} ： 分类名<br>
+{{qcms:List_CateNameEn}} ： 分类英文别名<br>
 {{qcms:List_CatePic}} ： 分类图片<br>
 {{qcms:List_CateUrl}} ： 分类地址<br>
 {{qcms:List_PageBar}} ： 分页 (IsPage 必须是1 才生效)<br>

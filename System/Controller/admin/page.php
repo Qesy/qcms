@@ -59,6 +59,7 @@ class Page extends ControllersAdmin {
             $Ret = $this->PageObj->SetInsert(array(
                 'PageCateId' => $_POST['PageCateId'],
                 'Name' => $_POST['Name'],
+                'NameEn' => $_POST['NameEn'],
                 'TempDetail' => $_POST['TempDetail'],
                 //'UrlDetail' => $_POST['UrlDetail'],
                 'SeoTitle' => $_POST['SeoTitle'],
@@ -91,7 +92,8 @@ class Page extends ControllersAdmin {
                 'Title' => '核心设置',
                 'Form' => array(
                         array('Name' =>'Name', 'Desc' => '单页名字',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
-                        array('Name' =>'PageCateId', 'Desc' => '分类',  'Type' => 'select', 'Data' => $CateKV, 'Value' => $CateDefaultId, 'Required' => 1, 'Col' => 6),                        
+                    array('Name' =>'NameEn', 'Desc' => '英文别名',  'Type' => 'input', 'Value' => '', 'Required' => 0, 'Col' => 3),
+                        array('Name' =>'PageCateId', 'Desc' => '分类',  'Type' => 'select', 'Data' => $CateKV, 'Value' => $CateDefaultId, 'Required' => 1, 'Col' => 3),                        
                     array('Name' =>'Pic', 'Desc' => '单页图片',  'Type' => 'upload', 'Value' => '', 'Required' => 0, 'Col' => 12),
                     array('Name' =>'Content', 'Desc' => '单页内容',  'Type' => 'textarea', 'Value' => '', 'Required' => 0, 'Col' => 12, 'Row' => 22, 'Class' => 'Content'),
                     array('Name' =>'IsEditor', 'Desc' => '加载编辑器',  'Type' => 'hidden', 'Value' => '2', 'Required' => 0, 'Col' => 12),
@@ -126,6 +128,7 @@ class Page extends ControllersAdmin {
             $Ret = $this->PageObj->SetCond(array('PageId' => $Rs['PageId']))->SetUpdate(array(
                 'PageCateId' => $_POST['PageCateId'],
                 'Name' => $_POST['Name'],
+                'NameEn' => $_POST['NameEn'],
                 'TempDetail' => $_POST['TempDetail'],
                 //'UrlDetail' => $_POST['UrlDetail'],
                 'SeoTitle' => $_POST['SeoTitle'],
@@ -156,7 +159,8 @@ class Page extends ControllersAdmin {
                 'Title' => '核心设置',
                 'Form' => array(
                     array('Name' =>'Name', 'Desc' => '单页名字',  'Type' => 'input', 'Value' => $Rs['Name'], 'Required' => 1, 'Col' => 6),
-                    array('Name' =>'PageCateId', 'Desc' => '分类',  'Type' => 'select', 'Data' => $CateKV, 'Value' => $Rs['PageCateId'], 'Required' => 1, 'Col' => 6),
+                    array('Name' =>'NameEn', 'Desc' => '英文别名',  'Type' => 'input', 'Value' => $Rs['NameEn'], 'Required' => 0, 'Col' => 3),
+                    array('Name' =>'PageCateId', 'Desc' => '分类',  'Type' => 'select', 'Data' => $CateKV, 'Value' => $Rs['PageCateId'], 'Required' => 1, 'Col' => 3),
                     array('Name' =>'Pic', 'Desc' => '单页图片',  'Type' => 'upload', 'Value' => $Rs['Pic'], 'Required' => 0, 'Col' => 12),
                     array('Name' =>'Content', 'Desc' => '单页内容',  'Type' => 'textarea', 'Value' => $Rs['Content'], 'Required' => 0, 'Col' => 12, 'Row' => 22, 'Class' => 'Content'),
                     array('Name' =>'IsEditor', 'Desc' => '加载编辑器',  'Type' => 'hidden', 'Value' => '2', 'Required' => 0, 'Col' => 12),

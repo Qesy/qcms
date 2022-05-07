@@ -845,6 +845,7 @@ class Controllers extends Base {
         $Search[] =  '{{qcms:'.$Pre.'n}}';
         $Search[] =  '{{qcms:'.$Pre.'m}}';
         $Search[] =  '{{qcms:'.$Pre.'CateName}}';
+        $Search[] =  '{{qcms:'.$Pre.'CateNameEn}}';
         $Search[] =  '{{qcms:'.$Pre.'CatePic}}';
         $Search[] =  '{{qcms:'.$Pre.'CateUrl}}';        
         $Search[] =  '{{qcms:'.$Pre.'Url}}';
@@ -871,6 +872,7 @@ class Controllers extends Base {
             $Replace[] =  $k;
             $Replace[] =  $k%2;
             $Replace[] = $CateRs['Name'];
+            $Replace[] = $CateRs['NameEn'];
             $Replace[] = $CateRs['Pic'];
             $Replace[] = ($CateRs['IsLink'] == 1) ? $CateRs['LinkUrl'] : $UrlCate; // 分类地址
             $Replace[] = ($v['IsLink'] == '1') ? $v['LinkUrl'] : $UrlDetail;
