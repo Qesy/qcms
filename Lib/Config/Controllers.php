@@ -31,9 +31,11 @@ class Controllers extends Base {
     public $TmpName; //模板名称 （为了调用静态文件路径）
     public $PageTmp = 1;
     public $CountTmp = 0; //分页用
+    public $CateFieldArr;
     function __construct(){
         parent::__construct();
         $this->SysRs = $this->SysObj->getKv();
+        $this->CateFieldArr = empty($this->SysRs['CategoryFieldJson']) ? array() : json_decode($this->SysRs['CategoryFieldJson'], true);
         if($this->CommonObj->isMobile() && !empty($this->SysRs['TmpPathMobile'])){
             $TmpName = $this->SysRs['TmpPathMobile'];
         }else{
@@ -906,6 +908,9 @@ class Controllers extends Base {
             '{{qcms:'.$Pre.'n}}',
             '{{qcms:'.$Pre.'m}}',
         );
+        foreach($this->CateFieldArr as $v){
+            $Search[] = '{{qcms:'.$Pre.$v['Name'].'}}';
+        }
         foreach($CateArr as $k => $v){
             if($Row >0 && $k >= $Row) continue;
             $Url = ($v['IsLink'] == 1) ? $v['LinkUrl'] : self::createUrl('cate', $v['CateId'], $v['PinYin'], $v['PY']);
@@ -927,6 +932,9 @@ class Controllers extends Base {
                 $k,
                 $k%2,
             );
+            foreach($this->CateFieldArr as $FieldRs){
+                $Replace[] = $v[$FieldRs['Name']];
+            }
             $Compile .= str_replace($Search, $Replace, $Html);
         }
         return $Compile;
@@ -1013,6 +1021,32 @@ class ControllersAdmin extends Controllers {
         'edit' => '修改',
         'del' => '删除',
     );
+    
+    public $CategoryFieldArr = array(
+        'CateId', 
+        'PCateId', 
+        'TCateId', 
+        'Name', 
+        'Pic', 
+        'ModelId', 
+        'IsPost', 
+        'IsShow', 
+        'UserLevel', 
+        'IsLink', 
+        'LinkUrl', 
+        'TempList', 
+        'TempDetail', 
+        'SeoTitle', 
+        'Keywords', 
+        'Description', 
+        'Content', 
+        'IsCross', 
+        'Sort', 
+        'PinYin', 
+        'PY',         
+        'NameEn'        
+    );
+    
     public $IsArr = array('1' => '是', 2 => '否');
     public $OpenArr = array('1' => '开启', 2 => '关闭');
     public $IsShowArr = array('1' => '显示', 2 => '隐藏');
@@ -1072,6 +1106,11 @@ class ControllersAdmin extends Controllers {
             'admin/sysField/index' => array('Name' => '系统变量管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sysField', 'index'))),
             'admin/sysField/add' => array('Name' => '添加系统变量', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sysField', 'add'))),
             'admin/sysField/del' => array('Name' => '删除系统变量', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sysField', 'del'))),
+            
+            'admin/categoryField/index' => array('Name' => '分类字段管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'categoryField', 'index'))),
+            'admin/categoryField/add' => array('Name' => '添加分类字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'categoryField', 'add'))),
+            'admin/categoryField/edit' => array('Name' => '修改分类字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'categoryField', 'edit'))),
+            'admin/categoryField/del' => array('Name' => '删除分类字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'categoryField', 'del'))),
             
             // 分类管理
             'admin/category/index' => array('Name' => '分类管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'index'))),
@@ -1242,9 +1281,10 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/user/index'),
                 array('Key' => 'admin/groupUser/index'),
             )),
-            array('Key' => 'admin/data', 'subCont' => array('data', 'model', 'modelField', 'database', 'redisManage', 'sysField'), 'Icon' => 'bi bi-tools', 'Sub' => array(
+            array('Key' => 'admin/data', 'subCont' => array('data', 'model', 'modelField', 'database', 'redisManage', 'sysField', 'categoryField'), 'Icon' => 'bi bi-tools', 'Sub' => array(
                 array('Key' => 'admin/model/index'),
                 array('Key' => 'admin/sysField/index'),
+                array('Key' => 'admin/categoryField/index'),
                 array('Key' => 'admin/database/index'),
                 array('Key' => 'admin/redisManage/index'),
                 array('Key' => 'admin/data/replace'),

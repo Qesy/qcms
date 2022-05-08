@@ -65,6 +65,7 @@ class Category extends ControllersAdmin {
             if(empty($Rs)) $this->Err(1001);
             $ModelId = $Rs['ModelId'];
         }        
+        $FieldArr = empty($this->SysRs['CategoryFieldJson']) ? array() : json_decode($this->SysRs['CategoryFieldJson'], true);
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name', 'ModelId'))) $this->Err(1001);
             $IsPost = isset($_POST['Attr']['IsPost']) ? 1 : 2;
@@ -95,6 +96,19 @@ class Category extends ControllersAdmin {
                 'PinYin' => $this->PinYinObj->str2pys(trim($_POST['Name'])),
                 'PY' => $this->PinYinObj->str2py(trim($_POST['Name'])),
             );
+            
+            foreach($FieldArr as $v){
+                if(is_array($_POST[$v['Name']])){
+                    $_POST[$v['Name']] = implode('|', array_keys($_POST[$v['Name']]));
+                }elseif($v['Type'] == 'datetime'){
+                    $_POST[$v['Name']] = strtotime($_POST[$v['Name']]);
+                }else{
+                    $_POST[$v['Name']] = trim($_POST[$v['Name']]);
+                }
+                if($v['NotNull'] == 1 && empty($_POST[$v['Name']])) $this->Err(1001);
+                $InsertArr[$v['Name']] = $_POST[$v['Name']];
+            }               
+            
             $Ret = $this->CategoryObj->SetInsert($InsertArr)->ExecInsert();
             if($Ret === false) $this->Err(1002);
             $this->CategoryObj->cleanList();
@@ -159,9 +173,19 @@ class Category extends ControllersAdmin {
             array(
                 'Title' => '分类内容',
                 'Form' => array(
-                    array('Name' =>'Content', 'Desc' => '分类内容',  'Type' => 'editor', 'Value' => '', 'Required' => 0, 'Col' => 12),                    
+                    array('Name' =>'Content', 'Desc' => '分类内容',  'Type' => 'editor', 'Value' => $v['Content'], 'Required' => 0, 'Col' => 12),                    
                 )),
         );
+        foreach($FieldArr as $v){
+            $DataArr = array();
+            if(!empty($v['Data'])){
+                $Data = explode('|', $v['Data']);
+                foreach($Data as $sv) $DataArr[$sv] = $sv;
+            }            
+            $Row = in_array($v['Type'], array('editor', 'textarea')) ? 12 : 3;
+            $this->BuildObj->Arr[0]['Form'][] =  array('Name' => $v['Name'], 'Desc' => $v['Comment'],  'Type' => $v['Type'], 'Data' => $DataArr, 'Value' => $v['Content'], 'Required' => $v['NotNull'], 'Col' => $Row);
+        }
+        
         $this->PageTitle2 = $this->BuildObj->FormMultipleTitle();
         $this->BuildObj->FormMultiple('post', 'form-row');
         $tmp['ModelTempKV'] = $ModelTempKV;
@@ -172,7 +196,7 @@ class Category extends ControllersAdmin {
         if(!$this->VeriObj->VeriPara($_GET, array('CateId'))) $this->Err(1001);
         $CateRs = $this->CategoryObj->getOne($_GET['CateId']);
         if(empty($CateRs)) $this->Err(1003);
-        
+        $FieldArr = empty($this->SysRs['CategoryFieldJson']) ? array() : json_decode($this->SysRs['CategoryFieldJson'], true);
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name'))) $this->Err(1001);
             $IsPost = isset($_POST['Attr']['IsPost']) ? 1 : 2;
@@ -201,6 +225,22 @@ class Category extends ControllersAdmin {
                 'PinYin' => $this->PinYinObj->str2pys(trim($_POST['Name'])),
                 'PY' => $this->PinYinObj->str2py(trim($_POST['Name'])),
             );
+            
+            foreach($FieldArr as $v){
+                if(is_array($_POST[$v['Name']])){
+                    $_POST[$v['Name']] = implode('|', array_keys($_POST[$v['Name']]));
+                }elseif($v['Type'] == 'datetime'){
+                    $_POST[$v['Name']] = strtotime($_POST[$v['Name']]);
+                }else{
+                    $_POST[$v['Name']] = trim($_POST[$v['Name']]);
+                }
+                //$_POST[$v['Name']] = is_array($_POST[$v['Name']]) ? implode('|', array_keys($_POST[$v['Name']])) : $_POST[$v['Name']];
+                if($v['NotNull'] == 1 && empty($_POST[$v['Name']])) {
+                    $this->Err(1001);
+                }
+                $UpdateArr[$v['Name']] = $_POST[$v['Name']];
+            } 
+            
             $Ret = $this->CategoryObj->SetCond(array('CateId' => $CateRs['CateId']))->SetUpdate($UpdateArr)->ExecUpdate();
             
             if(isset($_POST['SyncSubColumn']) && $_POST['SyncSubColumn'] == 1){
@@ -279,6 +319,15 @@ class Category extends ControllersAdmin {
                     array('Name' =>'Content', 'Desc' => '分类内容',  'Type' => 'editor', 'Value' => $CateRs['Content'], 'Required' => 0, 'Col' => 12),
                 )),
         );
+        foreach($FieldArr as $v){
+            $DataArr = array();
+            if(!empty($v['Data'])){
+                $Data = explode('|', $v['Data']);
+                foreach($Data as $sv) $DataArr[$sv] = $sv;
+            }
+            $Row = in_array($v['Type'], array('editor', 'textarea')) ? 12 : 3;
+            $this->BuildObj->Arr[0]['Form'][] =  array('Name' => $v['Name'], 'Desc' => $v['Comment'],  'Type' => $v['Type'], 'Data' => $DataArr, 'Value' => $CateRs[$v['Name']], 'Required' => $v['NotNull'], 'Col' => $Row);
+        }
         $this->PageTitle2 = $this->BuildObj->FormMultipleTitle();
         $this->BuildObj->FormMultiple('post', 'form-row');
         $tmp['ModelTempKV'] = $ModelTempKV;

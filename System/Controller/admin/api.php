@@ -45,25 +45,25 @@ class Api extends ControllersAdmin {
         $msg['url'] = $Ret['Url'];
         echo json_encode($msg);
     }
-    
+
     public function fileBrowse_Action(){
         //if(!$this->VeriObj->VeriPara($_POST, array('Path'))) $this->ApiErr(1001);
         $Path = empty($_POST['Path']) ? '' : $_POST['Path'].'/';
         $Files = scandir(PATH_STATIC.'upload/'.$Path);
         $Folder = array();
         foreach($Files as $v){
-            if(in_array($v, array('.', '..'))) continue;            
+            if(in_array($v, array('.', '..'))) continue;
             $Type = is_dir(PATH_STATIC.'upload/'.$Path.$v) ? 'folder' : 'file';
             if($Type == 'file'){
                 $ext = substr ( strrchr ( $v, '.' ), 1 );
                 if($ext == 'html') continue;
             }
-            
+
             $Folder[] = array('Name' => $v, 'Type' => $Type, 'Path' => URL_STATIC.'upload/'.$Path.$v);
         }
         $this->ApiSuccess($Folder);
     }
-    
+
     public function fileClean_Action(){
         $Arr = $this->FileObj->SetCond(array('IsDel' => 1))->ExecSelect();
         try{
@@ -81,7 +81,7 @@ class Api extends ControllersAdmin {
         }
         $this->ApiSuccess();
     }
-    
+
     public function fileDel_Action(){
         if(!$this->VeriObj->VeriPara($_POST, array('Ids'))) $this->ApiErr(1001);
         $Ids = explode('|', $_POST['Ids']);
@@ -93,7 +93,7 @@ class Api extends ControllersAdmin {
                 $FilePath = realpath(substr($v['Img'], 1));
                 if(file_exists($FilePath)){
                     if(!@unlink($FilePath)) throw new PDOException('删除文件失败');
-                }                
+                }
             }
             DB::$s_db_obj->commit();
         }catch(PDOException $e){
@@ -140,7 +140,7 @@ class Api extends ControllersAdmin {
         $this->LabelObj->clean($Rs['KeyName']);
         $this->CommonObj->ApiSuccess();
     }
-    
+
     public function formState_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Id', 'Status', 'Field'))) $this->ApiErr(1001);
         $DataArr = array($_GET['Field'] => $_GET['Status']);
@@ -150,7 +150,7 @@ class Api extends ControllersAdmin {
         $this->Sys_formObj->clean($Rs['KeyName']);
         $this->CommonObj->ApiSuccess();
     }
-    
+
     public function formDataState_Action($FormId = 0){
         if(empty($FormId)) $this->ApiErr(1001);
         if(!$this->VeriObj->VeriPara($_GET, array('Id', 'Status', 'Field'))) $this->ApiErr(1001);
@@ -161,10 +161,10 @@ class Api extends ControllersAdmin {
         if($Ret === false) $this->Err(1002);
         $this->CommonObj->ApiSuccess();
     }
-    
+
     public function inlinkState_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Id', 'Status', 'Field'))) $this->ApiErr(1001);
-        $DataArr = array($_GET['Field'] => $_GET['Status']);        
+        $DataArr = array($_GET['Field'] => $_GET['Status']);
         $Ret = $this->InlinkObj->SetCond(array('InlinkId' => $_GET['Id']))->SetUpdate($DataArr)->ExecUpdate();
         if($Ret === false) $this->Err(1002);
         $this->InlinkObj->cleanList();
@@ -176,7 +176,7 @@ class Api extends ControllersAdmin {
         $FieldArr = $this->SysObj->query('SHOW FULL COLUMNS FROM '.$_POST['TableName'], array());
         $this->ApiSuccess($FieldArr);
     }
-    
+
     public function contentState_Action(){ // 批量发布内容
         if(!$this->VeriObj->VeriPara($_POST, array('Ids', 'Key', 'Val'))) $this->ApiErr(1001);
         if(!in_array($_POST['Key'], array('State', 'IsSpuerRec', 'IsHeadlines', 'IsRec', 'IsDelete'))) $this->ApiErr(1001);
@@ -184,12 +184,12 @@ class Api extends ControllersAdmin {
 
         $TableRs = $this->TableObj->SetCond(array('Id' => $Ids[0]))->ExecSelectOne();
         $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
-        
+
         $Ret = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Ids))->SetUpdate(array($_POST['Key'] => $_POST['Val']))->ExecUpdate();
         if($Ret === false) $this->ApiErr(1002);
         $this->ApiSuccess();
     }
-    
+
     public function contentAttr_Action(){ //批量设置属性
         if(!$this->VeriObj->VeriPara($_POST, array('Ids', 'Attrs', 'Val'))) $this->ApiErr(1001);
         $AllowArr = array('IsSpuerRec', 'IsHeadlines', 'IsRec', 'IsBold');
@@ -202,12 +202,12 @@ class Api extends ControllersAdmin {
         }
         $TableRs = $this->TableObj->SetCond(array('Id' => $Ids[0]))->ExecSelectOne();
         $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
-        
+
         $Ret = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Ids))->SetUpdate($UpdateArr)->ExecUpdate();
         if($Ret === false) $this->ApiErr(1002);
         $this->ApiSuccess();
     }
-    
+
     public function contentMove_Action(){ //移动内容
         if(!$this->VeriObj->VeriPara($_POST, array('Ids', 'CateId', 'ModelId'))) $this->ApiErr(1001);
         $Ids = explode(',', $_POST['Ids']);
@@ -216,10 +216,10 @@ class Api extends ControllersAdmin {
         if($Ret === false) $this->ApiErr(1002);
         $this->ApiSuccess();
     }
-    
+
     public function deleteRec_Action(){ // 彻底删除
         if(!$this->VeriObj->VeriPara($_POST, array('Ids'))) $this->ApiErr(1001);
-        $Ids = explode(',', $_POST['Ids']);        
+        $Ids = explode(',', $_POST['Ids']);
         $TableRs = $this->TableObj->SetCond(array('Id' => $Ids[0]))->ExecSelectOne();
         $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
         try{
@@ -230,7 +230,7 @@ class Api extends ControllersAdmin {
                 $this->PhotosObj->SetCond(array('Id' => $Ids))->ExecDelete();
             }
             $this->FileObj->SetCond(array('FType' => 2, 'IndexId' => $Ids))->SetUpdate(array('IsDel' => 1))->ExecUpdate();
-            
+
             DB::$s_db_obj->commit();
         }catch (PDOException $e){
             DB::$s_db_obj->rollBack();
@@ -238,7 +238,7 @@ class Api extends ControllersAdmin {
         }
         $this->ApiSuccess();
     }
-    
+
     public function installTemplate_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('TemplatesId'))) $this->ApiErr(1001);
         $Ret = $this->getTemplateInfo($_GET['TemplatesId']);
@@ -265,11 +265,11 @@ class Api extends ControllersAdmin {
                 DB::$s_db_obj->rollBack();
                 $this->ApiErr(1002);
             }
-            
+
         }
         $this->ApiSuccess();
     }
-    
+
     public function sort_Action(){ // 排序
         if(!$this->VeriObj->VeriPara($_POST, array('Index', 'Type', 'Sort'))) $this->ApiErr(1001);
         if($_POST['Type'] == 'category'){
@@ -342,9 +342,9 @@ class Api extends ControllersAdmin {
             $this->SysObj->clean($_POST['Index']);
             $this->ApiSuccess();
         }
-        
+
     }
-    
+
 
 
 }

@@ -25,6 +25,7 @@ class ModelField extends ControllersAdmin {
         $this->BuildObj->TableTopBtnArr = array(
             array('Desc' => '返回', 'Link' => $this->CommonObj->Url(array('admin', 'model', 'index')), 'Class' => 'default'),
         );
+        $this->BuildObj->IsEdit = false;
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, '', 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }
