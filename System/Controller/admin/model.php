@@ -36,7 +36,8 @@ class Model extends ControllersAdmin {
                 DB::$s_db_obj->beginTransaction();
                 $this->Sys_modelObj->SetInsert(array('Name' => trim($_POST['Name']), 'KeyName' => trim($_POST['KeyName'])))->ExecInsert();
 
-                $FieldStr = "`Id` bigint(20) NOT NULL DEFAULT '0',
+                $FieldStr = "
+                  `Id` bigint(20) NOT NULL DEFAULT '0',
                   `CateId` int(11) NOT NULL DEFAULT '0',
                   `Title` varchar(100) NOT NULL DEFAULT '',
                   `STitle` varchar(60) NOT NULL DEFAULT '' COMMENT '短标题',
@@ -50,6 +51,7 @@ class Model extends ControllersAdmin {
                   `TsAdd` bigint(20) NOT NULL DEFAULT '0',
                   `TsUpdate` bigint(20) NOT NULL DEFAULT '0',
                   `ReadNum` int(11) NOT NULL DEFAULT '0',
+                  `DownNum` int(11) NOT NULL DEFAULT '0',
                   `Coins` int(11) NOT NULL DEFAULT '0' COMMENT '需消费金币',
                   `Money` int(11) NOT NULL DEFAULT '0' COMMENT '支付费用',
                   `UserLevel` int(11) NOT NULL DEFAULT '0' COMMENT '浏览权限',
@@ -70,6 +72,7 @@ class Model extends ControllersAdmin {
                   `IsDelete` tinyint(3) NOT NULL DEFAULT '2' COMMENT '是否删除',
                   `PinYin` varchar(255) NOT NULL DEFAULT '',
                   `PY` varchar(255) NOT NULL DEFAULT '',
+                  `Summary` varchar(255) DEFAULT '' COMMENT '摘要',
                   ";
 
                 $TableSql = 'CREATE TABLE `'.$DbConfig['Prefix'].'table_'.$_POST['KeyName'].'` ( '.PHP_EOL.$FieldStr.' PRIMARY KEY (`Id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=\'\';';

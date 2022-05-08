@@ -118,10 +118,10 @@ abstract class Base {
 	    'Sort',
 	    'Keywords',
 	    'Description',
-	    'Summary',
 	    'TsAdd',
 	    'TsUpdate',
 	    'ReadNum',
+	    'DownNum',
 	    'Coins',
 	    'Money',
 	    'UserLevel',
@@ -142,6 +142,7 @@ abstract class Base {
 	    'IsDelete',
 	    'PinYin',
 	    'PY',
+	    'Summary',
 	);
 	function __construct() {
 	    $this->CodeObj = Code::get_instance();

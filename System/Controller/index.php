@@ -17,10 +17,8 @@ class Index extends Controllers {
 
     public function detail_Action($Id = 0){
         if(empty($Id)) $this->DieErr(1001);
-        echo $this->tempRun('detail', $Id);
-        if(!empty($this->Tmp['TableRs']) && $this->Tmp['ModelRs']['KeyName'] != 'down'){
-            $this->TableObj->SetTbName('table_'.$this->Tmp['ModelRs']['KeyName'])->SetCond(array('Id' => $Id))->SetUpdate(array('ReadNum' => ($this->Tmp['TableRs']['ReadNum']+1)))->ExecUpdate();
-        }
+        echo $this->tempRun('detail', $Id);        
+        $this->TableObj->SetTbName('table_'.$this->Tmp['ModelRs']['KeyName'])->SetCond(array('Id' => $Id))->SetUpdate(array('ReadNum' => ($this->Tmp['TableRs']['ReadNum']+1)))->ExecUpdate();        
         self::_statFlow();
     }
 
@@ -42,9 +40,10 @@ class Index extends Controllers {
         $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
         $TableRs = $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $TableRs['Id']))->ExecSelectOne();
 
-        if(!empty($TableRs) && $ModelRs['KeyName'] == 'down'){
-            $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Id))->SetUpdate(array('ReadNum' => ($TableRs['ReadNum']+1)))->ExecUpdate();
-        }
+        //if(!empty($TableRs) && $ModelRs['KeyName'] == 'down'){
+        //无论什么模型都可以做下载，并统计
+        $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Id))->SetUpdate(array('DownNum' => ($TableRs['DownNum']+1)))->ExecUpdate();
+        //}
         header('HTTP/1.1 301 Moved Permanently');
         header('Location: '.$TableRs['Address']);
     }

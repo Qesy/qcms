@@ -191,6 +191,7 @@
                                             {{qcms:Detail_TsAdd}} ： 添加时间（UNIX时间戳）<br>
                                             {{qcms:Detail_TsUpdate}} ： 最后更新时间（UNIX时间戳）<br>
                                             {{qcms:Detail_ReadNum}} ： 浏览次数<br>
+                                            {{qcms:Detail_DownNum}} ： 下载次数<br>
                                             {{qcms:Detail_Coins}} ： 所需金币<br>
                                             {{qcms:Detail_Money}} ： 所需费用<br>
                                             {{qcms:Detail_Color}} ： 标题颜色<br>
@@ -297,9 +298,11 @@
                                                 {{qcms:Get_Author}} ： 作者<br>
                                                 {{qcms:Get_Keywords}} ： SEO关键字<br>
                                                 {{qcms:Get_Description}} ： SEO简介<br>
+                                                {{qcms:Get_Summary}} ： 摘要<br>
                                                 {{qcms:Get_TsAdd}} ： 添加时间（UNIX时间戳）<br>
                                                 {{qcms:Get_TsUpdate}} ： 最后更新时间（UNIX时间戳）<br>
                                                 {{qcms:Get_ReadNum}} ： 浏览次数<br>
+                                                {{qcms:Get_DownNum}} ： 下载次数<br>
                                                 {{qcms:Get_Coins}} ： 所需金币<br>
                                                 {{qcms:Get_Money}} ： 所需费用<br>
                                                 {{qcms:Get_Color}} ： 标题颜色<br>
@@ -454,6 +457,7 @@
 {{qcms:List_TsAdd}} ： 添加时间<br>
 {{qcms:List_TsUpdate}} ： 更新时间<br>
 {{qcms:List_ReadNum}} ： 阅读数量<br>
+{{qcms:List_DownNum}} ： 下载数量<br>
 {{qcms:List_Coins}} ： 所需金币<br>
 {{qcms:List_Money}} ： 所需费用<br>
 {{qcms:List_Color}} ： 标题颜色<br>

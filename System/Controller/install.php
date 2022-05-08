@@ -45,7 +45,8 @@ class Install extends ControllersInstall {
                 DB::$s_db_obj->beginTransaction();                
                 $Path = PATH_DIRNAME.'/Database/qcms.sql';
                 if(!file_exists($Path)) $this->Err(1035);
-                $this->SysObj->ImportSql($Path);                
+                $this->SysObj->ImportSql($Path);        
+                $this->UserObj->ExecDelete();
                 $this->UserObj->SetInsert(array(                    
                     'Phone' => $_POST['Phone'],
                     'NickName' => '管理员',

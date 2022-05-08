@@ -12,6 +12,9 @@ class Upgrade{
         $FieldArr = array_keys($Rs);
         $PageRs = $CategoryObj->SetTbName('page')->ExecSelectOne();
         $PageFieldArr = array_keys($PageRs);
+        $ArticleRs = $CategoryObj->SetTbName('table_article')->ExecSelectOne();
+        $ArticleFieldArr = array_keys($ArticleRs);
+        $ModelArr = $CategoryObj->SetTbName('sys_model')->ExecSelect();
         try{
             $SysObj->exec('alter table '.$DbConfig['Prefix'].'swiper_cate modify COLUMN Name varchar(100) NOT NULL DEFAULT "";', array());
             if(!in_array('TCateId', $FieldArr)){
@@ -23,6 +26,12 @@ class Upgrade{
             if(!in_array('NameEn', $PageFieldArr)){
                 $SysObj->exec('alter table '.$DbConfig['Prefix'].'page add COLUMN NameEn varchar(100) NOT NULL DEFAULT "";', array());
             }  
+            if(!in_array('DownNum', $ArticleFieldArr)){
+                foreach($ModelArr as $v){
+                    $SysObj->exec('alter table '.$DbConfig['Prefix'].'table_'.$v['KeyName'].' add COLUMN DownNum int(11) NOT NULL DEFAULT "0";', array());
+                }
+                
+            }
         }catch (PDOException $e){
         
         }
