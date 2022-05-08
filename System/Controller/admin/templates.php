@@ -140,6 +140,12 @@ class Templates extends ControllersAdmin {
         $tmp['DiyLabelArr'] = $this->LabelObj->ExecSelect();
         $tmp['DiyField'] = $this->SysObj->SetCond(array('IsSys' => 2))->SetSort(array('Sort' => 'ASC'))->ExecSelect();
         $tmp['componentList'] = $this->getTemplate('component_');
+        $ModelArr = $this->Sys_modelObj->getList();
+        
+        foreach($ModelArr as $k => $v){
+            $ModelArr[$k]['FieldJson'] = empty($v['FieldJson']) ? array() : json_decode($v['FieldJson'], true);
+        }
+        $tmp['ModelArr'] = $ModelArr;       
         $this->LoadView('admin/templates/builder', $tmp);
     }
 

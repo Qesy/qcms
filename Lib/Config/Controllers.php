@@ -31,7 +31,7 @@ class Controllers extends Base {
     public $TmpName; //模板名称 （为了调用静态文件路径）
     public $PageTmp = 1;
     public $CountTmp = 0; //分页用
-    public $CateFieldArr;
+    public $CateFieldArr = array();
     function __construct(){
         parent::__construct();
         $this->SysRs = $this->SysObj->getKv();
