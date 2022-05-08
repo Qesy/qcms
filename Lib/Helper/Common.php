@@ -369,7 +369,7 @@ class Common {
 	    return true;
 	}
 	
-	public function PageBar($Count, $Size) { // -- 分页 --
+	public function PageBar($Count, $Size, $IsSimple = false) { // -- 分页 --
 	    $Num = 9;
 	    $PageNum = !empty($_GET['Page']) ? intval($_GET['Page']) : 1;
 	    $Url = URL_ROOT.URL_CURRENT;
@@ -420,6 +420,7 @@ class Common {
             }
 		    </script>";
 	    $Jump = '';
+	    if($IsSimple) return '<ul class="pagination justify-content-center py-3 my-0">'.$FirstPage . $PreStr . $NextStr . $ToallStr . $LastPage.'<li class="page-item  disabled "><a  class="page-link">总'.$Count.'条</a></li>'.$Jump.'</ul>';
 	    return '<ul class="pagination justify-content-center py-3 my-0">'.$FirstPage . $PreStr . $Str . $NextStr . $ToallStr . $LastPage.'<li class="page-item  disabled "><a  class="page-link">总'.$Count.'条</a></li>'.$Jump.'</ul>';
 	}
 

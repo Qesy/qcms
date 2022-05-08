@@ -604,7 +604,7 @@ class Controllers extends Base {
             $Replace[] = self::_replaceList($Ret, $Matches[2][$k], 'List_');
             if($Ret['IsPage'] == 1){
                 $Search[] = '{{qcms:List_PageBar}}';
-                $Replace[] = $this->CommonObj->PageBar($this->CountTmp, $Ret['Row']);
+                $Replace[] = $this->CommonObj->PageBar($this->CountTmp, $Ret['Row'], $this->CommonObj->isMobile());
             }
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
