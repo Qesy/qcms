@@ -662,6 +662,7 @@
                                             {{qcms:Tag_TagId}} ： TagId<br>
                                             {{qcms:Tag_Name}} ： 关键字<br>
                                             {{qcms:Tag_Total}} ： 数量<br>
+                                            {{qcms:Tag_Url}} ： 链接地址<br>
                                             {{qcms:Tag_i}} ： 自曾数（从1开始）<br>
                                             {{qcms:Tag_n}} ： 自曾数（从0开始）<br>
                                             {{qcms:Tag_m}} ： 隔行数（第一行0，第二行1，第三行0 以此类推）<br>
