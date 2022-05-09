@@ -442,21 +442,21 @@ class Controllers extends Base {
                     if(!isset($DetailArr[$Index])){
                         $Replace[] = '';
                     }else{
-                        $Replace[] = self::_replaceOne($Type, $DetailArr[$Index], $Matches[2][$k], 'Get_');
+                        $Replace[] = self::_replaceOne($Type, $DetailArr[$Index], $Matches[2][$k], 'Get_Detal_');
                     }                    
                     break;
                 case 'page':
                     if(!isset($PageArr[$Index])){
                         $Replace[] = '';
                     }else{
-                        $Replace[] = self::_replaceOne($Type, $PageArr[$Index], $Matches[2][$k], 'Get_');
+                        $Replace[] = self::_replaceOne($Type, $PageArr[$Index], $Matches[2][$k], 'Get_Page_');
                     }                    
                     break;
                 case 'swiper':
                     if(!isset($SwiperArr[$Index])){
                         $Replace[] = '';
                     }else{
-                        $Replace[] = self::_replaceOne($Type, $SwiperArr[$Index], $Matches[2][$k], 'Get_');
+                        $Replace[] = self::_replaceOne($Type, $SwiperArr[$Index], $Matches[2][$k], 'Get_Swiper_');
                     }  
                     break;
                 default:
