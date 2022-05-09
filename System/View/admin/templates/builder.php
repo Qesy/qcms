@@ -663,7 +663,7 @@
 
 <textarea class="form-control text-dark mb-3 p-2" rows="15">
 {{tag Row='10'}}
-    <a href="{{qcms:Tag_Url}}"><img src="{{qcms:Tag_Name}}"/></a>
+    <a href="{{qcms:Tag_Url}}">{{qcms:Tag_Name}}</a>
 {{/tag}}
 </textarea>
                                         <h5 >属性说明</h5>
