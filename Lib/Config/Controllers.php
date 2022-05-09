@@ -54,7 +54,7 @@ class Controllers extends Base {
     
     public function tempRun($Type, $Index = '0'){
         $this->initTmp($Type, $Index)->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->get_Tmp()->photo_Tmp()->menu_Tmp();
-        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->link_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
+        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->link_Tmp()->tag_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
         $this->substr_Tmp()->math_Tmp()->replace_Tmp()->thumb_Tmp();
         return $this->Tmp['Compile'];
     }
@@ -64,7 +64,7 @@ class Controllers extends Base {
         $this->Tmp['Compile'] = $this->Tmp['Html'] = $Html;
         //var_dump($this->Tmp['Compile']);exit;
         $this->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->get_Tmp()->photo_Tmp()->menu_Tmp();
-        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->link_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
+        $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->link_Tmp()->tag_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
         $this->substr_Tmp()->math_Tmp()->replace_Tmp()->thumb_Tmp();
         return $this->Tmp['Compile'];
     }
@@ -554,6 +554,20 @@ class Controllers extends Base {
         return $this;
     }
     
+    public function tag_Tmp(){ // 菜单
+        preg_match_all("/{{tag([\s\S.]*?)}}([\s\S.]*?){{\/tag}}/i", $this->Tmp['Compile'], $Matches);
+        $Search = array();
+        $Replace = array();
+        foreach($Matches[1] as $k => $v){
+            $Para = self::_getKv($v);
+            $Row = isset($Para['Row']) ? intval($Para['Row']) : '0';
+            $Search[] = $Matches[0][$k];
+            $Replace[] = self::_replaceTag($Row, $Matches[2][$k], 'Tag_');
+        }        
+        $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
+        return $this;
+    }
+    
     public function photo_Tmp(){ //相册
         if($this->Tmp['Type'] != 'detail' || $this->Tmp['ModelRs']['KeyName'] != 'album') return $this;
         preg_match_all("/{{photo([\s\S.]*?)}}([\s\S.]*?){{\/photo}}/i", $this->Tmp['Compile'], $Matches);
@@ -880,6 +894,33 @@ class Controllers extends Base {
             $Replace[] = ($v['IsLink'] == '1') ? $v['LinkUrl'] : $UrlDetail;
             $Compile .= str_replace($Search, $Replace, $Html);
         }        
+        return $Compile;
+    }
+    
+    private function _replaceTag($Row, $Html, $Pre){
+        if($Row > 100) $Row = 100;
+        $TagArr = $this->TagObj->SetLimit(array(0, $Row))->SetSort(array('Total' => 'DESC'))->ExecSelect();
+
+        $Search = array(
+            '{{qcms:'.$Pre.'TagId}}',
+            '{{qcms:'.$Pre.'Name}}',
+            '{{qcms:'.$Pre.'Total}}',
+            '{{qcms:'.$Pre.'i}}',
+            '{{qcms:'.$Pre.'n}}',
+            '{{qcms:'.$Pre.'m}}',
+        );
+
+        foreach($TagArr as $k => $v){
+            $Replace = array(
+                $v['TagId'],
+                $v['Name'],
+                $v['Total'],                
+                ($k+1),
+                $k,
+                $k%2,
+            );
+            $Compile .= str_replace($Search, $Replace, $Html);
+        }
         return $Compile;
     }
     

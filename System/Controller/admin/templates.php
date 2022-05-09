@@ -128,6 +128,7 @@ class Templates extends ControllersAdmin {
             'link' => '友情链接',
             'loop' => '万能标签',
             'slide' => '幻灯片',
+            'tag' => 'Tag标签',
             'if' => 'if条件标签',
             'date' => '日期标签',
             'substr' => '截取字符串',

@@ -620,7 +620,7 @@
 
                                     <div class="my-3 DemoDiv d-none" data="slide">
                                         <h5 >幻灯片</h5>
-                                        <div class="mb-2">列表形式调用数据库里任何数据</div>
+                                        <div class="mb-2">列表形式调用幻灯片数据</div>
 
 <textarea class="form-control text-dark mb-3 p-2" rows="15">
 {{slide SwiperCateId='1'}}
@@ -641,6 +641,30 @@
                                             {{qcms:Slide_i}} ： 自曾数（从1开始）<br>
                                             {{qcms:Slide_n}} ： 自曾数（从0开始）<br>
                                             {{qcms:Slide_m}} ： 隔行数（第一行0，第二行1，第三行0 以此类推）<br>
+                                        </div>
+                                    </div>
+
+                                     <div class="my-3 DemoDiv d-none" data="tag">
+                                        <h5 >Tag标签</h5>
+                                        <div class="mb-2">列表形式调用Tag数据</div>
+
+<textarea class="form-control text-dark mb-3 p-2" rows="15">
+{{tag Row='10'}}
+    <a href="{{qcms:Slide_Link}}"><img src="{{qcms:Slide_Pic}}"/></a>
+{{/tag}}
+</textarea>
+                                        <h5 >属性说明</h5>
+                                        <div class="mb-2">
+                                            Row : 调用数量
+                                        </div>
+                                        <h5 >标签说明</h5>
+                                        <div>
+                                            {{qcms:Tag_TagId}} ： TagId<br>
+                                            {{qcms:Tag_Name}} ： 关键字<br>
+                                            {{qcms:Tag_Total}} ： 数量<br>
+                                            {{qcms:Tag_i}} ： 自曾数（从1开始）<br>
+                                            {{qcms:Tag_n}} ： 自曾数（从0开始）<br>
+                                            {{qcms:Tag_m}} ： 隔行数（第一行0，第二行1，第三行0 以此类推）<br>
                                         </div>
                                     </div>
 
