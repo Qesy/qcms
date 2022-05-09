@@ -651,6 +651,7 @@
                                             {{qcms:Slide_Title}} ： 图片标题<br>
                                             {{qcms:Slide_Link}} ： 链接地址<br>
                                             {{qcms:Slide_Sort}} ： 排序<br>
+                                            {{qcms:Slide_Summary}} ： 摘要<br>
                                             {{qcms:Slide_i}} ： 自曾数（从1开始）<br>
                                             {{qcms:Slide_n}} ： 自曾数（从0开始）<br>
                                             {{qcms:Slide_m}} ： 隔行数（第一行0，第二行1，第三行0 以此类推）<br>
