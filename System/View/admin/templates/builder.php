@@ -270,17 +270,17 @@
 
 // 单页数据单条调用例子
 {{get Type='page' Index='1'}}
-    <a href="{{qcms:Get_Page_Url}}">{{qcms:Get_Page_Name}}</a>
+    <a href="{{qcms:Get_Url}}">{{qcms:Get_Name}}</a>
 {{/get}}
 
 // 详情数据单条调用例子
 {{get Type='detail' Index='1'}}
-    <a href="{{qcms:Get_Detal_Url}}">{{qcms:Get_Detal_Title}}</a>
+    <a href="{{qcms:Get_Url}}">{{qcms:Get_Title}}</a>
 {{/get}}
 
 // 幻灯片数据单条调用例子
 {{get Type='swiper' Index='1'}}
-    <a href="{{qcms:Get_Swiper_Link}}"><img src="{{qcms:Get_Swiper_Pic}}"></a>
+    <a href="{{qcms:Get_Link}}"><img src="{{qcms:Get_Pic}}"></a>
 {{/get}}
 </textarea>
                                         <h5 >属性说明</h5>
@@ -318,55 +318,55 @@
                                             </div>
                                             <div class="mr-3">
                                                 <h6 class="py-2 font-weight-bold">单页字段</h6>
-                                                {{qcms:Get_Page_PageId}} ： 单页ID<br>
-                                                {{qcms:Get_Page_Name}} ： 单页名字<br>
-                                                {{qcms:Get_Page_NameEn}} ： 分类英文别名<br>
-                                                {{qcms:Get_Page_SeoTitle}} ： SEO标题<br>
-                                                {{qcms:Get_Page_Keywords}} ： SEO关键字<br>
-                                                {{qcms:Get_Page_Description}} ： SEO简介<br>
-                                                {{qcms:Get_Page_Content}} ： 内容<br>
-                                                {{qcms:Get_Page_Url}} ： 链接地址<br>
+                                                {{qcms:Get_PageId}} ： 单页ID<br>
+                                                {{qcms:Get_Name}} ： 单页名字<br>
+                                                {{qcms:Get_NameEn}} ： 分类英文别名<br>
+                                                {{qcms:Get_SeoTitle}} ： SEO标题<br>
+                                                {{qcms:Get_Keywords}} ： SEO关键字<br>
+                                                {{qcms:Get_Description}} ： SEO简介<br>
+                                                {{qcms:Get_Content}} ： 内容<br>
+                                                {{qcms:Get_Url}} ： 链接地址<br>
                                             </div>
                                             <div class="mr-3">
                                                 <h6 class="py-2 font-weight-bold">详情字段</h6>
-                                                {{qcms:Get_Detal_Id}} ： 详情ID<br>
-                                                {{qcms:Get_Detal_CateId}} ： 分类ID<br>
-                                                {{qcms:Get_Detal_Title}} ： 标题<br>
-                                                {{qcms:Get_Detal_STitle}} ：短标题<br>
-                                                {{qcms:Get_Detal_Tag}}： Tag<br>
-                                                {{qcms:Get_Detal_Pic}} ：图片<br>
-                                                {{qcms:Get_Detal_Source}} ： 来源<br>
-                                                {{qcms:Get_Detal_Author}} ： 作者<br>
-                                                {{qcms:Get_Detal_Keywords}} ： SEO关键字<br>
-                                                {{qcms:Get_Detal_Description}} ： SEO简介<br>
-                                                {{qcms:Get_Detal_Summary}} ： 摘要<br>
-                                                {{qcms:Get_Detal_TsAdd}} ： 添加时间（UNIX时间戳）<br>
-                                                {{qcms:Get_Detal_TsUpdate}} ： 最后更新时间（UNIX时间戳）<br>
-                                                {{qcms:Get_Detal_ReadNum}} ： 浏览次数<br>
-                                                {{qcms:Get_Detal_DownNum}} ： 下载次数<br>
-                                                {{qcms:Get_Detal_Coins}} ： 所需金币<br>
-                                                {{qcms:Get_Detal_Money}} ： 所需费用<br>
-                                                {{qcms:Get_Detal_Color}} ： 标题颜色<br>
-                                                {{qcms:Get_Detal_UserId}} ： 发布人ID<br>
-                                                {{qcms:Get_Detal_Good}} ： 好评数<br>
-                                                {{qcms:Get_Detal_Bad}} ： 差评数<br>
-                                                {{qcms:Get_Detal_Content}} ： 内容详情<br>
-                                                {{qcms:Get_Detal_IsLink}}  ： 是否外链 （1：外链， 2：不是外链）<br>
-                                                {{qcms:Get_Detal_LinkUrl}} ： 外链地址<br>
-                                                {{qcms:Get_Detal_IsBold}} ： 是否加粗 （1：加粗， 2：不加粗）<br>
-                                                {{qcms:Get_Detal_IsPic}} ： 是否有缩略图 （1：有， 2 没有）<br>
-                                                {{qcms:Get_Detal_IsSpuerRec}} ： 是否特推（1是， 2：不是）<br>
-                                                {{qcms:Get_Detal_IsHeadlines}} ： 是否头条（1是， 2：不是）<br>
-                                                {{qcms:Get_Detal_IsRec}} ： 是否推荐（1是， 2：不是）<br>
-                                                {{qcms:Get_Detal_PinYin}} ： 全拼<br>
-                                                {{qcms:Get_Detal_PY}} ： 拼音首字母<br>
-                                                {{qcms:Get_Detal_Url}} ： 链接地址<br>
+                                                {{qcms:Get_Id}} ： 详情ID<br>
+                                                {{qcms:Get_CateId}} ： 分类ID<br>
+                                                {{qcms:Get_Title}} ： 标题<br>
+                                                {{qcms:Get_STitle}} ：短标题<br>
+                                                {{qcms:Get_Tag}}： Tag<br>
+                                                {{qcms:Get_Pic}} ：图片<br>
+                                                {{qcms:Get_Source}} ： 来源<br>
+                                                {{qcms:Get_Author}} ： 作者<br>
+                                                {{qcms:Get_Keywords}} ： SEO关键字<br>
+                                                {{qcms:Get_Description}} ： SEO简介<br>
+                                                {{qcms:Get_Summary}} ： 摘要<br>
+                                                {{qcms:Get_TsAdd}} ： 添加时间（UNIX时间戳）<br>
+                                                {{qcms:Get_TsUpdate}} ： 最后更新时间（UNIX时间戳）<br>
+                                                {{qcms:Get_ReadNum}} ： 浏览次数<br>
+                                                {{qcms:Get_DownNum}} ： 下载次数<br>
+                                                {{qcms:Get_Coins}} ： 所需金币<br>
+                                                {{qcms:Get_Money}} ： 所需费用<br>
+                                                {{qcms:Get_Color}} ： 标题颜色<br>
+                                                {{qcms:Get_UserId}} ： 发布人ID<br>
+                                                {{qcms:Get_Good}} ： 好评数<br>
+                                                {{qcms:Get_Bad}} ： 差评数<br>
+                                                {{qcms:Get_Content}} ： 内容详情<br>
+                                                {{qcms:Get_IsLink}}  ： 是否外链 （1：外链， 2：不是外链）<br>
+                                                {{qcms:Get_LinkUrl}} ： 外链地址<br>
+                                                {{qcms:Get_IsBold}} ： 是否加粗 （1：加粗， 2：不加粗）<br>
+                                                {{qcms:Get_IsPic}} ： 是否有缩略图 （1：有， 2 没有）<br>
+                                                {{qcms:Get_IsSpuerRec}} ： 是否特推（1是， 2：不是）<br>
+                                                {{qcms:Get_IsHeadlines}} ： 是否头条（1是， 2：不是）<br>
+                                                {{qcms:Get_IsRec}} ： 是否推荐（1是， 2：不是）<br>
+                                                {{qcms:Get_PinYin}} ： 全拼<br>
+                                                {{qcms:Get_PY}} ： 拼音首字母<br>
+                                                {{qcms:Get_Url}} ： 链接地址<br>
                                                 <?
                                             foreach($ModelArr as $k => $v){
                                                 if(count($v['FieldJson']) > 0 ){
                                                     echo '<br><span class="text-danger">以下是'.$v['Name'].'模块自定义变量</span><br>';
                                                     foreach($v['FieldJson'] as $sk => $sv){
-                                                        echo '{{qcms:Get_Detal_'.$sv['Name'].'}} ： '.$sv['Comment'].'<br>';
+                                                        echo '{{qcms:Get_'.$sv['Name'].'}} ： '.$sv['Comment'].'<br>';
                                                     }
                                                 }
                                             }
@@ -374,11 +374,11 @@
                                             </div>
                                             <div class="mr-3">
                                                 <h6 class="py-2 font-weight-bold">幻灯片单张图片</h6>
-                                                {{qcms:Get_Swiper_SwiperId}} ： 图片ID<br>
-                                                {{qcms:Get_Swiper_Pic}} ： 图片地址<br>
-                                                {{qcms:Get_Swiper_Title}} ： 图片标题<br>
-                                                {{qcms:Get_Swiper_Summary}} ： 图片摘要<br>
-                                                {{qcms:Get_Swiper_Link}} ： 链接地址<br>
+                                                {{qcms:Get_SwiperId}} ： 图片ID<br>
+                                                {{qcms:Get_Pic}} ： 图片地址<br>
+                                                {{qcms:Get_Title}} ： 图片标题<br>
+                                                {{qcms:Get_Summary}} ： 图片摘要<br>
+                                                {{qcms:Get_Link}} ： 链接地址<br>
                                             </div>
 
                                         </div>
