@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 08/05/2022 11:10:29
+ Date: 09/05/2022 17:15:03
 */
 
 SET NAMES utf8mb4;
@@ -420,7 +420,7 @@ CREATE TABLE `qc_log_login`  (
   `Ts` bigint(20) NOT NULL DEFAULT 0,
   `Ip` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`LogLoginId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qc_log_login
@@ -429,6 +429,7 @@ INSERT INTO `qc_log_login` VALUES (1, 1, 'Mozilla/5.0 (Windows NT 10.0; Win64; x
 INSERT INTO `qc_log_login` VALUES (2, 1, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36', 1649931302, '127.0.0.1');
 INSERT INTO `qc_log_login` VALUES (3, 1, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36', 1651496170, '127.0.0.1');
 INSERT INTO `qc_log_login` VALUES (4, 1, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36', 1651979296, '127.0.0.1');
+INSERT INTO `qc_log_login` VALUES (5, 3, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36', 1652087629, '127.0.0.1');
 
 -- ----------------------------
 -- Table structure for qc_log_operate
@@ -563,16 +564,17 @@ CREATE TABLE `qc_swiper`  (
   `Title` varchar(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `Link` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   `Sort` int(11) NOT NULL DEFAULT 99,
+  `Summary` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL,
   PRIMARY KEY (`SwiperId`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qc_swiper
 -- ----------------------------
-INSERT INTO `qc_swiper` VALUES (3, 1, '/Static/images/banner1.jpg', 'Banner1', '#', 99);
-INSERT INTO `qc_swiper` VALUES (4, 1, '/Static/images/banner2.jpg', 'Banner2', '#', 99);
-INSERT INTO `qc_swiper` VALUES (5, 1, '/Static/images/banner3.jpg', 'Banner3', '#', 99);
-INSERT INTO `qc_swiper` VALUES (6, 1, '/Static/images/banner4.jpg', 'Banner4', '#', 99);
+INSERT INTO `qc_swiper` VALUES (3, 1, '/Static/images/banner1.jpg', 'Banner1', '#', 99, '');
+INSERT INTO `qc_swiper` VALUES (4, 1, '/Static/images/banner2.jpg', 'Banner2', '#', 99, '');
+INSERT INTO `qc_swiper` VALUES (5, 1, '/Static/images/banner3.jpg', 'Banner3', '#', 99, '');
+INSERT INTO `qc_swiper` VALUES (6, 1, '/Static/images/banner4.jpg', 'Banner4', '#', 99, '');
 
 -- ----------------------------
 -- Table structure for qc_swiper_cate
@@ -1095,6 +1097,7 @@ CREATE TABLE `qc_token`  (
 -- ----------------------------
 -- Records of qc_token
 -- ----------------------------
+INSERT INTO `qc_token` VALUES ('0a79cdb12139517203d837026bb40c6172299ec2', 3, 'Web', 1652087629, 0);
 INSERT INTO `qc_token` VALUES ('6cc2cf7c1b00618b22c1d92b7c0f3794559e6d82', 1, 'Web', 1651979296, 0);
 
 -- ----------------------------
@@ -1123,12 +1126,11 @@ CREATE TABLE `qc_user`  (
   `TsLast` bigint(20) NOT NULL DEFAULT 0,
   `IpLast` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`UserId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qc_user
 -- ----------------------------
-INSERT INTO `qc_user` VALUES (1, 18888888888, '管理员', '', 'e10adc3949ba59abbe56e057f20f883e', '', '', 1, '', 2, 0.00, 0, 1, 1651496157, '127.0.0.1', 1, 1, 1, 1651979296, '127.0.0.1');
-INSERT INTO `qc_user` VALUES (2, 18888888888, '管理员', '', 'e10adc3949ba59abbe56e057f20f883e', '', '', 1, '', 2, 0.00, 0, 1, 1651979285, '127.0.0.1', 1, 1, 1, 0, '');
+INSERT INTO `qc_user` VALUES (3, 18888888888, '管理员', '', 'e10adc3949ba59abbe56e057f20f883e', '', '', 1, '', 2, 0.00, 0, 1, 1652087616, '127.0.0.1', 1, 1, 1, 1652087629, '127.0.0.1');
 
 SET FOREIGN_KEY_CHECKS = 1;

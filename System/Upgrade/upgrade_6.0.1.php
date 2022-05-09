@@ -8,13 +8,15 @@ class Upgrade{
         $SysObj = QC_Sys::get_instance();
         $CategoryObj = QC_Category::get_instance();
         $DbConfig = Config::DbConfig();
-        $Rs = $CategoryObj->SetTbName('category')->ExecSelectOne();
-        $FieldArr = array_keys($Rs);
-        $PageRs = $CategoryObj->SetTbName('page')->ExecSelectOne();
-        $PageFieldArr = array_keys($PageRs);
-        $ArticleRs = $CategoryObj->SetTbName('table_article')->ExecSelectOne();
-        $ArticleFieldArr = array_keys($ArticleRs);
+        $Rs = $CategoryObj->query("select COLUMN_NAME from information_schema.COLUMNS where table_name = '".$DbConfig['Prefix']."category' and table_schema = '".$DbConfig['Name']."';", array());
+        $FieldArr = array_column($Rs, 'COLUMN_NAME');
+        $PageRs = $CategoryObj->query("select COLUMN_NAME from information_schema.COLUMNS where table_name = '".$DbConfig['Prefix']."page' and table_schema = '".$DbConfig['Name']."';", array());
+        $PageFieldArr = array_column($PageRs, 'COLUMN_NAME');
+        $ArticleRs = $CategoryObj->query("select COLUMN_NAME from information_schema.COLUMNS where table_name = '".$DbConfig['Prefix']."table_article' and table_schema = '".$DbConfig['Name']."';", array());
+        $ArticleFieldArr = array_column($ArticleRs, 'COLUMN_NAME');
         $ModelArr = $CategoryObj->SetTbName('sys_model')->ExecSelect();
+        $SwiperRs = $CategoryObj->query("select COLUMN_NAME from information_schema.COLUMNS where table_name = '".$DbConfig['Prefix']."swiper' and table_schema = '".$DbConfig['Name']."';", array());
+        $SwiperFieldArr = array_column($SwiperRs, 'COLUMN_NAME');
         try{
             $SysObj->exec('alter table '.$DbConfig['Prefix'].'swiper_cate modify COLUMN Name varchar(100) NOT NULL DEFAULT "";', array());
             if(!in_array('TCateId', $FieldArr)){
@@ -31,6 +33,9 @@ class Upgrade{
                     $SysObj->exec('alter table '.$DbConfig['Prefix'].'table_'.$v['KeyName'].' add COLUMN DownNum int(11) NOT NULL DEFAULT "0";', array());
                 }
                 
+            }
+            if(!in_array('Summary', $SwiperFieldArr)){
+                $SysObj->exec('alter table '.$DbConfig['Prefix'].'swiper add COLUMN Summary varchar(255) NOT NULL DEFAULT "";', array()); 
             }
         }catch (PDOException $e){
         

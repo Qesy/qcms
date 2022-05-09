@@ -37,6 +37,7 @@ class Swiper extends ControllersAdmin {
             $Ret = $this->SwiperObj->SetInsert(array(
                 'Pic' => $_POST['Pic'],
                 'Title' => $_POST['Title'],
+                'Summary' => $_POST['Summary'],
                 'Link' => $_POST['Link'],
                 'SwiperCateId' => intval($_GET['SwiperCateId']),
                 'Sort' => 99,
@@ -48,7 +49,8 @@ class Swiper extends ControllersAdmin {
         $this->BuildObj->Arr = array(
             array('Name' =>'Title', 'Desc' => '图片标题',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
             array('Name' =>'Link', 'Desc' => '链接地址',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
-            array('Name' =>'Pic', 'Desc' => '上传图片',  'Type' => 'upload', 'Value' => '', 'Required' => 1, 'Col' => 12),            
+            array('Name' =>'Pic', 'Desc' => '上传图片',  'Type' => 'upload', 'Value' => '', 'Required' => 1, 'Col' => 12), 
+            array('Name' =>'Summary', 'Desc' => '摘要',  'Type' => 'textarea', 'Value' => '', 'Col' => 12),
         );
         $this->BuildObj->FormFooterBtnArr = array(
             array('Name' => 'back', 'Desc' => '返回', 'Type' => 'button', 'Class' => 'default'),
@@ -66,6 +68,7 @@ class Swiper extends ControllersAdmin {
             $Ret = $this->SwiperObj->SetCond(array('SwiperId' => $Rs['SwiperId']))->SetUpdate(array(
                 'Pic' => $_POST['Pic'],
                 'Title' => $_POST['Title'],
+                'Summary' => $_POST['Summary'],
                 'Link' => $_POST['Link'],
             ))->ExecUpdate();
             if($Ret === false) $this->Err(1002);
@@ -77,7 +80,7 @@ class Swiper extends ControllersAdmin {
             array('Name' =>'Title', 'Desc' => '图片标题',  'Type' => 'input', 'Value' => $Rs['Title'], 'Required' => 1, 'Col' => 6),
             array('Name' =>'Link', 'Desc' => '链接地址',  'Type' => 'input', 'Value' => $Rs['Link'], 'Required' => 1, 'Col' => 6),
             array('Name' =>'Pic', 'Desc' => '上传图片',  'Type' => 'upload', 'Value' => $Rs['Pic'], 'Required' => 1, 'Col' => 12),
-            
+            array('Name' =>'Summary', 'Desc' => '摘要',  'Type' => 'textarea', 'Value' => $Rs['Summary'], 'Col' => 12),
         );
         $this->BuildObj->FormFooterBtnArr = array(
             array('Name' => 'back', 'Desc' => '返回', 'Type' => 'button', 'Class' => 'default'),

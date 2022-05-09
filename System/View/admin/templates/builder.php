@@ -277,6 +277,11 @@
 {{get Type='detail' Index='1'}}
     <a href="{{qcms:Get_Url}}">{{qcms:Get_Title}}</a>
 {{/get}}
+
+// 幻灯片数据单条调用例子
+{{get Type='swiper' Index='1'}}
+    <a href="{{qcms:Get_Link}}"><img src="{{qcms:Get_Pic}}"></a>
+{{/get}}
 </textarea>
                                         <h5 >属性说明</h5>
                                         <div class="mb-2">
@@ -366,6 +371,14 @@
                                                 }
                                             }
                                             ?>
+                                            </div>
+                                            <div class="mr-3">
+                                                <h6 class="py-2 font-weight-bold">幻灯片单张图片</h6>
+                                                {{qcms:Get_SwiperId}} ： 图片ID<br>
+                                                {{qcms:Get_Pic}} ： 图片地址<br>
+                                                {{qcms:Get_Title}} ： 图片标题<br>
+                                                {{qcms:Get_Summary}} ： 图片摘要<br>
+                                                {{qcms:Get_Link}} ： 链接地址<br>
                                             </div>
 
                                         </div>

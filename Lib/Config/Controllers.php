@@ -375,7 +375,7 @@ class Controllers extends Base {
         preg_match_all("/{{get([\s\S.]*?)}}([\s\S.]*?){{\/get}}/i", $this->Tmp['Compile'], $Matches);
         $Search = array();
         $Replace = array();
-        $CateIds = $PageIds = $DetailIds = array();
+        $CateIds = $PageIds = $DetailIds = $SwiperIds = array();
         foreach($Matches[1] as $k => $v){ //一次性把数据全提取出来
             $Para = self::_getKv($v);
             $Type = isset($Para['Type']) ? trim($Para['Type']) : 'cate';
@@ -391,6 +391,9 @@ class Controllers extends Base {
                 case 'detail':
                     $DetailIds[] = $Index;
                     break;
+                case 'swiper':
+                    $SwiperIds[] = $Index;
+                    break;
             }
             $CateArr = $PageArr = $DetailArr = array();
             if(!empty($CateIds)){
@@ -398,6 +401,9 @@ class Controllers extends Base {
             }
             if(!empty($PageIds)){
                 $PageArr = $this->PageObj->SetCond(array('PageId' => $PageIds))->SetIndex('PageId')->ExecSelect();
+            }
+            if(!empty($SwiperIds)){
+                $SwiperArr = $this->SwiperObj->SetCond(array('SwiperId' => $SwiperIds))->SetIndex('SwiperId')->ExecSelect();
             }
             if(!empty($DetailIds)){
                 $ModleArr = $this->Sys_modelObj->getList();
@@ -445,6 +451,13 @@ class Controllers extends Base {
                     }else{
                         $Replace[] = self::_replaceOne($Type, $PageArr[$Index], $Matches[2][$k], 'Get_');
                     }                    
+                    break;
+                case 'swiper':
+                    if(!isset($SwiperArr[$Index])){
+                        $Replace[] = '';
+                    }else{
+                        $Replace[] = self::_replaceOne($Type, $SwiperArr[$Index], $Matches[2][$k], 'Get_');
+                    }  
                     break;
                 default:
                     $Replace[] = '';
