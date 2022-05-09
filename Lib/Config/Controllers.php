@@ -905,16 +905,19 @@ class Controllers extends Base {
             '{{qcms:'.$Pre.'TagId}}',
             '{{qcms:'.$Pre.'Name}}',
             '{{qcms:'.$Pre.'Total}}',
+            '{{qcms:'.$Pre.'Url}}',
             '{{qcms:'.$Pre.'i}}',
             '{{qcms:'.$Pre.'n}}',
             '{{qcms:'.$Pre.'m}}',
         );
 
         foreach($TagArr as $k => $v){
+            $Link = $this->CommonObj->Url(array('index', 'search')).'?Search='.$v['Name'];
             $Replace = array(
                 $v['TagId'],
                 $v['Name'],
-                $v['Total'],                
+                $v['Total'],  
+                $Link,
                 ($k+1),
                 $k,
                 $k%2,
