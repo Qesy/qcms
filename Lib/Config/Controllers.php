@@ -617,7 +617,7 @@ class Controllers extends Base {
         $Search = array();
         $Replace = array();
         foreach($Matches[1] as $k => $v){
-            $Para = self::_getKv($v);
+            $Para = self::_getKv($v);            
             $Ret['Model'] = empty($Para['Model']) ? 'article' : $Para['Model'];
             $Ret['Row'] = !isset($Para['Row']) ? '10' : intval($Para['Row']);
             if($Ret['Row'] > 100) $Ret['Row'] = 100;

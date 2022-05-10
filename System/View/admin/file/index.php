@@ -4,9 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>
-        <?=WEB_TITLE?>
-    </title>
+    <title><?=$this->SysRs['WebName']?> - 网站后台</title>
     <meta name="description" content="">
     <meta name="keywords" content="">
     <?=$this->LoadView('admin/common/meta')?>
