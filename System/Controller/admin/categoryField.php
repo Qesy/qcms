@@ -14,6 +14,7 @@ class CategoryField extends ControllersAdmin {
                 'IsSys' => 1,
             ))->ExecInsert();
             $this->SysObj->cleanList();
+            $this->SysRs = $this->SysObj->getKv();
         }
         $Arr = json_decode($this->SysRs['CategoryFieldJson'], true);
         foreach($Arr as $k => $v){
