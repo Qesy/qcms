@@ -113,7 +113,7 @@ class Index extends Controllers {
 	        $FieldArr = empty($Rs['FieldJson']) ? array() : json_decode($Rs['FieldJson'], true);
 	        foreach($FieldArr as $v){
 	            if($v['NotNull'] == 1 && empty($_POST[$v['Name']])) $this->Err(1001);
-	            $InsertArr[$v['Name']] = $_POST[$v['Name']];
+	            $InsertArr[$v['Name']] = strip_tags($_POST[$v['Name']]);
 	        }
 	        $Ret = $this->Sys_formObj->SetTbName('form_'.$Rs['KeyName'])->SetInsert($InsertArr)->ExecInsert();
 	        if($Ret === false) $this->Err(1002);
