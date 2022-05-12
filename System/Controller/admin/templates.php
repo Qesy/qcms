@@ -104,8 +104,11 @@ class Templates extends ControllersAdmin {
     public function market_Action(){
         $Page = intval($_GET['Page']);
         if($Page < 1) $Page = 1;
-        $PageNum = 10;
-        $Ret = $this->getTemplaites($Page, $PageNum);
+        $PageNum = 12;
+        $CateId = intval($_GET['CateId']);
+        $Ret = $this->getTemplaites($Page, $PageNum, $CateId);
+        $CateArr = $this->getTemplaitesCate();
+        $tmp['CateArr'] = $CateArr['Data'];
         $tmp['Arr'] = $Ret['Data']['List'];
         $tmp['Page'] = $this->CommonObj->PageBar($Ret['Data']['Count'], $PageNum);
         $tmp['TempFolder'] = $this->getTempFolder();

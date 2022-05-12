@@ -56,6 +56,18 @@
                             </div>
                             <div class="panel-wrapper ">
                                 <div class="panel-body">
+                                    <div class="px-3 my-4 <?=(count($CateArr) == 0) ? 'd-none' : ''?>">
+                                        <div class="row border py-3">
+                                            <?
+                                            foreach($CateArr as $v){
+
+                                                ?>
+                                                <div class="col-3 text-center py-1 "><a href="<?=$this->CommonObj->Url(array('admin', 'templates', 'market')).'?CateId='.$v['TemplatesCateId']?>" class="<?=(isset($_GET['CateId']) && $v['TemplatesCateId'] == $_GET['CateId']) ? 'text-primary font-weight-bold' : 'text-muted'?>"><?=$v['Name']?> (<span > <?=$v['c']?></span> )</a></div>
+                                                <?
+                                            }
+                                            ?>
+                                        </div>
+                                    </div>
                                     <div class="row">
                                         <?
                                         foreach($Arr as $k => $v){
@@ -71,7 +83,7 @@
                                                             <img alt="image" class="img-fluid" src="<?=$v['Pic']?>">
                                                         </div>
                                                         <div class="file-name">
-                                                            <div class="text-nowrap overflow-hidden "><span class="float-right"><?=$this->CommonObj->Size($v['Size'])?></span><span class="font-weight-bold"><?=empty($v['Name']) ? '未命名' : $v['Name']?></span></div>
+                                                            <div class="text-nowrap overflow-hidden "><span class="float-right d-none"><?=$this->CommonObj->Size($v['Size'])?></span><span class="font-weight-bold overflow-hidden"><?=empty($v['Name']) ? '未命名' : $v['Name']?></span></div>
 
                                                         </div>
                                                     </a>
@@ -108,7 +120,8 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-            <button type="button" class="btn btn-primary" id="installBtn">安装</button>
+            <a target="_blank" href="https://www.q-cms.cn/templates.html" class="btn btn-primary">去官网下载</a>
+            <!-- <button type="button" class="btn btn-primary" id="installBtn">安装</button> -->
           </div>
         </div>
       </div>

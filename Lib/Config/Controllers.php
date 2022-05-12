@@ -1491,8 +1491,15 @@ class ControllersAdmin extends Controllers {
         return $Ret;
     }
     
-    public function getTemplaites($Page, $PageNum){        
-        $Json = $this->CurlObj->SetUrl('https://www.q-cms.cn/client/templates.html')->SetPara(array('Domain' => URL_DOMAIN, 'Page' => $Page, 'PageNum' => $PageNum))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
+    public function getTemplaites($Page, $PageNum, $CateId = 0){        
+        $Para = array('Domain' => URL_DOMAIN, 'Page' => $Page, 'PageNum' => $PageNum, 'CateId' => $CateId);
+        $Json = $this->CurlObj->SetUrl('https://www.q-cms.cn/client/templates.html')->SetPara($Para)->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Ret = json_decode($Json, true);
+        return $Ret;
+    }
+    
+    public function getTemplaitesCate(){
+        $Json = $this->CurlObj->SetUrl('https://www.q-cms.cn/client/templatesCate.html')->SetPara(array('Domain' => URL_DOMAIN))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
     }
