@@ -11,7 +11,7 @@
  Target Server Version : 50726
  File Encoding         : 65001
 
- Date: 09/05/2022 17:15:03
+ Date: 12/05/2022 13:50:13
 */
 
 SET NAMES utf8mb4;
@@ -420,7 +420,7 @@ CREATE TABLE `qc_log_login`  (
   `Ts` bigint(20) NOT NULL DEFAULT 0,
   `Ip` varchar(20) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`LogLoginId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 6 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qc_log_login
@@ -430,6 +430,7 @@ INSERT INTO `qc_log_login` VALUES (2, 1, 'Mozilla/5.0 (Windows NT 10.0; Win64; x
 INSERT INTO `qc_log_login` VALUES (3, 1, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36', 1651496170, '127.0.0.1');
 INSERT INTO `qc_log_login` VALUES (4, 1, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36', 1651979296, '127.0.0.1');
 INSERT INTO `qc_log_login` VALUES (5, 3, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36', 1652087629, '127.0.0.1');
+INSERT INTO `qc_log_login` VALUES (6, 4, 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36', 1652334410, '127.0.0.1');
 
 -- ----------------------------
 -- Table structure for qc_log_operate
@@ -719,9 +720,9 @@ CREATE TABLE `qc_sys_model`  (
 -- Records of qc_sys_model
 -- ----------------------------
 INSERT INTO `qc_sys_model` VALUES (1, 'article', '文章', 1, '');
-INSERT INTO `qc_sys_model` VALUES (2, 'product', '产品', 1, '[{\"Name\":\"factory\",\"Comment\":\"\\u5382\\u5546\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"2\",\"Data\":\"\"},{\"Name\":\"level\",\"Comment\":\"\\u7ea7\\u522b\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"2\",\"Data\":\"\"},{\"Name\":\"energy\",\"Comment\":\"\\u80fd\\u6e90\\u7c7b\\u578b\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"2\",\"Data\":\"\"},{\"Name\":\"environment\",\"Comment\":\"\\u73af\\u4fdd\\u6807\\u51c6\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"2\",\"Data\":\"\"},{\"Name\":\"marketTime\",\"Comment\":\"\\u4e0a\\u5e02\\u65f6\\u95f4\",\"Type\":\"date\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"2\",\"Data\":\"\"},{\"Name\":\"maxpower\",\"Comment\":\"\\u6700\\u5927\\u529f\\u7387(kW)\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"2\",\"Data\":\"\"},{\"Name\":\"maxtorque\",\"Comment\":\"\\u6700\\u5927\\u626d\\u77e9(N\\u00b7m)\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"2\",\"Data\":\"\"},{\"Name\":\"engine\",\"Comment\":\"\\u53d1\\u52a8\\u673a\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"2\",\"Data\":\"\"},{\"Name\":\"transmission\",\"Comment\":\"\\u53d8\\u901f\\u7bb1\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"2\",\"Data\":\"\"},{\"Name\":\"size\",\"Comment\":\"\\u957f*\\u5bbd*\\u9ad8(mm)\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"2\",\"Data\":\"\"},{\"Name\":\"Price\",\"Comment\":\"\\u4ef7\\u683c\",\"Type\":\"money\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"}]');
+INSERT INTO `qc_sys_model` VALUES (2, 'product', '产品', 1, '[{\"Name\":\"factory\",\"Comment\":\"\\u5382\\u5546\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"},{\"Name\":\"level\",\"Comment\":\"\\u7ea7\\u522b\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"},{\"Name\":\"energy\",\"Comment\":\"\\u80fd\\u6e90\\u7c7b\\u578b\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"},{\"Name\":\"environment\",\"Comment\":\"\\u73af\\u4fdd\\u6807\\u51c6\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"},{\"Name\":\"marketTime\",\"Comment\":\"\\u4e0a\\u5e02\\u65f6\\u95f4\",\"Type\":\"date\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"},{\"Name\":\"maxpower\",\"Comment\":\"\\u6700\\u5927\\u529f\\u7387(kW)\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"},{\"Name\":\"maxtorque\",\"Comment\":\"\\u6700\\u5927\\u626d\\u77e9(N\\u00b7m)\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"},{\"Name\":\"engine\",\"Comment\":\"\\u53d1\\u52a8\\u673a\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"},{\"Name\":\"transmission\",\"Comment\":\"\\u53d8\\u901f\\u7bb1\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"},{\"Name\":\"size\",\"Comment\":\"\\u957f*\\u5bbd*\\u9ad8(mm)\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"},{\"Name\":\"Price\",\"Comment\":\"\\u4ef7\\u683c\",\"Type\":\"money\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"}]');
 INSERT INTO `qc_sys_model` VALUES (3, 'album', '相册', 1, '');
-INSERT INTO `qc_sys_model` VALUES (4, 'down', '下载', 1, '[{\"Name\":\"Size\",\"Comment\":\"\\u8f6f\\u4ef6\\u5927\\u5c0f\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"2\",\"Data\":\"\"},{\"Name\":\"Lang\",\"Comment\":\"\\u8f6f\\u4ef6\\u8bed\\u8a00\",\"Type\":\"input\",\"Content\":\"\\u7b80\\u4f53\\u4e2d\\u6587\",\"NotNull\":\"1\",\"IsList\":\"2\",\"Data\":\"\"},{\"Name\":\"Level\",\"Comment\":\"\\u8f6f\\u4ef6\\u8bc4\\u7ea7\",\"Type\":\"input\",\"Content\":\"5\",\"NotNull\":\"1\",\"IsList\":\"2\",\"Data\":\"\"},{\"Name\":\"Company\",\"Comment\":\"\\u8f6f\\u4ef6\\u5382\\u5546\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"2\",\"Data\":\"\"},{\"Name\":\"Auth\",\"Comment\":\"\\u8f6f\\u4ef6\\u6388\\u6743\",\"Type\":\"input\",\"Content\":\"\\u514d\\u8d39\",\"NotNull\":\"1\",\"IsList\":\"2\",\"Data\":\"\"},{\"Name\":\"Platform\",\"Comment\":\"\\u5e94\\u7528\\u5e73\\u53f0\",\"Type\":\"input\",\"Content\":\"windows\",\"NotNull\":\"1\",\"IsList\":\"2\",\"Data\":\"\"},{\"Name\":\"WebSite\",\"Comment\":\"\\u5b98\\u65b9\\u7f51\\u7ad9\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"2\",\"Data\":\"\"},{\"Name\":\"Address\",\"Comment\":\"\\u4e0b\\u8f7d\\u5730\\u5740\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"2\",\"Data\":\"\"}]');
+INSERT INTO `qc_sys_model` VALUES (4, 'down', '下载', 1, '[{\"Name\":\"Size\",\"Comment\":\"\\u8f6f\\u4ef6\\u5927\\u5c0f\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"},{\"Name\":\"Lang\",\"Comment\":\"\\u8f6f\\u4ef6\\u8bed\\u8a00\",\"Type\":\"input\",\"Content\":\"\\u7b80\\u4f53\\u4e2d\\u6587\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"},{\"Name\":\"Level\",\"Comment\":\"\\u8f6f\\u4ef6\\u8bc4\\u7ea7\",\"Type\":\"input\",\"Content\":\"5\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"},{\"Name\":\"Company\",\"Comment\":\"\\u8f6f\\u4ef6\\u5382\\u5546\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"},{\"Name\":\"Auth\",\"Comment\":\"\\u8f6f\\u4ef6\\u6388\\u6743\",\"Type\":\"input\",\"Content\":\"\\u514d\\u8d39\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"},{\"Name\":\"Platform\",\"Comment\":\"\\u5e94\\u7528\\u5e73\\u53f0\",\"Type\":\"input\",\"Content\":\"windows\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"},{\"Name\":\"WebSite\",\"Comment\":\"\\u5b98\\u65b9\\u7f51\\u7ad9\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"},{\"Name\":\"Address\",\"Comment\":\"\\u4e0b\\u8f7d\\u5730\\u5740\",\"Type\":\"input\",\"Content\":\"\",\"NotNull\":\"1\",\"IsList\":\"1\",\"Data\":\"\"}]');
 
 -- ----------------------------
 -- Table structure for qc_table
@@ -1099,6 +1100,7 @@ CREATE TABLE `qc_token`  (
 -- ----------------------------
 INSERT INTO `qc_token` VALUES ('0a79cdb12139517203d837026bb40c6172299ec2', 3, 'Web', 1652087629, 0);
 INSERT INTO `qc_token` VALUES ('6cc2cf7c1b00618b22c1d92b7c0f3794559e6d82', 1, 'Web', 1651979296, 0);
+INSERT INTO `qc_token` VALUES ('d8285375ecbcc187ef65d43f91885df3b1623bfd', 4, 'Web', 1652334410, 0);
 
 -- ----------------------------
 -- Table structure for qc_user
@@ -1126,11 +1128,11 @@ CREATE TABLE `qc_user`  (
   `TsLast` bigint(20) NOT NULL DEFAULT 0,
   `IpLast` varchar(16) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '',
   PRIMARY KEY (`UserId`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 4 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8 COLLATE = utf8_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of qc_user
 -- ----------------------------
-INSERT INTO `qc_user` VALUES (3, 18888888888, '管理员', '', 'e10adc3949ba59abbe56e057f20f883e', '', '', 1, '', 2, 0.00, 0, 1, 1652087616, '127.0.0.1', 1, 1, 1, 1652087629, '127.0.0.1');
+INSERT INTO `qc_user` VALUES (4, 18888888888, '管理员', '', 'e10adc3949ba59abbe56e057f20f883e', '', '', 1, '', 2, 0.00, 0, 1, 1652334396, '127.0.0.1', 1, 1, 1, 1652334410, '127.0.0.1');
 
 SET FOREIGN_KEY_CHECKS = 1;

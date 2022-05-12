@@ -573,6 +573,7 @@
                                                 if(count($v['FieldJson']) > 0 ){
                                                     echo '<br><span class="text-danger">以下是'.$v['Name'].'模块自定义变量</span><br>';
                                                     foreach($v['FieldJson'] as $sk => $sv){
+                                                        if($sv['IsList'] != 1) continue;
                                                         echo '{{qcms:List_'.$sv['Name'].'}} ： '.$sv['Comment'].'<br>';
                                                     }
                                                 }
