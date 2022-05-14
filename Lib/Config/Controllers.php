@@ -533,8 +533,9 @@ class Controllers extends Base {
             $Para = self::_getKv($v);
             $PCateId = isset($Para['PCateId']) ? intval($Para['PCateId']) : '0';
             $Row = isset($Para['Row']) ? intval($Para['Row']) : '0';
+            $Start = !isset($Para['Start']) ? 0 : intval($Para['Start']);
             $Search[] = $Matches[0][$k];
-            $Replace[] = self::_replaceCate($PCateId, $Row, $Matches[2][$k], 'Menu_');
+            $Replace[] = self::_replaceCate($PCateId, $Start, $Row, $Matches[2][$k], 'Menu_');
         }
         
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
@@ -549,8 +550,9 @@ class Controllers extends Base {
             $Para = self::_getKv($v);
             $PCateId = isset($Para['PCateId']) ? intval($Para['PCateId']) : '0';
             $Row = isset($Para['Row']) ? intval($Para['Row']) : '0';
+            $Start = !isset($Para['Start']) ? 0 : intval($Para['Start']);
             $Search[] = $Matches[0][$k];
-            $Replace[] = self::_replaceCate($PCateId, $Row, $Matches[2][$k], 'sMenu_');
+            $Replace[] = self::_replaceCate($PCateId, $Start, $Row, $Matches[2][$k], 'sMenu_');
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
@@ -564,8 +566,9 @@ class Controllers extends Base {
             $Para = self::_getKv($v);
             $PCateId = isset($Para['PCateId']) ? intval($Para['PCateId']) : '0';
             $Row = isset($Para['Row']) ? intval($Para['Row']) : '0';
+            $Start = !isset($Para['Start']) ? 0 : intval($Para['Start']);
             $Search[] = $Matches[0][$k];
-            $Replace[] = self::_replaceCate($PCateId, $Row, $Matches[2][$k], 'ssMenu_');
+            $Replace[] = self::_replaceCate($PCateId, $Start, $Row, $Matches[2][$k], 'ssMenu_');
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
@@ -947,7 +950,7 @@ class Controllers extends Base {
         return $Compile;
     }
     
-    private function _replaceCate($PCateId, $Row, $Html, $Pre){
+    private function _replaceCate($PCateId, $Start, $Row, $Html, $Pre){
         $Arr = $this->CategoryObj->CateTreeDetail;
         $CateArr = array();
         foreach($Arr as $k => $v){
@@ -975,8 +978,12 @@ class Controllers extends Base {
         foreach($this->CateFieldArr as $v){
             $Search[] = '{{qcms:'.$Pre.$v['Name'].'}}';
         }
+        $End = $Start+$Row;
         foreach($CateArr as $k => $v){
-            if($Row >0 && $k >= $Row) continue;
+            if($Row >0){
+                if($k < $Start || $k >= $End) continue; 
+            }
+            //if($Row >0 && $k >= $Row) continue;
             $Url = ($v['IsLink'] == 1) ? $v['LinkUrl'] : self::createUrl('cate', $v['CateId'], $v['PinYin'], $v['PY']);
             $TCateId = empty($v['TCateId']) ? $v['CateId'] : $v['TCateId'];
             $Replace = array(

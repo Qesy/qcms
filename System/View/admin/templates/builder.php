@@ -398,6 +398,7 @@
                                         <div class="mb-2">
                                             PCateId : 上级分类ID （不填默认为0）<br>
                                             Row : 调用数量<br>
+                                            Start : 开始记录，默认：0 （比如要获取第3-6条记录，Start='3' Row='3'）<br>
                                         </div>
                                         <h5 >标签说明</h5>
                                         <div>
@@ -439,6 +440,7 @@
                                         <div class="mb-2">
                                             PCateId : 上级分类ID （不填默认为0）<br>
                                             Row : 调用数量<br>
+                                            Start : 开始记录，默认：0 （比如要获取第3-6条记录，Start='3' Row='3'）<br>
                                         </div>
                                         <h5 >标签说明</h5>
                                         <div>
@@ -478,6 +480,7 @@
                                         <div class="mb-2">
                                             PCateId : 上级分类ID （不填默认为0）<br>
                                             Row : 调用数量<br>
+                                            Start : 开始记录，默认：0 （比如要获取第3-6条记录，Start='3' Row='3'）<br>
                                         </div>
                                         <h5 >标签说明</h5>
                                         <div>
