@@ -627,6 +627,7 @@ class Controllers extends Base {
             $Ret['Keyword'] = !isset($Para['Keyword']) ? '' : $Para['Keyword'];
             $Ret['Search'] = !isset($Para['Search']) ? '' : $Para['Search'];
             $Ret['Ids'] = !isset($Para['Ids']) ? '' : $Para['Ids'];
+            $Ret['Start'] = !isset($Para['Start']) ? 0 : intval($Para['Start']);
             $Ret['Attr'] = !isset($Para['Attr']) ? '' : $Para['Attr'];
             $Ret['IsPage'] = !isset($Para['IsPage']) ? '-1' : intval($Para['IsPage']); //是否开启分页
             $Search[] = $Matches[0][$k];
@@ -842,7 +843,7 @@ class Controllers extends Base {
             $CondArr['Title LIKE'] = $Ret['Search'];
         }
         
-        $Limit = ($Ret['IsPage'] != 1) ? array(0, $Ret['Row']) : array(($this->PageTmp-1)*$Ret['Row'], $Ret['Row']);
+        $Limit = ($Ret['IsPage'] != 1) ? array($Ret['Start'], $Ret['Row']) : array(($this->PageTmp-1)*$Ret['Row'], $Ret['Row']);
 
         $Count = 0;
         $Sort = array('Sort' => 'ASC', 'Id' => 'DESC');
