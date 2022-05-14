@@ -178,6 +178,7 @@
                                             {{qcms:TopCate_Content}} ： 顶级分类内容详情<br>
                                             {{qcms:TopCate_PinYin}} ： 顶级全拼<br>
                                             {{qcms:TopCate_PY}} ： 顶级拼音首字母<br>
+                                            {{qcms:TopCate_HasSub}} ： 顶级拼音首字母<br>
                                             <?
                                             if(count($this->CateFieldArr) > 0){
                                                 echo '<span class="text-danger">以下是顶级分类自定义变量</span><br>';
