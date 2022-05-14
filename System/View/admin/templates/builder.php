@@ -523,6 +523,7 @@
                                             Search：关键字 (模糊匹配标题)<br>
                                             Ids ： 文章ID (用 | 分割，例：12|23|33)<br>
                                             Attr：属性 (sr:特推、hl:头条、re:推荐、ip:带图, 例 ：sr,hl,re,ip hl)<br>
+                                            Start：开始记录，默认：0 （比如要获取第3-6条记录，Start='3' Row='3'）<br>
                                             IsPage：开启分页 （默认 0：关闭, 1：开启 ）<br>
 
                                         </div>
