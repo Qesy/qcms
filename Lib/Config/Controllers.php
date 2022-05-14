@@ -267,6 +267,8 @@ class Controllers extends Base {
                     $Replace[] = $v;
                 }      
                 $TopCateRs = $this->CategoryObj->getOne($this->Tmp['CateRs']['TCateId']);
+                $TopCateRsT = $this->CateKv[$this->Tmp['CateRs']['TCateId']];
+                $TopCateRs['HasSub'] = $TopCateRsT['HasSub'];
                 $TopCateRs['TCateId'] = $TopCateRs['CateId'];
                 foreach($TopCateRs as $k => $v){
                     $Search[] = '{{qcms:TopCate_'.$k.'}}';
