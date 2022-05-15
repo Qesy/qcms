@@ -806,6 +806,7 @@
                                         <h5 >属性说明</h5>
                                         <div class="mb-2">
                                             Index : 索引ID （默认当前文章的ID）<br>
+                                            Row : 数量 （默认调用全部）<br>
 
                                             <h5 >标签说明</h5>
                                         <div>

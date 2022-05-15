@@ -596,8 +596,9 @@ class Controllers extends Base {
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);
             $Index = isset($Para['Index']) ? intval($Para['Index']) : $this->Tmp['Index'];
+            $Row = isset($Para['Row']) ? intval($Para['Row']) : 0;
             $Search[] = $Matches[0][$k];
-            $Replace[] = self::_replacePhoto($Index, $Matches[2][$k], 'Photo_');
+            $Replace[] = self::_replacePhoto($Index, $Row, $Matches[2][$k], 'Photo_');
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
@@ -771,12 +772,13 @@ class Controllers extends Base {
         return $Compile;
     }
     
-    private function _replacePhoto($Index, $Html, $Pre){
+    private function _replacePhoto($Index, $Row, $Html, $Pre){
         $Rs = $this->PhotosObj->SetCond(array('Id' => $Index))->ExecSelectOne();
         $Photos = empty($Rs['Photos']) ? array() : json_decode($Rs['Photos'], true);
         $Compile = '';
         $Search = array('{{qcms:'.$Pre.'Name}}', '{{qcms:'.$Pre.'Path}}', '{{qcms:'.$Pre.'Size}}', '{{qcms:'.$Pre.'i}}', '{{qcms:'.$Pre.'n}}', '{{qcms:'.$Pre.'m}}');
         foreach($Photos as $k => $v){
+            if(!empty($Row) && $k>=$Row) continue;
             $Replace = array($v['Name'], $v['Path'], $v['Size'], ($k+1), $k, $k%2);
             $Compile .= str_replace($Search, $Replace, $Html);
         }
