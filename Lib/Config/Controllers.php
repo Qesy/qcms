@@ -52,7 +52,8 @@ class Controllers extends Base {
         $this->PageTmp = (intval($_GET['Page']) < 1) ? 1 : intval($_GET['Page']);
     }
     
-    public function tempRun($Type, $Index = '0'){
+    public function tempRun($Type, $Index = '0', $Page = 1){
+        $this->PageTmp = $Page;
         $this->initTmp($Type, $Index)->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->get_Tmp()->photo_Tmp()->menu_Tmp();
         $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->link_Tmp()->tag_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
         $this->substr_Tmp()->math_Tmp()->replace_Tmp()->thumb_Tmp();
@@ -640,7 +641,11 @@ class Controllers extends Base {
             $Ret['IsPage'] = !isset($Para['IsPage']) ? '-1' : intval($Para['IsPage']); //是否开启分页
             $Search[] = $Matches[0][$k];
             $Replace[] = self::_replaceList($Ret, $Matches[2][$k], 'List_');
-            if($Ret['IsPage'] == 1){
+            if($this->Tmp['Type'] == 'cate' && $Ret['IsPage'] == 1){
+                $Search[] = '{{qcms:List_PageBar}}';
+                $UrlArr = array('Default' => $this->SysRs['UrlList'], 'Page' => $this->SysRs['UrlListPage']);
+                $Replace[] = $this->CommonObj->PageBarTemplate($this->CountTmp, $Ret['Row'], $this->PageTmp, $this->Tmp['CateRs'], $UrlArr, $this->CommonObj->isMobile());
+             } elseif ($this->Tmp['Type'] == 'search' && $Ret['IsPage'] == 1) {
                 $Search[] = '{{qcms:List_PageBar}}';
                 $Replace[] = $this->CommonObj->PageBar($this->CountTmp, $Ret['Row'], $this->CommonObj->isMobile());
             }
@@ -681,18 +686,18 @@ class Controllers extends Base {
     public function createUrl($Type, $Index, $PinYin, $PY, $Ts = 0){
         switch($Type){
             case 'cate':
-                $Url = $this->SysObj->getOne('UrlList')['AttrValue'];
+                $Url = $this->SysRs['UrlList'];
                 $RetUrl = str_replace(array('{CateId}', '{PinYin}', '{PY}'), array($Index, $PinYin, $PY), $Url);
                 break;
             case 'detail':
-                $Url = $this->SysObj->getOne('UrlDetail')['AttrValue'];
+                $Url = $this->SysRs['UrlDetail'];
                 $Y = date('Y', $Ts);
                 $m = date('m', $Ts);
                 $d = date('d', $Ts);
                 $RetUrl = str_replace(array('{Id}', '{PinYin}', '{PY}', '{Y}', '{M}', '{D}'), array($Index, $PinYin, $PY, $Y, $m, $d), $Url);
                 break;
             case 'page':
-                $Url = $this->SysObj->getOne('UrlPage')['AttrValue'];
+                $Url = $this->SysRs['UrlPage'];
                 $RetUrl = str_replace(array('{PageId}', '{PinYin}', '{PY}'), array($Index, $PinYin, $PY), $Url);
                 break;
         }
@@ -890,8 +895,7 @@ class Controllers extends Base {
         $Search[] =  '{{qcms:'.$Pre.'CatePic}}';
         $Search[] =  '{{qcms:'.$Pre.'CateUrl}}';        
         $Search[] =  '{{qcms:'.$Pre.'Url}}';
-        foreach($Arr as $k => $v){
-            
+        foreach($Arr as $k => $v){            
             $CateRs = $this->CateKv[$v['CateId']];
             $UrlCate = self::createUrl('cate', $CateRs['CateId'], $CateRs['PinYin'], $CateRs['PY']);//$Url,
             $UrlDetail = self::createUrl('detail', $v['Id'], $v['PinYin'], $v['PY']);//$Url,
@@ -905,6 +909,8 @@ class Controllers extends Base {
                         $TagStrArr[] = '<a class="btn btn-default btn-sm mr-2" href="'.$this->CommonObj->Url(array('index', 'search')).'?Search='.$tv.'">'.$tv.'</a>';
                     }
                     $Replace[] =  implode('', $TagStrArr);
+                }elseif($sv == 'Color'){
+                    $Replace[] =  empty($v[$sv]) ? '' : 'color:'.$v[$sv].';';
                 }else{
                     $Replace[] =  $v[$sv];
                 }                

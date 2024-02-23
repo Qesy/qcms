@@ -33,21 +33,22 @@ class Sys extends ControllersAdmin {
         $TempSearchList = $this->getTemplate('search_');
         $UrlListDesc = '<span class="text-dark">
             <span class="mr-3 font-weight-bold">{CateId}</span>分类ID<br>
-            <span class="mr-3 font-weight-bold">{PinYin}</span>拼音+分类ID<br>
-            <span class="mr-3 font-weight-bold">{PY}</span>拼音部首+分类ID<br>
+            <span class="mr-3 font-weight-bold">{PinYin}</span>拼音<br>
+            <span class="mr-3 font-weight-bold">{PY}</span>拼音首字母<br>
+            <span class="mr-3 font-weight-bold">{Page}</span>分页码<br>
         </span>
         ';
         $UrlDetailDesc = '<span class="text-dark">
         	<span class="mr-3 font-weight-bold">{Y}、{M}、{D}</span>年月日<br>
             <span class="mr-3 font-weight-bold">{Id}</span>文章ID<br>
-            <span class="mr-3 font-weight-bold">{PinYin}</span>拼音+文章ID<br>
-            <span class="mr-3 font-weight-bold">{PY}</span>拼音部首+文章ID<br>
+            <span class="mr-3 font-weight-bold">{PinYin}</span>拼音<br>
+            <span class="mr-3 font-weight-bold">{PY}</span>拼音首字母<br>
         </span>
         ';
         $UrlPageDesc = '<span class="text-dark">
             <span class="mr-3 font-weight-bold">{PageId}</span>文章ID<br>
-            <span class="mr-3 font-weight-bold">{PinYin}</span>拼音+文章ID<br>
-            <span class="mr-3 font-weight-bold">{PY}</span>拼音部首+文章ID<br>
+            <span class="mr-3 font-weight-bold">{PinYin}</span>拼音<br>
+            <span class="mr-3 font-weight-bold">{PY}</span>拼音首字母<br>
         </span>
         ';
         foreach($SysArr as $v){

@@ -173,7 +173,7 @@ class Category extends ControllersAdmin {
             array(
                 'Title' => '分类内容',
                 'Form' => array(
-                    array('Name' =>'Content', 'Desc' => '分类内容',  'Type' => 'editor', 'Value' => $v['Content'], 'Required' => 0, 'Col' => 12),                    
+                    array('Name' =>'Content', 'Desc' => '分类内容',  'Type' => 'editor', 'Value' => '', 'Required' => 0, 'Col' => 12),                    
                 )),
         );
         foreach($FieldArr as $v){

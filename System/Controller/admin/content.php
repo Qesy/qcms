@@ -46,7 +46,8 @@ class Content extends ControllersAdmin {
             $Arr[$k]['UserLevelView'] = '<span class="text-muted ">'.$GroupUserKv[$v['UserLevel']].'</span>';
             $Arr[$k]['NickName'] = $UserKv[$v['UserId']];
             $Arr[$k]['StateView'] = $this->StateArr[$v['State']];
-            $Arr[$k]['TitleView'] = '<span class="'.($v['IsBold'] == 2 ? '' : 'font-weight-bold').'">'.$v['Title'].'</span>'.$AttrStr;
+            $Color = empty($v['Color']) ? '' : 'color:'.$v['Color'].';';
+            $Arr[$k]['TitleView'] = '<span class="'.($v['IsBold'] == 2 ? '' : 'font-weight-bold').'" style="'.$Color.'">'.$v['Title'].'</span>'.$AttrStr;
             $Arr[$k]['BtnArr'] = array(
                 array('Desc' => '预览', 'Color' => 'success', 'Link' => $this->createUrl('detail', $v['Id'], $v['PinYin'], $v['PY'], $v['TsUpdate']), 'IsBlank' => 1),
             );
@@ -156,6 +157,7 @@ class Content extends ControllersAdmin {
                     'Content' => trim($_POST['Content']),
                     'IsPost' => $IsPost,
                     'IsLink' => $IsLink,
+                    'LinkUrl' => trim($_POST['LinkUrl']),
                     'IsBold' => $IsBold,
                     'IsPic' => $IsPic,
                     'IsSpuerRec' => $IsSpuerRec,
@@ -164,6 +166,7 @@ class Content extends ControllersAdmin {
                     'PinYin' => $this->PinYinObj->str2pys(trim($_POST['Title'])),
                     'PY' => $this->PinYinObj->str2py(trim($_POST['Title'])),
                 );
+                //var_dump($FieldArr);exit;
                 foreach($FieldArr as $v){
                     if(is_array($_POST[$v['Name']])){
                         $_POST[$v['Name']] = implode('|', array_keys($_POST[$v['Name']]));
@@ -311,6 +314,7 @@ class Content extends ControllersAdmin {
                     'Content' => trim($_POST['Content']),
                     'IsPost' => $IsPost,
                     'IsLink' => $IsLink,
+                    'LinkUrl' => trim($_POST['LinkUrl']),
                     'IsBold' => $IsBold,
                     'IsPic' => $IsPic,
                     'IsSpuerRec' => $IsSpuerRec,
@@ -483,10 +487,11 @@ class Content extends ControllersAdmin {
             $Arr[$k]['UserLevelView'] = $GroupUserKv[$v['UserLevel']];
             $Arr[$k]['NickName'] = $UserKv[$v['UserId']];
             $Arr[$k]['StateView'] = $this->StateArr[$v['State']];
-            $Arr[$k]['TitleView'] = '<span class="'.($v['IsBold'] == 2 ? '' : 'font-weight-bold').'">'.$v['Title'].'</span>'.$AttrStr;
+            $Color = empty($v['Color']) ? '' : 'color:'.$v['Color'].';';
+            $Arr[$k]['TitleView'] = '<span class="'.($v['IsBold'] == 2 ? '' : 'font-weight-bold').'" style="'.$Color.'">'.$v['Title'].'</span>'.$AttrStr;
             $Arr[$k]['BtnArr'] = array(
-                array('Desc' => '查看', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'view')) ),
-                array('Desc' => '还原', 'Color' => 'primary', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'restore')) ),
+                array('Desc' => '查看', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'view'), array('Id' => $v['Id'])) ),
+                array('Desc' => '还原', 'Color' => 'primary', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'restore'), array('Id' => $v['Id'])) ),
                 //array('Name' => '彻底删除', 'Color' => 'danger', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'view')) ),
             );
         }
