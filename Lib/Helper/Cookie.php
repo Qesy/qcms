@@ -22,8 +22,8 @@ class Cookie {
 	}
 	public function set($arr, $pre = '', $hour = 0) {
 		$time = empty ( $hour ) ? $this->expire * 60 * 60 : $hour * 60 * 60;
-		foreach ( $arr as $k => $v ) {
-			setcookie ( $pre.'_'.$k, $v, time () + $time, '/', '' );
+		foreach ( $arr as $k => $v ) {		    
+			setcookie ( $pre.'_'.$k, $v, time () + $time, '/',  null, null, true );
 		}
 	}
 	public function get($k, $pre = '') {
@@ -31,14 +31,14 @@ class Cookie {
 	}
 	public function del($arr, $pre = '') {
 		foreach ( $arr as $k => $v ) {
-			setcookie ( $pre.'_'.$k, '', time () - ($this->expire * 60 * 60), '/', '' );
+		    setcookie ( $pre.'_'.$k, '', time () - ($this->expire * 60 * 60), '/',  null, null, true );
 		}
 	}
 	
 	public function delBatch($pre = ''){
 	    foreach($_COOKIE as $k => $v){
 	        if(strpos($k, $pre) !== false){
-	            setcookie ( $k, '', time () - ($this->expire * 60 * 60), '/', $this->Domain );
+	            setcookie ( $k, '', time () - ($this->expire * 60 * 60), '/',  null, null, true );
 	        }
 	    }
 	}
