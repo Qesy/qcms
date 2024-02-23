@@ -118,7 +118,7 @@ class Build {
                     $this->Html .= self::_FormEditor($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder'], $v['Required']);
                     break;
                 case 'money':
-                    $this->Html .= self::_FromMoney($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']); break;
+                    $this->Html .= self::_FromMoney($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder'], $v['Required']); break;
                 case 'date':
                     $this->Html .= self::_FromInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Type'], $v['Disabled'], $v['Placeholder'], $v['Required']); break;
                 case 'month':
@@ -204,7 +204,7 @@ class Build {
                 $Html = self::_FormEditor($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder'], $v['Required']);
                 break;
             case 'money':
-                $Html = self::_FromMoney($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder']); 
+                $Html = self::_FromMoney($v['Name'], $v['Desc'], $v['Value'], $v['Col'], $v['Disabled'], $v['Placeholder'], $v['Required']); 
                 break;
             case 'date':
                 $Html = self::_FromInput($v['Name'], $v['Desc'], $v['Value'], $v['Col'], 'date', $v['Disabled'], $v['Placeholder'], $v['Required']); 
@@ -465,15 +465,20 @@ class Build {
      return array($StrHtml, $StrJs);
      } */
     
-    private function _FromMoney($Name, $Desc, $Value, $Col, $IsDisabled = 0, $Placeholder = ''){ //金钱
+    private function _FromMoney($Name, $Desc, $Value, $Col, $IsDisabled = 0, $Placeholder = '', $Required = 2){ //金钱
         $Disabled = ($IsDisabled) ? 'disabled="disabled"' : '';
         if(empty($Placeholder)) $Placeholder =  '请输入'.$Desc  ;
         $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
+        $RequiredViewStr = $RequiredStr = '';
+        if($Required == 1){
+            $RequiredStr = 'required="required"';
+            $RequiredViewStr = '<span class="text-danger ml-2" style="font-weight: 900;">*</span>';
+        }
         return '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.'">
-                        <label for="Input_'.$Name.'">'.$Desc.'</label>
+                        <label for="Input_'.$Name.'">'.$Desc.'</label>'.$RequiredViewStr.'
                             <div class="input-group mb-3">
                                 <div class="input-group-prepend"><span class="input-group-text">&yen;</span></div>
-                                <input type="text" class="form-control" name="'.$Name.'" '.$IsDisabled.' id="Input_'.$Name.'" placeholder="'.$Placeholder.'" value="'.$Value.'">
+                                <input type="text" class="form-control" name="'.$Name.'" '.$IsDisabled.' id="Input_'.$Name.'" placeholder="'.$Placeholder.'" value="'.$Value.'" '.$RequiredStr.'>
                                 <div class="input-group-append"><span class="input-group-text">.00</span></div>
                             </div>
                     </div>';
@@ -513,7 +518,7 @@ class Build {
         return '<div class="form-group '.$Class.'">
                         <label for="Input_'.$Name.'" class="'.(($this->FormStyle == 2) ? 'mr-2' : '').' mb-1">'.$Desc.'</label>'.$RequiredViewStr.'
                         <div class="colorpicker input-group colorpicker-component colorpicker-element">
-							<input type="text" value="#00AABB" class="form-control">
+							<input type="text" name="'.$Name.'" value="'.$Value.'" class="form-control">
 							<span class="input-group-addon border border-left-0" style="padding: 6px 12px;"><i style="background-color: rgb(219, 56, 46);"></i></span>
 						</div>
                             

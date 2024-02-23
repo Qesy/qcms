@@ -269,12 +269,13 @@ class Common {
 	    self::exec_script ( 'window.location.href="' . self::Url ( $UrlArr ) . '"' );
 	    exit ();
 	}
-	public function Url(array $UrlArr = array ('index')) { // -- 路径函数 --
+	public function Url(array $UrlArr = array ('index'), array $Para = array()) { // -- 路径函数 --
 	    $Url = array ();
 	    foreach ( $UrlArr as $key => $val ) {
 	        $Url [] = $val;
 	    }
-	    return URL_ROOT . implode ( '/', $Url ) . '.html';
+	    $GetStr = empty($Para) ? '' : '?'.http_build_query($Para);
+	    return URL_ROOT . implode ( '/', $Url ) . '.html'.$GetStr;
 	}
 	
 	/**
@@ -367,6 +368,56 @@ class Common {
 	        return chmod($path, $mode);
 	    }
 	    return true;
+	}
+	
+	public function PageBarTemplate($Count, $Size, $PageNum, $CateRs, $UrlArr, $IsSimple = false){ // -- 分页 --
+	    $Num = 9;	    
+	    if ($Count <= 0) return '';
+	    $Toall = ceil ( $Count / $Size );
+	    ($PageNum <= $Toall) || $PageNum = $Toall;
+	    $JumpGet = $PreGet = $NextGet = $PageListGet = $_GET;
+	    $SearchDefault = array('{CateId}', '{PinYin}', '{PY}', '{Page}');
+	    $FirstUrl = str_replace($SearchDefault, array($CateRs['CateId'], $CateRs['PinYin'], $CateRs['PY'], '1'), $UrlArr['Default']);
+	    $FirstPage = '<li class="page-item '.(($PageNum == 1) ? 'disabled' : '').'"><a href="'.$FirstUrl.'" class="page-link">首页</a></li>';
+	    
+	    $PreNum = ($PageNum <= 1) ? 1 : $PageNum-1;
+	    $PreUrlStr = ($PreNum == 1) ? $UrlArr['Default'] : $UrlArr['Page'];	    
+	    $PreUrl = str_replace($SearchDefault, array($CateRs['CateId'], $CateRs['PinYin'], $CateRs['PY'], $PreNum), $PreUrlStr);    
+	    $PreStr = '<li class="page-item '.(($PageNum == 1) ? 'disabled' : '').'"><a href="' . $PreUrl . '" class="page-link">上一页</a></li>';
+	    
+	    $NextNum = ($PageNum >= $Toall) ? $Toall : $PageNum+1;
+	    $NextUrlStr = ($NextNum == 1) ? $UrlArr['Default'] : $UrlArr['Page'];
+	    $NextUrl = str_replace($SearchDefault, array($CateRs['CateId'], $CateRs['PinYin'], $CateRs['PY'], $NextNum), $NextUrlStr);    
+	    $NextStr = '<li class="page-item '.(($PageNum == $Toall) ? 'disabled' : '').'"><a href="' . $NextUrl . '" class="page-link">下一页</a></li>';
+	    //$PageListGet['Page'] = 1;
+	    
+	    $LastUrlStr = ($Toall == 1) ? $UrlArr['Default'] : $UrlArr['Page'];
+	    $LastUrl = str_replace($SearchDefault, array($CateRs['CateId'], $CateRs['PinYin'], $CateRs['PY'], $Toall), $NextUrlStr);    
+	    $LastPage = '<li class="page-item '.(($PageNum == $Toall) ? 'disabled' : '').'"><a href="'.$LastUrl.'" class="page-link">尾页</a></li>';
+	    $Start = $End = 1;
+	    $ToallStr = $Str = '';
+	    if ($Toall <= $Num) {
+	        $Start = 1;
+	        $End = $Toall;
+	    } elseif (($Toall - $PageNum) > ceil ( $Num / 2 ) && $PageNum < ceil ( $Num / 2 )) {
+	        $Start = 1;
+	        $End = $Num;
+	    } elseif (($Toall - $PageNum) < ceil ( $Num / 2 )) {
+	        $Start = ($Toall - $Num + 1);
+	        $End = $Toall;
+	    } else {
+	        $Start = ($PageNum - floor ( $Num / 2 ));
+	        $End = ($PageNum + floor ( $Num / 2 ));
+	    }
+	    for($i = $Start; $i <= $End; $i ++) {
+	        $PageTmp = $i;
+	        $PageTmpUrlStr = ($i == 1) ? $UrlArr['Default'] : $UrlArr['Page'];
+	        $PateTmpUrl = str_replace($SearchDefault, array($CateRs['CateId'], $CateRs['PinYin'], $CateRs['PY'], $i), $PageTmpUrlStr);    
+	        $Str .= ($PageNum == $i) ? '<li class="page-item active"><a class="page-link">' . $i . '</a></li>' : '<li class="page-item"><a href="' . $PateTmpUrl.'" class="page-link">' . $i . '</a></li>';
+	    }
+    
+	    if($IsSimple) return '<ul class="pagination justify-content-center py-3 my-0">'.$FirstPage . $PreStr . $NextStr . $ToallStr . $LastPage.'<li class="page-item  disabled "><a  class="page-link">总'.$Count.'条</a></li></ul>';
+	    return '<ul class="pagination justify-content-center py-3 my-0">'.$FirstPage . $PreStr . $Str . $NextStr . $ToallStr . $LastPage.'<li class="page-item  disabled "><a  class="page-link">总'.$Count.'条</a></li></ul>';
 	}
 	
 	public function PageBar($Count, $Size, $IsSimple = false) { // -- 分页 --

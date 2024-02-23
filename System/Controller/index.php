@@ -9,9 +9,9 @@ class Index extends Controllers {
         self::_statFlow();
     }
 
-    public function cate_Action($CateId = 0){
+    public function cate_Action($CateId = 0, $Page = 1){
         if(empty($CateId)) $this->DieErr(1001);
-        echo $this->tempRun('cate', $CateId);
+        echo $this->tempRun('cate', $CateId, $Page);
         self::_statFlow();
     }
 

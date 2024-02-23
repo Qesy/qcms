@@ -100,21 +100,33 @@ class Router {
 	private function _UrlConvent($Url){
 	    if(strpos($Url, 'install') === 0) return $Url; //安装文件不处理
 	    $SysObj = QC_Sys::get_instance();
+	    $SysRs = $SysObj->getKv();
 	    if(strpos($Url, 'cate/') !== false){
-	        $ListUrl = 'cate/'.$SysObj->getOne('UrlList')['AttrValue'];
+	        $ListUrl = 'cate/'.$SysRs['UrlList'];
 	        $ListUrlRep = '/^'.str_replace(array('/', '{CateId}', '{PinYin}', '{PY}'), array('\/', '(\d+)', '([\w]*?)', '([\w]*?)'), $ListUrl).'$/';
+	        
+	        $ListUrlPage = 'cate/'.$SysRs['UrlListPage'];
+	        $ListUrlPageRep = '/^'.str_replace(array('/', '{CateId}', '{PinYin}', '{PY}', '{Page}'), array('\/', '(\d+)', '([\w]*?)', '([\w]*?)', '(\d+)'), $ListUrlPage).'$/';
             if(preg_match($ListUrlRep, $Url.$this->_SiteConfig['Extend'], $Matches)){ //匹配列表	            
 	            preg_match_all("/\{([a-zA-Z0-9]+)\}/",$ListUrl, $MatchesSort);
 	            $CateId = 0;
 	            foreach($MatchesSort[1] as $k => $v){
 	                $$v = $Matches[$k+1];
 	            }
-	            return 'index/cate/'.$CateId;
-	        }
+	            return 'index/cate/'.$CateId.'/1';
+            }elseif(preg_match($ListUrlPageRep, $Url.$this->_SiteConfig['Extend'], $Matches)){ //匹配列表
+                preg_match_all("/\{([a-zA-Z0-9]+)\}/",$ListUrlPage, $MatchesSort);
+                $CateId = 0;
+                $Page = 0;
+                foreach($MatchesSort[1] as $k => $v){
+                    $$v = $Matches[$k+1];
+                }
+                return 'index/cate/'.$CateId.'/'.$Page;
+            }
 	    }
 	    
 	    if(strpos($Url, 'detail/') !== false){	       
-	        $UrlDetail = 'detail/'.$SysObj->getOne('UrlDetail')['AttrValue'];
+	        $UrlDetail = 'detail/'.$SysRs['UrlDetail'];
 	        $UrlDetailRep = '/^'.str_replace(array('/', '{Y}', '{M}', '{D}', '{Id}', '{PinYin}', '{PY}'), array('\/', '(\d+)', '(\d+)', '(\d+)', '(\d+)','([\w]*?)', '([\w]*?)'), $UrlDetail).'$/';
 	        if(preg_match($UrlDetailRep, $Url.$this->_SiteConfig['Extend'], $Matches)){ //匹配详情	            
 	            preg_match_all("/\{([a-zA-Z0-9]+)\}/",$UrlDetail, $MatchesSort);
@@ -127,7 +139,7 @@ class Router {
 	    }
 	    
 	    if(strpos($Url, 'page/') !== false){
-	        $UrlPage = 'page/'.$SysObj->getOne('UrlPage')['AttrValue'];
+	        $UrlPage = 'page/'.$SysRs['UrlPage'];
 	        $UrlPageRep = '/^'.str_replace(array('/', '{PageId}', '{PinYin}', '{PY}'), array('\/', '(\d+)','([\w]*?)', '([\w]*?)'), $UrlPage).'$/';
 	        if(preg_match($UrlPageRep, $Url.$this->_SiteConfig['Extend'], $Matches)){ //匹配详情
 	            preg_match_all("/\{([a-zA-Z0-9]+)\}/",$UrlPage, $MatchesSort);
@@ -140,7 +152,7 @@ class Router {
 	    }
 	    
 	    if(strpos($Url, 'form/') !== false){
-	        $UrlPage = 'form/'.$SysObj->getOne('UrlForm')['AttrValue'];	        
+	        $UrlPage = 'form/'.$SysRs['UrlForm'];	        
 	        $UrlPageRep = '/^'.str_replace(array('/', '{KeyName}'), array('\/', '([\w\W]*?)'), $UrlPage).'$/';
 	        if(preg_match($UrlPageRep, $Url.$this->_SiteConfig['Extend'], $Matches)){ //匹配详情
 	            preg_match_all("/\{([a-zA-Z0-9]+)\}/",$UrlPage, $MatchesSort);

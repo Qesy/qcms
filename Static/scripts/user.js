@@ -8,6 +8,10 @@ var FileViewArr = [];
 var Limit = 24;
 var AttrState = 2; //批量操作属性状态
 $(function(){
+    ContentLinkReset();
+    $('#Attr_IsLink').change(function(){
+        ContentLinkReset();
+    })
     $('.browseBtn').on('click', function(){
         SelectUploadName = $(this).attr('data-name')
         $('#FileBrowseTitleView').html(`<a class="browseBackBtn" data-name="`+SelectUploadName+`" href="javascript:void(0);">根目录</a>`);
@@ -357,6 +361,17 @@ function barChart(DomID, Keys, Data){
 		}
 	});
 }
+
+function ContentLinkReset(){
+    if($('#Attr_IsLink').prop("checked")){
+        $('#Input_LinkUrl').parent().removeClass('d-none');
+        $('#Input_Content').parent().addClass('d-none');
+    }else{
+        $('#Input_LinkUrl').parent().addClass('d-none');
+        $('#Input_Content').parent().removeClass('d-none');
+    }
+}
+
 
 function EditorDestroy(){
     IsEditorCreat = false;
