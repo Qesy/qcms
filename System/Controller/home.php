@@ -33,8 +33,7 @@ class Home extends Controllers {
 	}
 	
 	public function phpinfo_Action() {
-	    var_dump($_SERVER);
-		phpinfo ();
+		//phpinfo ();
 	}
 	
     public function build_Action(){
