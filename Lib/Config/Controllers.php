@@ -1324,7 +1324,7 @@ class ControllersAdmin extends Controllers {
             'admin/api/inlinkState' => array('Name' => '设置内链状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'inlinkState'))),
             'admin/api/tableField' => array('Name' => '查询表字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'tableField'))),
             'admin/api/sort' => array('Name' => '排序通用模块', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'sort'))),
-            
+            'admin/api/contentStateOne' => array('Name' => '文章操作', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'contentStateOne'))),
             'admin/api/contentState' => array('Name' => '文章批量操作', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'contentState'))),
             'admin/api/deleteRec' => array('Name' => '彻底删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'deleteRec'))),
             'admin/api/fileDel' => array('Name' => '附件删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'fileDel'))),

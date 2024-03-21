@@ -178,10 +178,10 @@
     </div>
     <!-- jQuery -->
     <?=$this->LoadView('admin/common/js')?>
-    <script src="/Static/bootstrap/Highcharts-7.1.1/highcharts.js"></script>
-    <script src="/Static/bootstrap/Highcharts-7.1.1/modules/series-label.js"></script>
-    <script src="/Static/bootstrap/Highcharts-7.1.1/modules/exporting.js"></script>
-    <script src="/Static/bootstrap/Highcharts-7.1.1/modules/export-data.js"></script>
+    <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/highcharts/7.1.1/highcharts.js" type="application/javascript"></script>
+    <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/highcharts/7.1.1/modules/series-label.js" type="application/javascript"></script>
+    <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/highcharts/7.1.1/modules/exporting.js" type="application/javascript"></script>
+    <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/highcharts/7.1.1/modules/export-data.js" type="application/javascript"></script>
 <script type="text/javascript">
     ChartsFull('<?=date('Y-m')?> 流量报表', 'BarChart', <?=json_encode(array_keys($DataArr))?>,
     [

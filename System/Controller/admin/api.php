@@ -177,6 +177,16 @@ class Api extends ControllersAdmin {
         $this->ApiSuccess($FieldArr);
     }
 
+    public function contentStateOne_Action(){
+        if(!$this->VeriObj->VeriPara($_GET, array('Id', 'Status', 'Field'))) $this->ApiErr(1001);
+        $DataArr = array($_GET['Field'] => $_GET['Status']);
+        $TableRs = $this->TableObj->SetCond(array('Id' => $_GET['Id']))->ExecSelectOne();        
+        $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
+        $Ret = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $_GET['Id']))->SetUpdate($DataArr)->ExecUpdate();
+        if($Ret === false) $this->ApiErr(1002);
+        $this->ApiSuccess();
+    }
+    
     public function contentState_Action(){ // 批量发布内容
         if(!$this->VeriObj->VeriPara($_POST, array('Ids', 'Key', 'Val'))) $this->ApiErr(1001);
         if(!in_array($_POST['Key'], array('State', 'IsSpuerRec', 'IsHeadlines', 'IsRec', 'IsDelete'))) $this->ApiErr(1001);
