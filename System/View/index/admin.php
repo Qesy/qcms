@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title><?=$this->SysRs['WebName']?> - 网站后台</title>
     <!-- vector map CSS -->
-    <link href="<?=URL_BOOT?>css/jasny-bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/4.6.1/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
     <link href="<?=URL_BOOT?>css/style-init.css" rel="stylesheet" type="text/css">
     <style type="text/css">
         body{background-color:#1572e8!important;touch-action:none}

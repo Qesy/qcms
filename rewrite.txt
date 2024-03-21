@@ -3,8 +3,8 @@ location ~ /(System|Lib|Database|Template|\.git) {
     deny all;
 }
 if (!-e $request_filename) {
-	rewrite  ^(.*)$  /index.php?s=$1  last;
-	break;
+    rewrite  ^.*$  /index.php  last;
+    break;
 }
 
 Apache 路径重定向说明：

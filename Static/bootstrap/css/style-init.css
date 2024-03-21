@@ -76,7 +76,6 @@ Project:	KENNY
 
 */
 @import url(css1.css);
-@import url(bootstrap.min.css);
 @import url(font-awesome.min.css);
 @import url(themify-icons.css);
 @import url(animate.css);
@@ -87,7 +86,7 @@ Project:	KENNY
 @import url(filter.css);
 @import url(lightgallery.css);
 @import url(awesome-bootstrap-checkbox.css);
-@import url(bootstrap-icons.css);
+/*@import url(bootstrap-icons.css);*/
 /****************************/
 /** Reset **/
 /****************************/

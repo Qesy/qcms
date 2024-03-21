@@ -53,6 +53,19 @@ class Debug extends Controllers {
         var_dump($this->CategoryObj->CateTreeSelectHtml);
     }
     
+    public function fixAlbumData_Action(){
+        $Arr = $this->PhotosObj->ExecSelect();
+        foreach($Arr as $k => $v){
+            $Data = json_decode($v['Photos'], true);
+            foreach($Data as $sk => $sv){
+                $sv['Path'] = str_replace('/Static/upload/', 'https://cdn.q-cms.cn/resource/upload/', $sv['Path']);
+                $Data[$sk] = $sv;                
+            }
+            $this->PhotosObj->SetCond(array('Id' => $v['Id']))->SetUpdate(array('Photos' => json_encode($Data)))->ExecUpdate();
+        }
+        echo 'Success !';
+    }
+    
     private function _getTemplate($Prefix){
         $Files = scandir(PATH_TEMPLATE.$this->SysRs['TmpPath'].'/');
         $Template = array();

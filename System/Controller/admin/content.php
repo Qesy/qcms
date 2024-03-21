@@ -88,7 +88,8 @@ class Content extends ControllersAdmin {
         $this->BuildObj->PrimaryKey = 'Id';
         //$this->BuildObj->IsDel = $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = false;
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
-        $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'contentState')).'";';
+        
+        
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
         
         $this->CategoryObj->CateSelectId = $_GET['CateId'];
@@ -106,6 +107,7 @@ class Content extends ControllersAdmin {
         $this->BuildObj->Form('get', 'form-inline');
         $this->HeadHtml = $this->BuildObj->Html;
         $tmp['CateHtml'] = $this->CategoryObj->CateTreeModelSelectHtml;
+        $this->BuildObj->Js = 'var ChangeStateUrl="'.$this->CommonObj->Url(array('admin', 'api', 'contentStateOne')).'";';
         $this->LoadView('admin/content/list', $tmp);
     }
 
