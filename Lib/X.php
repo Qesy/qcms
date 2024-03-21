@@ -22,7 +22,7 @@ date_default_timezone_set ( 'Asia/Shanghai' );
 header("Content-type: text/html; charset=utf-8");
 header("Server: QCMS", true);
 header_remove("X-Powered-By");
-ini_set('session.cookie_secure', 1);
+//ini_set('session.cookie_secure', 1);
 ini_set('session.cookie_httponly', 1);
 ini_set('session.cookie_samesite', 'Strict');
 session_set_cookie_params ( 24 * 3600 );
