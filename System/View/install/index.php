@@ -6,7 +6,7 @@
        QCMS V<?=VERSION?> 安装
 
     </title>
-    <link href="<?=URL_BOOT?>css/jasny-bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link href="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/4.6.1/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
     <link href="<?=URL_BOOT?>css/style-init.css" rel="stylesheet" type="text/css">
 
 </head>
