@@ -14,10 +14,10 @@ defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 
 class Config {
     private static $s_ConfRs = array();
-    
+
     public static function DbConfig($GetType = 'DbConfig'){ //接口配置
         if(!empty(self::$s_ConfRs)) return self::$s_ConfRs[$GetType];
-        $ConfIniPath = PATH_LIB.'Config/Config.ini';    
+        $ConfIniPath = PATH_LIB.'Config/Config.ini';
         if(!file_exists($ConfIniPath)){
             Header("HTTP/1.1 303 See Other");
             Header("Location: /install/index.html");
@@ -26,7 +26,7 @@ class Config {
         self::$s_ConfRs = parse_ini_file($ConfIniPath, true);
         return self::$s_ConfRs[$GetType];
     }
-    
+
 }
 
 function SiteConfig() {
@@ -55,5 +55,5 @@ function autoload($classname) { // -- 自动加载类 --
 
 const WEB_MODE = 'Release'; //Dev ,Release
 const WEB_TITLE = 'QCMS';
-const VERSION = '6.0.2';
+const VERSION = '6.0.3';
 ?>
