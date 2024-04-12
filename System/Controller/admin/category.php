@@ -55,6 +55,7 @@ class Category extends ControllersAdmin {
             'UserLevel' => array('Name' => '浏览权限', 'Td' => 'th'), 
             'SortView' => array('Name' => '排序', 'Td' => 'th', 'Style' => 'width:100px'),
         );
+        unset($_GET['CateId']); // 顶级分类按钮需要处理
         $this->BuildObj->NameAdd = '添加顶级分类';
         $this->BuildObj->PrimaryKey = 'CateId';        
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, '', 'table-sm');
