@@ -475,6 +475,19 @@ class Common {
 	    return '<ul class="pagination justify-content-center py-3 my-0">'.$FirstPage . $PreStr . $Str . $NextStr . $ToallStr . $LastPage.'<li class="page-item  disabled "><a  class="page-link">总'.$Count.'条</a></li>'.$Jump.'</ul>';
 	}
 
+	public function IsSafeQuery($query) { // 是否安全sql
+	    // 将查询转换为小写
+	    $query = strtolower($query);
+	    
+	    // 检查是否包含不允许的SQL操作
+	    $disallowed = ['update', 'delete', 'insert', 'drop', 'alter', 'create', 'truncate'];
+	    foreach ($disallowed as $keyword) {
+	        if (strpos($query, $keyword) !== false) {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
 
 	/**
 	 * 生成缩略图

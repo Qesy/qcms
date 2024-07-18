@@ -66,7 +66,7 @@ class Index extends Controllers {
             if(!empty($OldTokenArr)){
                 $this->TokenObj->SetCond(array('Token' => $OldTokenArr))->ExecDelete();
             }
-            $this->Log_loginObj->SetInsert(array('UserId' => $Rs['UserId'], 'Ip' => $Ip, 'Ts' => $Ts, 'Ua'=> $_SERVER['HTTP_USER_AGENT']))->ExecInsert();
+            $this->Log_loginObj->SetInsert(array('UserId' => $Rs['UserId'], 'Ip' => $Ip, 'Ts' => $Ts, 'Ua'=> htmlentities($_SERVER['HTTP_USER_AGENT'], ENT_NOQUOTES)))->ExecInsert();
             $this->TokenObj->SetInsert(array('Token' => $Token, 'UserId' => $Rs['UserId'], 'Client' => $Client, 'Ts' => $Ts))->ExecInsert();
             $this->UserObj->SetCond(array('UserId' => $Rs['UserId']))->SetUpdate(array('TsLast' => $Ts, 'IpLast' => $Ip))->ExecUpdate();
             DB::$s_db_obj->commit();
@@ -142,7 +142,7 @@ class Index extends Controllers {
                 if(!empty($OldTokenArr)){
                     $this->TokenObj->SetCond(array('Token' => $OldTokenArr))->ExecDelete();
                 }
-                $this->Log_loginObj->SetInsert(array('UserId' => $Rs['UserId'], 'Ip' => $Ip, 'Ts' => $Ts, 'Ua'=> $_SERVER['HTTP_USER_AGENT']))->ExecInsert();
+                $this->Log_loginObj->SetInsert(array('UserId' => $Rs['UserId'], 'Ip' => $Ip, 'Ts' => $Ts, 'Ua'=> htmlentities($_SERVER['HTTP_USER_AGENT'], ENT_NOQUOTES)))->ExecInsert();
                 $this->TokenObj->SetInsert(array('Token' => $Token, 'UserId' => $Rs['UserId'], 'Client' => self::CurrentClient, 'Ts' => $Ts))->ExecInsert();
                 $this->UserObj->SetCond(array('UserId' => $Rs['UserId']))->SetUpdate(array('TsLast' => $Ts, 'IpLast' => $Ip))->ExecUpdate();
                 DB::$s_db_obj->commit();

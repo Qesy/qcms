@@ -54,7 +54,7 @@ class Database extends ControllersAdmin {
     
     public function restore_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Name'))) $this->Err(1001);
-        $Path = $this->Path.trim($_GET['Name']);
+        $Path = $this->Path.basename(trim($_GET['Name']));
         if(!file_exists($Path)) $this->Err(1035);
         $this->SysObj->ImportSql($this->Path.trim($_GET['Name']));
         $this->Jump(array('admin', 'database', 'index'), 1888);
@@ -62,7 +62,7 @@ class Database extends ControllersAdmin {
     
     public function del_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Name'))) $this->Err(1001);
-        $Path = $this->Path.trim($_GET['Name']);
+        $Path = $this->Path.basename(trim($_GET['Name']));
         if(!file_exists($Path)) $this->Err(1035);
         if(!unlink($Path)) $this->Err(1002);
         $this->Jump(array('admin', 'database', 'index'), 1888);

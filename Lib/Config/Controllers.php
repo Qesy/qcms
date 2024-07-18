@@ -662,7 +662,11 @@ class Controllers extends Base {
             $Para = self::_getKv($v);
             if(empty($Para['sql'])) return $this; 
             $Search[] = $Matches[0][$k];
-            $Replace[] = self::_replaceLoop($Para['sql'], $Matches[2][$k], 'Loop_');
+            if(!$this->CommonObj->IsSafeQuery($Para['sql'])) {
+                $Replace[] = $Matches[0][$k];
+            }else{
+                $Replace[] = self::_replaceLoop($Para['sql'], $Matches[2][$k], 'Loop_');
+            }            
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
