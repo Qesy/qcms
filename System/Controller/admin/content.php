@@ -194,9 +194,10 @@ class Content extends ControllersAdmin {
                 DB::$s_db_obj->rollBack();                
                 $this->Err(1002);
             }
+            $_GET['CateId'] = $InsetArr['CateId'];
             $this->Jump(array('admin', 'content', 'index'));
         }
-
+        if(!empty($_GET['CateId'])) $this->CategoryObj->CateSelectId = $_GET['CateId'];
         $this->CategoryObj->getTreeModelSelectHtml($ModelRs['ModelId']);
         $CateHtml = '<label for="Input_CateId" class="mb-1">分类<span class="text-danger ml-2" style="font-weight: 900;">*</span></label><select class="form-control" name="CateId" id="Input_CateId" required="required">';
         $CateHtml .= '<option value="" >请选择分类</option>';

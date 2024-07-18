@@ -10,6 +10,12 @@ class Category extends ControllersAdmin {
         $ModelArr = $this->Sys_modelObj->getList();
         $ModelKV = array_column($ModelArr, 'Name', 'ModelId');
         $ModelKV[-1] = '封面';
+        if(!empty($_GET['CateId'])) {
+            $CurrentCateRs = $this->CategoryObj->getOne($_GET['CateId']);
+            $TopCateId = ($CurrentCateRs['TCateId'] == 0) ? $CurrentCateRs['CateId'] : $CurrentCateRs['TCateId'];
+            $this->CategoryObj->getAllCateId($TopCateId, -99);
+        }
+
         foreach($Arr as $k => $v){
             $GET = $_GET;
             $GET['CateId'] = $v['CateId'];
@@ -37,9 +43,9 @@ class Category extends ControllersAdmin {
             }else{
                 $Level = $v['Level'];
                 $TrClass = ' ShowDiv_'.$v['PCateId'].' ';
-            }
-            //$TrClass .= ' SubShowDiv_'.$v['PCateId'].' ';
-            $Arr[$k]['TrClass'] = ($v['Level'] == 0) ? ' SubShowDiv_'.$v['PCateId'].' '.$TrClass : ' SubShowDiv_'.$v['PCateId'].' d-none'.$TrClass;
+            }            
+            $Disabled = in_array($v['CateId'], $this->CategoryObj->AllSubCateIdArr) ? '' : ' d-none ';
+            $Arr[$k]['TrClass'] = ($v['Level'] == 0) ? ' SubShowDiv_'.$v['PCateId'].' '.$TrClass : ' SubShowDiv_'.$v['PCateId'].' '.$Disabled.$TrClass;
         }
         $KeyArr = array(
             'CateId' => array('Name' => 'ID', 'Td' => 'th'),
@@ -49,6 +55,7 @@ class Category extends ControllersAdmin {
             'UserLevel' => array('Name' => '浏览权限', 'Td' => 'th'), 
             'SortView' => array('Name' => '排序', 'Td' => 'th', 'Style' => 'width:100px'),
         );
+        unset($_GET['CateId']); // 顶级分类按钮需要处理
         $this->BuildObj->NameAdd = '添加顶级分类';
         $this->BuildObj->PrimaryKey = 'CateId';        
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, '', 'table-sm');
@@ -251,7 +258,7 @@ class Category extends ControllersAdmin {
             if($Ret === false) $this->Err(1002);
             $this->CategoryObj->cleanList();
             $this->CategoryObj->clean($CateRs['CateId']);
-            unset($_GET['CateId']);
+            //unset($_GET['CateId']);
             $this->Jump(array('admin', 'category', 'index'));
         }
         
@@ -349,7 +356,11 @@ class Category extends ControllersAdmin {
         if($Ret === false) $this->Err(1002);
         $this->CategoryObj->cleanList();
         $this->CategoryObj->clean($CateRs['CateId']);
-        unset($_GET['CateId']);
+        if($CateRs['TCateId'] == 0){
+            unset($_GET['CateId']);
+        }else{
+            $_GET['CateId'] = $CateRs['TCateId'];
+        }
         $this->Jump(array('admin', 'category', 'index'));
     }
     

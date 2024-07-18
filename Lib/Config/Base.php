@@ -42,6 +42,7 @@ use Model\QC_User;
 use Helper\Pinyin;
 use Helper\WaterMask;
 use Helper\Redis;
+use Helper\RedisKey;
 
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 
@@ -192,7 +193,9 @@ abstract class Base {
 		$this->BasicArr = BasicArr();
 		
 		$RedisConf = Config::DbConfig('RedisConfig');
+		$DbConf = Config::DbConfig();	  
 		if($RedisConf['IsOpen'] == 1) Redis::exists('test');
+		RedisKey::$s_projectKey = 'QCMS_'.$DbConf['Name'];
 	}
 	
 	public function IdCreate(){ //创建ID	    

@@ -11,7 +11,7 @@ class common extends ControllersApi {
     public function sys_Action(){ //获取系统信息
         $Rs = $this->SysRs;
         $AllowField = array(
-            'MultistationSecret', 'License');
+            'MultistationSecret', 'License', 'Secret');
         foreach($Rs as $k => $v){
             if(in_array($k, $AllowField)) unset($Rs[$k]);
         }
