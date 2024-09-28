@@ -2,3 +2,5 @@
 /.project
 /.settings/org.eclipse.php.core.prefs
 /Static/upload/20220318
+/.user.ini
+/Lib/Config/Config.ini

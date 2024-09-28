@@ -16,9 +16,7 @@
         <div class="rounded bg-white px-3 py-4">
             <form class="form-signin " method="post" id="InstallForm">
                 <div class="text-center mb-3 mt-4">
-                    <svg class="logo mx-3" style="fill: #1572E8!important;width: 98px;height: 24px;" >
-                      <use xlink:href="/Static/images/logo.svg#layer"/>
-                    </svg>
+                    <?=$this->GetLogo('logo mx-3', 'fill: #1572E8!important;width: 98px;height: 24px;');?>
                 </div>
                 <div class=" mb-4 text-muted text-center install-br">
                     欢迎使用 QCMS V<?=VERSION?> ！现在进行安装

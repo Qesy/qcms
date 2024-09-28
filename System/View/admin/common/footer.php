@@ -1,10 +1,7 @@
 <footer class="footer container-fluid pl-30 pr-30">
     <div class="row">
         <div class="col-sm-5 d-flex align-items-center">
-
-            <svg class="logo " style="fill: #999!important;width: 84px;height: 20px;" >
-                  <use xlink:href="/Static/images/logo.svg#layer"/>
-                </svg>
+                <?=$this->GetLogo('logo', 'fill: #999!important;width: 84px;height: 20px;');?>
             <span class="h5 pl-1 pr-3 mb-0 font-italic">v<?=$this->SysRs['Version']?></span>
             <ul class="footer-link nav navbar-nav d-flex flex-row">
                 <li class="logo-footer"><a href="#">帮助</a></li>

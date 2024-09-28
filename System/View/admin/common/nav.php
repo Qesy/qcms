@@ -1,12 +1,10 @@
 <nav class="navbar navbar-inverse fixed-top">
     <div class="d-flex align-items-center">
 
-        <a href="/admin/index/index.html"><!-- <img class="pull-left" src="<?= URL_IMG ?>logo.svg" alt="brand" style="height:24px;
-        margin-right: 20px;
-        margin-left: 4px;
-        "> --><svg class="logo mx-3" style="fill: #1572E8!important;width: 98px;height: 24px;" >
-                  <use xlink:href="/Static/images/logo.svg#layer"/>
-                </svg></a>
+        <a href="/admin/index/index.html">
+            <?=$this->GetLogo('logo mx-3', 'fill:#1572E8; width: 98px; height: 24px;');?>
+        </a>
+
         <a id="toggle_nav_btn" class="toggle-left-nav-btn inline-block mr-20 pull-left" href="javascript:void(0);">
         <i class="ti-layers"></i>
     </a>
