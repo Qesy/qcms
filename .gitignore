@@ -4,3 +4,5 @@
 /Static/upload/20220318
 /.user.ini
 /Lib/Config/Config.ini
+/*.htaccess
+/*.rewrite
