@@ -251,14 +251,18 @@ class Db_pdo extends Db {
 	public function Data2Sql($Table, $Prefix){ //导出表
 	    $DbConf = Config::DbConfig();
 	    $TableFullName = $Prefix.$Table;
-	    $tabledump = "DROP TABLE IF EXISTS `".$TableFullName."`;\n";
-	    $createtable = self::query("SHOW CREATE TABLE $TableFullName", array(), 1);
-
-	    $tabledump .= $createtable['Create Table'].";\n\n";
+	    //$tabledump = "DROP TABLE IF EXISTS `".$TableFullName."`;\n";
+	    $tabledump = "TRUNCATE TABLE `".$TableFullName."`;\n";
+	    //$createtable = self::query("SHOW CREATE TABLE $TableFullName", array(), 1);
+	    //$tabledump .= $createtable['Create Table'].";\n\n";
 	    $Arr = self::SetTbName($Table)->ExecSelect();
-	    foreach($Arr as $v){
-	        $tabledump .= "INSERT INTO `".$TableFullName."` VALUES('".implode('\',\'', str_replace(array('\'', '"'), array('\\\'', '\"'), $v) )."');\n";
-	    }
+	    $ValueArr = array();
+	    if(count($Arr) > 0){
+	        foreach($Arr as $v){
+	            $ValueArr[] = "('".implode('\',\'', str_replace(array('\'', '"'), array('\\\'', '\"'), $v) )."')";
+	        }
+	        $tabledump .= "INSERT INTO `".$TableFullName."` (`".implode('`,`', array_keys($Arr[0]))."`)VALUES".implode(', ', $ValueArr).";\n";
+	    }	    
 	    return $tabledump."\n";
 	}
 }
