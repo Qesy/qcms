@@ -50,7 +50,10 @@
                             <div class="panel-heading mb-3 pb-2 d-flex justify-content-between align-items-center border-bottom">
 
 <h5 class="txt-dark"><?=$this->PageTitle2?></h5>
-
+<span>
+    <span class="mr-2">平台账号：<?=$this->SysRs['BindPhone']?></span>
+    <button type="button" class="btn btn-primary btn-sm UnBindBtn">解绑</button>
+</span>
 
 
                             </div>
@@ -78,15 +81,30 @@
                                             ?>
                                             <span class="position-absolute btn btn-danger btn-sm" style="right:1rem;top:0px;">已安装</span>
                                             <? } ?>
-                                            <a href="javascript:void(0);" class="tempViewBtn" data-index="<?=$k?>">
-                                                        <div class="border mb-2" >
-                                                            <img alt="image" class="img-fluid" src="<?=$v['Pic']?>">
-                                                        </div>
-                                                        <div class="file-name">
-                                                            <div class="text-nowrap overflow-hidden "><span class="float-right d-none"><?=$this->CommonObj->Size($v['Size'])?></span><span class="font-weight-bold overflow-hidden"><?=empty($v['Name']) ? '未命名' : $v['Name']?></span></div>
+                                            <div >
+                                                    <div class="border mb-2 tempViewBtn" data-index="<?=$k?>">
+                                                        <img alt="image" class="img-fluid" src="<?=$v['Pic']?>">
+                                                    </div>
+                                                    <div class="file-name">
 
+                                                        <div class="text-nowrap overflow-hidden py-1"><span class="float-right d-none"><?=$this->CommonObj->Size($v['Size'])?></span><span class="font-weight-bold overflow-hidden"><?=empty($v['Name']) ? '未命名' : $v['Name']?></span>
                                                         </div>
-                                                    </a>
+                                                        <div class="d-flex justify-content-between align-items-center">
+                                                            <span class="text-danger h5 mb-0">&yen; <?=$v['Price']?></span>
+                                                            <span>
+                                                                <?
+                                                                if(in_array($v['TemplatesId'], $PaidIDs)){
+                                                                    echo '<button class="btn btn-sm btn-success InstallBtn" data-index="'.$k.'">安装</button>';
+                                                                }else{
+                                                                    echo '<button class="btn btn-sm btn-primary  InstallBtn" data-index="'.$k.'">购买</button>';
+                                                                }
+                                                                ?>
+
+                                                            </span>
+                                                        </div>
+
+                                                    </div>
+                                            </div>
 
 
                                         </div>
@@ -120,8 +138,8 @@
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-secondary" data-dismiss="modal">取消</button>
-            <a target="_blank" href="https://www.q-cms.cn/templates.html" class="btn btn-primary">去官网下载</a>
-            <!-- <button type="button" class="btn btn-primary" id="installBtn">安装</button> -->
+            <!-- <a target="_blank" href="https://www.q-cms.cn/templates.html" class="btn btn-primary">去官网下载</a>
+            <button type="button" class="btn btn-primary" id="installBtn">安装</button> -->
           </div>
         </div>
       </div>
@@ -134,6 +152,15 @@
         var TempFolder = <?=json_encode($TempFolder)?>;
         var SelectIndex = -1;
         $(function(){
+            $('.UnBindBtn').click(function(){
+                $.get('/admin/api/ajaxUnBind', {}, function(Res){
+                    if(Res.Code != 0){
+                        alert(Res.Msg);return;
+                    }
+                    alert('解绑成功');
+                    location.reload();
+                }, 'json')
+            })
             $('.tempViewBtn').click(function(){
                 SelectIndex = $(this).attr('data-index');
                 let NameKey = TemplateArr[SelectIndex]['NameKey'];
@@ -150,13 +177,14 @@
                 }
                 $('#tempViewModal').modal();
             })
-            $('#installBtn').click(function(){
+            $('.InstallBtn').click(function(){
                 if(!confirm("安装模板覆盖数据库，请先备份数据库，再安装")) return;
-                let NameKey = TemplateArr[SelectIndex]['NameKey'];
-                if(typeof TempFolder[NameKey] != 'undefined'){
+                let Index = $(this).attr('data-index');
+                let NameKey = TemplateArr[Index]['NameKey'];
+                if(typeof TempFolder[Index] != 'undefined'){
                     alert('已安装，请先删除，再安装');return;
                 }
-                $.get('/admin/api/installTemplate', {TemplatesId:TemplateArr[SelectIndex]['TemplatesId']}, function(Res){
+                $.get('/admin/api/installTemplate', {TemplatesId:TemplateArr[Index]['TemplatesId']}, function(Res){
                     if(Res.Code != 0){
                         alert(Res.Msg);return;
                     }

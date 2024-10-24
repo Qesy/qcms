@@ -2,6 +2,23 @@
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class Api extends ControllersAdmin {
 
+    public function ajaxBind_Action(){
+        if(!$this->VeriObj->VeriPara($_POST, array('Phone', 'Pwd'))) $this->ApiErr(1001, '缺少参数');
+        $Ret = $this->loginPlatform(trim($_POST['Phone']), $_POST['Pwd']);
+        if($Ret['Code'] != 0) $this->ApiErr(1000, $Ret['Msg'].'('.$Ret['Code'].')');
+        $Result = $this->SysObj->SetCond(array('Name' => 'BindPhone'))->SetUpdate(array('AttrValue' => trim($_POST['Phone'])))->ExecUpdate();
+        if($Result === false) $this->Err(1002);
+        $this->SysObj->cleanList();
+        $this->ApiSuccess();
+    }
+    
+    public function ajaxUnBind_Action(){
+        $Result = $this->SysObj->SetCond(array('Name' => 'BindPhone'))->SetUpdate(array('AttrValue' => ''))->ExecUpdate();
+        if($Result === false) $this->Err(1002);
+        $this->SysObj->cleanList();
+        $this->ApiSuccess();
+    }
+    
     public function ajaxUpload_Action(){
         //$Ret = $this->UploadObj->upload_file($_FILES['filedata']);
         $Ret = self::p_upload($_FILES['filedata']);
@@ -251,7 +268,8 @@ class Api extends ControllersAdmin {
 
     public function installTemplate_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('TemplatesId'))) $this->ApiErr(1001);
-        $Ret = $this->getTemplateInfo($_GET['TemplatesId']);
+        $Ret = $this->apiRemotePlatform('apiRemote/templateInfo', array('TemplatesId' => $_GET['TemplatesId']));
+        if($Ret['Code'] != 0) $this->ApiErr(1000, $Ret['Msg']); // 获取模版信息错误        
         $DownRet = @file_get_contents($Ret['Data']['Address']);
         if($DownRet === false) $this->ApiErr(1016);
         $Path = './Static/tmp/';
