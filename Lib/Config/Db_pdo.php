@@ -259,7 +259,7 @@ class Db_pdo extends Db {
 	    $ValueArr = array();
 	    if(count($Arr) > 0){
 	        foreach($Arr as $v){
-	            $ValueArr[] = "('".implode('\',\'', str_replace(array('\'', '"'), array('\\\'', '\"'), $v) )."')";
+	            $ValueArr[] = "('".implode('\',\'', str_replace(array('\'', '"', ' ', "\r", "\n"), array('\\\'', '\"', '', '', ''), $v) )."')";
 	        }
 	        $tabledump .= "INSERT INTO `".$TableFullName."` (`".implode('`,`', array_keys($Arr[0]))."`)VALUES".implode(', ', $ValueArr).";\n";
 	    }	    

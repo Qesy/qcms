@@ -270,32 +270,40 @@ class Api extends ControllersAdmin {
         if(!$this->VeriObj->VeriPara($_GET, array('TemplatesId'))) $this->ApiErr(1001);
         $Ret = $this->apiRemotePlatform('apiRemote/templateInfo', array('TemplatesId' => $_GET['TemplatesId']));
         if($Ret['Code'] != 0) $this->ApiErr(1000, $Ret['Msg']); // 获取模版信息错误       
+        $FileName = 'QCms_'.$Ret['Data']['NameKey'].'_template.zip';
         $Path = './Static/tmp/';
         $CmsUpdatePath = $Path.'QCms_'.$Ret['Data']['NameKey'].'_template';
-        /* $DownRet = @file_get_contents($Ret['Data']['Address']);
-        if($DownRet === false) $this->ApiErr(1016);        
-        $FileName = 'QCms_'.$Ret['Data']['NameKey'].'_template.zip';
-        $WriteRet = @file_put_contents($Path.$FileName, $DownRet);
-        if($WriteRet === false) $this->ApiErr(1017);        
+        if(!file_exists($Path.$FileName)){ // 本地没有就下载
+            $DownRet = file_get_contents(trim($Ret['Data']['Address']));
+            if($DownRet === false) $this->ApiErr(1016);            
+            $WriteRet = @file_put_contents($Path.$FileName, $DownRet);
+            if($WriteRet === false) $this->ApiErr(1017);        
+        }
+        
         $UnZipRet = $this->CommonObj->UnZip($Path.$FileName, $CmsUpdatePath);
-        if($UnZipRet === false) $this->ApiErr(1018); */
+        if($UnZipRet === false) $this->ApiErr(1018); 
 
         $CopyRet = $this->CommonObj->DirCopy($CmsUpdatePath.'/'.$Ret['Data']['Name'].'/Template', './Template');
         $CopyRet2 = $this->CommonObj->DirCopy($CmsUpdatePath.'/'.$Ret['Data']['Name'].'/Static', './Static');
-        if(file_exists($CmsUpdatePath.'/'.$Ret['Data']['Name'].'/uploads')){ // 特殊上传文件
-            $this->CommonObj->DirCopy($CmsUpdatePath.'/'.$Ret['Data']['Name'].'/uploads', './uploads');
+        if(file_exists($CmsUpdatePath.'/'.$Ret['Data']['Name'].'/Root')){ // 特殊上传文件
+            $this->CommonObj->DirCopy($CmsUpdatePath.'/'.$Ret['Data']['Name'].'/Root', './');
         }
         if($CopyRet === false || $CopyRet2 === false) $this->ApiErr(1019);
-        $SqlPath = $CmsUpdatePath.'/'.$Ret['Data']['Name'].'/Static/backups/'.$Ret['Data']['NameKey'].'_templates.sql';
+        $SqlPath = $CmsUpdatePath.'/'.$Ret['Data']['Name'].'/Data/data.sql';
         if(file_exists($SqlPath)){
             try{
                 DB::$s_db_obj->beginTransaction();
                 $this->SysObj->ImportSql($SqlPath);
+                $this->SysObj->SetCond(array('Name' => 'TmpPath'))->SetUpdate(array('AttrValue' => $Ret['Data']['NameKey']))->ExecUpdate();
+                $PathMobileUpdate = file_exists('./Template/'.$Ret['Data']['NameKey'].'_mobile') ? array('AttrValue' => $Ret['Data']['NameKey'].'_mobile') : array('AttrValue' => '');
+
+                $this->SysObj->SetCond(array('Name' => 'TmpPathMobile'))->SetUpdate($PathMobileUpdate)->ExecUpdate();
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
                 DB::$s_db_obj->rollBack();
                 $this->ApiErr(1002);
             }
+            $this->SysObj->cleanList();
         }
         $this->ApiSuccess();
     }
