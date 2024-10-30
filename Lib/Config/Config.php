@@ -53,7 +53,7 @@ function autoload($classname) { // -- 自动加载类 --
         require $filename;
 }
 
-const WEB_MODE = 'Dev'; //Dev ,Release
+const WEB_MODE = 'Release'; //Dev ,Release
 const WEB_TITLE = 'QCMS';
 const VERSION = '6.0.4';
 ?>

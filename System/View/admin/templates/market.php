@@ -90,13 +90,13 @@
                                                         <div class="text-nowrap overflow-hidden py-1"><span class="float-right d-none"><?=$this->CommonObj->Size($v['Size'])?></span><span class="font-weight-bold overflow-hidden"><?=empty($v['Name']) ? '未命名' : $v['Name']?></span>
                                                         </div>
                                                         <div class="d-flex justify-content-between align-items-center">
-                                                            <span class="text-danger h5 mb-0">&yen; <?=$v['Price']?></span>
+                                                            <span class="text-danger h5 mb-0">&yen; <?=number_format($v['Price'], 2)?></span>
                                                             <span>
                                                                 <?
                                                                 if(in_array($v['TemplatesId'], $PaidIDs)){
                                                                     echo '<button class="btn btn-sm btn-success InstallBtn" data-index="'.$k.'">安装</button>';
                                                                 }else{
-                                                                    echo '<button class="btn btn-sm btn-primary  InstallBtn" data-index="'.$k.'">购买</button>';
+                                                                    echo '<button class="btn btn-sm btn-primary  BuyBtn" data-index="'.$k.'">购买</button>';
                                                                 }
                                                                 ?>
 
@@ -145,12 +145,34 @@
       </div>
     </div>
 
+    <div class="modal" tabindex="-1" id="PayModal">
+      <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">微信扫码支付</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body text-center">
+            <div id="QrCode"></div>
+            <div id="QrCodeStr" class="text-dark">请用微信扫描此二维码并支付</div>
+          </div>
+          <div class="modal-footer justify-content-center">
+            <button type="button" class="btn btn-secondary btn-sm" data-dismiss="modal">取消</button>
+            <button type="button" class="btn btn-primary btn-sm" data-dismiss="modal">支付完成</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- jQuery -->
     <?=$this->LoadView('admin/common/js')?>
     <script type="text/javascript">
         var TemplateArr = <?=json_encode($Arr)?>;
         var TempFolder = <?=json_encode($TempFolder)?>;
         var SelectIndex = -1;
+        var PlatformUrl = '<?=$PlatformUrl?>';
         $(function(){
             $('.UnBindBtn').click(function(){
                 $.get('/admin/api/ajaxUnBind', {}, function(Res){
@@ -161,7 +183,7 @@
                     location.reload();
                 }, 'json')
             })
-            $('.tempViewBtn').click(function(){
+            $('.tempViewBtn').click(function(){ // 查看演示
                 SelectIndex = $(this).attr('data-index');
                 let NameKey = TemplateArr[SelectIndex]['NameKey'];
                 $('#tempViewModal .modal-title').html(TemplateArr[SelectIndex]['Name']);
@@ -177,7 +199,7 @@
                 }
                 $('#tempViewModal').modal();
             })
-            $('.InstallBtn').click(function(){
+            $('.InstallBtn').click(function(){ // 安装
                 if(!confirm("安装模板覆盖数据库，请先备份数据库，再安装")) return;
                 let Index = $(this).attr('data-index');
                 let NameKey = TemplateArr[Index]['NameKey'];
@@ -191,6 +213,18 @@
                     alert('安装成功');
                     $('#tempViewModal').modal('hide');
                     location.reload();
+                }, 'json')
+            })
+            $('.BuyBtn').click(function(){
+                let Index = $(this).attr('data-index');
+                $.get('/admin/api/paytp', {TemplatesId:TemplateArr[Index]['TemplatesId']}, function(Res){
+                    if(Res.Code != 0){
+                        alert(Res.Msg);return;
+                    }
+                    $('#QrCode').html('<img src="'+PlatformUrl+Res.Data.Path+'">');
+                    $('#QrCodeStr').html(Res.Data.Body);
+                    $('#PayModal').modal('show')
+                    GetPayStatus(Res.Data.OrderId)
                 }, 'json')
             })
         })

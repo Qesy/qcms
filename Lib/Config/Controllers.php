@@ -32,7 +32,7 @@ class Controllers extends Base {
     public $PageTmp = 1;
     public $CountTmp = 0; //分页用
     public $CateFieldArr = array();
-    public const PLATFORM_URL = (WEB_MODE == 'Dev') ? 'http://q-cms.demo.com/' : 'https://www.q-cms.cn/';
+    public const PLATFORM_URL = (WEB_MODE == 'Dev') ? 'https://q-cms.demo.com/' : 'https://www.q-cms.cn/';
     protected const p_REMOTE_KEY = 'qcms$GHK346';
     function __construct(){
         parent::__construct();
@@ -1341,6 +1341,8 @@ class ControllersAdmin extends Controllers {
             'admin/api/contentAttr' => array('Name' => '批量操作内容属性', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'contentAttr'))),
             'admin/api/contentMove' => array('Name' => '批量移动内容', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'contentMove'))),
             'admin/api/installTemplate' => array('Name' => '安装模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'installTemplate'))),
+            'admin/api/paytp' => array('Name' => '购买模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'paytp'))),
+            'admin/api/payStatus' => array('Name' => '获取订单状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'payStatus'))),
             'index/adminLogout' => array('Name' => '安全退出', 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(array('index', 'adminLogout'))),
 
         );
@@ -1520,7 +1522,7 @@ class ControllersAdmin extends Controllers {
     }
     
     public function apiRemotePlatform($ApiUrl, $ParaArr){ // 平台需登录接口
-        $Para = array_merge(array('Phone' => $this->SysRs['BindPhone'], 'Ts' => time()), $ParaArr);        
+        $Para = array_merge(array('Phone' => $this->SysRs['BindPhone'], 'Ts' => time()), $ParaArr);  
         ksort($Para);
         $Para['Sign'] = md5($this->CommonObj->HttpBuildQueryQ($Para).'|'.self::p_REMOTE_KEY);
         $Json = $this->CurlObj->SetUrl(self::PLATFORM_URL.$ApiUrl)->SetDebug(false)->SetPara($Para)->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
@@ -1537,7 +1539,7 @@ class ControllersAdmin extends Controllers {
     
     public function getTemplaites($Page, $PageNum, $CateId = 0){        
         $Para = array('Domain' => URL_DOMAIN, 'Page' => $Page, 'PageNum' => $PageNum, 'CateId' => $CateId);
-        $Json = $this->CurlObj->SetUrl(self::PLATFORM_URL.'client/templates.html')->SetPara($Para)->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Json = $this->CurlObj->SetUrl(self::PLATFORM_URL.'client/templates.html')->SetDebug(false)->SetPara($Para)->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
     }

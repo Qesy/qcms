@@ -7,7 +7,12 @@ var SelectUploadName = '';
 var FileViewArr = [];
 var Limit = 24;
 var AttrState = 2; //批量操作属性状态
+var t1; // 时间定时器
 $(function(){
+    $('#PayModal').on('hidden.bs.modal', function (e) {
+        console.log('关闭定时器');
+        window.clearInterval(t1);
+    })
     ContentLinkReset();
     $('#Attr_IsLink').change(function(){
         ContentLinkReset();
@@ -492,3 +497,23 @@ class UploadAdapter {
     }
 }
 
+var GetPayStatus = function (OrderId){
+    t1 = window.setInterval(function() {
+      $.post('/admin/api/payStatus.html', {'OrderId':OrderId}, function(Res){
+        console.log('等待支付...');
+        if(Res.Code != 0){
+          $('#QrCodeModal').modal('hide');
+          alert(Res.Msg);
+          window.clearInterval(t1)
+          return;
+        }
+        if(Res.Data == 1){
+          $('#QrCodeModal').modal('hide');
+          alert('购买成功');
+          window.clearInterval(t1)
+          location.reload();
+          return;
+        }
+      }, 'json')
+    },2000);
+}
