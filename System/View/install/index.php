@@ -34,7 +34,7 @@
                         <div class="form-group pt-0 pb-1 row">
                         <label for="input<?=$v['Name']?>" class="col-sm-2 col-form-label text-right"><?=$v['Desc']?> : </label>
                         <div class="col-sm-10">
-                          <input type="text" name="<?=$v['Name']?>" class="form-control" id="input<?=$v['Name']?>" value="<?=$v['Value']?>" placeholder="请输入<?=$v['Desc']?>" required="required">
+                          <input type="<?=$v['Type']?>" name="<?=$v['Name']?>" class="form-control" id="input<?=$v['Name']?>" value="<?=$v['Value']?>" placeholder="请输入<?=$v['Desc']?>" required="required">
                         </div>
                       </div>
                     <?
@@ -48,7 +48,7 @@
                     <div class="form-group pt-0 pb-1 row">
                     <label for="input<?=$v['Name']?>" class="col-sm-2 col-form-label text-right"><?=$v['Desc']?> : </label>
                     <div class="col-sm-10">
-                      <input type="text" name="<?=$v['Name']?>" class="form-control" id="input<?=$v['Name']?>" value="<?=$v['Value']?>" placeholder="请输入<?=$v['Desc']?>" required="required">
+                      <input type="<?=$v['Type']?>" name="<?=$v['Name']?>" class="form-control" id="input<?=$v['Name']?>" value="<?=$v['Value']?>" placeholder="请输入<?=$v['Desc']?>" required="required">
                     </div>
                   </div>
                 <?
@@ -59,7 +59,7 @@
             </form>
         </div>
         <p class="my-4 text-dark" style="text-align: center;"> Copyrignt &copy;
-            <?=WEB_TITLE?>
+            <a target="_blank" href="<?=Controllers::PLATFORM_URL?>"><?=WEB_TITLE?></a>
         </p>
     </div>
 </body>

@@ -55,5 +55,5 @@ function autoload($classname) { // -- 自动加载类 --
 
 const WEB_MODE = 'Release'; //Dev ,Release
 const WEB_TITLE = 'QCMS';
-const VERSION = '6.0.4';
+const VERSION = '6.0.5';
 ?>
