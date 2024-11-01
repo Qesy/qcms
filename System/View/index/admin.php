@@ -22,9 +22,7 @@
     <div class="container loginContainer p-3">
         <div class="rounded bg-white px-4 py-5" style="width: 400px;">
             <form class="form-signin text-center" method="post">
-                <svg class="logo mb-2" style="fill: #1572E8!important;width: 160px;height: 53px;" >
-                  <use xlink:href="/Static/images/logo.svg#layer"/>
-                </svg>
+                <?=$this->GetLogo('logo mb-2', 'fill: #1572E8!important;width: 160px;height: 53px;');?>
 
                 <div class=" mb-3 text-muted">登录管理后台</div>
                 <div class="input-group mb-2">

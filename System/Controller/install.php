@@ -72,13 +72,13 @@ class Install extends ControllersInstall {
             array('Name' =>'Host', 'Desc' => '数据库IP',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 12),
             array('Name' =>'Name', 'Desc' => '数据库名',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 12),
             array('Name' =>'Accounts', 'Desc' => '账号',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 12),
-            array('Name' =>'Password', 'Desc' => '密码',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 12),
+            array('Name' =>'Password', 'Desc' => '密码',  'Type' => 'password', 'Value' => '', 'Required' => 1, 'Col' => 12),
             array('Name' =>'Port', 'Desc' => '端口',  'Type' => 'input', 'Value' => '3306', 'Required' => 1, 'Col' => 12),
         );
         $tmp['Step2'] = array(
             array('Name' =>'Phone', 'Desc' => '手机号',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 12),
-            array('Name' =>'RegPassword', 'Desc' => '密码',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 12),
-            array('Name' =>'RegPassword2', 'Desc' => '确认密码',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 12),
+            array('Name' =>'RegPassword', 'Desc' => '密码',  'Type' => 'password', 'Value' => '', 'Required' => 1, 'Col' => 12),
+            array('Name' =>'RegPassword2', 'Desc' => '确认密码',  'Type' => 'password', 'Value' => '', 'Required' => 1, 'Col' => 12),
         );
         $this->LoadView('install/index', $tmp);
     }

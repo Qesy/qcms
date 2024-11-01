@@ -45,21 +45,7 @@ class ModelField extends ControllersAdmin {
             $DbConfig = Config::DbConfig();
             $AddField = array('Name' => trim($_POST['Name']), 'Comment' => trim($_POST['Comment']), 'Type' => trim($_POST['Type']), 'Content' => trim($_POST['Content']), 'NotNull' => $_POST['NotNull'], 'IsList' => $_POST['IsList'], 'Data' => trim($_POST['Data']));
             $Arr[] = $AddField;
-            $FieldType = 'varchar(255)';
-            $FieldDefault = "DEFAULT ''";
-            if(in_array($AddField['Type'], array('textarea', 'editor'))){
-                $FieldType = 'text';
-                $FieldDefault = '';
-            }elseif(in_array($AddField['Type'], array('number', 'datetime'))){
-                $FieldType = 'bigint(20)';
-                $FieldDefault = "DEFAULT '0'";
-            }elseif(in_array($AddField['Type'], array('date'))){
-                $FieldType = 'date';
-                $FieldDefault = "DEFAULT '0000-00-00'";
-            }elseif(in_array($AddField['Type'], array('money'))){
-                $FieldType = 'decimal(10,2)';
-                $FieldDefault = "DEFAULT '0.00'";
-            }
+            list($FieldType, $FieldDefault) = $this->Sys_modelObj->GetField($AddField['Type']);
             try{
                 DB::$s_db_obj->beginTransaction();
                 $this->Sys_modelObj->SetCond(array('ModelId' => $Rs['ModelId']))->SetUpdate(array('FieldJson' => json_encode($Arr)))->ExecUpdate();
@@ -111,21 +97,9 @@ class ModelField extends ControllersAdmin {
                 'Data' => trim($_POST['Data']),                
             );
             $Arr[$Index] = $AddField;
-            $FieldType = 'varchar(255)';
-            $FieldDefault = "DEFAULT ''";
-            if(in_array($AddField['Type'], array('textarea', 'editor'))){
-                $FieldType = 'text';
-                $FieldDefault = '';
-            }elseif(in_array($AddField['Type'], array('number', 'datetime'))){
-                $FieldType = 'bigint(20)';
-                $FieldDefault = "DEFAULT '0'";
-            }elseif(in_array($AddField['Type'], array('date'))){
-                $FieldType = 'date';
-                $FieldDefault = "DEFAULT '0000-00-00'";
-            }elseif(in_array($AddField['Type'], array('money'))){
-                $FieldType = 'decimal(10,2)';
-                $FieldDefault = "DEFAULT '0.00'";
-            }
+            
+            list($FieldType, $FieldDefault) = $this->Sys_modelObj->GetField($AddField['Type']);
+            
             try{
                 DB::$s_db_obj->beginTransaction();
                 $this->Sys_modelObj->SetCond(array('ModelId' => $Rs['ModelId']))->SetUpdate(array('FieldJson' => json_encode($Arr)))->ExecUpdate();

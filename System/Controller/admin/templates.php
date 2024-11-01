@@ -21,7 +21,7 @@ class Templates extends ControllersAdmin {
         'page' => '封面',
     );
 
-    public function index_Action(){
+    public function index_Action(){        
         $TempList = $this->getTemplate();
         $Arr = array();
         $Desc = $Desc2 = '';
@@ -102,16 +102,24 @@ class Templates extends ControllersAdmin {
     }
 
     public function market_Action(){
+        if(empty($this->SysRs['BindPhone'])){
+            $this->LoadView('admin/templates/marketBind');
+            return;
+        }
         $Page = intval($_GET['Page']);
         if($Page < 1) $Page = 1;
         $PageNum = 12;
         $CateId = intval($_GET['CateId']);
+        
+        $templatesPaidRet = $this->apiRemotePlatform('apiRemote/templatesPaid', array());
+        $tmp['PaidIDs'] = $templatesPaidRet['Data'];
         $Ret = $this->getTemplaites($Page, $PageNum, $CateId);
         $CateArr = $this->getTemplaitesCate();
         $tmp['CateArr'] = $CateArr['Data'];
         $tmp['Arr'] = $Ret['Data']['List'];
         $tmp['Page'] = $this->CommonObj->PageBar($Ret['Data']['Count'], $PageNum);
         $tmp['TempFolder'] = $this->getTempFolder();
+        $tmp['PlatformUrl'] = self::PLATFORM_URL;
         $this->LoadView('admin/templates/market', $tmp);
     }
     

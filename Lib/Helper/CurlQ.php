@@ -81,7 +81,7 @@ class CurlQ {
 	    if(!empty($this->ParaArr['Header'])) curl_setopt($Ch, CURLOPT_HTTPHEADER, $this->ParaArr['Header']); 
 	    if($this->ParaArr['IsHttps']){
 	        curl_setopt($Ch, CURLOPT_SSL_VERIFYPEER, 0);
-	        curl_setopt($Ch, CURLOPT_SSL_VERIFYHOST, 1);
+	        curl_setopt($Ch, CURLOPT_SSL_VERIFYHOST, 0);
 	       /*  curl_setopt($Ch, CURLOPT_SSLCERTTYPE, 'PEM');
 	        curl_setopt($Ch, CURLOPT_SSLCERT, self::CURLOPT_SSLCERT_PATH);
 	        curl_setopt($Ch, CURLOPT_SSLKEYTYPE, 'PEM');

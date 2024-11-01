@@ -32,6 +32,8 @@ class Controllers extends Base {
     public $PageTmp = 1;
     public $CountTmp = 0; //分页用
     public $CateFieldArr = array();
+    public const PLATFORM_URL = (WEB_MODE == 'Dev') ? 'https://q-cms.demo.com/' : 'https://www.q-cms.cn/';
+    protected const p_REMOTE_KEY = 'qcms$GHK346';
     function __construct(){
         parent::__construct();
         $this->SysRs = $this->SysObj->getKv();
@@ -1317,6 +1319,8 @@ class ControllersAdmin extends Controllers {
             'admin/templates/market' => array('Name' => '模板市场', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'market'))),
             // API
             'admin/api/ajaxUpload' => array('Name' => 'AJAX上传', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'ajaxUpload'))),
+            'admin/api/ajaxBind' => array('Name' => 'AJAX绑定账号', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'ajaxBind'))),
+            'admin/api/ajaxUnBind' => array('Name' => 'AJAX解绑账号', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'ajaxUnBind'))),
             'admin/api/batchUpload' => array('Name' => '批量上传', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'batchUpload'))),
             'admin/api/ckUpload' => array('Name' => 'CkEditor上传', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'ckUpload'))),
             'admin/api/userState' => array('Name' => '设置用户状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'userState'))),
@@ -1337,6 +1341,8 @@ class ControllersAdmin extends Controllers {
             'admin/api/contentAttr' => array('Name' => '批量操作内容属性', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'contentAttr'))),
             'admin/api/contentMove' => array('Name' => '批量移动内容', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'contentMove'))),
             'admin/api/installTemplate' => array('Name' => '安装模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'installTemplate'))),
+            'admin/api/paytp' => array('Name' => '购买模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'paytp'))),
+            'admin/api/payStatus' => array('Name' => '获取订单状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'payStatus'))),
             'index/adminLogout' => array('Name' => '安全退出', 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(array('index', 'adminLogout'))),
 
         );
@@ -1515,30 +1521,46 @@ class ControllersAdmin extends Controllers {
         return $Ret;
     }
     
+    public function apiRemotePlatform($ApiUrl, $ParaArr){ // 平台需登录接口
+        $Para = array_merge(array('Phone' => $this->SysRs['BindPhone'], 'Ts' => time()), $ParaArr);  
+        ksort($Para);
+        $Para['Sign'] = md5($this->CommonObj->HttpBuildQueryQ($Para).'|'.self::p_REMOTE_KEY);
+        $Json = $this->CurlObj->SetUrl(self::PLATFORM_URL.$ApiUrl)->SetDebug(false)->SetPara($Para)->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Ret = json_decode($Json, true);
+        return $Ret;
+    }
+    
+    public function loginPlatform($Phone, $Pwd){ // 绑定平台账户
+        $Para = array('Phone' => $Phone, 'Pwd' => $Pwd);
+        $Json = $this->CurlObj->SetUrl(self::PLATFORM_URL.'api/login.html')->SetDebug(false)->SetPara($Para)->SetIsPost(true)->SetIsHttps(true)->SetIsJson(false)->Execute();
+        $Ret = json_decode($Json, true);
+        return $Ret;
+    }
+    
     public function getTemplaites($Page, $PageNum, $CateId = 0){        
         $Para = array('Domain' => URL_DOMAIN, 'Page' => $Page, 'PageNum' => $PageNum, 'CateId' => $CateId);
-        $Json = $this->CurlObj->SetUrl('https://www.q-cms.cn/client/templates.html')->SetPara($Para)->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Json = $this->CurlObj->SetUrl(self::PLATFORM_URL.'client/templates.html')->SetDebug(false)->SetPara($Para)->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
     }
     
     public function getTemplaitesCate(){
-        $Json = $this->CurlObj->SetUrl('https://www.q-cms.cn/client/templatesCate.html')->SetPara(array('Domain' => URL_DOMAIN))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Json = $this->CurlObj->SetUrl(self::PLATFORM_URL.'client/templatesCate.html')->SetPara(array('Domain' => URL_DOMAIN))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
     }
     
     public function getVerUpdate(){
-        $Json = $this->CurlObj->SetUrl('https://www.q-cms.cn/client/getUpdate.html')->SetPara(array('Domain' => URL_DOMAIN, 'Version' => $this->SysRs['Version']))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Json = $this->CurlObj->SetUrl(self::PLATFORM_URL.'client/getUpdate.html')->SetPara(array('Domain' => URL_DOMAIN, 'Version' => $this->SysRs['Version']))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
     }
     
-    public function getTemplateInfo($TemplatesId){
-        $Json = $this->CurlObj->SetUrl('https://www.q-cms.cn/client/getTemplate.html')->SetPara(array('Domain' => URL_DOMAIN, 'TemplatesId' => $TemplatesId, 'License' => $this->SysRs['License']))->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
+    /* public function getTemplateInfo($TemplatesId){ // 废弃
+        $Json = $this->CurlObj->SetUrl(self::PLATFORM_URL.'client/getTemplate.html')->SetPara(array('Domain' => URL_DOMAIN, 'TemplatesId' => $TemplatesId, 'License' => $this->SysRs['License']))->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
-    }
+    } */
     
     private function _getUpdate(){
         $pTime = $this->CookieObj->get('UpdateTs', 'User');
@@ -1553,7 +1575,7 @@ class ControllersAdmin extends Controllers {
         $pTime = $this->CookieObj->get('Ts', 'User');
         if(empty($pTime) || time() - $pTime > 3600){            
             $key = self::getKey();
-            $this->CurlObj->SetUrl('https://www.q-cms.cn/client/updata.html')->SetPara(array('Key' => $key, 'Domain' => $_SERVER['REQUEST_SCHEME'].'://'.URL_DOMAIN.'/'))->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
+            $this->CurlObj->SetUrl(self::PLATFORM_URL.'client/updata.html')->SetPara(array('Key' => $key, 'Domain' => $_SERVER['REQUEST_SCHEME'].'://'.URL_DOMAIN.'/'))->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
             $this->CookieObj->set(array('Ts' => time()), 'User');
         }
         

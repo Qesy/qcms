@@ -198,6 +198,24 @@ abstract class Base {
 		RedisKey::$s_projectKey = 'QCMS_'.$DbConf['Name'];
 	}
 	
+	public function GetLogo($Class, $Style){
+	    return '
+            <svg class="'.$Class.'" viewBox="0 0 93.3 22.7" xmlns="http://www.w3.org/2000/svg" style="'.$Style.'">
+            <g id="logo" transform="translate(-313.125 -293)">
+                <path id="layer_79" class="st0" d="M366.6,293.1l4.6,22.5h-4.8l-3-14.2l-8.8,14.2h-5.1l13.6-22.5L366.6,293.1z M379.3,301.5
+                    l-6.3,14.1l-1.5-7.4l6.9-15.1h6.8l-5,22.5h-4.1L379.3,301.5z"/>
+                <path id="layer_80" class="st0" d="M349.8,311.5l-2.4,4.2h-9.8c-2.8,0-3.5-1.3-2.8-3.9l4.2-15.6c0.7-1.8,2.4-3,4.4-3l17.5,0
+                    l-2.6,4.3l-14.2-0.1l-3.5,12.9c-0.2,0.8,0.1,1.2,0.8,1.2L349.8,311.5z"/>
+                <path id="layer_81" class="st0" d="M406.5,293l-1.5,6.9h-4.6l0.8-3.3h-9.9l-1.2,5.7l14.5,0l-3,13.2l-19,0l1.6-7.1l4.6,0l-0.7,3.1
+                    h9.8l1.2-5.4h-14.4l2.9-13.1L406.5,293z"/>
+                <path id="layer_82" class="st0" d="M325.8,315.7h7L321.5,304L325.8,315.7z"/>
+                <path id="layer_83" class="st0" d="M336.7,297.1c0.7-2.6-0.5-4-3.7-4h-10c-3.1,0-5.1,1.3-5.8,4l-4,14.6c-0.7,2.6,0.5,3.9,3.6,3.9
+                    h7.4l-1.3-3.9h-3.4c-0.8,0-1.2-0.4-1-1.2l3.7-13.6h7.3c0.9,0,1.2,0.4,1,1.2l-2.9,10.8l4.4,4.6l0.5-1.9L336.7,297.1z"/>
+            </g>
+            </svg>
+        ';
+	}
+	
 	public function IdCreate(){ //创建ID	    
 	    return IdCreate::createOnlyId();
 	}

@@ -2,6 +2,23 @@
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class Api extends ControllersAdmin {
 
+    public function ajaxBind_Action(){
+        if(!$this->VeriObj->VeriPara($_POST, array('Phone', 'Pwd'))) $this->ApiErr(1001, '缺少参数');
+        $Ret = $this->loginPlatform(trim($_POST['Phone']), $_POST['Pwd']);
+        if($Ret['Code'] != 0) $this->ApiErr(1000, $Ret['Msg'].'('.$Ret['Code'].')');
+        $Result = $this->SysObj->SetCond(array('Name' => 'BindPhone'))->SetUpdate(array('AttrValue' => trim($_POST['Phone'])))->ExecUpdate();
+        if($Result === false) $this->Err(1002);
+        $this->SysObj->cleanList();
+        $this->ApiSuccess();
+    }
+    
+    public function ajaxUnBind_Action(){
+        $Result = $this->SysObj->SetCond(array('Name' => 'BindPhone'))->SetUpdate(array('AttrValue' => ''))->ExecUpdate();
+        if($Result === false) $this->Err(1002);
+        $this->SysObj->cleanList();
+        $this->ApiSuccess();
+    }
+    
     public function ajaxUpload_Action(){
         //$Ret = $this->UploadObj->upload_file($_FILES['filedata']);
         $Ret = self::p_upload($_FILES['filedata']);
@@ -249,35 +266,83 @@ class Api extends ControllersAdmin {
         $this->ApiSuccess();
     }
 
-    public function installTemplate_Action(){
+    public function installTemplate_Action(){ // 安装模版
         if(!$this->VeriObj->VeriPara($_GET, array('TemplatesId'))) $this->ApiErr(1001);
-        $Ret = $this->getTemplateInfo($_GET['TemplatesId']);
-        $DownRet = @file_get_contents($Ret['Data']['Address']);
-        if($DownRet === false) $this->ApiErr(1016);
-        $Path = './Static/tmp/';
+        $Ret = $this->apiRemotePlatform('apiRemote/templateInfo', array('TemplatesId' => $_GET['TemplatesId']));
+        if($Ret['Code'] != 0) $this->ApiErr(1000, $Ret['Msg']); // 获取模版信息错误       
         $FileName = 'QCms_'.$Ret['Data']['NameKey'].'_template.zip';
-        $WriteRet = @file_put_contents($Path.$FileName, $DownRet);
-        if($WriteRet === false) $this->ApiErr(1017);
+        $Path = './Static/tmp/';
         $CmsUpdatePath = $Path.'QCms_'.$Ret['Data']['NameKey'].'_template';
-        $UnZipRet = $this->CommonObj->UnZip($Path.$FileName, $CmsUpdatePath);
-        if($UnZipRet === false) $this->ApiErr(1018);
-        $TempPath = './Template/'.$Ret['Data']['NameKey'];
-        $TempStaticPath = './Static/'.$Ret['Data']['NameKey'];
-        $CopyRet = $this->CommonObj->DirCopy($CmsUpdatePath.'/html', $TempPath);
-        $CopyRet2 = $this->CommonObj->DirCopy($CmsUpdatePath.'/static', $TempStaticPath);
+        if(!file_exists($Path.$FileName)){ // 本地没有就下载
+            $DownRet = file_get_contents(trim($Ret['Data']['Address']));
+            if($DownRet === false) $this->ApiErr(1016);            
+            $WriteRet = @file_put_contents($Path.$FileName, $DownRet);
+            if($WriteRet === false) $this->ApiErr(1017);        
+        }
+        
+        $UnZipRet = $this->CommonObj->UnZip($Path.$FileName, $CmsUpdatePath); // 解压并把文件COPY到对应目录
+        if($UnZipRet === false) $this->ApiErr(1018); 
+        $CopyRet = $this->CommonObj->DirCopy($CmsUpdatePath.'/'.$Ret['Data']['Name'].'/Template', './Template');
+        $CopyRet2 = $this->CommonObj->DirCopy($CmsUpdatePath.'/'.$Ret['Data']['Name'].'/Static', './Static');
+        if(file_exists($CmsUpdatePath.'/'.$Ret['Data']['Name'].'/Root')){ // 特殊上传文件
+            $this->CommonObj->DirCopy($CmsUpdatePath.'/'.$Ret['Data']['Name'].'/Root', './');
+        }
         if($CopyRet === false || $CopyRet2 === false) $this->ApiErr(1019);
-        if(file_exists($CmsUpdatePath.'/data.sql')){
+        
+        $DbConfig = Config::DbConfig();
+        $InitPath = $CmsUpdatePath.'/'.$Ret['Data']['Name'].'/Data/init.json'; // 数据结构字段增加（模型字段添加）
+        if(file_exists($InitPath)){ 
+            $Json = file_get_contents($InitPath);
+            $JsonArr = empty($Json) ? array() : json_decode($Json, true);
             try{
                 DB::$s_db_obj->beginTransaction();
-                $this->SysObj->ImportSql($CmsUpdatePath.'/data.sql');
+                foreach($JsonArr as $k => $v){
+                    if($v['IsSys'] != 1){ // 非系统内置，创建表
+                        $this->Sys_modelObj->CreateTable($k);
+                    }
+                    foreach($v['FieldJson'] as $sv){
+                        list($FieldType, $FieldDefault) = $this->Sys_modelObj->GetField($sv['Type']);
+                        $AddField = array('Name' => $sv['Name'], 'Comment' => $sv['Comment'], 'Type' => $sv['Type'], 'Content' => $sv['Content'], 'NotNull' => $sv['NotNull'], 'IsList' => $sv['IsList'], 'Data' => $sv['Data']);
+                        $this->Sys_modelObj->exec('alter table `'.$DbConfig['Prefix'].'table_'.$v['KeyName'].'` add '.$AddField['Name'].' '.$FieldType.' not null '.$FieldDefault.' COMMENT "'.$AddField['Comment'].'";', array());
+                    }
+                }
+                DB::$s_db_obj->commit();
+            }catch(PDOException $e){
+                DB::$s_db_obj->rollBack();
+                $this->ApiErr(1002);
+            }
+            
+        }
+        $SqlPath = $CmsUpdatePath.'/'.$Ret['Data']['Name'].'/Data/data.sql'; // 刷新数据库数据
+        if(file_exists($SqlPath)){
+            try{
+                DB::$s_db_obj->beginTransaction();
+                $this->SysObj->ImportSql($SqlPath);
+                $this->SysObj->SetCond(array('Name' => 'TmpPath'))->SetUpdate(array('AttrValue' => $Ret['Data']['NameKey']))->ExecUpdate();
+                $PathMobileUpdate = file_exists('./Template/'.$Ret['Data']['NameKey'].'_mobile') ? array('AttrValue' => $Ret['Data']['NameKey'].'_mobile') : array('AttrValue' => '');
+                $this->SysObj->SetCond(array('Name' => 'TmpPathMobile'))->SetUpdate($PathMobileUpdate)->ExecUpdate();
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
                 DB::$s_db_obj->rollBack();
                 $this->ApiErr(1002);
             }
-
+            $this->SysObj->cleanList();
         }
         $this->ApiSuccess();
+    }
+    
+    public function paytp_Action(){
+        if(!$this->VeriObj->VeriPara($_GET, array('TemplatesId'))) $this->ApiErr(1001);
+        $Ret = $this->apiRemotePlatform('apiRemote/paytp', array('TemplatesId' => $_GET['TemplatesId']));
+        if($Ret['Code'] != 0) $this->ApiErr(1000, $Ret['Msg']); // 获取模版信息错误       
+        $this->ApiSuccess($Ret['Data']);
+    }
+    
+    public function payStatus_Action(){
+        if(!$this->VeriObj->VeriPara($_POST, array('OrderId'))) $this->ApiErr(1001);
+        $Ret = $this->apiRemotePlatform('apiRemote/payStatus', array('OrderId' => $_POST['OrderId']));
+        if($Ret['Code'] != 0) $this->ApiErr(1000, $Ret['Msg']); // 获取模版信息错误
+        $this->ApiSuccess($Ret['Data']);
     }
 
     public function sort_Action(){ // 排序
