@@ -1,5 +1,12 @@
 <IfModule mod_rewrite.c>
-RewriteEngine on
-RewriteCond $1 !^(index\.php|Static|robots\.txt|favicon\.ico|uc)
-RewriteRule ^(.*)$ /index.php [L]
+	RewriteEngine on
+	
+	# 拒绝访问根目录下的指定文件夹
+    RewriteCond %{REQUEST_URI} ^/(System|Lib|Database|Template|\.git) [NC]
+    RewriteRule ^ - [F,L]
+
+    # 如果请求的文件不存在，则重写到 index.php
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^.*$ /index.php [L]
 </IfModule>
