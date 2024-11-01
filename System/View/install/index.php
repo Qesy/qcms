@@ -59,7 +59,7 @@
             </form>
         </div>
         <p class="my-4 text-dark" style="text-align: center;"> Copyrignt &copy;
-            <a target="_blank" href="<?=Controllers::PLATFORM_URL?>"><?=WEB_TITLE?></a>
+            <a target="_blank" href="<?=$this->PlatformUrl?>"><?=WEB_TITLE?></a>
         </p>
     </div>
 </body>

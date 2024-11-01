@@ -11,7 +11,7 @@ defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
  *
  */
 class Controllers extends Base {
-    
+
     public $Tmp = array(
         'Type' => '', //页面类型 index,cate,detail,page
         'Index' => '0', //索引ID
@@ -22,9 +22,9 @@ class Controllers extends Base {
         'PageRs' => array(),
         'ModelRs' => array(),
         'FormRs' => array(),
-    
+
     );
-    
+
     public $ModelKv = array();
     public $CateKv = array();
     public $TmpPath; //模板路径
@@ -32,8 +32,8 @@ class Controllers extends Base {
     public $PageTmp = 1;
     public $CountTmp = 0; //分页用
     public $CateFieldArr = array();
-    public const PLATFORM_URL = (WEB_MODE == 'Dev') ? 'https://q-cms.demo.com/' : 'https://www.q-cms.cn/';
-    protected const p_REMOTE_KEY = 'qcms$GHK346';
+
+    protected $p_RemoteKey = 'qcms$GHK346';
     function __construct(){
         parent::__construct();
         $this->SysRs = $this->SysObj->getKv();
@@ -53,7 +53,7 @@ class Controllers extends Base {
         }
         $this->PageTmp = (intval($_GET['Page']) < 1) ? 1 : intval($_GET['Page']);
     }
-    
+
     public function tempRun($Type, $Index = '0', $Page = 1){
         $this->PageTmp = $Page;
         $this->initTmp($Type, $Index)->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->get_Tmp()->photo_Tmp()->menu_Tmp();
@@ -61,9 +61,9 @@ class Controllers extends Base {
         $this->substr_Tmp()->math_Tmp()->replace_Tmp()->thumb_Tmp();
         return $this->Tmp['Compile'];
     }
-    
+
     public function tempRunTest($Type, $Index = '0', $Html = ''){
-        $this->initTmp($Type, $Index);        
+        $this->initTmp($Type, $Index);
         $this->Tmp['Compile'] = $this->Tmp['Html'] = $Html;
         //var_dump($this->Tmp['Compile']);exit;
         $this->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->get_Tmp()->photo_Tmp()->menu_Tmp();
@@ -77,7 +77,7 @@ class Controllers extends Base {
         $this->Tmp['Index'] = $Index;
         switch($Type){
             case 'index':
-                $Path = $this->SysRs['TmpIndex'];        
+                $Path = $this->SysRs['TmpIndex'];
                 break;
             case 'search':
                 $Path = $this->SysRs['TmpSearch'];
@@ -88,23 +88,23 @@ class Controllers extends Base {
                 $this->Tmp['FormRs'] = $Rs;
                 $Path = $Rs['TempDetail'];
                 break;
-            case 'cate':                
-                $CateRs = $this->CategoryObj->getOne($Index);        
+            case 'cate':
+                $CateRs = $this->CategoryObj->getOne($Index);
                 $CateRsT = $this->CateKv[$Index];
                 $CateRs['HasSub'] = $CateRsT['HasSub'];
                 if(empty($CateRs)) $this->DieErr(1001);
                 $this->Tmp['CateRs'] = $CateRs;
-                $Path = $CateRs['TempList'];    
+                $Path = $CateRs['TempList'];
                 break;
             case 'detail':
                 $TableRs = $this->TableObj->SetCond(array('Id' => $this->Tmp['Index']))->ExecSelectOne();
                 if(empty($TableRs)) $this->DieErr(1001);
                 $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
                 $TableRs = $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $TableRs['Id']))->ExecSelectOne();
-                $CateRs = $this->CategoryObj->getOne($TableRs['CateId']); 
+                $CateRs = $this->CategoryObj->getOne($TableRs['CateId']);
                 $CateRsT = $this->CateKv[$TableRs['CateId']];
                 $CateRs['HasSub'] = $CateRsT['HasSub'];
-                $Path = $CateRs['TempDetail'];    
+                $Path = $CateRs['TempDetail'];
                 $this->Tmp['ModelRs'] = $ModelRs;
                 $this->Tmp['CateRs'] = $CateRs;
                 $this->Tmp['TableRs'] = $TableRs;
@@ -113,49 +113,49 @@ class Controllers extends Base {
                 $PageRs = $this->PageObj->SetCond(array('PageId' => $Index))->ExecSelectOne();
                 if(empty($PageRs)) $this->DieErr(1001);
                 $this->Tmp['PageRs'] = $PageRs;
-                $Path = $PageRs['TempDetail'];    
+                $Path = $PageRs['TempDetail'];
                 break;
-        }        
+        }
         if(!file_exists($this->TmpPath.$Path) || !is_file( $this->TmpPath.$Path)) $this->DieErr(1054);
-        $this->Tmp['Compile'] = $this->Tmp['Html'] = file_get_contents($this->TmpPath.$Path);        
+        $this->Tmp['Compile'] = $this->Tmp['Html'] = file_get_contents($this->TmpPath.$Path);
         return $this;
     }
-    
+
     public function include_Tmp(){ // 包含
-        preg_match_all("/{{include([\s\S.]*?)\/?}}/i",$this->Tmp['Compile'], $Matches); 
+        preg_match_all("/{{include([\s\S.]*?)\/?}}/i",$this->Tmp['Compile'], $Matches);
         $Replace = array();
         foreach($Matches[1] as $k => $v){
             $Data = self::_getKv($v);
-            $Replace[] = @file_get_contents($this->TmpPath.trim($Data['filename']));         
+            $Replace[] = @file_get_contents($this->TmpPath.trim($Data['filename']));
         }
         $this->Tmp['Compile'] = str_replace($Matches[0], $Replace, $this->Tmp['Compile']);
         return $this;
     }
-    
+
     public function date_Tmp(){
-        preg_match_all("/{{date([\s\S.]*?)\/?}}/i",$this->Tmp['Compile'], $Matches); 
+        preg_match_all("/{{date([\s\S.]*?)\/?}}/i",$this->Tmp['Compile'], $Matches);
         $Replace = array();
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);
-            
+
             $Replace[] = ($Para['format'] == 'special') ? $this->CommonObj->TimeView($Para['time']) : date($Para['format'], $Para['time']);
         }
         $this->Tmp['Compile'] = str_replace($Matches[0], $Replace, $this->Tmp['Compile']);
         return $this;
     }
-    
+
     public function substr_Tmp(){ //截取字符串
-        preg_match_all("/{{cut([\s\S.]*?)\/?}}/i",$this->Tmp['Compile'], $Matches); 
+        preg_match_all("/{{cut([\s\S.]*?)\/?}}/i",$this->Tmp['Compile'], $Matches);
         $Replace = array();
         foreach($Matches[1] as $k => $v){
-            $Para = self::_getKv($v);       
+            $Para = self::_getKv($v);
             $Len = isset($Para['Len']) ? intval($Para['Len']) : 0;
             $Replace[] = ($Len > 0) ? mb_substr(strip_tags($Para['Str']), 0, $Len) : $Para['Str'];
         }
         $this->Tmp['Compile'] = str_replace($Matches[0], $Replace, $this->Tmp['Compile']);
         return $this;
     }
-    
+
     public function thumb_Tmp(){ //缩略图
         preg_match_all("/{{thumb([\w\W]*?)\/?}}/i",$this->Tmp['Compile'], $Matches);
         if(!empty($Matches[1])){
@@ -179,12 +179,12 @@ class Controllers extends Base {
         $this->Tmp['Compile'] = str_replace($Matches[0], $Replace, $this->Tmp['Compile']);
         return $this;
     }
-    
+
     public function replace_Tmp(){
         preg_match_all("/{{replace([\s\S.]*?)\/?}}/i", $this->Tmp['Compile'], $Matches);
         $Replace = array();
         foreach($Matches[1] as $k => $v){
-            $Para = self::_getKv($v);   
+            $Para = self::_getKv($v);
             $SubStr = $Para['Str'];
             $SubSearch = explode('|', $Para['Search']) ;
             $SubReplace = explode('|', $Para['Replace']) ;
@@ -193,16 +193,16 @@ class Controllers extends Base {
         $this->Tmp['Compile'] = str_replace($Matches[0], $Replace, $this->Tmp['Compile']);
         return $this;
     }
-    
+
     public function math_Tmp(){ //数学标签
-        preg_match_all("/{{math([\s\S.]*?)\/?}}/i", $this->Tmp['Compile'], $Matches);        
+        preg_match_all("/{{math([\s\S.]*?)\/?}}/i", $this->Tmp['Compile'], $Matches);
         $Search = array();
         $Replace = array();
         $Result = 0;
         foreach($Matches[1] as $k => $v){
-            if(strpos($v, '+') !== false){                
-                $Arr = self::_getKv2If($v, '\+'); 
-                $Result = intval($Arr[0]) + intval($Arr[1]);                
+            if(strpos($v, '+') !== false){
+                $Arr = self::_getKv2If($v, '\+');
+                $Result = intval($Arr[0]) + intval($Arr[1]);
             }elseif(strpos($v, '-') !== false){
                 $Arr = self::_getKv2If($v, '-');
                 $Result = intval($Arr[0]) - intval($Arr[1]);
@@ -224,7 +224,7 @@ class Controllers extends Base {
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
-    
+
     public function global_Tmp(){ // 全局标签
         $Search = array('{{qcms:Domain}}', '{{qcms:Static}}', '{{qcms:PathImg}}', '{{qcms:PathJs}}', '{{qcms:PathCss}}', '{{qcms:Scheme}}', '{{qcms:PathTemplate}}', '{{qcms:Method}}');
         $Replace = array(URL_DOMAIN, URL_STATIC, URL_IMG, URL_JS, URL_CSS, $_SERVER['REQUEST_SCHEME'], URL_STATIC.$this->TmpName.'/', Router::$s_Method);
@@ -236,11 +236,11 @@ class Controllers extends Base {
         $Search[] = '{{qcms:Search}}';
         $Replace[] = !empty($_GET['Search']) ? trim($_GET['Search']) : '';
 
-        
+
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
-    
+
     public function self_Tmp(){ //替换自身需要的
         $Search = array();
         $Replace = array();
@@ -255,20 +255,20 @@ class Controllers extends Base {
                 $Search = array('{{qcms:Crumbs}}');
                 $this->CategoryObj->getCrumbs($this->Tmp['Index']);
                 $CrumbsArr = array('<li class="breadcrumb-item"><a href="/">首页</a></li>');
-                foreach($this->CategoryObj->CateCrumbsArr as $k => $v){                    
-                    if($k+1 < count($this->CategoryObj->CateCrumbsArr)){                        
+                foreach($this->CategoryObj->CateCrumbsArr as $k => $v){
+                    if($k+1 < count($this->CategoryObj->CateCrumbsArr)){
                         if( $v['IsLink'] == 1) continue;
                         $CrumbsArr[] = '<li class="breadcrumb-item"><a href="'.$this->createUrl('cate', $v['CateId'], $v['PinYin'], $v['PY']).'">'.$v['Name'].'</a></li>';
                     }else{
                         $CrumbsArr[] = '<li class="breadcrumb-item active">'.$v['Name'].'</li>';
-                    }                    
+                    }
                 }
                 $Replace = array('<nav aria-label="breadcrumb"><ol class="breadcrumb">'.implode('', $CrumbsArr).'</ol></nav>');
                 if(empty($this->Tmp['CateRs']['TCateId'])) $this->Tmp['CateRs']['TCateId'] = $this->Tmp['CateRs']['CateId'];
                 foreach($this->Tmp['CateRs'] as $k => $v){
                     $Search[] = '{{qcms:Cate_'.$k.'}}';
                     $Replace[] = $v;
-                }      
+                }
                 $TopCateRs = $this->CategoryObj->getOne($this->Tmp['CateRs']['TCateId']);
                 $TopCateRsT = $this->CateKv[$this->Tmp['CateRs']['TCateId']];
                 $TopCateRs['HasSub'] = $TopCateRsT['HasSub'];
@@ -276,7 +276,7 @@ class Controllers extends Base {
                 foreach($TopCateRs as $k => $v){
                     $Search[] = '{{qcms:TopCate_'.$k.'}}';
                     $Replace[] = $v;
-                } 
+                }
                 //当前分类地址
                 $Search[] = '{{qcms:Cate_Url}}';
                 $Replace[] = $this->createUrl('cate', $this->Tmp['CateRs']['CateId'], $this->Tmp['CateRs']['PinYin'], $this->Tmp['CateRs']['PY']);
@@ -295,7 +295,7 @@ class Controllers extends Base {
                     <li class="breadcrumb-item active">搜索页</li>
                 </ol></nav>', -1);
                 break;
-            case 'detail':                
+            case 'detail':
                 $Search = array('{{qcms:Crumbs}}');
                 $this->CategoryObj->getCrumbs($this->Tmp['CateRs']['CateId']);
                 $CrumbsArr = array('<li class="breadcrumb-item"><a href="/">首页</a></li>');
@@ -308,7 +308,7 @@ class Controllers extends Base {
                     }
                 }
                 $Replace = array('<nav aria-label="breadcrumb"><ol class="breadcrumb">'.implode('', $CrumbsArr).'</ol></nav>');
-                //$CateRs = $this->CategoryObj->getOne($Rs['CateId']); 
+                //$CateRs = $this->CategoryObj->getOne($Rs['CateId']);
                 if(empty($this->Tmp['CateRs']['TCateId'])) $this->Tmp['CateRs']['TCateId'] = $this->Tmp['CateRs']['CateId'];
                 foreach($this->Tmp['CateRs'] as $k => $v){
                     $Search[] = '{{qcms:Cate_'.$k.'}}';
@@ -321,8 +321,8 @@ class Controllers extends Base {
                 foreach($TopCateRs as $k => $v){
                     $Search[] = '{{qcms:TopCate_'.$k.'}}';
                     $Replace[] = $v;
-                } 
-                
+                }
+
                 foreach($this->Tmp['TableRs'] as $k => $v){
                     $Search[] = '{{qcms:Detail_'.$k.'}}';
                     if($k == 'Content' && $this->SysRs['IsOpenInLink'] == 1){
@@ -344,7 +344,7 @@ class Controllers extends Base {
                         $Replace[] =  implode('', $TagStrArr);
                     }else{
                         $Replace[] = $v;
-                    }                    
+                    }
                 }
                 $PreRs = $this->Sys_modelObj->SetTbName('table_'.$this->Tmp['ModelRs']['KeyName'])->SetCond(' WHERE Id < '.$this->Tmp['Index'])->SetLimit(' ORDER BY Id DESC LIMIT 0, 1')->ExecSelectOne();
                 $NextRs = $this->Sys_modelObj->SetTbName('table_'.$this->Tmp['ModelRs']['KeyName'])->SetCond(' WHERE Id > '.$this->Tmp['Index'])->SetLimit(' ORDER BY Id ASC LIMIT 0, 1')->ExecSelectOne();
@@ -354,7 +354,7 @@ class Controllers extends Base {
                 $Search[] = '{{qcms:Detail_Url}}';
                 $Search[] = '{{qcms:Cate_Url}}';
                 $Search[] = '{{qcms:TopCate_Url}}';
-                
+
                 //$Search[] = '{{qcms:Cate_HasSub}}';
                 $Replace[] = empty($PreRs) ? '没有了' : '<a href="'.$this->createUrl('detail', $PreRs['Id'], $PreRs['PinYin'], $PreRs['PY']).'">'.$PreRs['Title'].'</a>';
                 $Replace[] = empty($NextRs) ? '没有了' : '<a href="'.$this->createUrl('detail', $NextRs['Id'], $NextRs['PinYin'], $NextRs['PY']).'">'.$NextRs['Title'].'</a>';
@@ -377,7 +377,7 @@ class Controllers extends Base {
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
-    
+
     public function get_Tmp(){ //获取单条数据详情
         preg_match_all("/{{get([\s\S.]*?)}}([\s\S.]*?){{\/get}}/i", $this->Tmp['Compile'], $Matches);
         $Search = array();
@@ -428,7 +428,7 @@ class Controllers extends Base {
                     foreach($DataArr as $v){
                         $DetailArr[$v['Id']] = $v;
                     }
-                }                
+                }
             }
         }
         foreach($Matches[1] as $k => $v){
@@ -442,62 +442,62 @@ class Controllers extends Base {
                         $Replace[] = '';
                     }else{
                         $Replace[] = self::_replaceOne($Type, $CateArr[$Index], $Matches[2][$k], 'Get_');
-                    }                    
+                    }
                     break;
                 case 'detail':
-                    
+
                     if(!isset($DetailArr[$Index])){
                         $Replace[] = '';
                     }else{
                         $Replace[] = self::_replaceOne($Type, $DetailArr[$Index], $Matches[2][$k], 'Get_');
-                    }                    
+                    }
                     break;
                 case 'page':
                     if(!isset($PageArr[$Index])){
                         $Replace[] = '';
                     }else{
                         $Replace[] = self::_replaceOne($Type, $PageArr[$Index], $Matches[2][$k], 'Get_');
-                    }                    
+                    }
                     break;
                 case 'swiper':
                     if(!isset($SwiperArr[$Index])){
                         $Replace[] = '';
                     }else{
                         $Replace[] = self::_replaceOne($Type, $SwiperArr[$Index], $Matches[2][$k], 'Get_');
-                    }  
+                    }
                     break;
                 default:
                     $Replace[] = '';
                     break;
-            }            
+            }
         }
-        
+
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
-    
+
     public function label_Tmp(){ // 自定义标签
-        preg_match_all("/{{label:([\w\W]*?)\/?}}/i",$this->Tmp['Compile'], $Matches);  
+        preg_match_all("/{{label:([\w\W]*?)\/?}}/i",$this->Tmp['Compile'], $Matches);
         if(!empty($Matches[1])){
             $Search = array();
             $Replace = array();
             foreach($Matches[1] as $v){
                 $LabelRs = $this->LabelObj->getOne($v);
                 if($LabelRs['State'] != 1) continue;
-                $Search[] = '{{label:'.$v.'}}';                
+                $Search[] = '{{label:'.$v.'}}';
                 $Replace[] = $LabelRs['Content'];
             }
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
-    
+
     public function if_Tmp(){ //IF标签
         preg_match_all("/{{if([\s\S.]*?)}}([\s\S.]*?){{\/if}}/i", $this->Tmp['Compile'], $Matches);
         $Search = array();
-        $Replace = array();        
+        $Replace = array();
         $ok = false;
-        foreach($Matches[1] as $k => $v){            
+        foreach($Matches[1] as $k => $v){
             if(strpos($v, '>=') !== false){
                 $Arr = self::_getKv2If($v, '>=');
                 $ok = ($Arr[0] >= $Arr[1]) ? true : false;
@@ -527,9 +527,9 @@ class Controllers extends Base {
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
-    
+
     public function menu_Tmp(){ // 菜单
-        preg_match_all("/{{menu([\s\S.]*?)}}([\s\S.]*?){{\/menu}}/i", $this->Tmp['Compile'], $Matches);        
+        preg_match_all("/{{menu([\s\S.]*?)}}([\s\S.]*?){{\/menu}}/i", $this->Tmp['Compile'], $Matches);
         $Search = array();
         $Replace = array();
         foreach($Matches[1] as $k => $v){
@@ -540,11 +540,11 @@ class Controllers extends Base {
             $Search[] = $Matches[0][$k];
             $Replace[] = self::_replaceCate($PCateId, $Start, $Row, $Matches[2][$k], 'Menu_');
         }
-        
+
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
-    
+
     public function smenu_Tmp(){ // 二级菜单
         preg_match_all("/{{smenu([\s\S.]*?)}}([\s\S.]*?){{\/smenu}}/i", $this->Tmp['Compile'], $Matches);
         $Search = array();
@@ -560,7 +560,7 @@ class Controllers extends Base {
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
-    
+
     public function ssmenu_Tmp(){ // 三级菜单
         preg_match_all("/{{ssmenu([\s\S.]*?)}}([\s\S.]*?){{\/ssmenu}}/i", $this->Tmp['Compile'], $Matches);
         $Search = array();
@@ -576,7 +576,7 @@ class Controllers extends Base {
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
-    
+
     public function tag_Tmp(){ // 菜单
         preg_match_all("/{{tag([\s\S.]*?)}}([\s\S.]*?){{\/tag}}/i", $this->Tmp['Compile'], $Matches);
         $Search = array();
@@ -586,11 +586,11 @@ class Controllers extends Base {
             $Row = isset($Para['Row']) ? intval($Para['Row']) : '0';
             $Search[] = $Matches[0][$k];
             $Replace[] = self::_replaceTag($Row, $Matches[2][$k], 'Tag_');
-        }        
+        }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
-    
+
     public function photo_Tmp(){ //相册
         if($this->Tmp['Type'] != 'detail' || $this->Tmp['ModelRs']['KeyName'] != 'album') return $this;
         preg_match_all("/{{photo([\s\S.]*?)}}([\s\S.]*?){{\/photo}}/i", $this->Tmp['Compile'], $Matches);
@@ -606,7 +606,7 @@ class Controllers extends Base {
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
-    
+
     public function link_Tmp(){
         preg_match_all("/{{link([\s\S.]*?)}}([\s\S.]*?){{\/link}}/i", $this->Tmp['Compile'], $Matches);
         $Search = array();
@@ -614,21 +614,21 @@ class Controllers extends Base {
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);
             if(!empty($Para['LinkCateId'])) $Ret['LinkCateId'] = intval($Para['LinkCateId']);
-            if(!empty($Para['IsIndex'])) $Ret['IsIndex'] = intval($Para['IsIndex']);       
-            $Ret['Row'] = !isset($Para['Row']) ? '100' : intval($Para['Row']);              
+            if(!empty($Para['IsIndex'])) $Ret['IsIndex'] = intval($Para['IsIndex']);
+            $Ret['Row'] = !isset($Para['Row']) ? '100' : intval($Para['Row']);
             $Search[] = $Matches[0][$k];
             $Replace[] = self::_replaceLink($Ret, $Matches[2][$k], 'Link_');
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
-    
+
     public function list_Tmp(){ // 列表
         preg_match_all("/{{list([\s\S.]*?)}}([\s\S.]*?){{\/list}}/i", $this->Tmp['Compile'], $Matches);
         $Search = array();
         $Replace = array();
         foreach($Matches[1] as $k => $v){
-            $Para = self::_getKv($v);            
+            $Para = self::_getKv($v);
             $Ret['Model'] = empty($Para['Model']) ? 'article' : $Para['Model'];
             $Ret['Row'] = !isset($Para['Row']) ? '10' : intval($Para['Row']);
             if($Ret['Row'] > 100) $Ret['Row'] = 100;
@@ -655,25 +655,25 @@ class Controllers extends Base {
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
-    
+
     public function loop_Tmp(){ // 万能查询
         preg_match_all("/{{loop([\s\S.]*?)}}([\s\S.]*?){{\/loop}}/i", $this->Tmp['Compile'], $Matches);
         $Search = array();
         $Replace = array();
         foreach($Matches[1] as $k => $v){
             $Para = self::_getKv($v);
-            if(empty($Para['sql'])) return $this; 
+            if(empty($Para['sql'])) return $this;
             $Search[] = $Matches[0][$k];
             if(!$this->CommonObj->IsSafeQuery($Para['sql'])) {
                 $Replace[] = $Matches[0][$k];
             }else{
                 $Replace[] = self::_replaceLoop($Para['sql'], $Matches[2][$k], 'Loop_');
-            }            
+            }
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
     }
-    
+
     public function slide_Tmp(){ // 幻灯片
         preg_match_all("/{{slide([\s\S.]*?)}}([\s\S.]*?){{\/slide}}/i", $this->Tmp['Compile'], $Matches);
         $Search = array();
@@ -688,7 +688,7 @@ class Controllers extends Base {
         //var_dump($Matches);exit;
         return $this;
     }
-    
+
     public function createUrl($Type, $Index, $PinYin, $PY, $Ts = 0){
         switch($Type){
             case 'cate':
@@ -709,7 +709,7 @@ class Controllers extends Base {
         }
         return '/'.$Type.'/'.$RetUrl;
     }
-    
+
     protected function p_upload($FileData){
         $Ret = $this->UploadObj->upload_file($FileData);
         if($this->SysRs['WaterMaskIsOpen'] != 1) return $Ret; //未开启水印
@@ -724,7 +724,7 @@ class Controllers extends Base {
         }else{
             if(!file_exists($this->WaterMaskObj->fontFile)) return $Ret;
         }
-        
+
         $this->WaterMaskObj->waterStr = $this->SysRs['WaterMaskTxt'];
         $this->WaterMaskObj->pos = $this->SysRs['WaterMaskPostion'];
         $this->WaterMaskObj->transparent = $this->SysRs['WaterMaskFontOpacity'];
@@ -734,7 +734,7 @@ class Controllers extends Base {
         $this->WaterMaskObj->output();
         return $Ret;
     }
-    
+
     private function _replaceSlide($SwiperCateId, $Html, $Pre){
         $Arr = $this->SwiperObj->getList($SwiperCateId);
         $Compile = '';
@@ -755,8 +755,8 @@ class Controllers extends Base {
                 $v['Pic'],
                 $v['Title'],
                 $v['Link'],
-                $v['Sort'],   
-                $v['Summary'],   
+                $v['Sort'],
+                $v['Summary'],
                 ($k+1),
                 $k,
                 $k%2,
@@ -765,7 +765,7 @@ class Controllers extends Base {
         }
         return $Compile;
     }
-    
+
     private function _replaceLoop($Sql, $Html, $Pre){
         //var_dump($Html);exit;
         $Arr = $this->Sys_modelObj->query($Sql, array());
@@ -782,7 +782,7 @@ class Controllers extends Base {
         }
         return $Compile;
     }
-    
+
     private function _replacePhoto($Index, $Row, $Html, $Pre){
         $Rs = $this->PhotosObj->SetCond(array('Id' => $Index))->ExecSelectOne();
         $Photos = empty($Rs['Photos']) ? array() : json_decode($Rs['Photos'], true);
@@ -795,11 +795,11 @@ class Controllers extends Base {
         }
         return $Compile;
     }
-    
+
     private function _replaceLink($Ret, $Html, $Pre){
         $CondArr = array('State' => 1);
         if(isset($Ret['LinkCateId'])) $CondArr['LinkCateId'] = $Ret['LinkCateId'];
-        if(isset($Ret['IsIndex'])) $CondArr['IsIndex'] = $Ret['IsIndex'];        
+        if(isset($Ret['IsIndex'])) $CondArr['IsIndex'] = $Ret['IsIndex'];
         $Arr = $this->LinkObj->SetCond($CondArr)->SetSort(array('Sort' => 'ASC', 'LinkId' => 'ASC'))->SetCond($CondArr)->SetLimit(array(0, $Ret['Row']))->SetIsDebug(0)->ExecSelect();
         $Compile = '';
         $Search = array();
@@ -827,7 +827,7 @@ class Controllers extends Base {
         }
         return $Compile;
     }
-    
+
     private function _replaceList($Ret, $Html, $Pre){
         $ModelRs = $this->ModelKv[$Ret['Model']];
         $CondArr = array('IsDelete' => 2, 'State' => 1);
@@ -862,7 +862,7 @@ class Controllers extends Base {
         if(!empty($Ret['Search'])){
             $CondArr['Title LIKE'] = $Ret['Search'];
         }
-        
+
         $Limit = ($Ret['IsPage'] != 1) ? array($Ret['Start'], $Ret['Row']) : array(($this->PageTmp-1)*$Ret['Row'], $Ret['Row']);
 
         $Count = 0;
@@ -887,7 +887,7 @@ class Controllers extends Base {
         }else{
             $Arr = $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetField(implode(', ', $ListField))->SetCond($CondArr)->SetSort($Sort)->SetLimit($Limit)->SetIsDebug(0)->ExecSelect();
         }
-        
+
         $Compile = '';
         $Search = array();
         foreach($ListField as $v){
@@ -899,9 +899,9 @@ class Controllers extends Base {
         $Search[] =  '{{qcms:'.$Pre.'CateName}}';
         $Search[] =  '{{qcms:'.$Pre.'CateNameEn}}';
         $Search[] =  '{{qcms:'.$Pre.'CatePic}}';
-        $Search[] =  '{{qcms:'.$Pre.'CateUrl}}';        
+        $Search[] =  '{{qcms:'.$Pre.'CateUrl}}';
         $Search[] =  '{{qcms:'.$Pre.'Url}}';
-        foreach($Arr as $k => $v){            
+        foreach($Arr as $k => $v){
             $CateRs = $this->CateKv[$v['CateId']];
             $UrlCate = self::createUrl('cate', $CateRs['CateId'], $CateRs['PinYin'], $CateRs['PY']);//$Url,
             $UrlDetail = self::createUrl('detail', $v['Id'], $v['PinYin'], $v['PY']);//$Url,
@@ -919,7 +919,7 @@ class Controllers extends Base {
                     $Replace[] =  empty($v[$sv]) ? '' : 'color:'.$v[$sv].';';
                 }else{
                     $Replace[] =  $v[$sv];
-                }                
+                }
             }
             $Replace[] =  ($k+1);
             $Replace[] =  $k;
@@ -930,10 +930,10 @@ class Controllers extends Base {
             $Replace[] = ($CateRs['IsLink'] == 1) ? $CateRs['LinkUrl'] : $UrlCate; // 分类地址
             $Replace[] = ($v['IsLink'] == '1') ? $v['LinkUrl'] : $UrlDetail;
             $Compile .= str_replace($Search, $Replace, $Html);
-        }        
+        }
         return $Compile;
     }
-    
+
     private function _replaceTag($Row, $Html, $Pre){
         if($Row > 100) $Row = 100;
         $TagArr = $this->TagObj->SetLimit(array(0, $Row))->SetSort(array('Total' => 'DESC'))->ExecSelect();
@@ -953,7 +953,7 @@ class Controllers extends Base {
             $Replace = array(
                 $v['TagId'],
                 $v['Name'],
-                $v['Total'],  
+                $v['Total'],
                 $Link,
                 ($k+1),
                 $k,
@@ -963,7 +963,7 @@ class Controllers extends Base {
         }
         return $Compile;
     }
-    
+
     private function _replaceCate($PCateId, $Start, $Row, $Html, $Pre){
         $Arr = $this->CategoryObj->CateTreeDetail;
         $CateArr = array();
@@ -983,7 +983,7 @@ class Controllers extends Base {
             '{{qcms:'.$Pre.'SeoTitle}}',
             '{{qcms:'.$Pre.'Keywords}}',
             '{{qcms:'.$Pre.'Description}}',
-            '{{qcms:'.$Pre.'Url}}', 
+            '{{qcms:'.$Pre.'Url}}',
             '{{qcms:'.$Pre.'HasSub}}',
             '{{qcms:'.$Pre.'i}}',
             '{{qcms:'.$Pre.'n}}',
@@ -995,7 +995,7 @@ class Controllers extends Base {
         $End = $Start+$Row;
         foreach($CateArr as $k => $v){
             if($Row >0){
-                if($k < $Start || $k >= $End) continue; 
+                if($k < $Start || $k >= $End) continue;
             }
             //if($Row >0 && $k >= $Row) continue;
             $Url = ($v['IsLink'] == 1) ? $v['LinkUrl'] : self::createUrl('cate', $v['CateId'], $v['PinYin'], $v['PY']);
@@ -1024,13 +1024,13 @@ class Controllers extends Base {
         }
         return $Compile;
     }
-    
+
     private function _replaceOne($Type, $Rs, $Html, $Pre){
         $Search = $Replace = array();
         foreach($Rs as $k => $v){
             $Search[] = '{{qcms:'.$Pre.$k.'}}';
             $Replace[] = $v;
-        }        
+        }
         switch($Type){
             case 'cate':
                 $Search[] = '{{qcms:'.$Pre.'Url}}';
@@ -1050,10 +1050,10 @@ class Controllers extends Base {
         $Compile = str_replace($Search, $Replace, $Html);
         return $Compile;
     }
-    
-    
+
+
     private function _getKv($Str){
-        preg_match_all("/([\w]*?)=\'([\w\W]*?)\'/i",$Str, $Matches); 
+        preg_match_all("/([\w]*?)=\'([\w\W]*?)\'/i",$Str, $Matches);
         if(empty($Matches[0])) return array();
         $Ret = array();
         for($i=0;$i<count($Matches[0]);$i++){
@@ -1061,21 +1061,21 @@ class Controllers extends Base {
         }
         return $Ret;
     }
-    
-    private function _getKv2If2($Str, $CondStr){ // if专用获取参数        
+
+    private function _getKv2If2($Str, $CondStr){ // if专用获取参数
         $Str = str_replace(' ', '', $Str);
         preg_match("/\'([\w\W]*?)\'".$CondStr."\'([\w\W]*?)\'/i",$Str, $Matches);
         if(empty($Matches[0])) return array();
         return array($Matches[1], $Matches[2]);
     }
-    
-    private function _getKv2If($Str, $CondStr){ // if专用获取参数        
+
+    private function _getKv2If($Str, $CondStr){ // if专用获取参数
         $Str = str_replace(' ', '', $Str);
-        preg_match("/\'([\w\W]*?)\'".$CondStr."\'([\w\W]*?)\'/i",$Str, $Matches); 
+        preg_match("/\'([\w\W]*?)\'".$CondStr."\'([\w\W]*?)\'/i",$Str, $Matches);
         if(empty($Matches[0])) return array();
         return array($Matches[1], $Matches[2]);
     }
-    
+
 }
 
 class ControllersAdmin extends Controllers {
@@ -1106,32 +1106,32 @@ class ControllersAdmin extends Controllers {
         'edit' => '修改',
         'del' => '删除',
     );
-    
+
     public $CategoryFieldArr = array(
-        'CateId', 
-        'PCateId', 
-        'TCateId', 
-        'Name', 
-        'Pic', 
-        'ModelId', 
-        'IsPost', 
-        'IsShow', 
-        'UserLevel', 
-        'IsLink', 
-        'LinkUrl', 
-        'TempList', 
-        'TempDetail', 
-        'SeoTitle', 
-        'Keywords', 
-        'Description', 
-        'Content', 
-        'IsCross', 
-        'Sort', 
-        'PinYin', 
-        'PY',         
-        'NameEn'        
+        'CateId',
+        'PCateId',
+        'TCateId',
+        'Name',
+        'Pic',
+        'ModelId',
+        'IsPost',
+        'IsShow',
+        'UserLevel',
+        'IsLink',
+        'LinkUrl',
+        'TempList',
+        'TempDetail',
+        'SeoTitle',
+        'Keywords',
+        'Description',
+        'Content',
+        'IsCross',
+        'Sort',
+        'PinYin',
+        'PY',
+        'NameEn'
     );
-    
+
     public $IsArr = array('1' => '是', 2 => '否');
     public $OpenArr = array('1' => '开启', 2 => '关闭');
     public $IsShowArr = array('1' => '显示', 2 => '隐藏');
@@ -1191,12 +1191,12 @@ class ControllersAdmin extends Controllers {
             'admin/sysField/index' => array('Name' => '系统变量管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sysField', 'index'))),
             'admin/sysField/add' => array('Name' => '添加系统变量', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sysField', 'add'))),
             'admin/sysField/del' => array('Name' => '删除系统变量', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sysField', 'del'))),
-            
+
             'admin/categoryField/index' => array('Name' => '分类字段管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'categoryField', 'index'))),
             'admin/categoryField/add' => array('Name' => '添加分类字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'categoryField', 'add'))),
             'admin/categoryField/edit' => array('Name' => '修改分类字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'categoryField', 'edit'))),
             'admin/categoryField/del' => array('Name' => '删除分类字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'categoryField', 'del'))),
-            
+
             // 分类管理
             'admin/category/index' => array('Name' => '分类管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'index'))),
             'admin/category/add' => array('Name' => '添加分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'add'))),
@@ -1229,7 +1229,7 @@ class ControllersAdmin extends Controllers {
             'admin/content/photos' => array('Name' => '照片管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'photos'))),
             'admin/content/photoDel' => array('Name' => '照片删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'photoDel'))),
             'admin/content/photoSort' => array('Name' => '照片排序', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'photoSort'))),
-            
+
             // 会员管理
             'admin/user/index' => array('Name' => '会员管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'user', 'index'))),
             'admin/user/add' => array('Name' => '添加会员', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'user', 'add'))),
@@ -1256,7 +1256,7 @@ class ControllersAdmin extends Controllers {
             'admin/inlink/add' => array('Name' => '添加内联', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'inlink', 'add'))),
             'admin/inlink/edit' => array('Name' => '修改内联', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'inlink', 'edit'))),
             'admin/inlink/del' => array('Name' => '删除内联', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'inlink', 'del'))),
-            
+
             'admin/swiperCate/index' => array('Name' => '幻灯片', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiperCate', 'index'))),
             'admin/swiperCate/add' => array('Name' => '添加幻灯片', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiperCate', 'add'))),
             'admin/swiperCate/edit' => array('Name' => '修改幻灯片', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiperCate', 'edit'))),
@@ -1268,18 +1268,18 @@ class ControllersAdmin extends Controllers {
             'admin/tag/index' => array('Name' => 'Tag管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'tag', 'index'))),
             'admin/tag/list' => array('Name' => 'Tag内容管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'tag', 'list'))),
             'admin/file/index' => array('Name' => '附件管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'file', 'index'))),
-            
+
             //数据维护
             'admin/model/index' => array('Name' => '模型管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'model', 'index'))),
             'admin/model/add' => array('Name' => '添加模型', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'model', 'add'))),
             'admin/model/edit' => array('Name' => '修改模型', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'model', 'edit'))),
             'admin/model/del' => array('Name' => '删除模型', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'model', 'del'))),
-            
+
             'admin/modelField/index' => array('Name' => '字段管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'modelField', 'index'))),
             'admin/modelField/add' => array('Name' => '添加字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'modelField', 'add'))),
             'admin/modelField/edit' => array('Name' => '修改字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'modelField', 'edit'))),
             'admin/modelField/del' => array('Name' => '删除字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'modelField', 'del'))),
-            
+
             'admin/form/index' => array('Name' => '自定义表单', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'form', 'index'))),
             'admin/form/add' => array('Name' => '添加自定义表单', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'form', 'add'))),
             'admin/form/edit' => array('Name' => '修改自定义表单', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'form', 'edit'))),
@@ -1289,25 +1289,25 @@ class ControllersAdmin extends Controllers {
             'admin/formField/add' => array('Name' => '添加字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'formField', 'add'))),
             'admin/formField/edit' => array('Name' => '修改字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'formField', 'edit'))),
             'admin/formField/del' => array('Name' => '删除字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'formField', 'del'))),
-            
+
             'admin/formData/index' => array('Name' => '表单数据管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'formData', 'index'))),
             //'admin/formData/add' => array('Name' => '添加字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'formField', 'add'))),
             'admin/formData/edit' => array('Name' => '修改表单数据', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'formData', 'edit'))),
             'admin/formData/del' => array('Name' => '删除表单数据', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'formData', 'del'))),
-            
+
             'admin/database/index' => array('Name' => '数据库管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'database', 'index'))),
             'admin/database/backups' => array('Name' => '数据库备份', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'database', 'backups'))),
             'admin/database/restore' => array('Name' => '数据库恢复', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'database', 'restore'))),
             'admin/database/del' => array('Name' => '数据库删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'database', 'del'))),
-            
+
             'admin/redisManage/index' => array('Name' => 'Redis管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'redisManage', 'index'))),
             'admin/redisManage/edit' => array('Name' => 'Redis修改', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'redisManage', 'edit'))),
             'admin/redisManage/del' => array('Name' => 'Redis删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'redisManage', 'del'))),
-            'admin/redisManage/empty' => array('Name' => 'Redis清空', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'redisManage', 'empty'))),            
-            
+            'admin/redisManage/empty' => array('Name' => 'Redis清空', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'redisManage', 'empty'))),
+
             'admin/data/replace' => array('Name' => '批量替换', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'data', 'replace'))),
             'admin/data/highReplace' => array('Name' => '高级替换', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'data', 'highReplace'))),
-            
+
             //模板管理
             'admin/templates/index' => array('Name' => '模板管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'index'))),
             'admin/templates/add' => array('Name' => '添加模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'add'))),
@@ -1352,13 +1352,13 @@ class ControllersAdmin extends Controllers {
             $Para = array('ModelId' => $v['ModelId']);
             foreach(array('index', 'add', 'edit', 'del') as $mv){
                 $Key = 'admin/content/'.$mv.'?'.http_build_query($Para);
-                if($mv == 'index') $RoleMenuArr[] = array('Key' => $Key);                
+                if($mv == 'index') $RoleMenuArr[] = array('Key' => $Key);
                 $this->MenuArr[$Key] = array('Name' => $v['Name'].$this->ModelKeyNameArr[$mv], 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', $mv)), 'Para' => array('ModelId' => $v['ModelId']));
-            }            
+            }
         }
         $this->RoleMenuArr = array(
             array('Key' => 'admin/index/index', 'subCont' => array('index'), 'Icon' => 'bi bi-house'),
-            
+
             array('Key' => 'admin/category', 'subCont' => array('category', 'page', 'pageCate', 'labelCate', 'label', 'form', 'formField', 'formData'), 'Icon' => 'bi bi-list-ol', 'Sub' => array(
                 array('Key' => 'admin/category/index'),
                 array('Key' => 'admin/page/index'),
@@ -1410,7 +1410,7 @@ class ControllersAdmin extends Controllers {
         $Url = implode('/', array($this->Module, Router::$s_Controller, Router::$s_Method));
         $Key = '';
         foreach($this->MenuArr as $k => $v){
-            
+
             if(strpos($k, $Url) === 0){
                 if(isset($v['Para'])){
                     $GetPara = array();
@@ -1423,8 +1423,8 @@ class ControllersAdmin extends Controllers {
         }
         //var_dump($Key);exit;
         if(!isset($this->MenuArr[$Key])) $this->Err(1056);
-        
-        $MenuRs = $this->MenuArr[$Key]; 
+
+        $MenuRs = $this->MenuArr[$Key];
         if($this->LoginUserRs['GroupAdminId'] != 1 && !in_array($Key, $this->PermissionArr)) $this->Err(1005);
         $this->PageTitle = $MenuRs['Name'];
         $this->PageTitle2 = $this->BuildObj->FormTitle($MenuRs['Name']);
@@ -1445,7 +1445,7 @@ class ControllersAdmin extends Controllers {
             $this->SysObj->cleanList();
         }
     }
-    
+
     public function getTemplate($Prefix = ''){
         $Files = scandir(PATH_TEMPLATE.$this->SysRs['TmpPath'].'/');
         $Template = array();
@@ -1457,7 +1457,7 @@ class ControllersAdmin extends Controllers {
         }
         return $Template;
     }
-    
+
     public function getTempFolder(){ // 获取模板文件夹
         $Files = scandir(PATH_TEMPLATE);
         $Folder = array();
@@ -1468,12 +1468,12 @@ class ControllersAdmin extends Controllers {
         }
         return $Folder;
     }
-    
+
     public function getLicense($LicenseStr){
         $pk = self::_pvKey();
         return $this->_sslDecrypt($LicenseStr, $pk, 'public');
     }
-    
+
     public function getKey(){
         $pk = self::_pvKey();
         $Token = $this->CookieObj->get('Token', 'User');
@@ -1481,7 +1481,7 @@ class ControllersAdmin extends Controllers {
         $key = $this->_sslEncrypt(json_encode($Rs) , $pk, 'public');
         return $key;
     }
-    
+
     public function setRedis($Host, $Password, $Port, $IsOpen){ //设置Redis服务接口
         $Ret = array('Code' => 0, 'Data' => array(), 'Msg' => '');
         $Extensions = get_loaded_extensions();
@@ -1520,67 +1520,67 @@ class ControllersAdmin extends Controllers {
         }
         return $Ret;
     }
-    
+
     public function apiRemotePlatform($ApiUrl, $ParaArr){ // 平台需登录接口
-        $Para = array_merge(array('Phone' => $this->SysRs['BindPhone'], 'Ts' => time()), $ParaArr);  
+        $Para = array_merge(array('Phone' => $this->SysRs['BindPhone'], 'Ts' => time()), $ParaArr);
         ksort($Para);
-        $Para['Sign'] = md5($this->CommonObj->HttpBuildQueryQ($Para).'|'.self::p_REMOTE_KEY);
-        $Json = $this->CurlObj->SetUrl(self::PLATFORM_URL.$ApiUrl)->SetDebug(false)->SetPara($Para)->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Para['Sign'] = md5($this->CommonObj->HttpBuildQueryQ($Para).'|'.$this->p_RemoteKey);
+        $Json = $this->CurlObj->SetUrl($this->PlatformUrl.$ApiUrl)->SetDebug(false)->SetPara($Para)->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
     }
-    
+
     public function loginPlatform($Phone, $Pwd){ // 绑定平台账户
         $Para = array('Phone' => $Phone, 'Pwd' => $Pwd);
-        $Json = $this->CurlObj->SetUrl(self::PLATFORM_URL.'api/login.html')->SetDebug(false)->SetPara($Para)->SetIsPost(true)->SetIsHttps(true)->SetIsJson(false)->Execute();
+        $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'api/login.html')->SetDebug(false)->SetPara($Para)->SetIsPost(true)->SetIsHttps(true)->SetIsJson(false)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
     }
-    
-    public function getTemplaites($Page, $PageNum, $CateId = 0){        
+
+    public function getTemplaites($Page, $PageNum, $CateId = 0){
         $Para = array('Domain' => URL_DOMAIN, 'Page' => $Page, 'PageNum' => $PageNum, 'CateId' => $CateId);
-        $Json = $this->CurlObj->SetUrl(self::PLATFORM_URL.'client/templates.html')->SetDebug(false)->SetPara($Para)->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/templates.html')->SetDebug(false)->SetPara($Para)->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
     }
-    
+
     public function getTemplaitesCate(){
-        $Json = $this->CurlObj->SetUrl(self::PLATFORM_URL.'client/templatesCate.html')->SetPara(array('Domain' => URL_DOMAIN))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/templatesCate.html')->SetPara(array('Domain' => URL_DOMAIN))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
     }
-    
+
     public function getVerUpdate(){
-        $Json = $this->CurlObj->SetUrl(self::PLATFORM_URL.'client/getUpdate.html')->SetPara(array('Domain' => URL_DOMAIN, 'Version' => $this->SysRs['Version']))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/getUpdate.html')->SetPara(array('Domain' => URL_DOMAIN, 'Version' => $this->SysRs['Version']))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
     }
-    
+
     /* public function getTemplateInfo($TemplatesId){ // 废弃
-        $Json = $this->CurlObj->SetUrl(self::PLATFORM_URL.'client/getTemplate.html')->SetPara(array('Domain' => URL_DOMAIN, 'TemplatesId' => $TemplatesId, 'License' => $this->SysRs['License']))->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/getTemplate.html')->SetPara(array('Domain' => URL_DOMAIN, 'TemplatesId' => $TemplatesId, 'License' => $this->SysRs['License']))->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
     } */
-    
+
     private function _getUpdate(){
         $pTime = $this->CookieObj->get('UpdateTs', 'User');
-        if(empty($pTime) || time() - $pTime > 3600){     
+        if(empty($pTime) || time() - $pTime > 3600){
             $Ret = self::getVerUpdate();
             $IsUpdate = empty($Ret['Data']) ? 2 : 1;
             $this->CookieObj->set(array('UpdateTs' => time(), 'IsUpdate' => $IsUpdate), 'User');
         }
     }
-    
+
     private function _postKey(){
         $pTime = $this->CookieObj->get('Ts', 'User');
-        if(empty($pTime) || time() - $pTime > 3600){            
+        if(empty($pTime) || time() - $pTime > 3600){
             $key = self::getKey();
-            $this->CurlObj->SetUrl(self::PLATFORM_URL.'client/updata.html')->SetPara(array('Key' => $key, 'Domain' => $_SERVER['REQUEST_SCHEME'].'://'.URL_DOMAIN.'/'))->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
+            $this->CurlObj->SetUrl($this->PlatformUrl.'client/updata.html')->SetPara(array('Key' => $key, 'Domain' => $_SERVER['REQUEST_SCHEME'].'://'.URL_DOMAIN.'/'))->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
             $this->CookieObj->set(array('Ts' => time()), 'User');
         }
-        
+
     }
-    
+
     private function _pvKey(){
         return '-----BEGIN PUBLIC KEY-----
 MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA0rwpQg7QurxLuMP3knkD
@@ -1592,7 +1592,7 @@ R6LXQzX/zL3NwvCd/hiT0XgdYW6rGH3qYL36d44Hziw/2PWC7psfZ3TrUwFzYRmg
 oQIDAQAB
 -----END PUBLIC KEY-----';
     }
-    
+
     private function _sslEncrypt($Data, $Key, $Type = 'private', $ReturnType = 'base64') { // $Type: private, public
         if($Type == 'private'){
             $Ret = openssl_private_encrypt($Data, $encrypted, $Key);
@@ -1611,8 +1611,8 @@ oQIDAQAB
         }
         return $encrypted;
     }
-    
-    function __destruct(){       
+
+    function __destruct(){
         if($this->SysRs['OpenLog'] == 1){
             $this->Log_operateObj->SetInsert(array(
                 'UserId' => $this->LoginUserRs['UserId'],
@@ -1627,7 +1627,7 @@ oQIDAQAB
 
 }
 class ControllersUser extends Base {
-    
+
 }
 
 class ControllersApi extends Base {
@@ -1635,7 +1635,7 @@ class ControllersApi extends Base {
     public $ModelKv = array();
     function __construct(){
         parent::__construct();
-        $this->SysRs = $this->SysObj->getKv();        
+        $this->SysRs = $this->SysObj->getKv();
         $ModelArr = $this->Sys_modelObj->getList();
         foreach($ModelArr as $v){
             $this->ModelKv[$v['KeyName']] = $v;
@@ -1644,7 +1644,7 @@ class ControllersApi extends Base {
 }
 
 class ControllersInstall extends Base {
-    
+
     public function __construct(){
         $this->CodeObj = \Helper\Code::get_instance();
         $this->BuildObj = \Helper\Build::get_instance();
@@ -1655,6 +1655,6 @@ class ControllersInstall extends Base {
         $this->UploadObj = \Helper\Upload::get_instance();
         $this->LanguageArr = require_once PATH_LIB .'Language/Cn/Error'.EXTEND;
     }
-    
+
 }
 ?>
