@@ -1,5 +1,5 @@
-﻿# Host: localhost  (Version 5.7.26)
-# Date: 2024-03-21 19:14:30
+﻿# Host: localhost  (Version 5.5.62-log)
+# Date: 2024-11-01 15:25:56
 # Generator: MySQL-Front 6.1  (Build 1.26)
 
 
@@ -58,7 +58,7 @@ CREATE TABLE `qc_file` (
   `RandKey` varchar(50) NOT NULL DEFAULT '' COMMENT '随机串',
   `IsDel` tinyint(3) NOT NULL DEFAULT '2',
   PRIMARY KEY (`FileId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=243 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "qc_file"
@@ -80,7 +80,7 @@ CREATE TABLE `qc_form_form1` (
   `Phone` varchar(255) NOT NULL DEFAULT '' COMMENT '电话',
   `Message` text NOT NULL COMMENT '留言',
   PRIMARY KEY (`FormListId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=3 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 #
 # Data for table "qc_form_form1"
@@ -260,13 +260,13 @@ CREATE TABLE `qc_log_login` (
   `Ts` bigint(20) NOT NULL DEFAULT '0',
   `Ip` varchar(20) NOT NULL DEFAULT '',
   PRIMARY KEY (`LogLoginId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "qc_log_login"
 #
 
-INSERT INTO `qc_log_login` VALUES (1,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36',1649843330,'127.0.0.1'),(2,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.75 Safari/537.36',1649931302,'127.0.0.1'),(3,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36',1651496170,'127.0.0.1'),(4,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36',1651979296,'127.0.0.1'),(5,3,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36',1652087629,'127.0.0.1'),(6,4,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/101.0.4951.54 Safari/537.36',1652334410,'127.0.0.1'),(7,5,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/121.0.0.0 Safari/537.36',1708654492,'127.0.0.1'),(8,6,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36',1711016956,'127.0.0.1');
+INSERT INTO `qc_log_login` VALUES (1,1,'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0.0.0 Safari/537.36 Edg/130.0.0.0',1730445414,'127.0.0.1');
 
 #
 # Structure for table "qc_log_operate"
@@ -390,7 +390,6 @@ CREATE TABLE `qc_stat_flow` (
 # Data for table "qc_stat_flow"
 #
 
-INSERT INTO `qc_stat_flow` VALUES ('2024-03-21',40);
 
 #
 # Structure for table "qc_swiper"
@@ -453,7 +452,7 @@ CREATE TABLE `qc_sys` (
 # Data for table "qc_sys"
 #
 
-INSERT INTO `qc_sys` VALUES ('AllowAdminSpace','允许访问管理员空间','1',9,'radio',2006,1),('AllowReg','是否允许注册','1',9,'radio',2001,1),('AllowUploadType','允许上传类型','jpg|jpeg|gif|png|webp|bmp|svg',3,'input',3000,1),('AuditMode','会员注册自动审核','1',9,'radio',2008,1),('CdnHost','Cdn地址','http://www.baidu.com/',3,'input',3013,1),('CdnIsOpen','是否开启CDN','2',3,'radio',3012,1),('Copyright','版权信息','©CopyRight 2002-2022 Q-cms.Cn, All Rights Reserved。',1,'textarea',1009,1),('Description','SEO简介','QCMS网站管理系统',1,'input',1008,1),('Editor','富文本编辑器','ckeditor',2,'select',2011,1),('Email','站长邮箱','admin@admin.com',1,'input',1004,1),('Icp','备案号','沪ICP备08080808号',1,'input',1005,1),('ImgViewType','图片浏览类型','jpg|gif|png',3,'input',3001,1),('IsOpenInLink','是否开启内链','2',2,'radio',2001,1),('Keywords','SEO关键字','QCMS网站管理系统',1,'input',1007,1),('License','授权码','',9,'input',9002,1),('Logo','网站Logo','/Static/images/logo.png',1,'upload',1001,1),('MultistationIsOpen','开启站点管理','1',4,'radio',4001,1),('NotAllowReg','不允许注册名','www,bbs,ftp,mail,user,users,admin,administrator,qcms',9,'input',2005,1),('OpenLog','开启日志','2',2,'radio',2014,1),('OpenRecycle','开启回收站','1',9,'radio',2013,1),('OpenRegDetails','注册需要完成详细资料','2',9,'radio',2002,1),('RegLenMax','注册最大长度','',9,'input',2004,1),('RegLenMin','注册最小长度','',9,'input',2003,1),('Secret','站点秘钥(用于多站点管理和接口API)','123456',4,'input',4002,1),('StatsCode','统计代码','<script type=\"text/javascript\">document.write(unescape(\"%3Cspan id=\'cnzz_stat_icon_1281045441\'%3E%3C/span%3E%3Cscript src=\'https://v1.cnzz.com/stat.php%3Fid%3D1281045441%26show%3Dpic\' type=\'text/javascript\'%3E%3C/script%3E\"));</script>',2,'textarea',2012,1),('ThumbSize','允许缩略图尺寸(240x180|360x120)','240x180',3,'input',3003,1),('TmpIndex','首页模板','index_main.html',1,'select',1002,1),('TmpPath','模板路径','default',2,'select',2010,1),('TmpPathMobile','手机模板路径','',2,'select',2010,1),('TmpSearch','搜索页模板','search_default.html',1,'select',1003,1),('UrlDetail','详情地址命名规则','{Id}.html',2,'input',2061,1),('UrlForm','表单地址命名规则','{KeyName}.html',9,'input',2063,1),('UrlList','分类地址命名规则','list_{CateId}.html',2,'input',2060,1),('UrlListPage','分类分页地址命名规则','list_{CateId}_{Page}.html',2,'input',2060,1),('UrlPage','单页地址命名规则','page_{PageId}.html',2,'input',2062,1),('Version','版本号','6.0.4',9,'input',9001,1),('WaBeian','网安备案号','',1,'input',1006,1),('WaterMaskFontColor','水印文字颜色','0,0,0',3,'input',3009,1),('WaterMaskFontOpacity','水印透明度','50',3,'input',3010,1),('WaterMaskFontSize','水印文字大小','20',3,'input',3008,1),('WaterMaskIsOpen','是否开启水印','2',3,'radio',3004,1),('WaterMaskPic','水印图片','',3,'upload',3006,1),('WaterMaskPostion','水印位置','5',3,'select',3011,1),('WaterMaskTxt','水印文字','www.q-cms.cn',3,'input',3007,1),('WaterMaskType','水印图片类型','2',3,'radio',3005,1),('WebName','网站名字','QCMS网站管理系统',1,'input',1000,1),('WebOpen','开启网站','1',1,'radio',1010,1);
+INSERT INTO `qc_sys` VALUES ('AllowAdminSpace','允许访问管理员空间','1',9,'radio',9006,1),('AllowReg','是否允许注册','1',9,'radio',9003,1),('AllowUploadType','允许上传类型','jpg|jpeg|gif|png|webp|bmp|svg',3,'input',3000,1),('AuditMode','会员注册自动审核','1',9,'radio',9008,1),('BindPhone','绑定平台账号','',9,'input',9006,1),('CdnHost','Cdn地址','http://www.baidu.com/',3,'input',3013,1),('CdnIsOpen','是否开启CDN','2',3,'radio',3012,1),('Copyright','版权信息','©CopyRight 2002-2022 Q-cms.Cn, All Rights Reserved。',1,'textarea',1009,1),('Description','SEO简介','QCMS网站管理系统',1,'input',1008,1),('Editor','富文本编辑器','ckeditor',2,'select',2011,1),('Email','站长邮箱','admin@admin.com',1,'input',1004,1),('Icp','备案号','沪ICP备08080808号',1,'input',1005,1),('ImgViewType','图片浏览类型','jpg|gif|png',3,'input',3001,1),('IsOpenInLink','是否开启内链','2',2,'radio',2001,1),('Keywords','SEO关键字','QCMS网站管理系统',1,'input',1007,1),('License','授权码','',9,'input',9002,1),('Logo','网站Logo','/Static/images/logo.png',1,'upload',1001,1),('MultistationIsOpen','开启站点管理','1',4,'radio',4001,1),('NotAllowReg','不允许注册名','www,bbs,ftp,mail,user,users,admin,administrator,qcms',9,'input',9005,1),('OpenLog','开启日志','2',2,'radio',2014,1),('OpenRecycle','开启回收站','1',9,'radio',9013,1),('OpenRegDetails','注册需要完成详细资料','2',9,'radio',9002,1),('RegLenMax','注册最大长度','',9,'input',9004,1),('RegLenMin','注册最小长度','',9,'input',9003,1),('Secret','站点秘钥(用于多站点管理和接口API)','123456',4,'input',4002,1),('StatsCode','统计代码','<script type=\"text/javascript\">document.write(unescape(\"%3Cspan id=\'cnzz_stat_icon_1281045441\'%3E%3C/span%3E%3Cscript src=\'https://v1.cnzz.com/stat.php%3Fid%3D1281045441%26show%3Dpic\' type=\'text/javascript\'%3E%3C/script%3E\"));</script>',2,'textarea',2012,1),('ThumbSize','允许缩略图尺寸(240x180|360x120)','240x180',3,'input',3003,1),('TmpIndex','首页模板','index_main.html',1,'select',1002,1),('TmpPath','模板路径','default',2,'select',2010,1),('TmpPathMobile','手机模板路径','',2,'select',2010,1),('TmpSearch','搜索页模板','search_default.html',1,'select',1003,1),('UrlDetail','详情地址命名规则','{Id}.html',2,'input',2061,1),('UrlForm','表单地址命名规则','{KeyName}.html',9,'input',9063,1),('UrlList','分类地址命名规则','list_{CateId}.html',2,'input',2060,1),('UrlListPage','分类分页地址命名规则','list_{CateId}_{Page}.html',2,'input',2060,1),('UrlPage','单页地址命名规则','page_{PageId}.html',2,'input',2062,1),('Version','版本号','6.0.5',9,'input',9001,1),('WaBeian','网安备案号','',1,'input',1006,1),('WaterMaskFontColor','水印文字颜色','0,0,0',3,'input',3009,1),('WaterMaskFontOpacity','水印透明度','50',3,'input',3010,1),('WaterMaskFontSize','水印文字大小','20',3,'input',3008,1),('WaterMaskIsOpen','是否开启水印','2',3,'radio',3004,1),('WaterMaskPic','水印图片','',3,'upload',3006,1),('WaterMaskPostion','水印位置','5',3,'select',3011,1),('WaterMaskTxt','水印文字','www.q-cms.cn',3,'input',3007,1),('WaterMaskType','水印图片类型','2',3,'radio',3005,1),('WebName','网站名字','QCMS网站管理系统',1,'input',1000,1),('WebOpen','开启网站','1',1,'radio',1010,1);
 
 #
 # Structure for table "qc_sys_attr"
@@ -815,7 +814,7 @@ CREATE TABLE `qc_token` (
 # Data for table "qc_token"
 #
 
-INSERT INTO `qc_token` VALUES ('084a0b9aa24834c95dcf0210c61f32c196d2d37f',5,'Web',1708654492,0),('0a79cdb12139517203d837026bb40c6172299ec2',3,'Web',1652087629,0),('6cc2cf7c1b00618b22c1d92b7c0f3794559e6d82',1,'Web',1651979296,0),('cc6c65b957dfdccc2d0c927d721c1f22442d4951',6,'Web',1711016956,0),('d8285375ecbcc187ef65d43f91885df3b1623bfd',4,'Web',1652334410,0);
+INSERT INTO `qc_token` VALUES ('c2be77b6af376962f45bcc844246996d586a8dbc',1,'Web',1730445414,0);
 
 #
 # Structure for table "qc_user"
@@ -844,10 +843,9 @@ CREATE TABLE `qc_user` (
   `TsLast` bigint(20) NOT NULL DEFAULT '0',
   `IpLast` varchar(16) NOT NULL DEFAULT '',
   PRIMARY KEY (`UserId`) USING BTREE
-) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
 
 #
 # Data for table "qc_user"
 #
 
-INSERT INTO `qc_user` VALUES (6,18888888888,'管理员','','e10adc3949ba59abbe56e057f20f883e','','',1,'',2,0.00,0,1,1711016912,'127.0.0.1',1,1,1,1711016956,'127.0.0.1');
