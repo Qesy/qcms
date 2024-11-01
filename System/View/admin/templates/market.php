@@ -172,7 +172,7 @@
         var TemplateArr = <?=json_encode($Arr)?>;
         var TempFolder = <?=json_encode($TempFolder)?>;
         var SelectIndex = -1;
-        var PlatformUrl = '<?=$PlatformUrl?>';
+        var PlatformUrl = '<?=$this->PlatformUrl?>';
         $(function(){
             $('.UnBindBtn').click(function(){
                 $.get('/admin/api/ajaxUnBind', {}, function(Res){

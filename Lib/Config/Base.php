@@ -145,6 +145,8 @@ abstract class Base {
 	    'PY',
 	    'Summary',
 	);
+	
+	public $PlatformUrl = (WEB_MODE == 'Dev') ? 'https://q-cms.demo.com/' : 'https://www.q-cms.cn/';
 	function __construct() {
 	    $this->CodeObj = Code::get_instance();
 	    $this->BuildObj = Build::get_instance();
