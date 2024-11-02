@@ -282,15 +282,15 @@ class Api extends ControllersAdmin {
         
         $UnZipRet = $this->CommonObj->UnZip($Path.$FileName, $CmsUpdatePath); // 解压并把文件COPY到对应目录
         if($UnZipRet === false) $this->ApiErr(1018); 
-        $CopyRet = $this->CommonObj->DirCopy($CmsUpdatePath.'/'.$Ret['Data']['Name'].'/Template', './Template');
-        $CopyRet2 = $this->CommonObj->DirCopy($CmsUpdatePath.'/'.$Ret['Data']['Name'].'/Static', './Static');
-        if(file_exists($CmsUpdatePath.'/'.$Ret['Data']['Name'].'/Root')){ // 特殊上传文件
-            $this->CommonObj->DirCopy($CmsUpdatePath.'/'.$Ret['Data']['Name'].'/Root', './');
+        $CopyRet = $this->CommonObj->DirCopy($CmsUpdatePath.'/Template', './Template');
+        $CopyRet2 = $this->CommonObj->DirCopy($CmsUpdatePath.'/Static', './Static');
+        if(file_exists($CmsUpdatePath.'/Root')){ // 特殊上传文件
+            $this->CommonObj->DirCopy($CmsUpdatePath.'/Root', './');
         }
         if($CopyRet === false || $CopyRet2 === false) $this->ApiErr(1019);
         
         $DbConfig = Config::DbConfig();
-        $InitPath = $CmsUpdatePath.'/'.$Ret['Data']['Name'].'/Data/init.json'; // 数据结构字段增加（模型字段添加）
+        $InitPath = $CmsUpdatePath.'/Data/init.json'; // 数据结构字段增加（模型字段添加）
         if(file_exists($InitPath)){ 
             $Json = file_get_contents($InitPath);
             $JsonArr = empty($Json) ? array() : json_decode($Json, true);
@@ -313,7 +313,7 @@ class Api extends ControllersAdmin {
             }
             
         }
-        $SqlPath = $CmsUpdatePath.'/'.$Ret['Data']['Name'].'/Data/data.sql'; // 刷新数据库数据
+        $SqlPath = $CmsUpdatePath.'/Data/data.sql'; // 刷新数据库数据
         if(file_exists($SqlPath)){
             try{
                 DB::$s_db_obj->beginTransaction();
