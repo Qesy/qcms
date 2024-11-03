@@ -7,7 +7,8 @@ class Upgrade{
         $SysObj = QC_Sys::get_instance();         
         $SysObj->SetTable("qc_sys")->SetInsert(array('Name' => 'BindPhone', 'Info' => 'BindPhone', 'AttrValue' => '', 'GroupId' => '9', 'AttrType' => 'input', 'Sort' => '9006', 'IsSys' => '1'))->ExecInsert();       
         // 调整数据库字段类型
-        $DbConfig = Config::DbConfig();	    
+        $DbConfig = Config::DbConfig();	   
+        $SysObj->exec("ALTER TABLE `".$DbConfig['Prefix']."swiper` MODIFY COLUMN `Summary` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' AFTER `Sort`;", array());
         $SysObj->exec("ALTER TABLE `".$DbConfig['Prefix']."file` MODIFY COLUMN `Img` varchar(255) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' AFTER `Name`;", array());
         $SysObj->exec("ALTER TABLE `".$DbConfig['Prefix']."file` MODIFY COLUMN `Ext` varchar(10) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '' AFTER `Size`;", array());
         $SysObj->exec("ALTER TABLE `".$DbConfig['Prefix']."label` MODIFY COLUMN `LabelCateId` int(11) NOT NULL DEFAULT 0 AFTER `LabelId`;", array());
