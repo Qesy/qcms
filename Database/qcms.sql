@@ -1,5 +1,5 @@
 ﻿# Host: localhost  (Version 5.5.62-log)
-# Date: 2024-11-01 15:25:56
+# Date: 2024-11-03 20:28:21
 # Generator: MySQL-Front 6.1  (Build 1.26)
 
 
@@ -49,9 +49,9 @@ CREATE TABLE `qc_file` (
   `FileId` int(11) NOT NULL AUTO_INCREMENT,
   `UserId` bigint(20) NOT NULL DEFAULT '0',
   `Name` varchar(100) NOT NULL DEFAULT '' COMMENT '上传文件名',
-  `Img` varchar(255) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT NULL,
+  `Img` varchar(255) NOT NULL DEFAULT '',
   `Size` int(11) NOT NULL DEFAULT '0',
-  `Ext` varchar(10) CHARACTER SET utf8 COLLATE utf8_unicode_ci DEFAULT '',
+  `Ext` varchar(10) NOT NULL DEFAULT '',
   `Ts` int(11) NOT NULL DEFAULT '0',
   `FType` tinyint(3) NOT NULL DEFAULT '-1' COMMENT '1系统2内容',
   `IndexId` bigint(20) NOT NULL DEFAULT '-1' COMMENT '内容ID -1未知',
@@ -170,7 +170,7 @@ INSERT INTO `qc_inlink_cate` VALUES (1,'系统默认',99);
 DROP TABLE IF EXISTS `qc_label`;
 CREATE TABLE `qc_label` (
   `LabelId` int(11) NOT NULL AUTO_INCREMENT,
-  `LabelCateId` int(11) NOT NULL,
+  `LabelCateId` int(11) NOT NULL DEFAULT '0',
   `Name` varchar(50) NOT NULL DEFAULT '',
   `KeyName` varchar(50) NOT NULL DEFAULT '',
   `Content` text NOT NULL,
@@ -215,11 +215,11 @@ CREATE TABLE `qc_link` (
   `Logo` varchar(255) NOT NULL DEFAULT '' COMMENT '图片',
   `Link` varchar(255) NOT NULL DEFAULT '',
   `Sort` int(11) NOT NULL DEFAULT '99',
-  `Info` varchar(255) DEFAULT NULL,
+  `Info` varchar(255) NOT NULL DEFAULT '',
   `Mail` varchar(50) NOT NULL DEFAULT '' COMMENT '站长邮箱',
   `IsIndex` tinyint(3) NOT NULL DEFAULT '1' COMMENT '是否首页',
   `State` tinyint(3) NOT NULL DEFAULT '1' COMMENT '状态',
-  `LinkCateId` int(11) NOT NULL,
+  `LinkCateId` int(11) NOT NULL DEFAULT '0',
   `TsAdd` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`LinkId`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=14 DEFAULT CHARSET=utf8;
@@ -255,7 +255,7 @@ INSERT INTO `qc_link_cate` VALUES (1,'默认分类',99);
 DROP TABLE IF EXISTS `qc_log_login`;
 CREATE TABLE `qc_log_login` (
   `LogLoginId` bigint(20) NOT NULL AUTO_INCREMENT,
-  `UserId` bigint(20) NOT NULL,
+  `UserId` bigint(20) NOT NULL DEFAULT '0',
   `Ua` varchar(255) NOT NULL DEFAULT '',
   `Ts` bigint(20) NOT NULL DEFAULT '0',
   `Ip` varchar(20) NOT NULL DEFAULT '',
@@ -278,11 +278,9 @@ CREATE TABLE `qc_log_operate` (
   `UserId` bigint(20) NOT NULL DEFAULT '0',
   `Url` varchar(255) NOT NULL DEFAULT '',
   `Method` varchar(10) NOT NULL DEFAULT '',
-  `Query` varchar(255) DEFAULT '',
+  `Query` varchar(255) NOT NULL DEFAULT '',
   `Ip` varchar(16) NOT NULL DEFAULT '',
   `Ts` bigint(20) NOT NULL DEFAULT '0',
-  `vv` decimal(10,2) DEFAULT '0.00',
-  `ff` text NOT NULL,
   PRIMARY KEY (`LogOperateId`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -403,7 +401,7 @@ CREATE TABLE `qc_swiper` (
   `Title` varchar(100) NOT NULL DEFAULT '',
   `Link` varchar(255) NOT NULL DEFAULT '',
   `Sort` int(11) NOT NULL DEFAULT '99',
-  `Summary` varchar(255) NOT NULL,
+  `Summary` varchar(255) NOT NULL DEFAULT '',
   PRIMARY KEY (`SwiperId`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=7 DEFAULT CHARSET=utf8;
 
@@ -561,7 +559,7 @@ CREATE TABLE `qc_table_album` (
   `Good` int(11) NOT NULL DEFAULT '0',
   `Bad` int(11) NOT NULL DEFAULT '0',
   `State` tinyint(3) NOT NULL DEFAULT '1',
-  `Content` text,
+  `Content` text NOT NULL,
   `IsLink` tinyint(3) NOT NULL DEFAULT '2',
   `LinkUrl` varchar(255) NOT NULL DEFAULT '' COMMENT '外链地址',
   `IsBold` tinyint(3) NOT NULL DEFAULT '2',
@@ -573,7 +571,7 @@ CREATE TABLE `qc_table_album` (
   `IsDelete` tinyint(3) NOT NULL DEFAULT '2' COMMENT '是否删除',
   `PinYin` varchar(255) NOT NULL DEFAULT '',
   `PY` varchar(255) NOT NULL DEFAULT '',
-  `Summary` varchar(255) DEFAULT '' COMMENT '摘要',
+  `Summary` varchar(255) NOT NULL DEFAULT '' COMMENT '摘要',
   `DownNum` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`Id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -613,7 +611,7 @@ CREATE TABLE `qc_table_article` (
   `Good` int(11) NOT NULL DEFAULT '0',
   `Bad` int(11) NOT NULL DEFAULT '0',
   `State` tinyint(3) NOT NULL DEFAULT '1',
-  `Content` text,
+  `Content` text NOT NULL,
   `IsLink` tinyint(3) NOT NULL DEFAULT '2',
   `LinkUrl` varchar(255) NOT NULL DEFAULT '' COMMENT '外链地址',
   `IsBold` tinyint(3) NOT NULL DEFAULT '2',
@@ -625,7 +623,7 @@ CREATE TABLE `qc_table_article` (
   `IsDelete` tinyint(3) NOT NULL DEFAULT '2' COMMENT '是否删除',
   `PinYin` varchar(255) NOT NULL DEFAULT '',
   `PY` varchar(255) NOT NULL DEFAULT '',
-  `Summary` varchar(255) DEFAULT '' COMMENT '摘要',
+  `Summary` varchar(255) NOT NULL DEFAULT '' COMMENT '摘要',
   `DownNum` int(11) NOT NULL DEFAULT '0',
   PRIMARY KEY (`Id`) USING BTREE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -665,7 +663,7 @@ CREATE TABLE `qc_table_down` (
   `Good` int(11) NOT NULL DEFAULT '0',
   `Bad` int(11) NOT NULL DEFAULT '0',
   `State` tinyint(3) NOT NULL DEFAULT '1',
-  `Content` text,
+  `Content` text NOT NULL,
   `IsLink` tinyint(3) NOT NULL DEFAULT '2',
   `LinkUrl` varchar(255) NOT NULL DEFAULT '' COMMENT '外链地址',
   `IsBold` tinyint(3) NOT NULL DEFAULT '2',
@@ -677,7 +675,7 @@ CREATE TABLE `qc_table_down` (
   `IsDelete` tinyint(3) NOT NULL DEFAULT '2' COMMENT '是否删除',
   `PinYin` varchar(255) NOT NULL DEFAULT '',
   `PY` varchar(255) NOT NULL DEFAULT '',
-  `Summary` varchar(255) DEFAULT '' COMMENT '摘要',
+  `Summary` varchar(255) NOT NULL DEFAULT '' COMMENT '摘要',
   `Size` varchar(255) NOT NULL DEFAULT '' COMMENT '软件大小',
   `Lang` varchar(255) NOT NULL DEFAULT '' COMMENT '软件语言',
   `Level` varchar(255) NOT NULL DEFAULT '' COMMENT '软件评级',
@@ -725,7 +723,7 @@ CREATE TABLE `qc_table_product` (
   `Good` int(11) NOT NULL DEFAULT '0',
   `Bad` int(11) NOT NULL DEFAULT '0',
   `State` tinyint(3) NOT NULL DEFAULT '1',
-  `Content` text,
+  `Content` text NOT NULL,
   `IsLink` tinyint(3) NOT NULL DEFAULT '2',
   `LinkUrl` varchar(255) NOT NULL DEFAULT '' COMMENT '外链地址',
   `IsBold` tinyint(3) NOT NULL DEFAULT '2',
@@ -737,7 +735,7 @@ CREATE TABLE `qc_table_product` (
   `IsDelete` tinyint(3) NOT NULL DEFAULT '2' COMMENT '是否删除',
   `PinYin` varchar(255) NOT NULL DEFAULT '',
   `PY` varchar(255) NOT NULL DEFAULT '',
-  `Summary` varchar(255) DEFAULT '' COMMENT '摘要',
+  `Summary` varchar(255) NOT NULL DEFAULT '' COMMENT '摘要',
   `factory` varchar(255) NOT NULL DEFAULT '' COMMENT '厂商',
   `level` varchar(255) NOT NULL DEFAULT '' COMMENT '级别',
   `energy` varchar(255) NOT NULL DEFAULT '' COMMENT '能源类型',
@@ -844,8 +842,3 @@ CREATE TABLE `qc_user` (
   `IpLast` varchar(16) NOT NULL DEFAULT '',
   PRIMARY KEY (`UserId`) USING BTREE
 ) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
-
-#
-# Data for table "qc_user"
-#
-
