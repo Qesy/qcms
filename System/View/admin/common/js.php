@@ -1,12 +1,11 @@
 <?
 $this->CommonObj->loadScripts(array(
+    'jquery-3.3.1.min',
+    'bootstrap.bundle.min',
     'ajaxupload',
-    'popper.min',
 ), true);
 ?>
-<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js" type="application/javascript"></script>
-<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/4.6.1/js/bootstrap.min.js" type="application/javascript"></script>
-<link href="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap-icons/1.8.1/font/bootstrap-icons.min.css" type="text/css" rel="stylesheet" />
+<script src="https://lf1-cdn-tos.bytegoofy.com/obj/iconpark/icons_29154_49.cbeba74a2aeddb9d0bfd48059bffe0e1.js"></script>
 <script src="<?=URL_BOOT?>js/jasny-bootstrap.min.js"></script>
 <script src="<?=URL_BOOT?>js/jquery.slimscroll.js"></script>
 <script src="<?=URL_BOOT?>js/bootstrap-colorpicker.min.js"></script>

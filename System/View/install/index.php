@@ -2,13 +2,8 @@
 <html lang="zh">
 
 <head>
-    <title>
-       QCMS V<?=VERSION?> 安装
-
-    </title>
-    <link href="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/4.6.1/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-    <link href="<?=URL_BOOT?>css/style-init.css" rel="stylesheet" type="text/css">
-
+    <title>QCMS V<?=VERSION?> 安装</title>
+    <? $this->LoadView('index/meta'); ?>
 </head>
 
 <body class="d-flex align-items-center" style="height: 100vh;">

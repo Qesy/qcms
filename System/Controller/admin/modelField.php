@@ -10,8 +10,8 @@ class ModelField extends ControllersAdmin {
         $Arr = empty($Rs['FieldJson']) ? array() : json_decode($Rs['FieldJson'], true);
         foreach($Arr as $k => $v){
             $Arr[$k]['Index'] = $k;
-            $Arr[$k]['NotNullView'] = ($v['NotNull'] == 1) ? '<i class="bi bi-check-lg text-success h5"></i>' : '<i class="bi bi-x-lg text-danger h5"></i>';
-            $Arr[$k]['IsList'] = ($v['IsList'] == 1) ? '<i class="bi bi-check-lg text-success h5"></i>' : '<i class="bi bi-x-lg text-danger h5"></i>';
+            $Arr[$k]['NotNullView'] = ($v['NotNull'] == 1) ? '<iconpark-icon size="1.2rem" name="check" class="text-success"></iconpark-icon>' : '<iconpark-icon size="1.2rem" name="close" class="text-danger"></iconpark-icon>';
+            $Arr[$k]['IsList'] = ($v['IsList'] == 1) ? '<iconpark-icon size="1.2rem" name="check" class="text-success"></iconpark-icon>' : '<iconpark-icon size="1.2rem" name="close" class="text-danger"></iconpark-icon>';
         }
         $this->PageTitle2 = $this->BuildObj->FormTitle($Rs['Name'].'字段管理');
         $KeyArr = array(
@@ -88,18 +88,18 @@ class ModelField extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Comment'))) $this->Err(1001);
             $AddField = array(
-                'Name' => trim($FieldRs['Name']), 
-                'Comment' => trim($_POST['Comment']), 
-                'Type' => trim($FieldRs['Type']), 
-                'Content' => trim($_POST['Content']), 
-                'NotNull' => $_POST['NotNull'], 
-                'IsList' => $_POST['IsList'], 
-                'Data' => trim($_POST['Data']),                
+                'Name' => trim($FieldRs['Name']),
+                'Comment' => trim($_POST['Comment']),
+                'Type' => trim($FieldRs['Type']),
+                'Content' => trim($_POST['Content']),
+                'NotNull' => $_POST['NotNull'],
+                'IsList' => $_POST['IsList'],
+                'Data' => trim($_POST['Data']),
             );
             $Arr[$Index] = $AddField;
-            
+
             list($FieldType, $FieldDefault) = $this->Sys_modelObj->GetField($AddField['Type']);
-            
+
             try{
                 DB::$s_db_obj->beginTransaction();
                 $this->Sys_modelObj->SetCond(array('ModelId' => $Rs['ModelId']))->SetUpdate(array('FieldJson' => json_encode($Arr)))->ExecUpdate();

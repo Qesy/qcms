@@ -1,14 +1,14 @@
 <?php
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class CategoryField extends ControllersAdmin {
-    
+
     public function index_Action(){
         if(!isset($this->SysRs['CategoryFieldJson'])) {
             $this->SysObj->SetInsert(array(
                 'Name' => 'CategoryFieldJson',
                 'Info' => '分类字段管理',
                 'AttrValue' => json_encode(array()),
-                'GroupId' => 9, 
+                'GroupId' => 9,
                 'AttrType' => 'textarea',
                 'Sort' => 99,
                 'IsSys' => 1,
@@ -19,8 +19,8 @@ class CategoryField extends ControllersAdmin {
         $Arr = json_decode($this->SysRs['CategoryFieldJson'], true);
         foreach($Arr as $k => $v){
             $Arr[$k]['Index'] = $k;
-            $Arr[$k]['NotNullView'] = ($v['NotNull'] == 1) ? '<i class="bi bi-check-lg text-success h5"></i>' : '<i class="bi bi-x-lg text-danger h5"></i>';
-            $Arr[$k]['IsList'] = ($v['IsList'] == 1) ? '<i class="bi bi-check-lg text-success h5"></i>' : '<i class="bi bi-x-lg text-danger h5"></i>';
+            $Arr[$k]['NotNullView'] = ($v['NotNull'] == 1) ? '<iconpark-icon size="1.2rem" name="check" class="text-success"></iconpark-icon>' : '<iconpark-icon size="1.2rem" name="close" class="text-danger"></iconpark-icon>';
+            $Arr[$k]['IsList'] = ($v['IsList'] == 1) ? '<iconpark-icon size="1.2rem" name="check" class="text-success"></iconpark-icon>' : '<iconpark-icon size="1.2rem" name="close" class="text-danger"></iconpark-icon>';
         }
         $this->PageTitle2 = $this->BuildObj->FormTitle('分类字段管理');
         $KeyArr = array(
@@ -38,7 +38,7 @@ class CategoryField extends ControllersAdmin {
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, '', 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }
-    
+
     public function add_Action(){
         $Arr = empty($this->SysRs['CategoryFieldJson']) ? array() : json_decode($this->SysRs['CategoryFieldJson'], true);
         if(!empty($_POST)){
@@ -83,7 +83,7 @@ class CategoryField extends ControllersAdmin {
             }
             $this->Jump(array('admin', 'categoryField', 'index'), 1888);
         }
-        
+
         $this->BuildObj->Arr = array(
             array('Name' =>'Comment', 'Desc' => '字段说明',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
             array('Name' =>'Name', 'Desc' => '字段名 (只能英文和数字)',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 3),
@@ -95,9 +95,9 @@ class CategoryField extends ControllersAdmin {
         $this->BuildObj->Form('post', 'form-row');
         $this->LoadView('admin/common/edit');
     }
-    
+
     public function edit_Action(){
-        if(!isset($_GET['Index'])) $this->Err(1001);        
+        if(!isset($_GET['Index'])) $this->Err(1001);
         $Arr = empty($this->SysRs['CategoryFieldJson']) ? array() : json_decode($this->SysRs['CategoryFieldJson'], true);
         $Index = intval($_GET['Index']);
         if(!isset($Arr[$Index])) $this->Err(1048);
@@ -123,10 +123,10 @@ class CategoryField extends ControllersAdmin {
         $this->BuildObj->Form('post', 'form-row');
         $this->LoadView('admin/common/edit');
     }
-    
-    public function del_Action(){        
+
+    public function del_Action(){
         if(!isset($_GET['Index'])) $this->Err(1001);
-        
+
         $Arr = empty($this->SysRs['CategoryFieldJson']) ? array() : json_decode($this->SysRs['CategoryFieldJson'], true);
         $Index = intval($_GET['Index']);
         if(!isset($Arr[$Index])) $this->Err(1048);
@@ -134,7 +134,7 @@ class CategoryField extends ControllersAdmin {
         $FieldRs = $Arr[$Index];
         array_splice($Arr, $Index, 1);
         $FieldArr = $this->Sys_modelObj->query('SHOW FULL COLUMNS FROM `'.$DbConfig['Prefix'].'category`', array());
-        $FieldNameArr = array_column($FieldArr, 'Field'); 
+        $FieldNameArr = array_column($FieldArr, 'Field');
         try{
             DB::$s_db_obj->beginTransaction();
             $this->SysObj->SetCond(array('Name' => 'CategoryFieldJson'))->SetUpdate(array('AttrValue' => json_encode($Arr)))->ExecUpdate();
@@ -154,5 +154,5 @@ class CategoryField extends ControllersAdmin {
         }
         $this->Jump(array('admin', 'categoryField', 'index'), 1888);
     }
-    
+
 }

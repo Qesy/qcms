@@ -13,7 +13,7 @@
                 <?=!empty($val['Sub']) ? 'href="javascript:void(0);" data-toggle="collapse"' : 'href="'.$CateRs['Url'].'"'?>
 
                 data-target="#<?=$Key2Id?>">
-                <i class="<?=$val['Icon']?> mr-10" style="font-size: 1rem;"></i><?=$CateRs['Name']?><span class="pull-right <?=empty($val['Sub']) ? 'd-none' : 'd-block'?>"><i class="fa fa-fw fa-angle-down"></i></span></a>
+                <iconpark-icon name="<?=$val['Icon']?>" class="mr-5" size="1.2rem" ></iconpark-icon><?=$CateRs['Name']?><span class="pull-right <?=empty($val['Sub']) ? 'd-none' : 'd-block'?>"><i class="fa fa-fw fa-angle-down"></i></span></a>
                 <? if(!empty($val['Sub'])){ ?>
             <ul id="<?=$Key2Id?>" class="collapse <? if(in_array(Router::$s_Controller, $val['subCont'])) echo 'show';?> collapse-level-1">
                 <?

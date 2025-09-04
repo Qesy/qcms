@@ -1,16 +1,16 @@
 <?php
 defined ( 'PATH_SYS' ) || exit ( 'No direct script access allowed' );
 class Sys extends ControllersAdmin {
-    
+
     public function index_Action(){ //系统设置
         if(!empty($_POST)){
             try {
                 DB::$s_db_obj->beginTransaction();
-                
+
                 foreach($_POST as $k => $v){
                     $this->SysObj->SetCond(array('Name' => $k))->SetUpdate(array('AttrValue' => $v))->ExecUpdate();
                 }
-                
+
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
                 DB::$s_db_obj->rollBack();
@@ -73,14 +73,14 @@ class Sys extends ControllersAdmin {
             );
             $FormArr[$v['GroupId']][] = array('Name' => $v['Name'], 'Desc' => $v['Info'],  'Type' => $v['AttrType'], 'Data' => $DataArr, 'Value' => $v['AttrValue'], 'Col' => 12);;
         }
-        $this->BuildObj->Arr = array(            
+        $this->BuildObj->Arr = array(
             array(
                 'Title' => '核心设置',
-                'Form' => $FormArr[1]                
+                'Form' => $FormArr[1]
             ),
             array(
                 'Title' => '扩展设置',
-                'Form' => $FormArr[2]                        
+                'Form' => $FormArr[2]
             ),
             array(
                 'Title' => '附件设置',
@@ -97,8 +97,8 @@ class Sys extends ControllersAdmin {
                 'Form' => $FormArr[10]
             );
         }
-        
-        
+
+
         $this->BuildObj->Arr[1]['Form'][] = array('Desc' => '列表地址规则说明',  'Type' => 'html', 'Value' => $UrlListDesc, 'Required' => 1, 'Col' => 4);
         $this->BuildObj->Arr[1]['Form'][] = array('Desc' => '文章地址规则说明',  'Type' => 'html', 'Value' => $UrlDetailDesc, 'Required' => 1, 'Col' => 4);
         $this->BuildObj->Arr[1]['Form'][] = array('Desc' => '单页地址规则说明',  'Type' => 'html', 'Value' => $UrlPageDesc, 'Required' => 1, 'Col' => 4);
@@ -106,7 +106,7 @@ class Sys extends ControllersAdmin {
         $this->BuildObj->FormMultiple('post', 'form-row');
         $this->LoadView('admin/common/edit');
     }
-    
+
     public function license_Action(){ //授权码
         if(!empty($_POST)){
             //if(!$this->VeriObj->VeriPara($_POST, array('License'))) $this->Err(1001);
@@ -116,10 +116,10 @@ class Sys extends ControllersAdmin {
             $this->Jump(array('admin', 'sys', 'license'), 1888);
         }
         $this->BuildObj->Arr = array(
-            array('Name' =>'License', 'Desc' => '授权码',  'Type' => 'textarea', 'Value' => $this->SysRs['License'], 'Required' => 2, 'Col' => 12, 'Row' => 4),           
+            array('Name' =>'License', 'Desc' => '授权码',  'Type' => 'textarea', 'Value' => $this->SysRs['License'], 'Required' => 2, 'Col' => 12, 'Row' => 4),
         );
         if(!empty($this->SysRs['License'])){
-            $LicenseJson = $this->getLicense($this->SysRs['License']);            
+            $LicenseJson = $this->getLicense($this->SysRs['License']);
             $LicenseRs = empty($LicenseJson) ? array() : json_decode($LicenseJson, true);
             if(empty($LicenseRs) || strpos(URL_DOMAIN, $LicenseRs['Domain']) === false){
                 $Desc = '授权失败';
@@ -128,7 +128,7 @@ class Sys extends ControllersAdmin {
                 $Desc = '授权成功';
                 $Content = '域名已经获得正版授权，'.PHP_EOL.'授权域名：'.$LicenseRs['Domain'].', 到期日期：'.$LicenseRs['Date'].'';
             }
-            
+
             $this->BuildObj->Arr[] = array('Name' =>'License', 'Desc' => $Desc,  'Type' => 'textarea', 'Value' => $Content, 'Disabled' => 1, 'Col' => 12, 'Row' => 4);
         }
         $this->BuildObj->FormFooterBtnArr = array(
@@ -137,7 +137,7 @@ class Sys extends ControllersAdmin {
         $this->BuildObj->Form('post', 'form-row');
         $this->LoadView('admin/common/edit');
     }
-    
+
     public function redis_Action(){
         $Rs = Config::DbConfig('RedisConfig');
         if(!empty($_POST)){
@@ -157,7 +157,7 @@ class Sys extends ControllersAdmin {
         $this->BuildObj->Form('post', 'form-row');
         $this->LoadView('admin/common/edit');
     }
-    
+
     public function check_Action(){
         $ModuleArr = array(
             'curl', 'gd', 'mbstring', 'pdo_mysql', 'iconv', 'date', 'hash', 'json', 'session', 'zip', 'PDO', 'SimpleXML' //'redis',
@@ -177,32 +177,32 @@ class Sys extends ControllersAdmin {
             'SimpleXML' => 'SimpleXML 扩展提供了一个非常简单和易于使用的工具集，能将 XML 转换成一个带有一般属性选择器和数组迭代器的对象。',
             'redis' => 'PHP支持redis的扩展，可以让你的程序大幅度提高响应速度。',
             'opcache' => 'OPcache 通过将 PHP 脚本预编译的字节码存储到共享内存中来提升 PHP 的性能， 存储预编译字节码的好处就是 省去了每次加载和解析 PHP 脚本的开销。'
-            
+
         );
 
         $Extensions = get_loaded_extensions();
         $Arr = array();
         foreach($ModuleArr as $k => $v){
-            $State = !in_array($v, $Extensions) ? '<span class="label label-danger font-weight-100"><i class="bi bi-x-lg"></i> 未安装</span>' : '<span class="label label-success font-weight-100"><i class="bi bi-check-lg"></i> 已安装</span>';
+            $State = !in_array($v, $Extensions) ? '<span class="label label-danger font-weight-100"><iconpark-icon name="close" ></iconpark-icon> 未安装</span>' : '<span class="label label-success font-weight-100"><iconpark-icon name="check" class="text-white" ></iconpark-icon> 已安装</span>';
             $Arr[$k]['Name'] = $v;
             $Arr[$k]['State'] = $State;
             $Arr[$k]['Desc'] = $DescArr[$v];
         }
-        $uploadState = !is_writeable(PATH_STATIC.'upload/') ? '<span class="label label-danger font-weight-100"><i class="bi bi-x-lg"></i> 不可写</span>' : '<span class="label label-success font-weight-100"><i class="bi bi-check-lg"></i> 可写</span>';
+        $uploadState = !is_writeable(PATH_STATIC.'upload/') ? '<span class="label label-danger font-weight-100"><iconpark-icon name="close" ></iconpark-icon> 不可写</span>' : '<span class="label label-success font-weight-100"><iconpark-icon name="check" class="text-white" ></iconpark-icon> 可写</span>';
         $Arr [] = array('Name' => '/Static/upload/', 'Desc' => '检测上传文件夹是否有可写权限', 'State' => $uploadState);
-        $backupsState = !is_writeable(PATH_STATIC.'backups/') ? '<span class="label label-danger font-weight-100"><i class="bi bi-x-lg"></i> 不可写</span>' : '<span class="label label-success font-weight-100"><i class="bi bi-check-lg"></i> 可写</span>';
-        $Arr [] = array('Name' => '/Static/backups/', 'Desc' => '检测上传文件夹是否有可写权限', 'State' => $backupsState);
-        $configState = !is_writeable(PATH_LIB.'Config/') ? '<span class="label label-danger font-weight-100"><i class="bi bi-x-lg"></i> 不可写</span>' : '<span class="label label-success font-weight-100"><i class="bi bi-check-lg"></i> 可写</span>';
-        $Arr [] = array('Name' => '/Lib/Config/', 'Desc' => '检测上传文件夹是否有可写权限', 'State' => $configState);
+        $backupsState = !is_writeable(PATH_STATIC.'backups/') ? '<span class="label label-danger font-weight-100"><iconpark-icon name="close" ></iconpark-icon> 不可写</span>' : '<span class="label label-success font-weight-100"><iconpark-icon name="check" class="text-white" ></iconpark-icon> 可写</span>';
+        $Arr [] = array('Name' => '/Static/backups/', 'Desc' => '检测数据库备份文件夹是否可写', 'State' => $backupsState);
+        $configState = !is_writeable(PATH_LIB.'Config/') ? '<span class="label label-danger font-weight-100"><iconpark-icon name="close" ></iconpark-icon> 不可写</span>' : '<span class="label label-success font-weight-100"><iconpark-icon name="check" class="text-white" ></iconpark-icon> 可写</span>';
+        $Arr [] = array('Name' => '/Lib/Config/', 'Desc' => '检测配置文件文件夹是否可写', 'State' => $configState);
         $KeyArr = array(
             'Name' => array('Name' => '名称', 'Td' => 'th'),
             'Desc' => array('Name' => '说明', 'Td' => 'th'),
-            'State' => array('Name' => '状态', 'Td' => 'th'),            
+            'State' => array('Name' => '状态', 'Td' => 'th'),
         );
         $this->BuildObj->PrimaryKey = 'UserId';
         $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = $this->BuildObj->IsDel = false;
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, '', 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
     }
-    
+
 }

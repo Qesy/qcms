@@ -258,7 +258,7 @@ class Common {
 	}
 	public function loadScripts(array $jsArr, $IsBoot = false) { // -- Name : 加载JS --
 	    $Path = $IsBoot ? URL_BOOT.'js/' : URL_JS;
-	    foreach ( $jsArr as $key => $val ) echo "<script type=\"text/javascript\" src=\"" . $Path . $val .".js?v=" . VERSION . "\" charset=\"utf-8\"></script>";
+	    foreach ( $jsArr as $key => $val ) echo "<script type=\"text/javascript\" charset=\"utf-8\" src=\"" . $Path . $val .".js?v=" . VERSION . "\" ></script>\n";
 	}
 
 	public function ExecScript($Str) { // -- 运行JS --

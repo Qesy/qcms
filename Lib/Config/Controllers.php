@@ -1357,20 +1357,20 @@ class ControllersAdmin extends Controllers {
             }
         }
         $this->RoleMenuArr = array(
-            array('Key' => 'admin/index/index', 'subCont' => array('index'), 'Icon' => 'bi bi-house'),
+            array('Key' => 'admin/index/index', 'subCont' => array('index'), 'Icon' => 'home'),
 
-            array('Key' => 'admin/category', 'subCont' => array('category', 'page', 'pageCate', 'labelCate', 'label', 'form', 'formField', 'formData'), 'Icon' => 'bi bi-list-ol', 'Sub' => array(
+            array('Key' => 'admin/category', 'subCont' => array('category', 'page', 'pageCate', 'labelCate', 'label', 'form', 'formField', 'formData'), 'Icon' => 'ordered-list', 'Sub' => array(
                 array('Key' => 'admin/category/index'),
                 array('Key' => 'admin/page/index'),
                 array('Key' => 'admin/form/index'),
                 array('Key' => 'admin/label/index'),
             )),
-            array('Key' => 'admin/content', 'subCont' => array('content'), 'Icon' => 'bi bi-layout-text-sidebar-reverse', 'Sub' => $RoleMenuArr),
-            array('Key' => 'admin/user', 'subCont' => array('user', 'groupUser'), 'Icon' => 'bi bi-person', 'Sub' => array(
+            array('Key' => 'admin/content', 'subCont' => array('content'), 'Icon' => 'log', 'Sub' => $RoleMenuArr),
+            array('Key' => 'admin/user', 'subCont' => array('user', 'groupUser'), 'Icon' => 'peoples', 'Sub' => array(
                 array('Key' => 'admin/user/index'),
                 array('Key' => 'admin/groupUser/index'),
             )),
-            array('Key' => 'admin/data', 'subCont' => array('data', 'model', 'modelField', 'database', 'redisManage', 'sysField', 'categoryField'), 'Icon' => 'bi bi-tools', 'Sub' => array(
+            array('Key' => 'admin/data', 'subCont' => array('data', 'model', 'modelField', 'database', 'redisManage', 'sysField', 'categoryField'), 'Icon' => 'tool', 'Sub' => array(
                 array('Key' => 'admin/model/index'),
                 array('Key' => 'admin/sysField/index'),
                 array('Key' => 'admin/categoryField/index'),
@@ -1379,7 +1379,7 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/data/replace'),
                 array('Key' => 'admin/data/highReplace'),
             )),
-            array('Key' => 'admin/assist', 'subCont' => array('linkCate', 'link', 'inlinkCate', 'inlink', 'file', 'swiper', 'swiperCate', 'tag'), 'Icon' => 'bi bi-columns-gap', 'Sub' => array(
+            array('Key' => 'admin/assist', 'subCont' => array('linkCate', 'link', 'inlinkCate', 'inlink', 'file', 'swiper', 'swiperCate', 'tag'), 'Icon' => 'page-template', 'Sub' => array(
                 //array('Key' => 'admin/linkCate/index'),
                 array('Key' => 'admin/link/index'),
                 array('Key' => 'admin/inlink/index'),
@@ -1387,14 +1387,14 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/tag/index'),
                 array('Key' => 'admin/file/index'),
             )),
-            array('Key' => 'admin/templates', 'subCont' => array('templates'), 'Icon' => 'bi bi-code-slash', 'Sub' => array(
+            array('Key' => 'admin/templates', 'subCont' => array('templates'), 'Icon' => 'code', 'Sub' => array(
                 array('Key' => 'admin/templates/market'),
                 array('Key' => 'admin/templates/index'),
                 array('Key' => 'admin/templates/builder'),
                 array('Key' => 'admin/templates/test'),
                 array('Key' => 'admin/templates/api'),
             )),
-            array('Key' => 'admin/sys', 'subCont' => array('sys', 'admin', 'groupAdmin', 'log', 'site'), 'Icon' => 'bi bi-gear', 'Sub' => array(
+            array('Key' => 'admin/sys', 'subCont' => array('sys', 'admin', 'groupAdmin', 'log', 'site'), 'Icon' => 'setting-two', 'Sub' => array(
                 array('Key' => 'admin/sys/index'),
                 array('Key' => 'admin/sys/license'),
                 array('Key' => 'admin/sys/check'),
@@ -1405,7 +1405,7 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/log/operate'),
                 array('Key' => 'admin/log/login'),
             )),
-            array('Key' => 'index/adminLogout', 'subCont' => array('signout'), 'Icon' => 'bi bi-box-arrow-right'),
+            array('Key' => 'index/adminLogout', 'subCont' => array('signout'), 'Icon' => 'logout'),
         );
         $Url = implode('/', array($this->Module, Router::$s_Controller, Router::$s_Method));
         $Key = '';
@@ -1639,7 +1639,7 @@ class ControllersApi extends Base {
         $ModelArr = $this->Sys_modelObj->getList();
         foreach($ModelArr as $v){
             $this->ModelKv[$v['KeyName']] = $v;
-        }
+        }        
     }
 }
 

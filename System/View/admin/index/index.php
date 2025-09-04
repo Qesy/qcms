@@ -67,7 +67,7 @@
                                     <div class="sm-data-box bg-green">
                                         <div class="row ma-0">
                                             <div class="col-5 text-center pa-0 icon-wrap-left">
-                                                <i class="bi bi-file-text text-white"></i>
+                                                <iconpark-icon name="view-list" size="3rem" class="mt-50 text-white"></iconpark-icon>
                                             </div>
                                             <div class="col-7 text-center data-wrap-right">
                                                 <h6 class="txt-light">内容数量</h6>
@@ -88,7 +88,7 @@
                                     <div class="sm-data-box bg-red">
                                         <div class="row ma-0">
                                             <div class="col-5 text-center pa-0 icon-wrap-left">
-                                                <i class="bi bi-list-ol txt-light"></i>
+                                                <iconpark-icon name="ordered-list" size="3rem" class="mt-50 text-white"></iconpark-icon>
                                             </div>
                                             <div class="col-7 text-center data-wrap-right">
                                                 <h6 class="txt-light">分类数量</h6>
@@ -110,7 +110,7 @@
                                     <div class="sm-data-box bg-primary">
                                         <div class="row ma-0">
                                             <div class="col-5 text-center pa-0 icon-wrap-left">
-                                                <i class="bi bi-people txt-light"></i>
+                                                <iconpark-icon name="peoples" size="3rem" class="mt-50 text-white"></iconpark-icon>
                                             </div>
                                             <div class="col-7 text-center data-wrap-right">
                                                 <h6 class="txt-light">用户数量</h6>
@@ -132,7 +132,7 @@
                                     <div class="sm-data-box bg-pink">
                                         <div class="row ma-0">
                                             <div class="col-5 text-center pa-0 icon-wrap-left">
-                                                <i class="bi bi-file-image text-white"></i>
+                                                <iconpark-icon name="image-files" size="3rem" class="mt-50 text-white"></iconpark-icon>
                                             </div>
                                             <div class="col-7 text-center data-wrap-right">
                                                 <h6 class="txt-light">附件占用空间</h6>
@@ -178,11 +178,11 @@
     </div>
     <!-- jQuery -->
     <?=$this->LoadView('admin/common/js')?>
-    <script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/highcharts/7.1.1/highcharts.js" type="application/javascript"></script>
-    <script src="https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/highcharts/7.1.1/modules/series-label.js" type="application/javascript"></script>
-    <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/highcharts/7.1.1/modules/exporting.js" type="application/javascript"></script>
-    <script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/highcharts/7.1.1/modules/export-data.js" type="application/javascript"></script>
-<script type="text/javascript">
+    <script type="application/javascript" src="<?=URL_BOOT?>Highcharts-7.1.1/highcharts.js"></script>
+    <script type="application/javascript" src="<?=URL_BOOT?>Highcharts-7.1.1/modules/series-label.js"></script>
+    <script type="application/javascript" src="<?=URL_BOOT?>Highcharts-7.1.1/modules/exporting.js"></script>
+    <script type="application/javascript" src="<?=URL_BOOT?>Highcharts-7.1.1/modules/export-data.js"></script>
+    <script type="text/javascript">
     ChartsFull('<?=date('Y-m')?> 流量报表', 'BarChart', <?=json_encode(array_keys($DataArr))?>,
     [
       {
