@@ -525,26 +525,6 @@ class Build {
                     </div>';
     }
 
-    private function _DateTimeInput($Name, $Desc, $Value, $Col, $Type = 'text', $IsDisabled = 0, $Placeholder = '', $Required = 0){ //输入框
-        $Disabled = ($IsDisabled) ? 'disabled="disabled"' : '';
-        if(empty($Placeholder)) $Placeholder =  '请输入'.$Desc  ;
-        $RequiredViewStr = $RequiredStr = '';
-        if($Required == 1){
-            $RequiredStr = 'required="required"';
-            $RequiredViewStr = '<span class="text-danger ml-2" style="font-weight: 900;">*</span>';
-        }
-        $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
-        return '
-                    <div class="form-group col-'.$SubCol.' col-lg-'.$Col.' "  id="Form_'.$Name.'">
-                        <label for="Input_'.$Name.'">'.$Desc.'</label>'.$RequiredViewStr.'
-                            <div class="input-group date '.$Type.'Only" id="FormDate_'.$Name.'" data-target-input="nearest">
-                            <input type="text" '.$Disabled.' class="form-control datetimepicker-input " name="'.$Name.'" value="'.$Value.'" data-target="#FormDate_'.$Name.'" '.$RequiredStr.'/>
-                            <div class="input-group-append" data-target="#FormDate_'.$Name.'" data-toggle="datetimepicker"  >
-                        <div class="input-group-text"><i class="fa fa-calendar"></i>&nbsp;</div>
-                    </div>
-                     </div></div>';
-    }
-
     private function _FromGroup($Col, $Desc){ //填充而已
         $SubCol = ($Col*2 > 12) ? 12 : ($Col*2);
         return '<div class="form-group col-'.$SubCol.'  col-lg-'.$Col.' d-none d-lg-block">'.$Desc.'
@@ -572,7 +552,8 @@ class Build {
      */
     public function Table(array $arr, $keyArr, $Page = '', $Class= '', $IsResponsive = 2){
         $num = count($keyArr);
-        if(empty($this->LinkAdd)) $this->LinkAdd = $this->CommObj->Url(array($this->Module, \Router::$s_Controller, 'add')).'?'.http_build_query($_GET);
+        $GetStr = empty($_GET) ? '' : '?'.http_build_query($_GET);
+        if(empty($this->LinkAdd)) $this->LinkAdd = $this->CommObj->Url(array($this->Module, \Router::$s_Controller, 'add')).$GetStr;
         if(empty($this->LinkEdit)) $this->LinkEdit = $this->CommObj->Url(array($this->Module, \Router::$s_Controller, 'edit'));
         if(empty($this->LinkDel)) $this->LinkDel = $this->CommObj->Url(array($this->Module, \Router::$s_Controller, 'del'));
         $str = '<table class="table '.$Class.'"><thead><tr>';
@@ -655,7 +636,10 @@ class Build {
 
         $TableFooterBtnArr = array();
         foreach($this->TableFooterBtnArr as $Btn){
-            $TableFooterBtnArr[] = '<button id="'.$Btn['Name'].'" type="button" class="mr-2 btn btn-sm btn-'.$Btn['Class'].'">'.$Btn['Desc'].'</button>';
+            $BtnClass = isset($Btn['Class']) ? $Btn['Class'] : 'primary';            
+            $Disabled = (isset($Btn['IsDisabled']) && $Btn['IsDisabled'] == 1) ? 'disabled' : '';
+            $Confirm = empty($Btn['Confirm']) ? '' : 'onclick="return confirm(\''.$Btn['Confirm'].'\')"';
+            $TableFooterBtnArr[] = '<button id="'.$Btn['Name'].'" type="button" class="mr-2 btn btn-sm btn-'.$BtnClass.'" '.$Disabled.' '.$Confirm.'>'.$Btn['Desc'].'</button>';
         }
         //var_dump($this->TableFooterBtnArr, $TableFooterBtnArr);exit;
         $str .= '</tbody>';

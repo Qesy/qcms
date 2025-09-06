@@ -206,14 +206,30 @@ class Api extends ControllersAdmin {
     
     public function contentState_Action(){ // 批量发布内容
         if(!$this->VeriObj->VeriPara($_POST, array('Ids', 'Key', 'Val'))) $this->ApiErr(1001);
-        if(!in_array($_POST['Key'], array('State', 'IsSpuerRec', 'IsHeadlines', 'IsRec', 'IsDelete'))) $this->ApiErr(1001);
+        if(!in_array($_POST['Key'], array('State', 'IsDelete'))) $this->ApiErr(1001);
         $Ids = explode(',', $_POST['Ids']);
 
         $TableRs = $this->TableObj->SetCond(array('Id' => $Ids[0]))->ExecSelectOne();
         $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
-
-        $Ret = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Ids))->SetUpdate(array($_POST['Key'] => $_POST['Val']))->ExecUpdate();
-        if($Ret === false) $this->ApiErr(1002);
+        try{
+            DB::$s_db_obj->beginTransaction();
+            $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Ids))->SetUpdate(array($_POST['Key'] => $_POST['Val']))->ExecUpdate();
+            if($_POST['Key'] == 'IsDelete'){ // 批量删除/恢复设置tag (发布状态不操作Tag)
+                $Arr = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Ids))->SetField('Id, Tag')->ExecSelect();
+                foreach ($Arr as $v){ // 批量设置TAG
+                    if($_POST['Val'] == 1){ // 删除
+                        $this->TagObj->DeleteTag($v['Id']);
+                    }else{
+                        $this->TagObj->RunUpdate($v['Tag'], '', $v['Id'], $TableRs['ModelId']);
+                    }
+                }
+            }
+            
+            DB::$s_db_obj->commit();
+        }catch (PDOException $e){
+            DB::$s_db_obj->rollBack();
+            $this->ApiErr(1002);
+        }
         $this->ApiSuccess();
     }
 
@@ -249,6 +265,8 @@ class Api extends ControllersAdmin {
         $Ids = explode(',', $_POST['Ids']);
         $TableRs = $this->TableObj->SetCond(array('Id' => $Ids[0]))->ExecSelectOne();
         $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
+        $Arr = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Ids, 'IsDelete' => '1'))->SetField('Id, IsDelete')->ExecSelect();
+        $Ids = array_column($Arr, 'Id');
         try{
             DB::$s_db_obj->beginTransaction();
             $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Ids))->ExecDelete();
@@ -257,7 +275,6 @@ class Api extends ControllersAdmin {
                 $this->PhotosObj->SetCond(array('Id' => $Ids))->ExecDelete();
             }
             $this->FileObj->SetCond(array('FType' => 2, 'IndexId' => $Ids))->SetUpdate(array('IsDel' => 1))->ExecUpdate();
-
             DB::$s_db_obj->commit();
         }catch (PDOException $e){
             DB::$s_db_obj->rollBack();
@@ -265,6 +282,29 @@ class Api extends ControllersAdmin {
         }
         $this->ApiSuccess();
     }
+    
+    public function emptyRec_Action(){ // 清空回收站
+        if(!$this->VeriObj->VeriPara($_POST, array('ModelId'))) $this->ApiErr(1001);
+        $ModelRs = $this->Sys_modelObj->getOne(trim($_POST['ModelId']));
+        if(empty($ModelRs)) $this->ApiErr(1003);
+        $Arr = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('IsDelete' => '1'))->SetField('Id, IsDelete')->ExecSelect();
+        $Ids = array_column($Arr, 'Id');
+        try{
+            DB::$s_db_obj->beginTransaction();
+            $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Ids))->ExecDelete();
+            $this->TableObj->SetCond(array('Id' => $Ids))->ExecDelete();
+            if($ModelRs['KeyName'] == 'album'){ //相册表删除
+                $this->PhotosObj->SetCond(array('Id' => $Ids))->ExecDelete();
+            }
+            $this->FileObj->SetCond(array('FType' => 2, 'IndexId' => $Ids))->SetUpdate(array('IsDel' => 1))->ExecUpdate();
+            DB::$s_db_obj->commit();
+        }catch (PDOException $e){
+            DB::$s_db_obj->rollBack();
+            $this->ApiErr(1002);
+        }
+        $this->ApiSuccess();
+    }
+    
 
     public function installTemplate_Action(){ // 安装模版
         if(!$this->VeriObj->VeriPara($_GET, array('TemplatesId'))) $this->ApiErr(1001);

@@ -117,11 +117,11 @@
                                             {{qcms:Crumbs}} ： 面包屑地址<br>
                                             {{qcms:PathTemplate}} ： 模板静态文件路径<br>
                                             {{qcms:Search}} ： 搜索关键字 ($_GET['Search'])<br>
-                                            {{qcms:Method}} ： 当前页方法 (首页:index, 分类:cate, 详情页:detail, 单页:page, 搜索页:search) <br>
+                                            {{qcms:Method}} ： 当前页方法 (首页:index, 分类:cate, 详情页:detail, 单页:page, 搜索页:search) <br><br>
 
                                             <?
                                             if(!empty($DiyField)){
-                                                echo '<span class="text-danger">以下是自定义系统变量</span><br>';
+                                                echo '<span class="text-danger"><span class="font-weight-bold">系统</span>自定义变量</span><br>';
                                             }
                                             foreach($DiyField as $v){
                                                 echo '{{qcms:'.$v['Name'].'}} ： '.$v['Info'].'<br>';
@@ -154,14 +154,14 @@
                                             {{qcms:Cate_HasSub}} ： 是否有子类<br>
                                             <?
                                             if(count($this->CateFieldArr) > 0){
-                                                echo '<span class="text-danger">以下是分类自定义变量</span><br>';
+                                                echo '<span class="text-danger"><span class="font-weight-bold">分类</span>自定义变量</span><br>';
                                                 foreach($this->CateFieldArr as $v){
                                                     echo '{{qcms:Cate_'.$v['Name'].'}} ： '.$v['Comment'].'<br>';
                                                 }
                                             }
                                             ?>
 
-                                            <br><span class="text-danger font-weight-bold">以下是顶级分类变量</span><br>
+                                            <br><span class="text-danger"><span class="font-weight-bold">顶级</span>分类变量</span><br>
                                             {{qcms:TopCate_CateId}} ： 顶级分类ID<br>
                                             {{qcms:TopCate_PCateId}} ： 顶级分类上级ID<br>
                                             {{qcms:TopCate_TCateId}} ： 顶级分类ID<br>
@@ -181,7 +181,7 @@
                                             {{qcms:TopCate_HasSub}} ： 顶级拼音首字母<br>
                                             <?
                                             if(count($this->CateFieldArr) > 0){
-                                                echo '<span class="text-danger">以下是顶级分类自定义变量</span><br>';
+                                                echo '<span class="text-danger"><span class="font-weight-bold">顶级</span>分类自定义变量</span><br>';
                                                 foreach($this->CateFieldArr as $v){
                                                     echo '{{qcms:TopCate_'.$v['Name'].'}} ： '.$v['Comment'].'<br>';
                                                 }
@@ -209,6 +209,8 @@
                                             {{qcms:Detail_Description}} ： SEO简介<br>
                                             {{qcms:Detail_TsAdd}} ： 添加时间（UNIX时间戳）<br>
                                             {{qcms:Detail_TsUpdate}} ： 最后更新时间（UNIX时间戳）<br>
+                                            {{qcms:Detail_TimeAdd}} ： 添加时间（格式：2020-12-13 14:15:16）<br>
+                                            {{qcms:Detail_TimeUpdate}} ： 最后更新时间（格式：2020-12-13 14:15:16）<br>
                                             {{qcms:Detail_ReadNum}} ： 浏览次数<br>
                                             {{qcms:Detail_DownNum}} ： 下载次数<br>
                                             {{qcms:Detail_Coins}} ： 所需金币<br>
@@ -233,7 +235,7 @@
                                             <?
                                             foreach($ModelArr as $k => $v){
                                                 if(count($v['FieldJson']) > 0 ){
-                                                    echo '<br><span class="text-danger">以下是'.$v['Name'].'模块自定义变量</span><br>';
+                                                    echo '<br><span class="text-danger"><span class="font-weight-bold">'.$v['Name'].'</span>模块自定义变量</span><br>';
                                                     foreach($v['FieldJson'] as $sk => $sv){
                                                         echo '{{qcms:Detail_'.$sv['Name'].'}} ： '.$sv['Comment'].'<br>';
                                                     }
@@ -295,6 +297,7 @@
                                                 <h6 class="py-2 font-weight-bold">分类字段</h6>
                                                 {{qcms:Get_CateId}} ： 分类ID<br>
                                                 {{qcms:Get_PCateId}} ： 分类上级ID<br>
+                                                {{qcms:Get_TCateId}} ： 分类顶级ID<br>
                                                 {{qcms:Get_Name}} ： 分类名<br>
                                                 {{qcms:Get_NameEn}} ： 分类英文别名<br>
                                                 {{qcms:Get_Pic}} ： 分类图片<br>
@@ -307,10 +310,10 @@
                                                 {{qcms:Get_Content}} ： 分类内容详情<br>
                                                 {{qcms:Get_PinYin}} ： 全拼<br>
                                                 {{qcms:Get_PY}} ： 拼音首字母<br>
-                                                {{qcms:Get_Url}} ： 链接地址<br>
+                                                {{qcms:Get_Url}} ： 链接地址<br><br>
                                                 <?
                                             if(count($this->CateFieldArr) > 0){
-                                                echo '<span class="text-danger">以下是分类自定义变量</span><br>';
+                                                echo '<span class="text-danger"><span class="font-weight-bold">分类</span>自定义变量</span><br>';
                                                 foreach($this->CateFieldArr as $v){
                                                     echo '{{qcms:Get_'.$v['Name'].'}} ： '.$v['Comment'].'<br>';
                                                 }
@@ -343,6 +346,8 @@
                                                 {{qcms:Get_Summary}} ： 摘要<br>
                                                 {{qcms:Get_TsAdd}} ： 添加时间（UNIX时间戳）<br>
                                                 {{qcms:Get_TsUpdate}} ： 最后更新时间（UNIX时间戳）<br>
+                                                {{qcms:Get_TimeAdd}} ： 添加时间（格式：2020-12-13 14:15:16）<br>
+                                                {{qcms:Get_TimeUpdate}} ： 最后更新时间（格式：2020-12-13 14:15:16）<br>
                                                 {{qcms:Get_ReadNum}} ： 浏览次数<br>
                                                 {{qcms:Get_DownNum}} ： 下载次数<br>
                                                 {{qcms:Get_Coins}} ： 所需金币<br>
@@ -365,7 +370,7 @@
                                                 <?
                                             foreach($ModelArr as $k => $v){
                                                 if(count($v['FieldJson']) > 0 ){
-                                                    echo '<br><span class="text-danger">以下是'.$v['Name'].'模块自定义变量</span><br>';
+                                                    echo '<br><span class="text-danger"><span class="font-weight-bold">'.$v['Name'].'</span>模块自定义变量</span><br>';
                                                     foreach($v['FieldJson'] as $sk => $sv){
                                                         echo '{{qcms:Get_'.$sv['Name'].'}} ： '.$sv['Comment'].'<br>';
                                                     }
@@ -404,6 +409,7 @@
                                         <div>
                                             {{qcms:Menu_CateId}} ： 分类ID<br>
                                             {{qcms:Menu_PCateId}} ： 上级分类ID<br>
+                                            {{qcms:Menu_TCateId}} ： 顶级分类ID<br>
                                             {{qcms:Menu_Name}} ： 分类名字<br>
                                             {{qcms:Menu_NameEn}} ： 分类英文别名<br>
                                             {{qcms:Menu_Pic}} ： 分类图片<br>
@@ -414,10 +420,10 @@
                                             {{qcms:Menu_HasSub}} ： 是否包含子分类 （1：是 0：否）<br>
                                             {{qcms:Menu_i}} ： 自曾数（从1开始）<br>
                                             {{qcms:Menu_n}} ： 自曾数（从0开始）<br>
-                                            {{qcms:Menu_m}} ： 隔行数（第一行0，第二行1，第三行0 以此类推）<br>
+                                            {{qcms:Menu_m}} ： 隔行数（第一行0，第二行1，第三行0 以此类推）<br><br>
                                             <?
                                             if(count($this->CateFieldArr) > 0){
-                                                echo '<span class="text-danger">以下是分类自定义变量</span><br>';
+                                                echo '<span class="text-danger"><span class="font-weight-bold">分类</span>自定义变量</span><br>';
                                                 foreach($this->CateFieldArr as $v){
                                                     echo '{{qcms:Menu_'.$v['Name'].'}} ： '.$v['Comment'].'<br>';
                                                 }
@@ -446,6 +452,7 @@
                                         <div>
                                             {{qcms:sMenu_CateId}} ： 分类ID<br>
                                             {{qcms:sMenu_PCateId}} ： 上级分类ID<br>
+                                            {{qcms:sMenu_TCateId}} ： 顶级分类ID<br>
                                             {{qcms:sMenu_Name}} ： 分类名字<br>
                                             {{qcms:sMenu_NameEn}} ： 分类英文别名<br>
                                             {{qcms:sMenu_Pic}} ： 分类图片<br>
@@ -456,10 +463,10 @@
                                             {{qcms:sMenu_HasSub}} ： 是否包含子分类 （1：是 0：否）<br>
                                             {{qcms:sMenu_i}} ： 自曾数（从1开始）<br>
                                             {{qcms:sMenu_n}} ： 自曾数（从0开始）<br>
-                                            {{qcms:sMenu_m}} ： 隔行数（第一行0，第二行1，第三行0 以此类推）<br>
+                                            {{qcms:sMenu_m}} ： 隔行数（第一行0，第二行1，第三行0 以此类推）<br><br>
                                             <?
                                             if(count($this->CateFieldArr) > 0){
-                                                echo '<span class="text-danger">以下是分类自定义变量</span><br>';
+                                                echo '<span class="text-danger"><span class="font-weight-bold">分类</span>自定义变量</span><br>';
                                                 foreach($this->CateFieldArr as $v){
                                                     echo '{{qcms:sMenu_'.$v['Name'].'}} ： '.$v['Comment'].'<br>';
                                                 }
@@ -486,6 +493,7 @@
                                         <div>
                                             {{qcms:ssMenu_CateId}} ： 分类ID<br>
                                             {{qcms:ssMenu_PCateId}} ： 上级分类ID<br>
+                                            {{qcms:ssMenu_TCateId}} ： 顶级分类ID<br>
                                             {{qcms:ssMenu_Name}} ： 分类名字<br>
                                             {{qcms:ssMenu_NameEn}} ： 分类英文别名<br>
                                             {{qcms:ssMenu_Pic}} ： 分类图片<br>
@@ -496,10 +504,10 @@
                                             {{qcms:ssMenu_HasSub}} ： 是否包含子分类 （1：是 0：否）<br>
                                             {{qcms:ssMenu_i}} ： 自曾数（从1开始）<br>
                                             {{qcms:ssMenu_n}} ： 自曾数（从0开始）<br>
-                                            {{qcms:ssMenu_m}} ： 隔行数（第一行0，第二行1，第三行0 以此类推）<br>
+                                            {{qcms:ssMenu_m}} ： 隔行数（第一行0，第二行1，第三行0 以此类推）<br><br>
                                             <?
                                             if(count($this->CateFieldArr) > 0){
-                                                echo '<span class="text-danger">以下是分类自定义变量</span><br>';
+                                                echo '<span class="text-danger"><span class="font-weight-bold">分类</span>自定义变量</span><br>';
                                                 foreach($this->CateFieldArr as $v){
                                                     echo '{{qcms:ssMenu_'.$v['Name'].'}} ： '.$v['Comment'].'<br>';
                                                 }
@@ -543,8 +551,12 @@
 {{qcms:List_Keywords}} ： SEO关键字<br>
 {{qcms:List_Description}} ： SEO简介<br>
 {{qcms:List_Summary}} ： 摘要<br>
-{{qcms:List_TsAdd}} ： 添加时间<br>
-{{qcms:List_TsUpdate}} ： 更新时间<br>
+{{qcms:List_TsAdd}} ： 添加时间（UNIX时间戳）<br>
+{{qcms:List_TsUpdate}} ： 更新时间（UNIX时间戳）<br>
+{{qcms:List_TimeAdd}} ： 添加时间（格式：2020-12-13 14:15:16）<br>
+{{qcms:List_TimeUpdate}} ： 更新时间 （格式：2020-12-13 14:15:16）<br>
+{{qcms:List_DateAdd}} ： 添加日期 （格式：2020-12-13）<br>
+{{qcms:List_DateUpdate}} ： 更新日期 （格式：2020-12-13）<br>
 {{qcms:List_ReadNum}} ： 阅读数量<br>
 {{qcms:List_DownNum}} ： 下载数量<br>
 {{qcms:List_Coins}} ： 所需金币<br>
@@ -576,7 +588,7 @@
 <?
                                             foreach($ModelArr as $k => $v){
                                                 if(count($v['FieldJson']) > 0 ){
-                                                    echo '<br><span class="text-danger">以下是'.$v['Name'].'模块自定义变量</span><br>';
+                                                    echo '<br><span class="text-danger"><span class="font-weight-bold">'.$v['Name'].'</span>模块自定义变量</span><br>';
                                                     foreach($v['FieldJson'] as $sk => $sv){
                                                         if($sv['IsList'] != 1) continue;
                                                         echo '{{qcms:List_'.$sv['Name'].'}} ： '.$sv['Comment'].'<br>';
@@ -660,7 +672,16 @@
                                             {{qcms:Slide_Summary}} ： 摘要<br>
                                             {{qcms:Slide_i}} ： 自曾数（从1开始）<br>
                                             {{qcms:Slide_n}} ： 自曾数（从0开始）<br>
-                                            {{qcms:Slide_m}} ： 隔行数（第一行0，第二行1，第三行0 以此类推）<br>
+                                            {{qcms:Slide_m}} ： 隔行数（第一行0，第二行1，第三行0 以此类推）<br><br>
+
+                                            <?
+                                            if(count($this->SwiperFieldArr) > 0){
+                                                echo '<span class="text-danger"><span class="font-weight-bold">幻灯片</span>自定义变量</span><br>';
+                                                foreach($this->SwiperFieldArr as $v){
+                                                    echo '{{qcms:Slide_'.$v['Name'].'}} ： '.$v['Comment'].'<br>';
+                                                }
+                                            }
+                                            ?>
                                         </div>
                                     </div>
 

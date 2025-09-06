@@ -162,7 +162,7 @@ class Templates extends ControllersAdmin {
 
     public function test_Action(){
         if(!empty($_POST)){
-            if(!$this->VeriObj->VeriPara($_POST, array('Html', 'Type'))) $this->DieErr(1001);
+            if(!$this->VeriObj->VeriPara($_POST, array('Type'))) $this->DieErr(1001);
             switch ($_POST['Type']){
                 case 'index':
                     echo $this->tempRunTest($_POST['Type'], 0, $_POST['Html']);

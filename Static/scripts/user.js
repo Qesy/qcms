@@ -191,12 +191,22 @@ $(function(){
         contentState('IsRec', '2');
     })
     $('#ContentbatchDel3Btn').click(function(){ //彻底删除
+        if(!confirm('此操作后无法恢复，确定彻底删除吗？')) return false;
         let Ids = getAllChecked();
         if(Ids.length == 0){
             alert('没有选中任何内容');
             return;
         }
         $.post('/admin/api/deleteRec', {Ids:Ids.join(',')}, function(Res){
+            if(Res.Code != 0){
+                alert(Res.Msg);return;
+            }
+            location.reload();
+        }, 'json')
+    })
+    $('#ContentbatchDel4Btn').click(function(){ //彻底删除
+        if(!confirm('此操作后无法恢复，确定彻底删除吗？')) return false;
+        $.post('/admin/api/emptyRec', {'ModelId':ModelId}, function(Res){
             if(Res.Code != 0){
                 alert(Res.Msg);return;
             }
