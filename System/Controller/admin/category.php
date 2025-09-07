@@ -261,7 +261,6 @@ class Category extends ControllersAdmin {
             if($Ret === false) $this->Err(1002);
             $this->CategoryObj->cleanList();
             $this->CategoryObj->clean($CateRs['CateId']);
-            //unset($_GET['CateId']);
             $this->Jump(array('admin', 'category', 'index'));
         }
 

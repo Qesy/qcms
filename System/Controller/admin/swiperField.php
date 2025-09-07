@@ -72,10 +72,9 @@ class SwiperField extends ControllersAdmin {
                 $this->Err(1002);
             }
             $this->SysObj->cleanList();
-            $this->SwiperObj->cleanList();
-            $Arr = $this->SwiperObj->getList();
+            $Arr = $this->Swiper_cateObj->ExecSelect();
             foreach($Arr as $v){
-                $this->SwiperObj->clean($Arr['CateId']);
+                $this->SwiperObj->clean($v['SwiperCateId']);
             }
             $this->Jump(array('admin', 'swiperField', 'index'), 1888);
         }
@@ -143,10 +142,10 @@ class SwiperField extends ControllersAdmin {
             $this->Err(1002);
         }
         $this->SysObj->cleanList();
-        $this->SwiperObj->cleanList();
-        $Arr = $this->SwiperObj->getList();
+
+        $Arr = $this->Swiper_cateObj->ExecSelect();
         foreach($Arr as $v){
-            $this->SwiperObj->clean($Arr['CateId']);
+            $this->SwiperObj->clean($v['SwiperCateId']);
         }
         $this->Jump(array('admin', 'swiperField', 'index'), 1888);
     }

@@ -79,7 +79,7 @@ class CategoryField extends ControllersAdmin {
             $this->CategoryObj->cleanList();
             $Arr = $this->CategoryObj->getList();
             foreach($Arr as $v){
-                $this->CategoryObj->clean($Arr['CateId']);
+                $this->CategoryObj->clean($v['CateId']);
             }
             $this->Jump(array('admin', 'categoryField', 'index'), 1888);
         }
@@ -150,7 +150,7 @@ class CategoryField extends ControllersAdmin {
         $this->CategoryObj->cleanList();
         $Arr = $this->CategoryObj->getList();
         foreach($Arr as $v){
-            $this->CategoryObj->clean($Arr['CateId']);
+            $this->CategoryObj->clean($v['CateId']);
         }
         $this->Jump(array('admin', 'categoryField', 'index'), 1888);
     }
