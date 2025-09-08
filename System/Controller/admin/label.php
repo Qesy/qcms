@@ -53,15 +53,16 @@ class Label extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name', 'KeyName', 'LabelCateId'))) $this->Err(1001);
             if(!$this->VeriObj->IsPassword($_POST['KeyName'], 1, 30)) $this->Err(1048);
-            $Ret = $this->LabelObj->SetInsert(array(
-                'Name' => $_POST['Name'],
-                'LabelCateId' => $_POST['LabelCateId'],
-                'KeyName' => $_POST['KeyName'],
-                'Content' => $_POST['Content'],
-                'IsEditor' => $_POST['IsEditor'],
+            $InsertMap = array(
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
+                'LabelCateId' => intval($_POST['LabelCateId']),
+                'KeyName' => $this->CommonObj->SafeInput(trim($_POST['KeyName'])),
+                'Content' => $this->CommonObj->CleanHtml(trim($_POST['Content'])),
+                'IsEditor' => intval($_POST['IsEditor']),
                 'State' => 1,
                 'Sort' => 99,
-            ))->ExecInsert();
+            );
+            $Ret = $this->LabelObj->SetInsert($InsertMap)->ExecInsert();
             if($Ret === false) $this->Err(1002);
             $this->Jump(array('admin', 'label', 'index'), 1888);
         }
@@ -88,13 +89,14 @@ class Label extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name', 'KeyName', 'LabelCateId', 'IsEditor'))) $this->Err(1001);
             if(!$this->VeriObj->IsPassword($_POST['KeyName'], 1, 30)) $this->Err(1048);
-            $Ret = $this->LabelObj->SetCond(array('LabelId' => $Rs['LabelId']))->SetUpdate(array(
-                'Name' => $_POST['Name'],
-                'LabelCateId' => $_POST['LabelCateId'],
-                'KeyName' => $_POST['KeyName'],
-                'Content' => $_POST['Content'],
-                'IsEditor' => $_POST['IsEditor'],
-            ))->ExecUpdate();
+            $UpdateMap = array(
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
+                'LabelCateId' => intval($_POST['LabelCateId']),
+                'KeyName' => $this->CommonObj->SafeInput(trim($_POST['KeyName'])),
+                'Content' => $this->CommonObj->CleanHtml(trim($_POST['Content'])),
+                'IsEditor' => intval($_POST['IsEditor']),
+            );
+            $Ret = $this->LabelObj->SetCond(array('LabelId' => $Rs['LabelId']))->SetUpdate($UpdateMap)->ExecUpdate();
             if($Ret === false) $this->Err(1002);
             $this->LabelObj->clean($Rs['KeyName']);
             $this->Jump(array('admin', 'label', 'index'), 1888);

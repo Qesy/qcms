@@ -76,7 +76,7 @@ class Index extends Controllers {
         }
         foreach($OldTokenArr as $OldToken) $this->TokenObj->clean($OldToken);
         $this->UserObj->clean($Rs['UserId']);
-        $this->CookieObj->set(array('Token' => $Token, 'Key' => $Key), 'User', 24*14);
+        $this->CookieObj->set(array('Token' => $Token), 'User', 24*14);
         /* if(isset($_GET['Refer'])){ //后台用户不需要
          $this->CommonObj->ExecScript('window.location.href="'.urldecode($_GET['Refer']).'"');
          } */
@@ -152,7 +152,7 @@ class Index extends Controllers {
             }
             foreach($OldTokenArr as $OldToken) $this->TokenObj->clean($OldToken);
             $this->UserObj->clean($Rs['UserId']);
-            $this->CookieObj->set(array('Token' => $Token, 'Key' => $Key), 'User', 24*14);
+            $this->CookieObj->set(array('Token' => $Token), 'User', 24*14);
 	        /* if(isset($_GET['Refer'])){ //后台用户不需要
 	            $this->CommonObj->ExecScript('window.location.href="'.urldecode($_GET['Refer']).'"');
 	        } */

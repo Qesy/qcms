@@ -6,11 +6,9 @@ class Sys extends ControllersAdmin {
         if(!empty($_POST)){
             try {
                 DB::$s_db_obj->beginTransaction();
-
                 foreach($_POST as $k => $v){
-                    $this->SysObj->SetCond(array('Name' => $k))->SetUpdate(array('AttrValue' => $v))->ExecUpdate();
+                    $this->SysObj->SetCond(array('Name' => $k))->SetUpdate(array('AttrValue' => $this->CommonObj->SafeInput(trim($v))))->ExecUpdate();
                 }
-
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
                 DB::$s_db_obj->rollBack();
@@ -110,7 +108,7 @@ class Sys extends ControllersAdmin {
     public function license_Action(){ //授权码
         if(!empty($_POST)){
             //if(!$this->VeriObj->VeriPara($_POST, array('License'))) $this->Err(1001);
-            $Ret = $this->SysObj->SetCond(array('Name' => 'License'))->SetUpdate(array('AttrValue' => trim($_POST['License'])))->ExecUpdate();
+            $Ret = $this->SysObj->SetCond(array('Name' => 'License'))->SetUpdate(array('AttrValue' => $this->CommonObj->SafeInput(trim($_POST['License']))))->ExecUpdate();
             if($Ret === false) $this->Err(1002);
             $this->SysObj->clean('License');
             $this->Jump(array('admin', 'sys', 'license'), 1888);

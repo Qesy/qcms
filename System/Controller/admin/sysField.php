@@ -35,10 +35,10 @@ class SysField extends ControllersAdmin {
             $SysKv = $this->SysObj->getKv();
             if(isset($SysKv[$_POST['Name']])) $this->Err(1004);
             $Ret = $this->SysObj->SetInsert(array(
-                'Name' => $_POST['Name'], 
-                'Info' => $_POST['Info'], 
-                'AttrType' => $_POST['AttrType'],
-                'AttrValue' => $_POST['AttrValue'],
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])), 
+                'Info' => $this->CommonObj->SafeInput(trim($_POST['Info'])), 
+                'AttrType' => $this->CommonObj->SafeInput(trim($_POST['AttrType'])),
+                'AttrValue' => $this->CommonObj->SafeInput(trim($_POST['AttrValue'])),
                 'GroupId' => 10,
                 'Sort' => '99',
                 'IsSys' => 2,
@@ -64,8 +64,8 @@ class SysField extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Info'))) $this->Err(1001);
             $Ret = $this->SysObj->SetCond(array('Name' => $Rs['Name']))->SetUpdate(array(
-                'Info' => $_POST['Info'],
-                'AttrValue' => $_POST['AttrValue'],
+                'Info' => $this->CommonObj->SafeInput(trim($_POST['Info'])),
+                'AttrValue' => $this->CommonObj->SafeInput(trim($_POST['AttrValue'])),
             ))->ExecUpdate();
             if($Ret === false) $this->Err(1002);
             $this->SysObj->cleanList();

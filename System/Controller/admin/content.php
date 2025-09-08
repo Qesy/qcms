@@ -134,17 +134,17 @@ class Content extends ControllersAdmin {
                 $InsertId = $this->TableObj->last_insert_id();
                 $InsetArr = array(
                     'Id' => $InsertId,
-                    'CateId' => intval($_POST['CateId']),
-                    'Title' => trim($_POST['Title']),
-                    'STitle' => trim($_POST['STitle']),
-                    'Tag' => trim($_POST['Tag']),
-                    'Pic' => trim($_POST['Pic']),
-                    'Source' => trim($_POST['Source']),
-                    'Author' => trim($_POST['Author']),
+                    'CateId' => $this->CommonObj->SafeInput(intval($_POST['CateId'])),
+                    'Title' => $this->CommonObj->SafeInput(trim($_POST['Title'])),
+                    'STitle' => $this->CommonObj->SafeInput(trim($_POST['STitle'])),
+                    'Tag' => $this->CommonObj->SafeInput(trim($_POST['Tag'])),
+                    'Pic' => $this->CommonObj->SafeInput(trim($_POST['Pic'])),
+                    'Source' => $this->CommonObj->SafeInput(trim($_POST['Source'])),
+                    'Author' => $this->CommonObj->SafeInput(trim($_POST['Author'])),
                     'Sort' => intval($_POST['Sort']),
-                    'Keywords' => trim($_POST['Keywords']),
-                    'Description' => trim($_POST['Description']),
-                    'Summary' =>trim($_POST['Summary']),
+                    'Keywords' => $this->CommonObj->SafeInput(trim($_POST['Keywords'])),
+                    'Description' => $this->CommonObj->SafeInput(trim($_POST['Description'])),
+                    'Summary' => $this->CommonObj->SafeInput(trim($_POST['Summary'])),
                     'TsAdd' => $Ts,
                     'TsUpdate' => empty($_POST['TsUpdate']) ? $Ts : strtotime($_POST['TsUpdate']),
                     'ReadNum' => intval($_POST['ReadNum']),
@@ -153,13 +153,13 @@ class Content extends ControllersAdmin {
                     'UserLevel' => intval($_POST['UserLevel']),
                     'Good' => intval($_POST['Good']),
                     'Bad' => intval($_POST['Bad']),
-                    'Color' => trim($_POST['Color']),
+                    'Color' => $this->CommonObj->SafeInput(trim($_POST['Color'])),
                     'UserId' => $this->LoginUserRs['UserId'],
                     'State' => $State,
-                    'Content' => trim($_POST['Content']),
+                    'Content' => $this->CommonObj->CleanHtml(trim($_POST['Content'])),
                     'IsPost' => $IsPost,
                     'IsLink' => $IsLink,
-                    'LinkUrl' => trim($_POST['LinkUrl']),
+                    'LinkUrl' => $this->CommonObj->SafeInput(trim($_POST['LinkUrl'])),
                     'IsBold' => $IsBold,
                     'IsPic' => $IsPic,
                     'IsSpuerRec' => $IsSpuerRec,
@@ -178,7 +178,7 @@ class Content extends ControllersAdmin {
                         $_POST[$v['Name']] = trim($_POST[$v['Name']]);
                     }
                     if($v['NotNull'] == 1 && empty($_POST[$v['Name']])) $this->Err(1001);
-                    $InsetArr[$v['Name']] = $_POST[$v['Name']];                                       
+                    $InsetArr[$v['Name']] = $v['Type'] == 'editor' ? $this->CommonObj->CleanHtml(trim($_POST[$v['Name']])) : $this->CommonObj->SafeInput($_POST[$v['Name']]);                                       
                 }                     
                 $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetInsert($InsetArr)->ExecInsert();
                 $this->TagObj->RunUpdate($InsetArr['Tag'], '', $InsertId, $ModelRs['ModelId']);              
@@ -293,16 +293,16 @@ class Content extends ControllersAdmin {
 
                 $InsetArr = array(
                     'CateId' => intval($_POST['CateId']),
-                    'Title' => trim($_POST['Title']),
-                    'STitle' => trim($_POST['STitle']),
-                    'Tag' => trim($_POST['Tag']),
-                    'Pic' => trim($_POST['Pic']),
-                    'Source' => trim($_POST['Source']),
-                    'Author' => trim($_POST['Author']),
+                    'Title' => $this->CommonObj->SafeInput(trim($_POST['Title'])),
+                    'STitle' => $this->CommonObj->SafeInput(trim($_POST['STitle'])),
+                    'Tag' => $this->CommonObj->SafeInput(trim($_POST['Tag'])),
+                    'Pic' => $this->CommonObj->SafeInput(trim($_POST['Pic'])),
+                    'Source' => $this->CommonObj->SafeInput(trim($_POST['Source'])),
+                    'Author' => $this->CommonObj->SafeInput(trim($_POST['Author'])),
                     'Sort' => intval($_POST['Sort']),
-                    'Keywords' => trim($_POST['Keywords']),
-                    'Description' => trim($_POST['Description']),
-                    'Summary' => trim($_POST['Summary']),
+                    'Keywords' => $this->CommonObj->SafeInput(trim($_POST['Keywords'])),
+                    'Description' => $this->CommonObj->SafeInput(trim($_POST['Description'])),
+                    'Summary' => $this->CommonObj->SafeInput(trim($_POST['Summary'])),
                     //'TsAdd' => $Ts,
                     'TsUpdate' => empty($_POST['TsUpdate']) ? $Ts : strtotime($_POST['TsUpdate']),
                     'ReadNum' => intval($_POST['ReadNum']),
@@ -311,13 +311,13 @@ class Content extends ControllersAdmin {
                     'UserLevel' => intval($_POST['UserLevel']),
                     'Good' => intval($_POST['Good']),
                     'Bad' => intval($_POST['Bad']),
-                    'Color' => trim($_POST['Color']),
+                    'Color' => $this->CommonObj->SafeInput(trim($_POST['Color'])),
                     'UserId' => $this->LoginUserRs['UserId'],
                     'State' => $State,
-                    'Content' => trim($_POST['Content']),
+                    'Content' => $this->CommonObj->CleanHtml(trim($_POST['Content'])),
                     'IsPost' => $IsPost,
                     'IsLink' => $IsLink,
-                    'LinkUrl' => trim($_POST['LinkUrl']),
+                    'LinkUrl' => $this->CommonObj->SafeInput(trim($_POST['LinkUrl'])),
                     'IsBold' => $IsBold,
                     'IsPic' => $IsPic,
                     'IsSpuerRec' => $IsSpuerRec,
@@ -338,7 +338,7 @@ class Content extends ControllersAdmin {
                     if($v['NotNull'] == 1 && empty($_POST[$v['Name']])) {
                         $this->Err(1001);
                     }                    
-                    $InsetArr[$v['Name']] = $_POST[$v['Name']];
+                    $InsetArr[$v['Name']] = $v['Type'] == 'editor' ? $this->CommonObj->CleanHtml(trim($_POST[$v['Name']])) : $this->CommonObj->SafeInput($_POST[$v['Name']]);
                 }   
                 
                 $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Rs['Id']))->SetUpdate($InsetArr)->ExecUpdate();                

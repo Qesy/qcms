@@ -57,7 +57,7 @@ class common extends ControllersApi {
         $FieldArr = empty($Rs['FieldJson']) ? array() : json_decode($Rs['FieldJson'], true);
         foreach($FieldArr as $v){
             if($v['NotNull'] == 1 && empty($this->PostData[$v['Name']])) $this->ApiErr(1001);
-            $InsertArr[$v['Name']] = $this->PostData[$v['Name']];
+            $InsertArr[$v['Name']] = $this->CommonObj->SafeInput(trim($this->PostData[$v['Name']]));
         }
         $Ret = $this->Sys_formObj->SetTbName('form_'.$Rs['KeyName'])->SetInsert($InsertArr)->ExecInsert();
         if($Ret === false) $this->ApiErr(1002);

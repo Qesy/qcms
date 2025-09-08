@@ -61,15 +61,15 @@ class User extends ControllersAdmin {
             $IsHave = $this->UserObj->SetCond(array('Phone' => $_POST['Phone']))->SetField('COUNT(*) AS c')->ExecSelectOne();
             if($IsHave['c'] > 0) $this->Err(1041);
             $Ret = $this->UserObj->SetInsert(array(
-                'Phone' => $_POST['Phone'],
-                'NickName' => $_POST['NickName'],
-                'Sex' => $_POST['Sex'],
+                'Phone' => $this->CommonObj->SafeInput(trim($_POST['Phone'])),
+                'NickName' => $this->CommonObj->SafeInput(trim($_POST['NickName'])),
+                'Sex' => intval($_POST['Sex']),
                 'Password' => md5(trim($_POST['Password'])),
-                'GroupUserId' => $_POST['GroupUserId'],
-                'Name' => $_POST['Name'],
-                'Mail' => $_POST['Mail'],
-                'Head' => $_POST['Head'],
-                'Address' => $_POST['Address'],
+                'GroupUserId' => intval($_POST['GroupUserId']),
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
+                'Mail' => $this->CommonObj->SafeInput(trim($_POST['Mail'])),
+                'Head' => $this->CommonObj->SafeInput(trim($_POST['Head'])),
+                'Address' => $this->CommonObj->SafeInput(trim($_POST['Address'])),
                 'TsAdd' => time(),
                 'IpAdd' => $this->CommonObj->ip(),
                 'IsAdmin' => 2,
@@ -112,13 +112,13 @@ class User extends ControllersAdmin {
         
         if(!empty($_POST)){
             $UpdateArr = array(
-                'NickName' => $_POST['NickName'],
-                'Sex' => $_POST['Sex'],
-                'GroupUserId' => $_POST['GroupUserId'],
-                'Name' => $_POST['Name'],
-                'Mail' => $_POST['Mail'],
-                'Head' => $_POST['Head'],
-                'Address' => $_POST['Address'],
+                'NickName' => $this->CommonObj->SafeInput(trim($_POST['NickName'])),
+                'Sex' => intval($_POST['Sex']),
+                'GroupUserId' => intval($_POST['GroupUserId']),
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
+                'Mail' => $this->CommonObj->SafeInput(trim($_POST['Mail'])),
+                'Head' => $this->CommonObj->SafeInput(trim($_POST['Head'])),
+                'Address' => $this->CommonObj->SafeInput(trim($_POST['Address'])),
             );
             if(!empty($_POST['Password'])) $UpdateArr['Password'] = md5(trim($_POST['Password']));
             $Ret = $this->UserObj->SetCond(array('UserId' => $UserRs['UserId']))->SetUpdate($UpdateArr)->ExecUpdate();

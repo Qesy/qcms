@@ -230,7 +230,7 @@ class Common {
 	    } else if (! empty ( $_SERVER ["REMOTE_ADDR"] )) {
 	        $cip = $_SERVER ["REMOTE_ADDR"];
 	    }
-	    return htmlentities($cip);
+	    return $this->SafeInput($cip);
 	}
 
 	public function Html2Js($Str){
@@ -488,6 +488,149 @@ class Common {
 	    }
 	    return true;
 	}
+	
+	public function SafeInput($data) {
+	    return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+	}
+	
+	public function CleanHtml($html) {
+	    // 允许的标签
+	    $allowed_tags = [
+	        'p' => [],
+	        'br' => [],
+	        'strong' => [],
+	        'b' => [],
+	        'em' => [],
+	        'i' => [],
+	        'u' => [],
+	        'h1' => [], 'h2' => [], 'h3' => [], 'h4' => [], 'h5' => [], 'h6' => [],
+	        'ul' => [], 'ol' => [], 'li' => [],
+	        'blockquote' => [],
+	        'code' => [], 'pre' => [],
+	        'table' => [], 'thead' => [], 'tbody' => [], 'tfoot' => [],
+	        'tr' => [], 'th' => [], 'td' => [],
+	        'a' => ['href'],
+	        'img' => ['src', 'alt'],
+	        'figure' => ['class'],
+	        'div' => ['data-oembed-url'],   // ✅ 新增 div 支持
+	        'oembed' => ['url'],
+	        'video' => ['controls', 'style'],   // ✅ 新增 video
+	        'source' => ['src', 'type']        // ✅ 新增 source
+	    ];
+	    
+	    // 用 strip_tags 去掉不允许标签
+	    $html = strip_tags($html, '<' . implode('><', array_keys($allowed_tags)) . '>');
+	    
+	    // 清理 <a> href
+	    $html = preg_replace_callback(
+	        '#<a\s+[^>]*href=["\']?([^"\'>\s]+)["\']?[^>]*>#i',
+	        function($m) {
+	            $url = $m[1];
+	            if (!preg_match('#^https?://#i', $url)) {
+	                return '<a>';
+	            }
+	            return '<a href="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '" target="_blank" rel="nofollow noopener">';
+	        },
+	        $html
+	        );
+	    
+	    // 清理 <img src>
+	    $html = preg_replace_callback(
+	        '#<img\s+[^>]*src=["\']?([^"\'>\s]+)["\']?[^>]*>#i',
+	        function($m) {
+	            $src = $m[1];
+	            if (!preg_match('#^(https?://|/).+#i', $src)) {
+	                return '';
+	            }
+	            return '<img src="' . htmlspecialchars($src, ENT_QUOTES, 'UTF-8') . '" alt="">';
+	        },
+	        $html
+	        );
+	    
+	    // 清理 <figure class="">
+	    $html = preg_replace_callback(
+	        '#<figure\s+[^>]*class=["\']?([^"\'>]+)["\']?[^>]*>#i',
+	        function($m) {
+	            $class = $m[1];
+	            return '<figure class="' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '">';
+	        },
+	        $html
+	        );
+	    
+	    // 处理 <div data-oembed-url="">
+	    $html = preg_replace_callback(
+	        '#<div\s+[^>]*data-oembed-url=["\']?([^"\'>]+)["\']?[^>]*>#i',
+	        function($m) {
+	            $url = $m[1];
+	            return '<div data-oembed-url="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '">';
+	        },
+	        $html
+	        );
+	    
+	    // <oembed url="">
+	    $html = preg_replace_callback(
+	        '#<oembed\s+[^>]*url=["\']?([^"\'>]+)["\']?[^>]*>#i',
+	        function($m) {
+	            $url = $m[1];
+	            // ✅ 限制为 YouTube 或 Vimeo 等可信来源
+	            /*if (!preg_match('#^(https://(www\.)?(youtube\.com|youtu\.be|vimeo\.com))#i', $url)) {
+	                return '';
+	            }*/
+	            return '<oembed url="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '">';
+	        },
+	        $html
+	        );
+	    
+	    // <video controls style="...">
+	    /*$html = preg_replace_callback(
+	        '#<video\s+([^>]*)>#i',
+	        function($m) {
+	            $attrs = $m[1];
+	            
+	            $controls = preg_match('/\bcontrols\b/i', $attrs) ? ' controls' : '';
+	            $style = '';
+	            if (preg_match('/style=["\']([^"\']+)["\']/', $attrs, $sm)) {
+	                $style = ' style="' . htmlspecialchars($sm[1], ENT_QUOTES, 'UTF-8') . '"';
+	            }
+	            
+	            return '<video' . $controls . $style . '>';
+	        },
+	        $html
+	        );
+	    
+	    // <source src="" type="">
+	    $html = preg_replace_callback(
+	        '#<source\s+([^>]*)>#i',
+	        function($m) {
+	            $attrs = $m[1];
+	            
+	            $src = '';
+	            if (preg_match('/src=["\']([^"\']+)["\']/', $attrs, $sm)) {
+	                $srcUrl = $sm[1];
+	                if (preg_match('#^(https?://|/).+\.mp4$#i', $srcUrl)) {
+	                    $src = ' src="' . htmlspecialchars($srcUrl, ENT_QUOTES, 'UTF-8') . '"';
+	                }
+	            }
+	            
+	            $type = '';
+	            if (preg_match('/type=["\']([^"\']+)["\']/', $attrs, $tm)) {
+	                if (stripos($tm[1], 'video/mp4') !== false) {
+	                    $type = ' type="video/mp4"';
+	                }
+	            }
+	            
+	            return '<source' . $src . $type . '>';
+	        },
+	        $html
+	        );*/
+	    
+	    // 去掉所有事件属性 onclick, onerror 等
+	    $html = preg_replace('#\s*on\w+="[^"]*"#i', '', $html);
+	    $html = preg_replace("#\s*on\w+='[^']*'#i", '', $html);
+	    
+	    return $html;
+	}
+	
 
 	/**
 	 * 生成缩略图

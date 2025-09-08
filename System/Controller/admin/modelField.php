@@ -43,7 +43,15 @@ class ModelField extends ControllersAdmin {
             $NameArr = array_column($Arr, 'Name');
             if(in_array(trim($_POST['Name']), $NameArr)) $this->Err(1004);
             $DbConfig = Config::DbConfig();
-            $AddField = array('Name' => trim($_POST['Name']), 'Comment' => trim($_POST['Comment']), 'Type' => trim($_POST['Type']), 'Content' => trim($_POST['Content']), 'NotNull' => $_POST['NotNull'], 'IsList' => $_POST['IsList'], 'Data' => trim($_POST['Data']));
+            $AddField = array(
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])), 
+                'Comment' => $this->CommonObj->SafeInput(trim($_POST['Comment'])), 
+                'Type' => $this->CommonObj->SafeInput(trim($_POST['Type'])), 
+                'Content' => $this->CommonObj->SafeInput(trim($_POST['Content'])), 
+                'NotNull' => intval($_POST['NotNull']), 
+                'IsList' => intval($_POST['IsList']), 
+                'Data' => $this->CommonObj->SafeInput(trim($_POST['Data']))                
+            );
             $Arr[] = $AddField;
             list($FieldType, $FieldDefault) = $this->Sys_modelObj->GetField($AddField['Type']);
             try{
@@ -88,13 +96,13 @@ class ModelField extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Comment'))) $this->Err(1001);
             $AddField = array(
-                'Name' => trim($FieldRs['Name']),
-                'Comment' => trim($_POST['Comment']),
-                'Type' => trim($FieldRs['Type']),
-                'Content' => trim($_POST['Content']),
-                'NotNull' => $_POST['NotNull'],
-                'IsList' => $_POST['IsList'],
-                'Data' => trim($_POST['Data']),
+                'Name' => $this->CommonObj->SafeInput(trim($FieldRs['Name'])),
+                'Comment' => $this->CommonObj->SafeInput(trim($_POST['Comment'])),
+                'Type' => $this->CommonObj->SafeInput(trim($FieldRs['Type'])),
+                'Content' => $this->CommonObj->SafeInput(trim($_POST['Content'])),
+                'NotNull' => intval($_POST['NotNull']),
+                'IsList' => intval($_POST['IsList']),
+                'Data' => $this->CommonObj->SafeInput(trim($_POST['Data'])),
             );
             $Arr[$Index] = $AddField;
 

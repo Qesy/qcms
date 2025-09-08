@@ -28,7 +28,7 @@ class SwiperCate extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name'))) $this->Err(1001);
             $Ret = $this->Swiper_cateObj->SetInsert(array(
-                'Name' => $_POST['Name'],
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
                 'Sort' => 99,
                 'Code' => '',
             ))->ExecInsert();
@@ -49,7 +49,7 @@ class SwiperCate extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name'))) $this->Err(1001);
             $Ret = $this->Swiper_cateObj->SetCond(array('SwiperCateId' => $Rs['SwiperCateId']))->SetUpdate(array(
-                'Name' => $_POST['Name'],
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
             ))->ExecUpdate();
             if($Ret === false) $this->Err(1002);
             $this->Swiper_cateObj->clean($Rs['SwiperCateId']);

@@ -34,7 +34,11 @@ class Model extends ControllersAdmin {
             if(!$this->VeriObj->VeriPara($_POST, array('Name', 'KeyName'))) $this->Err(1001);
             try{
                 DB::$s_db_obj->beginTransaction();
-                $this->Sys_modelObj->SetInsert(array('Name' => trim($_POST['Name']), 'KeyName' => trim($_POST['KeyName'])))->ExecInsert();
+                $InsertMap = array(
+                    'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])), 
+                    'KeyName' => $this->CommonObj->SafeInput(trim($_POST['KeyName']))                    
+                );
+                $this->Sys_modelObj->SetInsert($InsertMap)->ExecInsert();
                 $this->Sys_modelObj->CreateTable(trim($_POST['KeyName']));
 
                 DB::$s_db_obj->commit();
@@ -65,7 +69,7 @@ class Model extends ControllersAdmin {
             if(!$this->VeriObj->VeriPara($_POST, array('Name'))) $this->Err(1001);
             try{
                 DB::$s_db_obj->beginTransaction();
-                $this->Sys_modelObj->SetCond(array('ModelId' => $Rs['ModelId']))->SetUpdate(array('Name' => trim($_POST['Name'])))->ExecUpdate();
+                $this->Sys_modelObj->SetCond(array('ModelId' => $Rs['ModelId']))->SetUpdate(array('Name' => $this->CommonObj->SafeInput(trim($_POST['Name']))))->ExecUpdate();
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
                 DB::$s_db_obj->rollBack();

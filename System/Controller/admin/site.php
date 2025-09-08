@@ -31,9 +31,9 @@ class Site extends ControllersAdmin {
             if(!$this->VeriObj->VeriPara($_POST, array('Name', 'WebSite', 'Secret'))) $this->Err(1001);
             if(strpos($_POST['WebSite'], 'http') === false || substr($_POST['WebSite'], -1) != '/')  $this->Err(1048);
             $Ret = $this->SiteObj->SetInsert(array(
-                'Name' => $_POST['Name'],
-                'WebSite' => trim($_POST['WebSite']),
-                'Secret' => trim($_POST['Secret']),
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
+                'WebSite' => $this->CommonObj->SafeInput(trim($_POST['WebSite'])),
+                'Secret' => $this->CommonObj->SafeInput(trim($_POST['Secret'])),
                 'Sort' => 99,
                 'Ts' => time(),
             ))->ExecInsert();
@@ -60,8 +60,11 @@ class Site extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name', 'WebSite'))) $this->Err(1001);
             if(strpos($_POST['WebSite'], 'http') === false || substr($_POST['WebSite'], -1) != '/')  $this->Err(1048);
-            $UpdateArr = array('Name' => $_POST['Name'], 'WebSite' => trim($_POST['WebSite']));
-            if(!empty($_POST['Secret'])) $UpdateArr['Secret'] = trim($_POST['Secret']);
+            $UpdateArr = array(
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])), 
+                'WebSite' => $this->CommonObj->SafeInput(trim($_POST['WebSite']))                
+            );
+            if(!empty($_POST['Secret'])) $UpdateArr['Secret'] = $this->CommonObj->SafeInput(trim($_POST['Secret']));
             $Ret = $this->SiteObj->SetCond(array('SiteId' => $Rs['SiteId']))->SetUpdate($UpdateArr)->ExecUpdate();
             if($Ret === false) $this->Err(1002);
             $this->SiteObj->cleanList();

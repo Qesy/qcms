@@ -75,7 +75,7 @@ $Html .= '</form>'
                                     <div class="row">
                                         <div class="col-6">
                                             <h5 class="mb-2">获取代码</h5>
-                                            <div class="border p-3"><textarea class="form-control" rows="20"><?= htmlentities($Html)?></textarea></div>
+                                            <div class="border p-3"><textarea class="form-control" rows="20"><?= $this->CommonObj->SafeInput($Html)?></textarea></div>
                                         </div>
 
                                         <div class="col-6">

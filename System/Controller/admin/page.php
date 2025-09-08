@@ -57,18 +57,18 @@ class Page extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name', 'PageCateId', 'TempDetail'))) $this->Err(1001);
             $Ret = $this->PageObj->SetInsert(array(
-                'PageCateId' => $_POST['PageCateId'],
-                'Name' => $_POST['Name'],
-                'NameEn' => $_POST['NameEn'],
-                'TempDetail' => $_POST['TempDetail'],
+                'PageCateId' => intval($_POST['PageCateId']),
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
+                'NameEn' => $this->CommonObj->SafeInput(trim($_POST['NameEn'])),
+                'TempDetail' => $this->CommonObj->SafeInput(trim($_POST['TempDetail'])),
                 //'UrlDetail' => $_POST['UrlDetail'],
-                'SeoTitle' => $_POST['SeoTitle'],
-                'Keywords' => $_POST['Keywords'],
-                'Description' => $_POST['Description'],
-                'Content' => $_POST['Content'],
+                'SeoTitle' => $this->CommonObj->SafeInput(trim($_POST['SeoTitle'])),
+                'Keywords' => $this->CommonObj->SafeInput(trim($_POST['Keywords'])),
+                'Description' => $this->CommonObj->SafeInput(trim($_POST['Description'])),
+                'Content' => $this->CommonObj->CleanHtml(trim($_POST['Content'])),
                 'Sort' => 99,
                 'State' => 1,
-                'Pic' => trim($_POST['Pic']),
+                'Pic' => $this->CommonObj->SafeInput(trim($_POST['Pic'])),
                 'PinYin' => $this->PinYinObj->str2pys(trim($_POST['Name'])),
                 'PY' => $this->PinYinObj->str2py(trim($_POST['Name'])),
             ))->ExecInsert();
@@ -126,16 +126,16 @@ class Page extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name', 'PageCateId', 'TempDetail'))) $this->Err(1001);
             $Ret = $this->PageObj->SetCond(array('PageId' => $Rs['PageId']))->SetUpdate(array(
-                'PageCateId' => $_POST['PageCateId'],
-                'Name' => $_POST['Name'],
-                'NameEn' => $_POST['NameEn'],
-                'TempDetail' => $_POST['TempDetail'],
+                'PageCateId' => intval($_POST['PageCateId']),
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
+                'NameEn' => $this->CommonObj->SafeInput(trim($_POST['NameEn'])),
+                'TempDetail' => $this->CommonObj->SafeInput(trim($_POST['TempDetail'])),
                 //'UrlDetail' => $_POST['UrlDetail'],
-                'SeoTitle' => $_POST['SeoTitle'],
-                'Keywords' => $_POST['Keywords'],
-                'Description' => $_POST['Description'],
-                'Content' => $_POST['Content'],
-                'Pic' => trim($_POST['Pic']),
+                'SeoTitle' => $this->CommonObj->SafeInput(trim($_POST['SeoTitle'])),
+                'Keywords' => $this->CommonObj->SafeInput(trim($_POST['Keywords'])),
+                'Description' => $this->CommonObj->SafeInput(trim($_POST['Description'])),
+                'Content' => $this->CommonObj->CleanHtml(trim($_POST['Content'])),
+                'Pic' => $this->CommonObj->SafeInput(trim($_POST['Pic'])),
                 'PinYin' => $this->PinYinObj->str2pys(trim($_POST['Name'])),
                 'PY' => $this->PinYinObj->str2py(trim($_POST['Name'])),
             ))->ExecUpdate();

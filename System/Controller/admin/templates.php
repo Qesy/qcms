@@ -54,7 +54,7 @@ class Templates extends ControllersAdmin {
             if(!$this->VeriObj->VeriPara($_POST, array('Type', 'KeyName'))) $this->Err(1001);
             $File = $_POST['Type'].'_'.$_POST['KeyName'].'.html';
             $FilePath = PATH_TEMPLATE.$this->SysRs['TmpPath'].'/'.$File;
-            $Ret = @file_put_contents($FilePath, $_POST['Html']);
+            $Ret = @file_put_contents($FilePath, trim($_POST['Html']));
             if($Ret === false) $this->Err(1002);
             $this->Jump(array('admin', 'templates', 'index'), 1888);
         }
@@ -75,7 +75,7 @@ class Templates extends ControllersAdmin {
             if(!$this->VeriObj->VeriPara($_POST, array('Type', 'KeyName'))) $this->Err(1001);
             $File = $_POST['Type'].'_'.$_POST['KeyName'].'.html';
             $NewFilePath = PATH_TEMPLATE.$this->SysRs['TmpPath'].'/'.$File;
-            $Ret = @file_put_contents($NewFilePath, $_POST['Html']);
+            $Ret = @file_put_contents($NewFilePath, trim($_POST['Html']));
             if($File != trim($_GET['Name'])) @unlink($FilePath); // 如果改名了，就删除旧的文件
             if($Ret === false) $this->Err(1002);
             $this->Jump(array('admin', 'templates', 'index'), 1888);

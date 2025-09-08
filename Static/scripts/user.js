@@ -401,7 +401,129 @@ function EditorCreate(Dom){
     IsEditorCreat = true;
     //ClassicEditor.create( document.querySelector( Dom ), {
     ClassicEditor.create( Dom, {
-
+    mediaEmbed: {
+        previewsInData: true,  // ✅ 确保数据里保存 iframe/embed 代码
+        providers: [
+            // ✅ MP4 视频
+                {
+                    name: 'mp4',
+                    url: /^https?:\/\/.*\.mp4$/,
+                    html: match => {
+                        const url = match[0];
+                        return (
+                            '<video controls style="max-width:100%;">' +
+                                '<source src="' + url + '" type="video/mp4">' +
+                                'Your browser does not support the video tag.' +
+                            '</video>'
+                        );
+                    }
+                },
+                // ✅ WebM 视频
+                {
+                    name: 'webm',
+                    url: /^https?:\/\/.*\.webm$/,
+                    html: match => {
+                        const url = match[0];
+                        return (
+                            '<video controls style="max-width:100%;">' +
+                                '<source src="' + url + '" type="video/webm">' +
+                                'Your browser does not support the video tag.' +
+                            '</video>'
+                        );
+                    }
+                },
+                // ✅ OGG 视频
+                {
+                    name: 'ogv',
+                    url: /^https?:\/\/.*\.(ogg|ogv)$/,
+                    html: match => {
+                        const url = match[0];
+                        return (
+                            '<video controls style="max-width:100%;">' +
+                                '<source src="' + url + '" type="video/ogg">' +
+                                'Your browser does not support the video tag.' +
+                            '</video>'
+                        );
+                    }
+                },
+                // ✅ MP3 音频
+                {
+                    name: 'mp3',
+                    url: /^https?:\/\/.*\.mp3$/,
+                    html: match => {
+                        const url = match[0];
+                        return (
+                            '<audio controls style="width:100%;">' +
+                                '<source src="' + url + '" type="audio/mpeg">' +
+                                'Your browser does not support the audio tag.' +
+                            '</audio>'
+                        );
+                    }
+                },
+                // ✅ OGG 音频
+                {
+                    name: 'ogg-audio',
+                    url: /^https?:\/\/.*\.ogg$/,
+                    html: match => {
+                        const url = match[0];
+                        return (
+                            '<audio controls style="width:100%;">' +
+                                '<source src="' + url + '" type="audio/ogg">' +
+                                'Your browser does not support the audio tag.' +
+                            '</audio>'
+                        );
+                    }
+                },
+                // ✅ WAV 音频
+                {
+                    name: 'wav',
+                    url: /^https?:\/\/.*\.wav$/,
+                    html: match => {
+                        const url = match[0];
+                        return (
+                            '<audio controls style="width:100%;">' +
+                                '<source src="' + url + '" type="audio/wav">' +
+                                'Your browser does not support the audio tag.' +
+                            '</audio>'
+                        );
+                    }
+                },
+                {
+                    name: 'youtube',
+                    url: [
+                        /^https?:\/\/(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]+)/,
+                        /^https?:\/\/youtu\.be\/([a-zA-Z0-9_-]+)/
+                    ],
+                    html: match => {
+                        const id = match[1];
+                        return (
+                            '<div class="embed-youtube" style="position:relative;padding-bottom:56.25%;height:0;">' +
+                                '<iframe src="https://www.youtube.com/embed/' + id + '" ' +
+                                    'style="position:absolute;top:0;left:0;width:100%;height:100%;" ' +
+                                    'frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen>' +
+                                '</iframe>' +
+                            '</div>'
+                        );
+                    }
+                },
+                // ▶️ Vimeo
+                {
+                    name: 'vimeo',
+                    url: /^https?:\/\/(?:www\.)?vimeo\.com\/(\d+)/,
+                    html: match => {
+                        const id = match[1];
+                        return (
+                            '<div class="embed-vimeo" style="position:relative;padding-bottom:56.25%;height:0;">' +
+                                '<iframe src="https://player.vimeo.com/video/' + id + '" ' +
+                                    'style="position:absolute;top:0;left:0;width:100%;height:100%;" ' +
+                                    'frameborder="0" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen>' +
+                                '</iframe>' +
+                            '</div>'
+                        );
+                    }
+                }
+        ]
+    },
     toolbar: {
       items: [
         'heading',

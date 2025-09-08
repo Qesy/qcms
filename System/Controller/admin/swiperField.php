@@ -44,7 +44,14 @@ class SwiperField extends ControllersAdmin {
             $NameArr = array_column($Arr, 'Name');
             if(in_array(trim($_POST['Name']), $NameArr)) $this->Err(1004);
             $DbConfig = Config::DbConfig();
-            $AddField = array('Name' => trim($_POST['Name']), 'Comment' => trim($_POST['Comment']), 'Type' => trim($_POST['Type']), 'Content' => trim($_POST['Content']), 'NotNull' => $_POST['NotNull'], 'Data' => trim($_POST['Data']));
+            $AddField = array(
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])), 
+                'Comment' => $this->CommonObj->SafeInput(trim($_POST['Comment'])), 
+                'Type' => $this->CommonObj->SafeInput(trim($_POST['Type'])), 
+                'Content' => $this->CommonObj->SafeInput(trim($_POST['Content'])), 
+                'NotNull' => intval($_POST['NotNull']), 
+                'Data' => $this->CommonObj->SafeInput(trim($_POST['Data']))                
+            );
             $Arr[] = $AddField;
             
             $FieldType = 'varchar(255)';
@@ -98,10 +105,10 @@ class SwiperField extends ControllersAdmin {
         if(!isset($Arr[$Index])) $this->Err(1048);
         $Rs = $Arr[$Index];
         if(!empty($_POST)){
-            $Arr[$Index]['Comment'] = trim($_POST['Comment']);
-            $Arr[$Index]['Data'] = trim($_POST['Data']);
-            $Arr[$Index]['Content'] = trim($_POST['Content']);
-            $Arr[$Index]['NotNull'] = trim($_POST['NotNull']);
+            $Arr[$Index]['Comment'] = $this->CommonObj->SafeInput(trim($_POST['Comment']));
+            $Arr[$Index]['Data'] = $this->CommonObj->SafeInput(trim($_POST['Data']));
+            $Arr[$Index]['Content'] = $this->CommonObj->SafeInput(trim($_POST['Content']));
+            $Arr[$Index]['NotNull'] = intval($_POST['NotNull']);
             $Ret = $this->SysObj->SetCond(array('Name' => 'SwiperFieldJson'))->SetUpdate(array('AttrValue' => json_encode($Arr)))->ExecUpdate();
             if($Ret === false) $this->Err(1002);
             $this->SysObj->cleanList();

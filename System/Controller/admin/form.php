@@ -56,11 +56,11 @@ class Form extends ControllersAdmin {
             try{
                 DB::$s_db_obj->beginTransaction();
                 $this->Sys_formObj->SetInsert(array(
-                    'Name' => $_POST['Name'],
-                    'KeyName' => $_POST['KeyName'],
+                    'Name' => $this->CommonObj->SafeInput($_POST['Name']),
+                    'KeyName' => $this->CommonObj->SafeInput($_POST['KeyName']),
                     'TempDetail' => $_POST['TempDetail'],
-                    'IsLogin' => $_POST['IsLogin'],
-                    'StateDefault' => $_POST['StateDefault'],
+                    'IsLogin' => intval($_POST['IsLogin']),
+                    'StateDefault' => intval($_POST['StateDefault']),
                     'State' => 1,
                     'Sort' => 99,
                 ))->ExecInsert();
@@ -99,10 +99,10 @@ class Form extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name', 'TempDetail', 'IsLogin', 'StateDefault'))) $this->Err(1001);
             $Ret = $this->Sys_formObj->SetCond(array('FormId' => $Rs['FormId']))->SetUpdate(array(
-                'Name' => $_POST['Name'],
+                'Name' => $this->CommonObj->SafeInput($_POST['Name']),
                 'TempDetail' => $_POST['TempDetail'],
-                'IsLogin' => $_POST['IsLogin'],
-                'StateDefault' => $_POST['StateDefault'],
+                'IsLogin' => intval($_POST['IsLogin']),
+                'StateDefault' => intval($_POST['StateDefault']),
             ))->ExecUpdate();
             if($Ret === false) $this->Err(1002);
             //$this->Sys_formObj->clean($Rs['FormId']);

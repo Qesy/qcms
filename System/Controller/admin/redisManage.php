@@ -41,8 +41,9 @@ class RedisManage extends ControllersAdmin {
         $Type = redis::type($_GET['Name']);
         $TypeStr = $this->RedisType[$Type];
         if(!empty($_POST)){
+            if(!Redis::exists($_GET['Name'])) $this->Err(1003);
             if($TypeStr == 'string'){
-                redis::set($_GET['Name'], $_POST['Content']);
+                redis::set($_GET['Name'], $this->CommonObj->SafeInput(trim($_POST['Content'])));
             }elseif($TypeStr == 'hash'){
                 redis::hMset($_GET['Name'], json_decode($_POST['Content'], true));
             }

@@ -207,6 +207,7 @@
                                             {{qcms:Detail_Author}} ： 作者<br>
                                             {{qcms:Detail_Keywords}} ： SEO关键字<br>
                                             {{qcms:Detail_Description}} ： SEO简介<br>
+                                            {{qcms:Detail_Summary}} ：摘要<br>
                                             {{qcms:Detail_TsAdd}} ： 添加时间（UNIX时间戳）<br>
                                             {{qcms:Detail_TsUpdate}} ： 最后更新时间（UNIX时间戳）<br>
                                             {{qcms:Detail_TimeAdd}} ： 添加时间（格式：2020-12-13 14:15:16）<br>

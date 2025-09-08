@@ -33,10 +33,10 @@ class Swiper extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Pic'))) $this->Err(1001);   
             $InsertMap = array(
-                'Pic' => $_POST['Pic'],
-                'Title' => $_POST['Title'],
-                'Summary' => $_POST['Summary'],
-                'Link' => $_POST['Link'],
+                'Pic' => $this->CommonObj->SafeInput(trim($_POST['Pic'])),
+                'Title' => $this->CommonObj->SafeInput(trim($_POST['Title'])),
+                'Summary' => $this->CommonObj->SafeInput(trim($_POST['Summary'])),
+                'Link' => $this->CommonObj->SafeInput(trim($_POST['Link'])),
                 'SwiperCateId' => intval($_GET['SwiperCateId']),
                 'Sort' => 99,
             );
@@ -49,7 +49,7 @@ class Swiper extends ControllersAdmin {
                     $_POST[$v['Name']] = trim($_POST[$v['Name']]);
                 }
                 if($v['NotNull'] == 1 && empty($_POST[$v['Name']])) $this->Err(1001);
-                $InsertMap[$v['Name']] = $_POST[$v['Name']];
+                $InsertMap[$v['Name']] = ($v['Type'] == 'editor') ? $this->CommonObj->CleanHtml(trim($_POST[$v['Name']])) : $this->CommonObj->SafeInput(trim($_POST[$v['Name']]));
             }
             $Ret = $this->SwiperObj->SetInsert($InsertMap)->ExecInsert();
             if($Ret === false) $this->Err(1002);
@@ -86,10 +86,10 @@ class Swiper extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Pic'))) $this->Err(1001);
             $UpdateMap = array(
-                'Pic' => $_POST['Pic'],
-                'Title' => $_POST['Title'],
-                'Summary' => $_POST['Summary'],
-                'Link' => $_POST['Link'],
+                'Pic' => $this->CommonObj->SafeInput(trim($_POST['Pic'])),
+                'Title' => $this->CommonObj->SafeInput(trim($_POST['Title'])),
+                'Summary' => $this->CommonObj->SafeInput(trim($_POST['Summary'])),
+                'Link' => $this->CommonObj->SafeInput(trim($_POST['Link'])),
             );
             foreach($FieldArr as $v){
                 if(is_array($_POST[$v['Name']])){
@@ -100,7 +100,7 @@ class Swiper extends ControllersAdmin {
                     $_POST[$v['Name']] = trim($_POST[$v['Name']]);
                 }
                 if($v['NotNull'] == 1 && empty($_POST[$v['Name']])) $this->Err(1001);
-                $UpdateMap[$v['Name']] = $_POST[$v['Name']];
+                $UpdateMap[$v['Name']] = ($v['Type'] == 'editor') ? $this->CommonObj->CleanHtml(trim($_POST[$v['Name']])) : $this->CommonObj->SafeInput(trim($_POST[$v['Name']]));
             }
             $Ret = $this->SwiperObj->SetCond(array('SwiperId' => $Rs['SwiperId']))->SetUpdate($UpdateMap)->ExecUpdate();
             if($Ret === false) $this->Err(1002);

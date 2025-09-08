@@ -82,29 +82,29 @@ class Category extends ControllersAdmin {
             $IsShow = isset($_POST['Attr']['IsShow']) ? 1 : 2;
             $IsLink = isset($_POST['Attr']['IsLink']) ? 1 : 2;
             $InsertArr = array(
-                'PCateId' => $PCateId,
-                'TCateId' => $TCateId,
-                'Name' =>trim($_POST['Name']),
-                'NameEn' => trim($_POST['NameEn']),
-                'ModelId' => intval($_POST['ModelId']),
-                'Pic' => trim($_POST['Pic']),
-                'IsPost' => $IsPost,
-                'IsShow' => $IsShow,
-                'IsLink' => $IsLink,
-                'UserLevel' => intval($_POST['UserLevel']),
-                'LinkUrl' => trim($_POST['LinkUrl']),
-                'TempList' => trim($_POST['TempList']),
-                'TempDetail' => trim($_POST['TempDetail']),
-                /* 'UrlList' => trim($_POST['UrlList']),
-                'UrlDetail' => trim($_POST['UrlDetail']),            */
-                'SeoTitle' => trim($_POST['SeoTitle']),
-                'Keywords' => trim($_POST['Keywords']),
-                'Description' => trim($_POST['Description']),
-                'Content' => trim($_POST['Content']),
-                'IsCross' => 2,
-                'Sort' => 99,
-                'PinYin' => $this->PinYinObj->str2pys(trim($_POST['Name'])),
-                'PY' => $this->PinYinObj->str2py(trim($_POST['Name'])),
+                'PCateId'       => $PCateId,
+                'TCateId'       => $TCateId,
+                'Name'          => $this->CommonObj->SafeInput(trim($_POST['Name'])),
+                'NameEn'        => $this->CommonObj->SafeInput(trim($_POST['NameEn'])),
+                'ModelId'       => intval($_POST['ModelId']),
+                'Pic'           => $this->CommonObj->SafeInput(trim($_POST['Pic'])),
+                'IsPost'        => $IsPost,
+                'IsShow'        => $IsShow,
+                'IsLink'        => $IsLink,
+                'UserLevel'     => intval($_POST['UserLevel']),
+                'LinkUrl'       => $this->CommonObj->SafeInput(trim($_POST['LinkUrl'])),
+                'TempList'      => $this->CommonObj->SafeInput(trim($_POST['TempList'])),
+                'TempDetail'    => $this->CommonObj->SafeInput(trim($_POST['TempDetail'])),
+                /* 'UrlList'    => trim($_POST['UrlList']),
+                'UrlDetail'     => trim($_POST['UrlDetail']),            */
+                'SeoTitle'      => $this->CommonObj->SafeInput(trim($_POST['SeoTitle'])),
+                'Keywords'      => $this->CommonObj->SafeInput(trim($_POST['Keywords'])),
+                'Description'   => $this->CommonObj->SafeInput(trim($_POST['Description'])),
+                'Content'       => $this->CommonObj->CleanHtml(trim($_POST['Content'])),
+                'IsCross'       => 2,
+                'Sort'          => 99,
+                'PinYin'        => $this->PinYinObj->str2pys(trim($_POST['Name'])),
+                'PY'            => $this->PinYinObj->str2py(trim($_POST['Name'])),
             );
 
             foreach($FieldArr as $v){
@@ -116,7 +116,7 @@ class Category extends ControllersAdmin {
                     $_POST[$v['Name']] = trim($_POST[$v['Name']]);
                 }
                 if($v['NotNull'] == 1 && empty($_POST[$v['Name']])) $this->Err(1001);
-                $InsertArr[$v['Name']] = $_POST[$v['Name']];
+                $InsertArr[$v['Name']] = $v['Type'] == 'editor' ? $this->CommonObj->CleanHtml(trim($_POST[$v['Name']])) : $this->CommonObj->SafeInput($_POST[$v['Name']]);
             }
 
             $Ret = $this->CategoryObj->SetInsert($InsertArr)->ExecInsert();
@@ -214,23 +214,23 @@ class Category extends ControllersAdmin {
             $IsLink = isset($_POST['Attr']['IsLink']) ? 1 : 2;
             $UpdateArr = array(
                 //'PCateId' => $PCateId,
-                'Name' =>trim($_POST['Name']),
-                'NameEn' => trim($_POST['NameEn']),
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
+                'NameEn' => $this->CommonObj->SafeInput(trim($_POST['NameEn'])),
                 //'ModelId' => intval($_POST['ModelId']),
-                'Pic' => trim($_POST['Pic']),
+                'Pic' => $this->CommonObj->SafeInput(trim($_POST['Pic'])),
                 'IsPost' => $IsPost,
                 'IsShow' => $IsShow,
                 'IsLink' => $IsLink,
                 'UserLevel' => intval($_POST['UserLevel']),
-                'LinkUrl' => trim($_POST['LinkUrl']),
-                'TempList' => trim($_POST['TempList']),
-                'TempDetail' => trim($_POST['TempDetail']),
+                'LinkUrl' => $this->CommonObj->SafeInput(trim($_POST['LinkUrl'])),
+                'TempList' => $this->CommonObj->SafeInput(trim($_POST['TempList'])),
+                'TempDetail' => $this->CommonObj->SafeInput(trim($_POST['TempDetail'])),
                 /* 'UrlList' => trim($_POST['UrlList']),
                 'UrlDetail' => trim($_POST['UrlDetail']), */
-                'SeoTitle' => trim($_POST['SeoTitle']),
-                'Keywords' => trim($_POST['Keywords']),
-                'Description' => trim($_POST['Description']),
-                'Content' => trim($_POST['Content']),
+                'SeoTitle' => $this->CommonObj->SafeInput(trim($_POST['SeoTitle'])),
+                'Keywords' => $this->CommonObj->SafeInput(trim($_POST['Keywords'])),
+                'Description' => $this->CommonObj->SafeInput(trim($_POST['Description'])),
+                'Content' => $this->CommonObj->CleanHtml(trim($_POST['Content'])),
                 'IsCross' => 2,
                 'PinYin' => $this->PinYinObj->str2pys(trim($_POST['Name'])),
                 'PY' => $this->PinYinObj->str2py(trim($_POST['Name'])),
@@ -248,7 +248,7 @@ class Category extends ControllersAdmin {
                 if($v['NotNull'] == 1 && empty($_POST[$v['Name']])) {
                     $this->Err(1001);
                 }
-                $UpdateArr[$v['Name']] = $_POST[$v['Name']];
+                $UpdateArr[$v['Name']] = $v['Type'] == 'editor' ? $this->CommonObj->CleanHtml(trim($_POST[$v['Name']])) : $this->CommonObj->SafeInput($_POST[$v['Name']]);
             }
 
             $Ret = $this->CategoryObj->SetCond(array('CateId' => $CateRs['CateId']))->SetUpdate($UpdateArr)->ExecUpdate();

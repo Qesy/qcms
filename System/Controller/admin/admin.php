@@ -56,12 +56,12 @@ class Admin extends ControllersAdmin {
             $IsHave = $this->UserObj->SetCond(array('Phone' => $_POST['Phone']))->SetField('COUNT(*) AS c')->ExecSelectOne();
             if($IsHave['c'] > 0) $this->Err(1041);
             $Ret = $this->UserObj->SetInsert(array(
-                'Phone' => $_POST['Phone'],
-                'NickName' => $_POST['NickName'],
-                'Head' => $_POST['Head'],
-                'Password' => md5(trim($_POST['Password'])),
-                'GroupAdminId' => $_POST['GroupAdminId'],
-                'IsAdmin' => 1,
+                'Phone'         => $this->CommonObj->SafeInput($_POST['Phone']),
+                'NickName'      => $this->CommonObj->SafeInput($_POST['NickName']),
+                'Head'          => $this->CommonObj->SafeInput($_POST['Head']),
+                'Password'      => md5(trim($_POST['Password'])),
+                'GroupAdminId'  => $this->CommonObj->SafeInput($_POST['GroupAdminId']),
+                'IsAdmin'       => 1,
             ))->ExecInsert();
             if($Ret === false) $this->Err(1002);
             $this->Jump(array('admin', 'admin', 'index'), 1888);
@@ -88,11 +88,11 @@ class Admin extends ControllersAdmin {
             //if(!$this->VeriObj->VeriMobile($_POST['Phone'])) $this->Err(1001);
             $UpdateArr = array(
                 //'Phone' => $_POST['Phone'],
-                'NickName' => $_POST['NickName'],
-                'Head' => $_POST['Head'],
+                'NickName'      => $this->CommonObj->SafeInput($_POST['NickName']),
+                'Head'          => $this->CommonObj->SafeInput($_POST['Head']),
                 //'Password' => md5(trim($_POST['Password'])),
-                'GroupAdminId' => $_POST['GroupAdminId'],
-                'IsAdmin' => 1,
+                'GroupAdminId'  => $this->CommonObj->SafeInput($_POST['GroupAdminId']),
+                'IsAdmin'       => 1,
             );
             if(!empty($_POST['Password'])) $UpdateArr['Password'] = md5(trim($_POST['Password']));
             $Ret = $this->UserObj->SetCond(array('UserId' => $UserRs['UserId']))->SetUpdate($UpdateArr)->ExecUpdate();

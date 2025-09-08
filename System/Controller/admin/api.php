@@ -6,7 +6,7 @@ class Api extends ControllersAdmin {
         if(!$this->VeriObj->VeriPara($_POST, array('Phone', 'Pwd'))) $this->ApiErr(1001, '缺少参数');
         $Ret = $this->loginPlatform(trim($_POST['Phone']), $_POST['Pwd']);
         if($Ret['Code'] != 0) $this->ApiErr(1000, $Ret['Msg'].'('.$Ret['Code'].')');
-        $Result = $this->SysObj->SetCond(array('Name' => 'BindPhone'))->SetUpdate(array('AttrValue' => trim($_POST['Phone'])))->ExecUpdate();
+        $Result = $this->SysObj->SetCond(array('Name' => 'BindPhone'))->SetUpdate(array('AttrValue' => $this->CommonObj->SafeInput(trim($_POST['Phone']))))->ExecUpdate();
         if($Result === false) $this->Err(1002);
         $this->SysObj->cleanList();
         $this->ApiSuccess();
@@ -122,7 +122,7 @@ class Api extends ControllersAdmin {
 
     public function userState_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Id', 'Status', 'Field'))) $this->ApiErr(1001);
-        $DataArr = array($_GET['Field'] => $_GET['Status']);
+        $DataArr = array($_GET['Field'] => $this->CommonObj->SafeInput($_GET['Status']));
         if($_GET['Id'] == $this->LoginUserRs['UserId']) $this->ApiErr(1047);
         $Ret = $this->UserObj->SetCond(array('UserId' => $_GET['Id']))->SetUpdate($DataArr)->ExecUpdate();
         if($Ret === false) $this->Err(1002);
@@ -132,7 +132,7 @@ class Api extends ControllersAdmin {
 
     public function linkState_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Id', 'Status', 'Field'))) $this->ApiErr(1001);
-        $DataArr = array($_GET['Field'] => $_GET['Status']);
+        $DataArr = array($_GET['Field'] => $this->CommonObj->SafeInput($_GET['Status']));
         $Ret = $this->LinkObj->SetCond(array('LinkId' => $_GET['Id']))->SetUpdate($DataArr)->ExecUpdate();
         if($Ret === false) $this->Err(1002);
         $this->LinkObj->clean($_GET['Id']);
@@ -141,7 +141,7 @@ class Api extends ControllersAdmin {
 
     public function pageState_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Id', 'Status', 'Field'))) $this->ApiErr(1001);
-        $DataArr = array($_GET['Field'] => $_GET['Status']);
+        $DataArr = array($_GET['Field'] => $this->CommonObj->SafeInput($_GET['Status']));
         $Ret = $this->PageObj->SetCond(array('PageId' => $_GET['Id']))->SetUpdate($DataArr)->ExecUpdate();
         if($Ret === false) $this->Err(1002);
         $this->PageObj->clean($_GET['Id']);
@@ -150,7 +150,7 @@ class Api extends ControllersAdmin {
 
     public function labelState_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Id', 'Status', 'Field'))) $this->ApiErr(1001);
-        $DataArr = array($_GET['Field'] => $_GET['Status']);
+        $DataArr = array($_GET['Field'] => $this->CommonObj->SafeInput($_GET['Status']));
         $Rs = $this->LabelObj->SetCond(array('LabelId' => $_GET['Id']))->ExecSelectOne();
         $Ret = $this->LabelObj->SetCond(array('LabelId' => $_GET['Id']))->SetUpdate($DataArr)->ExecUpdate();
         if($Ret === false) $this->Err(1002);
@@ -160,7 +160,7 @@ class Api extends ControllersAdmin {
 
     public function formState_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Id', 'Status', 'Field'))) $this->ApiErr(1001);
-        $DataArr = array($_GET['Field'] => $_GET['Status']);
+        $DataArr = array($_GET['Field'] => $this->CommonObj->SafeInput($_GET['Status']));
         $Rs = $this->Sys_formObj->SetCond(array('FormId' => $_GET['Id']))->ExecSelectOne();
         $Ret = $this->Sys_formObj->SetCond(array('FormId' => $_GET['Id']))->SetUpdate($DataArr)->ExecUpdate();
         if($Ret === false) $this->Err(1002);
@@ -173,7 +173,7 @@ class Api extends ControllersAdmin {
         if(!$this->VeriObj->VeriPara($_GET, array('Id', 'Status', 'Field'))) $this->ApiErr(1001);
         $FormRs = $this->Sys_formObj->SetCond(array('FormId' => $FormId))->ExecSelectOne();
         if(empty($FormRs))  $this->ApiErr(1003);
-        $DataArr = array($_GET['Field'] => $_GET['Status']);
+        $DataArr = array($_GET['Field'] => $this->CommonObj->SafeInput($_GET['Status']));
         $Ret = $this->Sys_formObj->SetTbName('form_'.$FormRs['KeyName'])->SetCond(array('FormListId' => $_GET['Id']))->SetUpdate($DataArr)->ExecUpdate();
         if($Ret === false) $this->Err(1002);
         $this->CommonObj->ApiSuccess();
@@ -181,7 +181,7 @@ class Api extends ControllersAdmin {
 
     public function inlinkState_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Id', 'Status', 'Field'))) $this->ApiErr(1001);
-        $DataArr = array($_GET['Field'] => $_GET['Status']);
+        $DataArr = array($_GET['Field'] => $this->CommonObj->SafeInput($_GET['Status']));
         $Ret = $this->InlinkObj->SetCond(array('InlinkId' => $_GET['Id']))->SetUpdate($DataArr)->ExecUpdate();
         if($Ret === false) $this->Err(1002);
         $this->InlinkObj->cleanList();
@@ -196,7 +196,7 @@ class Api extends ControllersAdmin {
 
     public function contentStateOne_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('Id', 'Status', 'Field'))) $this->ApiErr(1001);
-        $DataArr = array($_GET['Field'] => $_GET['Status']);
+        $DataArr = array($_GET['Field'] => $this->CommonObj->SafeInput($_GET['Status']));
         $TableRs = $this->TableObj->SetCond(array('Id' => $_GET['Id']))->ExecSelectOne();        
         $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
         $Ret = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $_GET['Id']))->SetUpdate($DataArr)->ExecUpdate();
@@ -213,7 +213,7 @@ class Api extends ControllersAdmin {
         $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
         try{
             DB::$s_db_obj->beginTransaction();
-            $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Ids))->SetUpdate(array($_POST['Key'] => $_POST['Val']))->ExecUpdate();
+            $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Ids))->SetUpdate(array($_POST['Key'] => $this->CommonObj->SafeInput($_POST['Val'])))->ExecUpdate();
             if($_POST['Key'] == 'IsDelete'){ // 批量删除/恢复设置tag (发布状态不操作Tag)
                 $Arr = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Ids))->SetField('Id, Tag')->ExecSelect();
                 foreach ($Arr as $v){ // 批量设置TAG
@@ -255,7 +255,10 @@ class Api extends ControllersAdmin {
         if(!$this->VeriObj->VeriPara($_POST, array('Ids', 'CateId', 'ModelId'))) $this->ApiErr(1001);
         $Ids = explode(',', $_POST['Ids']);
         $ModelRs = $this->Sys_modelObj->getOne($_POST['ModelId']);
-        $Ret = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Ids))->SetUpdate(array('CateId' => $_POST['CateId']))->ExecUpdate();
+        $CateId = intval($_POST['CateId']);
+        $CateRs = $this->CategoryObj->getOne($CateId);
+        if(empty($CateRs)) $this->ApiErr(1003);
+        $Ret = $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Ids))->SetUpdate(array('CateId' => $CateRs['CateId']))->ExecUpdate();
         if($Ret === false) $this->ApiErr(1002);
         $this->ApiSuccess();
     }
