@@ -94,7 +94,7 @@ class QC_Sys_model extends \Db_pdo {
                   `Summary` varchar(255) DEFAULT '' COMMENT '摘要',
                   ";
 	    $DbConfig = \Config::DbConfig();
-	    $TableSql = 'CREATE TABLE `'.$DbConfig['Prefix'].'table_'.$KeyName.'` ( '.PHP_EOL.$FieldStr.' PRIMARY KEY (`Id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT=\'\';';
+	    $TableSql = 'CREATE TABLE `'.$DbConfig['Prefix'].'table_'.$KeyName.'` ( '.PHP_EOL.$FieldStr.' PRIMARY KEY (`Id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT=\'\';';
 	    $this->exec($TableSql, array());
 	}
 	

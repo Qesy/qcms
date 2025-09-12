@@ -22,6 +22,7 @@ use Model\QC_Log_login;
 use Model\QC_Log_operate;
 use Model\QC_Page;
 use Model\QC_Page_cate;
+use Model\QC_Plugin;
 use Model\QC_Photos;
 use Model\QC_Site;
 use Model\QC_Stat_flow;
@@ -37,6 +38,7 @@ use Model\QC_Table_down;
 use Model\QC_Table_product;
 use Model\QC_Tag;
 use Model\QC_Tag_map;
+use Model\QC_Templates;
 use Model\QC_Token;
 use Model\QC_User;
 use Helper\Pinyin;
@@ -81,6 +83,7 @@ abstract class Base {
 	public $Log_operateObj;
 	public $PageObj;
 	public $Page_cateObj;
+	public $PluginObj;
 	public $PhotosObj;
 	public $SiteObj;
 	public $Stat_flowObj;
@@ -96,6 +99,7 @@ abstract class Base {
 	public $Table_productObj;
 	public $TagObj;
 	public $Tag_mapObj;
+	public $TemplatesObj;
 	public $TokenObj;
 	public $UserObj;
 	
@@ -174,6 +178,7 @@ abstract class Base {
 		$this->Log_operateObj = QC_Log_operate::get_instance();
 		$this->PageObj = QC_Page::get_instance();
 		$this->Page_cateObj = QC_Page_cate::get_instance();
+		$this->PluginObj = QC_Plugin::get_instance();
 		$this->PhotosObj = QC_Photos::get_instance();
 		$this->SiteObj = QC_Site::get_instance();
 		$this->Stat_flowObj = QC_Stat_flow::get_instance();
@@ -189,6 +194,7 @@ abstract class Base {
 		$this->Table_productObj = QC_Table_product::get_instance();
 		$this->TagObj = QC_Tag::get_instance();
 		$this->Tag_mapObj = QC_Tag_map::get_instance();
+		$this->TemplatesObj = QC_Templates::get_instance();
 		$this->TokenObj = QC_Token::get_instance();
 		$this->UserObj = QC_User::get_instance();
 		

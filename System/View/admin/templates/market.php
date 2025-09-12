@@ -79,7 +79,7 @@
                                             <?
                                             if(isset($TempFolder[$v['NameKey']])){
                                             ?>
-                                            <span class="position-absolute btn btn-danger btn-sm" style="right:1rem;top:0px;">已安装</span>
+                                            <span class="position-absolute btn btn-danger btn-sm " style="right:1rem;top:0px;">已安装</span>
                                             <? } ?>
                                             <div >
                                                     <div class="border mb-2 tempViewBtn" data-index="<?=$k?>">
@@ -94,7 +94,12 @@
                                                             <span>
                                                                 <?
                                                                 if(in_array($v['TemplatesId'], $PaidIDs)){
-                                                                    echo '<button class="btn btn-sm btn-success InstallBtn" data-index="'.$k.'">安装</button>';
+                                                                    if(isset($TempFolder[$v['NameKey']])){
+                                                                        echo '<button class="btn btn-sm btn-success" data-index="'.$k.'" disabled="disabled">安装</button>';
+                                                                    }else{
+                                                                        echo '<button class="btn btn-sm btn-success InstallBtn " data-index="'.$k.'">安装</button>';
+                                                                    }
+
                                                                 }else{
                                                                     echo '<button class="btn btn-sm btn-primary  BuyBtn" data-index="'.$k.'">购买</button>';
                                                                 }
@@ -203,15 +208,17 @@
                 if(!confirm("安装模板覆盖数据库，请先备份数据库，再安装")) return;
                 let Index = $(this).attr('data-index');
                 let NameKey = TemplateArr[Index]['NameKey'];
-                if(typeof TempFolder[Index] != 'undefined'){
+                if(typeof TempFolder[NameKey] != 'undefined'){
                     alert('已安装，请先删除，再安装');return;
                 }
+                $('#LoadingModel').modal();
                 $.get('/admin/api/installTemplate', {TemplatesId:TemplateArr[Index]['TemplatesId']}, function(Res){
                     if(Res.Code != 0){
-                        alert(Res.Msg);return;
+                        alert(Res.Msg);
+                        $('#LoadingModel').modal('hide');
+                        return;
                     }
                     alert('安装成功');
-                    $('#tempViewModal').modal('hide');
                     location.reload();
                 }, 'json')
             })

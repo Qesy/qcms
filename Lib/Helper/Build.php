@@ -571,7 +571,7 @@ class Build {
                 $str .= '<th  scope="col">'.$v['Name'].'</th>';
             }
         }
-        if($this->IsEdit || $this->IsDel || !empty($v['BtnArr'])) $str .= '<th scope="col">操作</th>';
+        if($this->IsEdit || $this->IsDel || !empty($arr[0]['BtnArr'])) $str .= '<th scope="col">操作</th>';
         $str .= '</tr></thead><tbody>';
         foreach($arr as $k => $v){
             $str .= '<tr class="'.$v['TrClass'].' '.(($this->TableSelectIndex == $k) ? 'table-success' : '').'">';

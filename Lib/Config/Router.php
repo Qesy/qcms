@@ -101,6 +101,7 @@ class Router {
 	    if(strpos($Url, 'install') === 0) return $Url; //安装文件不处理
 	    $SysObj = QC_Sys::get_instance();
 	    $SysRs = $SysObj->getKv();
+	    //var_dump(($Url == false || strpos($Url, 'index') !== false));exit;
 	    if(strpos($Url, 'cate/') !== false){
 	        $ListUrl = 'cate/'.$SysRs['UrlList'];
 	        $ListUrlRep = '/^'.str_replace(array('/', '{CateId}', '{PinYin}', '{PY}'), array('\/', '(\d+)', '([\w]*?)', '([\w]*?)'), $ListUrl).'$/';
@@ -123,9 +124,7 @@ class Router {
                 }
                 return 'index/cate/'.$CateId.'/'.$Page;
             }
-	    }
-	    
-	    if(strpos($Url, 'detail/') !== false){	       
+	    }else if(strpos($Url, 'detail/') !== false){	       
 	        $UrlDetail = 'detail/'.$SysRs['UrlDetail'];
 	        $UrlDetailRep = '/^'.str_replace(array('/', '{Y}', '{M}', '{D}', '{Id}', '{PinYin}', '{PY}'), array('\/', '(\d+)', '(\d+)', '(\d+)', '(\d+)','([\w]*?)', '([\w]*?)'), $UrlDetail).'$/';
 	        if(preg_match($UrlDetailRep, $Url.$this->_SiteConfig['Extend'], $Matches)){ //匹配详情	            
@@ -136,9 +135,19 @@ class Router {
 	            }
 	            return 'index/detail/'.$Id;
 	        }
-	    }
-	    
-	    if(strpos($Url, 'page/') !== false){
+	    }else if($Url == false || strpos($Url, 'index') !== false){
+	        $UrlDetail = 'index_'.$SysRs['UrlDetail'];
+	        $UrlDetailRep = '/^'.str_replace(array('/', '{Id}'), array('\/', '(\d+)'), $UrlDetail).'$/';
+	        if(preg_match($UrlDetailRep, $Url.$this->_SiteConfig['Extend'], $Matches)){ //匹配详情
+	            preg_match_all("/\{([a-zA-Z0-9]+)\}/",$UrlDetail, $MatchesSort);
+	            $Id = 0;
+	            foreach($MatchesSort[1] as $k => $v){
+	                $$v = $Matches[$k+1];
+	            }
+	            //var_dump($Id);
+	            return 'index/index/'.$Id;
+	        }
+	    }else if(strpos($Url, 'page/') !== false){
 	        $UrlPage = 'page/'.$SysRs['UrlPage'];
 	        $UrlPageRep = '/^'.str_replace(array('/', '{PageId}', '{PinYin}', '{PY}'), array('\/', '(\d+)','([\w]*?)', '([\w]*?)'), $UrlPage).'$/';
 	        if(preg_match($UrlPageRep, $Url.$this->_SiteConfig['Extend'], $Matches)){ //匹配详情
@@ -149,9 +158,7 @@ class Router {
 	            }
 	            return 'index/page/'.$PageId;
 	        }
-	    }
-	    
-	    if(strpos($Url, 'form/') !== false){
+	    }else if(strpos($Url, 'form/') !== false){
 	        $UrlPage = 'form/'.$SysRs['UrlForm'];	        
 	        $UrlPageRep = '/^'.str_replace(array('/', '{KeyName}'), array('\/', '([\w\W]*?)'), $UrlPage).'$/';
 	        if(preg_match($UrlPageRep, $Url.$this->_SiteConfig['Extend'], $Matches)){ //匹配详情

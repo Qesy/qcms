@@ -5,7 +5,7 @@ $this->CommonObj->loadScripts(array(
     'ajaxupload',
 ), true);
 ?>
-<script src="https://lf1-cdn-tos.bytegoofy.com/obj/iconpark/icons_29154_49.cbeba74a2aeddb9d0bfd48059bffe0e1.js"></script>
+<script src="https://lf1-cdn-tos.bytegoofy.com/obj/iconpark/icons_29154_52.aed43a472ac64521b66990434cd8651a.js"></script>
 <script src="<?=URL_BOOT?>js/jasny-bootstrap.min.js"></script>
 <script src="<?=URL_BOOT?>js/jquery.slimscroll.js"></script>
 <script src="<?=URL_BOOT?>js/bootstrap-colorpicker.min.js"></script>

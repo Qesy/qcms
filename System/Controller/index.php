@@ -4,8 +4,8 @@ class Index extends Controllers {
 
     const CurrentClient = 'Web';
 
-    public function index_Action(){
-        echo $this->tempRun('index');
+    public function index_Action($Page = 1){
+        echo $this->tempRun('index', 0, $Page);
         self::_statFlow();
     }
 

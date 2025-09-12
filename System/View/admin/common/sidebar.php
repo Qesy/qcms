@@ -13,7 +13,7 @@
                 <?=!empty($val['Sub']) ? 'href="javascript:void(0);" data-toggle="collapse"' : 'href="'.$CateRs['Url'].'"'?>
 
                 data-target="#<?=$Key2Id?>">
-                <iconpark-icon name="<?=$val['Icon']?>" class="mr-5" size="1.2rem" ></iconpark-icon>
+                <iconpark-icon name="<?=$val['Icon']?>" class="mr-5" size="1.3rem" ></iconpark-icon>
                 <?=$CateRs['Name']?>
                 <span class="pull-right <?=empty($val['Sub']) ? 'd-none' : 'd-block'?>"><iconpark-icon size="1.2rem" name="down"></iconpark-icon></span></a>
                 <? if(!empty($val['Sub'])){ ?>

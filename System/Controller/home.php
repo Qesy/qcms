@@ -38,7 +38,7 @@ class Home extends Controllers {
 	
     public function build_Action(){
         if(WEB_MODE != 'Dev') return;
-        $DbConfig = DbConfig ();
+        $DbConfig = Config::DbConfig();
 	    $Pre = $DbConfig['Prefix'];
 	    $PdoObj = Db_pdo::get_instance();
 	    $TableArr = $PdoObj->query('show tables;', array());

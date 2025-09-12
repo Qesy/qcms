@@ -1,55 +1,70 @@
-.text-black{
-    color:#000;
+.text-black {
+    color: #000;
 }
 
-body{
+body {
 
     color: #212529 !important;
     line-height: 1.8;
-    font-family: -apple-system, "SF UI Text", Arial, PingFangSC-Medium, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;;
+    font-family: -apple-system, "SF UI Text", Arial, PingFangSC-Medium, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "WenQuanYi Micro Hei", sans-serif;
+    ;
     //background-color: #fff;
 }
-html{
+
+html {
     font-size: 14px;
 
 }
+
 p {
     font-size: unset;
     line-height: unset;
 }
-.breadcrumb{
-    float:unset;
+
+.breadcrumb {
+    float: unset;
     padding: 0px;
-    a{
+
+    a {
         color: #000;
     }
 }
-h1{
+
+h1 {
     font-size: 1.4rem;
     font-weight: 600;
 }
-li {list-style: none; }
+
+li {
+    list-style: none;
+}
+
 figure {
     margin: 0 0 1rem;
 }
-iconpark-icon{
+
+iconpark-icon {
     vertical-align: sub;
 }
-.Content{
-    .image{
+
+.Content {
+    .image {
         display: table;
         clear: both;
         text-align: center;
         margin: 1em auto;
     }
-    .Inlink{
-        color: #007bff!important;
+
+    .Inlink {
+        color: #007bff !important;
         padding-left: 2px;
-        padding-right:2px;
+        padding-right: 2px;
     }
-    .Inlink:hover{
-        text-decoration:underline;
+
+    .Inlink:hover {
+        text-decoration: underline;
     }
+
     font-size: 1.1rem !important;
 }
 
@@ -100,29 +115,128 @@ iconpark-icon{
     opacity: 1;
 }
 
-.swiperBanner{
+.swiperBanner {
     height: 560px;
 }
-.indexNewsImg{
-    width:120px;
+
+.indexNewsImg {
+    width: 120px;
 }
-.CateBannerPic{
+
+.CateBannerPic {
     height: 380px;
 }
-.Content img{
+
+.Content img {
     max-width: 100%;
 }
-.font-weight-1{
-    font-weight: 700!important;
+
+.font-weight-1 {
+    font-weight: 700 !important;
 }
+
+/***CKeditor5 CSS***/
+@CkMarkerYellow : #fdfd77;
+@CkMarkerGreen : #62f962;
+@CkMarkerPink : #fc7899;
+@CkMarkerBlue : #72ccfd;
+@CkPenRed : #e71313;
+@CkPenGreen : #128a00;
+
+.Content {
+    .table table {
+    border: 1px double #b3b3b3;
+    border-collapse: collapse;
+    border-spacing: 0;
+    height: 100%;
+    width: 100%;
+}
+.table table td, .ck-content .table table th {
+    border: 1px solid #bfbfbf;
+    min-width: 2em;
+    padding: .4em;
+}
+    .media{
+        display: block !important;
+    }
+    hr {
+        background: #dedede;
+        border: 0;
+        height: 1px;
+        margin: 15px 0;
+    }
+    .marker-yellow {
+        background-color: @CkMarkerYellow;
+    }
+    .marker-green {
+        background-color: @CkMarkerGreen;
+    }
+    .marker-pink {
+        background-color: @CkMarkerPink;
+    }
+    .marker-blue {
+        background-color: @CkMarkerBlue;
+    }
+
+.ck-content .text-tiny {
+    font-size: .7em;
+}
+.ck-content .text-small {
+    font-size: .85em;
+}
+    .text-big {
+    font-size: 1.4em;
+}
+.text-huge {
+    font-size: 1.8em;
+}
+.page-break {
+    align-items: center;
+    clear: both;
+    display: flex;
+    justify-content: center;
+    padding: 5px 0;
+    position: relative;
+}
+span[lang] {
+    font-style: italic;
+}
+pre , .raw-html-embed{
+    background: hsla(0, 0%, 78%, .3);
+    border: 1px solid #c4c4c4;
+    border-radius: 2px;
+    color: #353535;
+    direction: ltr;
+    font-style: normal;
+    min-width: 200px;
+    padding: 1em;
+    tab-size: 4;
+    text-align: left;
+    white-space: pre-wrap;
+}
+
+    blockquote {
+        border-left: 5px solid #ccc;
+        font-style: italic;
+        margin-left: 0;
+        margin-right: 0;
+        overflow: hidden;
+        padding-left: 1.5em;
+        padding-right: 1.5em;
+    }
+}
+
+
 @media (max-width: 991.98px) {
-    .swiperBanner{
+    .swiperBanner {
         height: 260px;
     }
-    .indexNewsImg{
-        width:100%;
+
+    .indexNewsImg {
+        width: 100%;
     }
-    .CateBannerPic{
+
+    .CateBannerPic {
         height: 200px;
     }
 }

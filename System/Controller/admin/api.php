@@ -309,14 +309,18 @@ class Api extends ControllersAdmin {
     }
     
 
-    public function installTemplate_Action(){ // 安装模版
+    public function installTemplate_Action(){ // 安装模版(从模版市场安装)
         if(!$this->VeriObj->VeriPara($_GET, array('TemplatesId'))) $this->ApiErr(1001);
+        $Count = $this->TemplatesObj->SetCond(array('TemplatesId' => trim($_GET['TemplatesId'])))->SetField('COUNT(*) AS c')->ExecSelectOne();
+        if($Count['c'] != 0){ // 已安装
+            $this->ApiErr(1057);
+        }
         $Ret = $this->apiRemotePlatform('apiRemote/templateInfo', array('TemplatesId' => $_GET['TemplatesId']));
         if($Ret['Code'] != 0) $this->ApiErr(1000, $Ret['Msg']); // 获取模版信息错误       
-        $FileName = 'QCms_'.$Ret['Data']['NameKey'].'_template.zip';
+        $FileName = 'QCms_'.$Ret['Data']['NameKey'].'_'.$Ret['Data']['LastVersion'].'_template.zip';
         $Path = './Static/tmp/';
-        $CmsUpdatePath = $Path.'QCms_'.$Ret['Data']['NameKey'].'_template';
-        if(!file_exists($Path.$FileName)){ // 本地没有就下载
+        $CmsUpdatePath = $Path.'QCms_'.$Ret['Data']['NameKey'].'_'.$Ret['Data']['LastVersion'].'_template';
+        if(!file_exists($Path.$FileName)){ // 本地没有就下载 (改为一律下载)
             $DownRet = file_get_contents(trim($Ret['Data']['Address']));
             if($DownRet === false) $this->ApiErr(1016);            
             $WriteRet = @file_put_contents($Path.$FileName, $DownRet);
@@ -334,11 +338,20 @@ class Api extends ControllersAdmin {
         
         $DbConfig = Config::DbConfig();
         $InitPath = $CmsUpdatePath.'/Data/init.json'; // 数据结构字段增加（模型字段添加）
-        if(file_exists($InitPath)){ 
-            $Json = file_get_contents($InitPath);
-            $JsonArr = empty($Json) ? array() : json_decode($Json, true);
-            try{
-                DB::$s_db_obj->beginTransaction();
+        $Ts = time();
+        try{
+            DB::$s_db_obj->beginTransaction();
+            $InsertMap = array(
+                'TemplatesId' => $Ret['Data']['TemplatesId'],
+                'NameKey' => $Ret['Data']['NameKey'],
+                'Version' => $Ret['Data']['LastVersion'],
+                'TsAdd' => $Ts,
+                'TsUpdate' => $Ts,
+            );
+            $this->TemplatesObj->SetInsert($InsertMap)->ExecInsert();
+            if(file_exists($InitPath)){ 
+                $Json = file_get_contents($InitPath);
+                $JsonArr = empty($Json) ? array() : json_decode($Json, true);
                 foreach($JsonArr as $k => $v){
                     if($v['IsSys'] != 1){ // 非系统内置，创建表
                         $this->Sys_modelObj->CreateTable($k);
@@ -349,14 +362,14 @@ class Api extends ControllersAdmin {
                         $this->Sys_modelObj->exec('alter table `'.$DbConfig['Prefix'].'table_'.$v['KeyName'].'` add '.$AddField['Name'].' '.$FieldType.' not null '.$FieldDefault.' COMMENT "'.$AddField['Comment'].'";', array());
                     }
                 }
-                DB::$s_db_obj->commit();
-            }catch(PDOException $e){
-                DB::$s_db_obj->rollBack();
-                $this->ApiErr(1002);
             }
-            
+            DB::$s_db_obj->commit();
+        }catch (PDOException $e){            
+            DB::$s_db_obj->rollBack();
+            $this->ApiErr(1002);
         }
-        $SqlPath = $CmsUpdatePath.'/Data/data.sql'; // 刷新数据库数据
+       
+        /*$SqlPath = $CmsUpdatePath.'/Data/data.sql'; // 刷新数据库数据(数据不导入，到已安装模版那边安装)
         if(file_exists($SqlPath)){
             try{
                 DB::$s_db_obj->beginTransaction();
@@ -370,7 +383,7 @@ class Api extends ControllersAdmin {
                 $this->ApiErr(1002);
             }
             $this->SysObj->cleanList();
-        }
+        }*/
         $this->ApiSuccess();
     }
     
