@@ -52,6 +52,7 @@ class Sys extends ControllersAdmin {
         foreach($SysArr as $v){
             $DataArr = ($v['AttrType'] == 'radio') ? $this->OpenArr : array();
             if($v['Name'] == 'TmpPath') $DataArr = $Folder;
+            if($v['Name'] == 'Lang') $DataArr = $this->LangArr;
             if($v['Name'] == 'TmpPathMobile') $DataArr = $Folder;
             if($v['Name'] == 'Editor') $DataArr = $this->EditorArr;
             if($v['Name'] == 'TmpIndex') $DataArr = $TempList;

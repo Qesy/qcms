@@ -20,6 +20,7 @@ use Model\QC_Link;
 use Model\QC_Link_cate;
 use Model\QC_Log_login;
 use Model\QC_Log_operate;
+use Model\QC_Menu_side;
 use Model\QC_Page;
 use Model\QC_Page_cate;
 use Model\QC_Plugin;
@@ -81,6 +82,7 @@ abstract class Base {
 	public $Label_cateObj;
 	public $Log_loginObj;
 	public $Log_operateObj;
+	public $Menu_sideObj;
 	public $PageObj;
 	public $Page_cateObj;
 	public $PluginObj;
@@ -176,6 +178,7 @@ abstract class Base {
 		$this->Label_cateObj = QC_Label_cate::get_instance();
 		$this->Log_loginObj = QC_Log_login::get_instance();
 		$this->Log_operateObj = QC_Log_operate::get_instance();
+		$this->Menu_sideObj = QC_Menu_side::get_instance();
 		$this->PageObj = QC_Page::get_instance();
 		$this->Page_cateObj = QC_Page_cate::get_instance();
 		$this->PluginObj = QC_Plugin::get_instance();

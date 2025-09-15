@@ -39,17 +39,28 @@ class Templates extends ControllersAdmin {
         foreach($Ret['Data']['List'] as $v){
             $OnlineTempMap[$v['TemplatesId']] = $v;
         }
+        $Json = array();
+        foreach($Arr as $v){
+            $OnlineRs = $OnlineTempMap[$v['TemplatesId']];
+            $Json[$v['TemplatesId']] = array(
+                'LastVersion' => $OnlineRs['LastVersion'],
+                'Version' => $v['Version'],
+            );
+        }
         foreach($Arr as $k => $v){
             $OnlineRs = $OnlineTempMap[$v['TemplatesId']];
             $Desc = empty($OnlineRs['Content']) ? '暂无介绍' : $OnlineRs['Content'];
             $Arr[$k]['Name'] = '<div class="d-flex"><img class="mr-2" src="'.$OnlineRs['Pic'].'" style="height:60px;"><div><span class="font-weight-bold">'.$OnlineRs['Name'].'</span><br>'.$Desc.'</div></div>';
             $Arr[$k]['TsView'] = '安装时间:'.date('Y-m-d', $v['TsAdd']).'<br>更新时间:'.date('Y-m-d', $v['TsUpdate']);
             $Arr[$k]['VersionView'] = '当前版本:'.$v['Version'].'<br>最新版本:'.$OnlineRs['LastVersion'];
+            $IsDisabledUpdate = ($v['Version'] == $OnlineRs['LastVersion']) ? 1 : 0;
+            $IsDisabledInstallData = ($this->SysRs['TmpPath'] != $v['NameKey']) ? 1 : 0;
+            $IsDisabledDel = ($this->SysRs['TmpPath'] == $v['NameKey']) ? 1 : 0;
             $Arr[$k]['BtnArr'] = array(
-                array('Name' => 'Update', 'Type' => 'button', 'Desc' => '更新模版'),
-                array('Name' => 'ReInstall', 'Type' => 'button', 'Desc' => '重新安装'),
-                array('Name' => 'DemoData', 'Type' => 'button', 'Desc' => '安装测试数据'),
-                array('Name' => 'DemoData', 'Type' => 'button', 'Desc' => '删除模版'),
+                array('Name' => 'Update', 'Type' => 'button', 'Desc' => '更新模版', 'IsDisabled' => $IsDisabledUpdate),
+                //array('Name' => 'ReInstall', 'Type' => 'button', 'Desc' => '重新安装'),
+                array('Name' => 'InstallData', 'Type' => 'button', 'Desc' => '测试数据', 'IsDisabled' => $IsDisabledInstallData),
+                array('Name' => 'Del', 'Type' => 'button', 'Desc' => '删除模版', 'IsDisabled' => $IsDisabledDel),
             );
         }
         $KeyArr = array(
@@ -60,9 +71,9 @@ class Templates extends ControllersAdmin {
         );
         $this->BuildObj->PrimaryKey = 'TemplatesId';
         $PageBar = $this->CommonObj->PageBar($Count, $this->PageNum);
-        //$this->BuildObj->NameDel = '卸载模版';
         $this->BuildObj->IsAdd = $this->BuildObj->IsEdit = $this->BuildObj->IsDel = false;
+        $tmp['Json'] = $Json;
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
-        $this->LoadView('admin/common/list', $tmp);
+        $this->LoadView('admin/templates/installed', $tmp);
     }
 }

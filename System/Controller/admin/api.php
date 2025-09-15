@@ -309,17 +309,14 @@ class Api extends ControllersAdmin {
     }
     
 
-    public function installTemplate_Action(){ // 安装模版(从模版市场安装)
-        if(!$this->VeriObj->VeriPara($_GET, array('TemplatesId'))) $this->ApiErr(1001);
-        $Count = $this->TemplatesObj->SetCond(array('TemplatesId' => trim($_GET['TemplatesId'])))->SetField('COUNT(*) AS c')->ExecSelectOne();
-        if($Count['c'] != 0){ // 已安装
-            $this->ApiErr(1057);
-        }
-        $Ret = $this->apiRemotePlatform('apiRemote/templateInfo', array('TemplatesId' => $_GET['TemplatesId']));
+    public function templateInstall_Action(){ // 安装模版(从模版市场安装)
+        if(!$this->VeriObj->VeriPara($_GET, array('TemplatesId', 'Version'))) $this->ApiErr(1001);
+        $Params = array('TemplatesId' => $_GET['TemplatesId'], 'Version' => trim($_GET['Version']));
+        $Ret = $this->apiRemotePlatform('apiRemote/templateInfo', $Params);
         if($Ret['Code'] != 0) $this->ApiErr(1000, $Ret['Msg']); // 获取模版信息错误       
-        $FileName = 'QCms_'.$Ret['Data']['NameKey'].'_'.$Ret['Data']['LastVersion'].'_template.zip';
+        $FileName = 'QCms_'.$Ret['Data']['NameKey'].'_'.$Ret['Data']['Version'].'_template.zip';
         $Path = './Static/tmp/';
-        $CmsUpdatePath = $Path.'QCms_'.$Ret['Data']['NameKey'].'_'.$Ret['Data']['LastVersion'].'_template';
+        $CmsUpdatePath = $Path.'QCms_'.$Ret['Data']['NameKey'].'_'.$Ret['Data']['Version'].'_template';
         if(!file_exists($Path.$FileName)){ // 本地没有就下载 (改为一律下载)
             $DownRet = file_get_contents(trim($Ret['Data']['Address']));
             if($DownRet === false) $this->ApiErr(1016);            
@@ -330,7 +327,7 @@ class Api extends ControllersAdmin {
         $UnZipRet = $this->CommonObj->UnZip($Path.$FileName, $CmsUpdatePath); // 解压并把文件COPY到对应目录
         if($UnZipRet === false) $this->ApiErr(1018); 
         $CopyRet = $this->CommonObj->DirCopy($CmsUpdatePath.'/Template', './Template');
-        $CopyRet2 = $this->CommonObj->DirCopy($CmsUpdatePath.'/Static', './Static');
+        $CopyRet2 = $this->CommonObj->DirCopy($CmsUpdatePath.'/Static', './Static/templates');
         if(file_exists($CmsUpdatePath.'/Root')){ // 特殊上传文件
             $this->CommonObj->DirCopy($CmsUpdatePath.'/Root', './');
         }
@@ -344,11 +341,14 @@ class Api extends ControllersAdmin {
             $InsertMap = array(
                 'TemplatesId' => $Ret['Data']['TemplatesId'],
                 'NameKey' => $Ret['Data']['NameKey'],
-                'Version' => $Ret['Data']['LastVersion'],
+                'Version' => $Ret['Data']['Version'],
                 'TsAdd' => $Ts,
                 'TsUpdate' => $Ts,
             );
-            $this->TemplatesObj->SetInsert($InsertMap)->ExecInsert();
+            $this->TemplatesObj->SetInsert($InsertMap)->ExecReplace();
+            $this->SysObj->SetCond(array('Name' => 'TmpPath'))->SetUpdate(array('AttrValue' => $Ret['Data']['NameKey']))->ExecUpdate();
+            $PathMobileUpdate = file_exists('./Template/'.$Ret['Data']['NameKey'].'_mobile') ? array('AttrValue' => $Ret['Data']['NameKey'].'_mobile') : array('AttrValue' => '');
+            $this->SysObj->SetCond(array('Name' => 'TmpPathMobile'))->SetUpdate($PathMobileUpdate)->ExecUpdate();
             if(file_exists($InitPath)){ 
                 $Json = file_get_contents($InitPath);
                 $JsonArr = empty($Json) ? array() : json_decode($Json, true);
@@ -368,29 +368,274 @@ class Api extends ControllersAdmin {
             DB::$s_db_obj->rollBack();
             $this->ApiErr(1002);
         }
-       
-        /*$SqlPath = $CmsUpdatePath.'/Data/data.sql'; // 刷新数据库数据(数据不导入，到已安装模版那边安装)
-        if(file_exists($SqlPath)){
-            try{
-                DB::$s_db_obj->beginTransaction();
-                $this->SysObj->ImportSql($SqlPath);
-                $this->SysObj->SetCond(array('Name' => 'TmpPath'))->SetUpdate(array('AttrValue' => $Ret['Data']['NameKey']))->ExecUpdate();
-                $PathMobileUpdate = file_exists('./Template/'.$Ret['Data']['NameKey'].'_mobile') ? array('AttrValue' => $Ret['Data']['NameKey'].'_mobile') : array('AttrValue' => '');
-                $this->SysObj->SetCond(array('Name' => 'TmpPathMobile'))->SetUpdate($PathMobileUpdate)->ExecUpdate();
-                DB::$s_db_obj->commit();
-            }catch (PDOException $e){
-                DB::$s_db_obj->rollBack();
-                $this->ApiErr(1002);
-            }
-            $this->SysObj->cleanList();
-        }*/
+        $this->SysObj->cleanList();
         $this->ApiSuccess();
+    }
+    
+    public function templateInstallData_Action(){ // 安装模版数据
+        if(!$this->VeriObj->VeriPara($_GET, array('TemplatesId'))) $this->ApiErr(1001);
+        $IsHave = $this->TemplatesObj->SetCond(array('TemplatesId' => trim($_GET['TemplatesId'])))->ExecSelectOne();
+        if($this->SysRs['TmpPath'] != $IsHave['NameKey']) $this->ApiErr(1001);
+        if(empty($IsHave)) $this->ApiErr(1003);
+        $Path = './Static/tmp/';
+        $CmsUpdatePath = $Path.'QCms_'.$IsHave['NameKey'].'_'.$IsHave['Version'].'_template';
+        $SqlPath = $CmsUpdatePath.'/Data/data.sql'; // 刷新数据库数据
+        if(!file_exists($SqlPath)) $this->ApiErr(1035);
+        try{
+            DB::$s_db_obj->beginTransaction();
+            $this->SysObj->ImportSql($SqlPath);
+            
+            DB::$s_db_obj->commit();
+        }catch (PDOException $e){
+            DB::$s_db_obj->rollBack();
+            $this->ApiErr(1002);
+        }
+        
+        $this->ApiSuccess();
+    }
+    
+    public function templateDelete_Action(){ // 删除模版
+        if(!$this->VeriObj->VeriPara($_GET, array('TemplatesId'))) $this->ApiErr(1001);
+        $Rs = $this->TemplatesObj->SetCond(array('TemplatesId' => trim($_GET['TemplatesId'])))->ExecSelectOne();
+        if(empty($Rs)) $this->ApiErr(1003);
+        $DbConfig = Config::DbConfig();
+        $Path = './Static/tmp/';
+        $CmsUpdatePath = $Path.'QCms_'.$Rs['NameKey'].'_'.$Rs['Version'].'_template';
+        $InitPath = $CmsUpdatePath.'/Data/init.json'; // 数据结构字段增加（模型字段添加）
+        try{
+            DB::$s_db_obj->beginTransaction();
+            // 删除模版安装记录
+            $this->TemplatesObj->SetCond(array('TemplatesId' => trim($_GET['TemplatesId'])))->ExecDelete();
+            
+            // 删除创建的表和字段
+            if(file_exists($InitPath)){
+                $Json = file_get_contents($InitPath);
+                $JsonArr = empty($Json) ? array() : json_decode($Json, true);
+                foreach($JsonArr as $k => $v){
+                    if($v['IsSys'] != 1){ // 非系统内置，直接删除
+                        $this->Sys_modelObj->DeleteTable($k);
+                        continue;
+                    }
+                    foreach($v['FieldJson'] as $sv){                       
+                        $this->Sys_modelObj->exec('alter table `'.$DbConfig['Prefix'].'table_'.$v['KeyName'].'` DROP COLUMN IF EXISTS '.$sv['Name'].';', array());
+                    }
+                }
+            }
+            
+            // 删除模版
+            $TempPath = './Template/'.$Rs['NameKey'];
+            $TempPathMobile = './Template/'.$Rs['NameKey'].'_mobile';
+            if ($this->CommonObj->rrmdir($TempPath) === false) throw new PDOException($this->lang(1030));
+            if(file_exists($TempPathMobile)){
+                if ($this->CommonObj->rrmdir($TempPathMobile) === false) throw new PDOException($this->lang(1030));
+            }
+            // 删除静态文件
+            $TempPathStatic = './Static/templates/'.$Rs['NameKey'];
+            $TempPathMobileStatic = './Static/templates/'.$Rs['NameKey'].'_mobile';
+            if ($this->CommonObj->rrmdir($TempPathStatic) === false) throw new PDOException($this->lang(1030));
+            if(file_exists($TempPathMobileStatic)){
+                if ($this->CommonObj->rrmdir($TempPathMobileStatic) === false) throw new PDOException($this->lang(1030));
+            }
+            // 删除临时文件
+            $Temp = './Static/tmp/QCms_'.$Rs['NameKey'].'_'.$Rs['Version'].'_template';
+            if ($this->CommonObj->rrmdir($Temp) === false) throw new PDOException($this->lang(1030));
+            // 压缩包文件就不删了
+            if ($this->CommonObj->rrmdir($Temp.'.zip') === false) throw new PDOException($this->lang(1030));
+            DB::$s_db_obj->commit();
+        }catch (PDOException $e){
+            DB::$s_db_obj->rollBack();
+            $this->ApiErr(1002);
+        }
+        $this->ApiSuccess();
+    }
+    
+    public function pluginInstall_Action(){ // 安装插件(从插件市场安装)
+        if(!$this->VeriObj->VeriPara($_GET, array('PluginId', 'Version'))) $this->ApiErr(1001);
+        $Params = array('PluginId' => $_GET['PluginId'], 'Version' => trim($_GET['Version']));
+        $Ret = $this->apiRemotePlatform('apiRemote/pluginInfo', $Params);
+        if($Ret['Code'] != 0) $this->ApiErr(1000, $Ret['Msg']); // 获取模版信息错误
+        $FileName = 'QCms_'.$Ret['Data']['NameKey'].'_'.$Ret['Data']['Version'].'_plugin.zip';
+        $Path = './Static/tmp/';
+        if(!file_exists($Path.$FileName)){ // 本地没有就下载 (改为一律下载)
+            $DownRet = file_get_contents(trim($Ret['Data']['Address']));
+            if($DownRet === false) $this->ApiErr(1016);
+            $WriteRet = @file_put_contents($Path.$FileName, $DownRet);
+            if($WriteRet === false) $this->ApiErr(1017);
+        }
+        $PlugPath = './Plugin/'.$Ret['Data']['NameKey'];
+        $UnZipRet = $this->CommonObj->UnZip($Path.$FileName, $PlugPath); // 解压并把文件COPY到对应目录
+        if($UnZipRet === false) $this->ApiErr(1018); // 解压压缩包失败
+        
+        $CopyRet = $this->CommonObj->DirCopy($PlugPath.'/Static', './Static/plugin/'.$Ret['Data']['NameKey']);
+        if($CopyRet === false) $this->ApiErr(1019); // Copy静态文件失败
+        
+        $Database = require_once $PlugPath.'/Lib/Database.php';
+        require_once $PlugPath.'/Lib/Install.php';
+        $InstallObj = new Install();
+        if(!method_exists($InstallObj, 'init')) $this->ApiErr(1033);
+        if(!method_exists($InstallObj, 'upgrade')) $this->ApiErr(1033);
+        if(!method_exists($InstallObj, 'menu')) $this->ApiErr(1033);
+        $DbConfig = Config::DbConfig();
+        $Ts = time();
+        try{
+            DB::$s_db_obj->beginTransaction();
+            // 插入插件表
+            $PluginInsertMap = array(
+                'PluginId' => $Ret['Data']['PluginId'],
+                'NameKey' => $Ret['Data']['NameKey'],
+                'Version' => $Ret['Data']['Version'],
+                'State' => '1',
+                'TsAdd' => $Ts,
+                'TsUpdate' => $Ts,
+            );
+            $this->PluginObj->SetInsert($PluginInsertMap)->ExecInsert(); 
+            
+            // 创建需要的表
+            $TablePre = $DbConfig['Prefix'].'plugs_'.$Ret['Data']['NameKey'].'_';            
+            $this->createTable($TablePre, $Database);             
+            
+            // 插入菜单
+            $MenuArr = $InstallObj->menu();
+            if(count($MenuArr['SideBar']) > 0){ //如果没分类就不用插入了
+                $this->Menu_sideObj->SetInsert(array( //插入父分类
+                    'PId' => 0,
+                    'PluginId' => $Ret['Data']['PluginId'],
+                    'NameKey' => $Ret['Data']['NameKey'],
+                    'Name' => $Ret['Data']['Name'],
+                    'Icons' => $MenuArr['Icons'],
+                    'Url' => '#', //附件父分类不需要链接
+                    'Para' => '{}',
+                    'Sort' => '99',
+                    'IsShow' => 1,
+                ))->ExecInsert();
+                $InsertId = $this->Menu_sideObj->last_insert_id();
+                foreach($MenuArr['SideBar'] as $k => $v){
+                    $this->Menu_sideObj->SetInsert(array(
+                        'PId' => $InsertId,
+                        'PluginId' => $Ret['Data']['PluginId'],
+                        'NameKey' => $Ret['Data']['NameKey'],
+                        'Name' => $v['Name'],
+                        'Icons' => '', //附件子分类不需图标
+                        'Url' => implode('/', $v['Url']),
+                        'Para' => empty($v['Para']) ? '{}' : json_encode($v['Para']),
+                        'Sort' => '99',
+                        'IsShow' => $v['IsShow'],
+                    ))->ExecInsert();
+                }
+            }            
+            $InstallObj->init(); //执行安装程序
+            DB::$s_db_obj->commit();
+        }catch (PDOException $e){
+            DB::$s_db_obj->rollBack();
+            $this->ApiErr(1002);
+        }
+        $this->Menu_sideObj->cleanList();
+        $this->ApiSuccess();
+    }
+    
+    public function pluginUpgrade_Action(){ // 升级插件
+        if(!$this->VeriObj->VeriPara($_GET, array('PluginId', 'Version'))) $this->ApiErr(1001);
+        $Params = array('PluginId' => $_GET['PluginId'], 'Version' => trim($_GET['Version']));
+        $Ret = $this->apiRemotePlatform('apiRemote/pluginInfo', $Params);
+        if($Ret['Code'] != 0) $this->ApiErr(1000, $Ret['Msg']); // 获取模版信息错误
+        $FileName = 'QCms_'.$Ret['Data']['NameKey'].'_'.$Ret['Data']['Version'].'_plugin.zip';
+        $Path = './Static/tmp/';
+        if(!file_exists($Path.$FileName)){ // 本地没有就下载 (改为一律下载)
+            $DownRet = file_get_contents(trim($Ret['Data']['Address']));
+            if($DownRet === false) $this->ApiErr(1016);
+            $WriteRet = @file_put_contents($Path.$FileName, $DownRet);
+            if($WriteRet === false) $this->ApiErr(1017);
+        }
+        $PlugPath = './Plugin/'.$Ret['Data']['NameKey'];
+        $UnZipRet = $this->CommonObj->UnZip($Path.$FileName, $PlugPath); // 解压并把文件COPY到对应目录
+        if($UnZipRet === false) $this->ApiErr(1018); // 解压压缩包失败
+        
+        $CopyRet = $this->CommonObj->DirCopy($PlugPath.'/Static', './Static/plugin/'.$Ret['Data']['NameKey']);
+        if($CopyRet === false) $this->ApiErr(1019); // Copy静态文件失败
+        
+        $Database = require_once $PlugPath.'/Lib/Database.php';
+        require_once $PlugPath.'/Lib/Install.php';
+        $InstallObj = new Install();
+        if(!method_exists($InstallObj, 'init')) $this->ApiErr(1033);
+        if(!method_exists($InstallObj, 'upgrade')) $this->ApiErr(1033);
+        if(!method_exists($InstallObj, 'menu')) $this->ApiErr(1033);
+        $DbConfig = Config::DbConfig();
+        $Ts = time();
+        try{
+            DB::$s_db_obj->beginTransaction();            
+            $InstallObj->upgrade(); //执行安装程序
+            DB::$s_db_obj->commit();
+        }catch (PDOException $e){
+            DB::$s_db_obj->rollBack();
+            $this->ApiErr(1002);
+        }
+        $this->Menu_sideObj->cleanList();
+        $this->ApiSuccess();
+    }
+    
+    public function pluginUnInstall_Action(){ // 删除插件(从插件市场安装)
+        if(!$this->VeriObj->VeriPara($_GET, array('PluginId'))) $this->ApiErr(1001);
+        $LocalPlusRs = $this->PluginObj->getOne($_GET['PluginId']);
+        if(empty($LocalPlusRs)) $this->ApiErr(1026);
+        if($LocalPlusRs['State'] != 2) $this->ApiErr(1028);
+        
+        $PlugPath = './Plugin/'.$LocalPlusRs['NameKey'];
+        $StaticPath = './Static/plugin/'.$LocalPlusRs['NameKey'];
+        $Database = require_once $PlugPath.'/Lib/Database.php';
+        $DbConfig = Config::DbConfig();
+        $Ts = time();
+        //先清空数据库
+        try{
+            DB::$s_db_obj->beginTransaction();
+            // 删除插件安装数据
+            $this->PluginObj->SetCond(array('PluginId' => $LocalPlusRs['PluginId']))->ExecDelete();
+            
+            // 删除创建的数据表
+            $TablePre = $DbConfig['Prefix'].'plugs_'.$LocalPlusRs['NameKey'].'_';   
+            $this->delTable($TablePre, $Database);
+            
+            // 删除菜单            
+            $this->Menu_sideObj->SetCond(array('PluginId' => $LocalPlusRs['PluginId']))->ExecDelete();            
+            
+            // 删除文件
+            if ($this->CommonObj->rrmdir($PlugPath) === false) throw new PDOException($this->lang(1030));
+            if ($this->CommonObj->rrmdir($StaticPath) === false) throw new PDOException($this->lang(1030));
+            DB::$s_db_obj->commit();
+        }catch(PDOException $e){
+            DB::$s_db_obj->rollBack();
+            $this->ApiErr(1000, $e->getMessage());
+        }
+        $this->Menu_sideObj->cleanList();
+        $this->ApiSuccess();
+    }
+    
+    public function pluginState_Action(){
+        if(!$this->VeriObj->VeriPara($_GET, array('Id', 'Status', 'Field'))) $this->ApiErr(1001);
+        $DataArr = array($_GET['Field'] => $this->CommonObj->SafeInput($_GET['Status']));    
+        try{
+            DB::$s_db_obj->beginTransaction();
+            $this->PluginObj->SetCond(array('PluginId' => $_GET['Id']))->SetUpdate($DataArr)->ExecUpdate();
+            $this->Menu_sideObj->SetCond(array('PluginId' => $_GET['Id'], 'PId' => '0'))->SetUpdate(array('IsShow' => $_GET['Status']))->ExecUpdate();
+            DB::$s_db_obj->commit();
+        }catch (PDOException $e){
+            DB::$s_db_obj->rollBack();
+            $this->Err(1002);
+        }
+        $this->Menu_sideObj->cleanList();
+        $this->CommonObj->ApiSuccess();
     }
     
     public function paytp_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('TemplatesId'))) $this->ApiErr(1001);
         $Ret = $this->apiRemotePlatform('apiRemote/paytp', array('TemplatesId' => $_GET['TemplatesId']));
         if($Ret['Code'] != 0) $this->ApiErr(1000, $Ret['Msg']); // 获取模版信息错误       
+        $this->ApiSuccess($Ret['Data']);
+    }
+    
+    public function payplugin_Action(){
+        if(!$this->VeriObj->VeriPara($_GET, array('PluginId'))) $this->ApiErr(1001);
+        $Ret = $this->apiRemotePlatform('apiRemote/payPlugin', array('PluginId' => $_GET['PluginId']));
+        if($Ret['Code'] != 0) $this->ApiErr(1000, $Ret['Msg']); // 获取模版信息错误
         $this->ApiSuccess($Ret['Data']);
     }
     

@@ -37,7 +37,7 @@
 <div class="modal" tabindex="-1" id="LoadingModel">
     <div class="modal-dialog modal-dialog-centered justify-content-center">
         <span class="text-white bg-dark p-3 Content">
-        模版安装中...
+
         </span>
     </div>
 </div>

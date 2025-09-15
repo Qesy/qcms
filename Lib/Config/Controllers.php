@@ -230,7 +230,7 @@ class Controllers extends Base {
 
     public function global_Tmp(){ // 全局标签
         $Search = array('{{qcms:Domain}}', '{{qcms:Static}}', '{{qcms:PathImg}}', '{{qcms:PathJs}}', '{{qcms:PathCss}}', '{{qcms:Scheme}}', '{{qcms:PathTemplate}}', '{{qcms:Method}}');
-        $Replace = array(URL_DOMAIN, URL_STATIC, URL_IMG, URL_JS, URL_CSS, $_SERVER['REQUEST_SCHEME'], URL_STATIC.$this->TmpName.'/', Router::$s_Method);
+        $Replace = array(URL_DOMAIN, URL_STATIC, URL_IMG, URL_JS, URL_CSS, $_SERVER['REQUEST_SCHEME'], URL_STATIC.'templates/'.$this->TmpName.'/', Router::$s_Method);
         foreach($this->SysRs as $k => $v){
             $Search[] = '{{qcms:'.$k.'}}';
             $Replace[] = $v;
@@ -1175,6 +1175,7 @@ class ControllersAdmin extends Controllers {
     public $StateArr = array('1' => '已发布', 2 => '未发布');
     public $SexArr = array('1' => '男', 2 => '女');
     public $EditorArr = array('ckeditor' => 'ckeditor');
+    public $LangArr = array('Cn' => '中文', 'En' => 'Eng');
     public $SiteArr = array();
     public $PermissionArr = array();
     public $HeadHtml = '';
@@ -1399,8 +1400,15 @@ class ControllersAdmin extends Controllers {
             'admin/api/fileBrowse' => array('Name' => '浏览上传目录', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'fileBrowse'))),
             'admin/api/contentAttr' => array('Name' => '批量操作内容属性', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'contentAttr'))),
             'admin/api/contentMove' => array('Name' => '批量移动内容', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'contentMove'))),
-            'admin/api/installTemplate' => array('Name' => '安装模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'installTemplate'))),
+            'admin/api/templateInstall' => array('Name' => '安装模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'templateInstall'))),
+            'admin/api/templateInstallData' => array('Name' => '安装模板数据', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'templateInstallData'))),
+            'admin/api/templateDelete' => array('Name' => '删除模版', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'templateDelete'))),
+            'admin/api/pluginInstall' => array('Name' => '安装插件', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'pluginInstall'))),
+            'admin/api/pluginUpgrade' => array('Name' => '升级插件', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'pluginUpgrade'))),
+            'admin/api/pluginUnInstall' => array('Name' => '卸载插件', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'pluginUnInstall'))),
+            'admin/api/pluginState' => array('Name' => '设置插件状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'pluginState'))),
             'admin/api/paytp' => array('Name' => '购买模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'paytp'))),
+            'admin/api/payplugin' => array('Name' => '购买插件', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'payplugin'))),
             'admin/api/payStatus' => array('Name' => '获取订单状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'payStatus'))),
             'index/adminLogout' => array('Name' => '安全退出', 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(array('index', 'adminLogout'))),
 
@@ -1632,7 +1640,7 @@ class ControllersAdmin extends Controllers {
         return $Ret;
     }
 
-    public function getTemplaites($Page, $PageNum, $CateId = 0, $TemplatesIds = ''){
+    public function getTemplaites($Page, $PageNum, $CateId = 0, $TemplatesIds = array()){
         $Para = array('Domain' => URL_DOMAIN, 'P' => $Page, 'PageNum' => $PageNum, 'CateId' => $CateId, 'TemplatesIds' => implode('|', $TemplatesIds));
         $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/templates.html')->SetDebug(false)->SetPara($Para)->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
@@ -1650,12 +1658,46 @@ class ControllersAdmin extends Controllers {
         $Ret = json_decode($Json, true);
         return $Ret;
     }
-
-    /* public function getTemplateInfo($TemplatesId){ // 废弃
-        $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/getTemplate.html')->SetPara(array('Domain' => URL_DOMAIN, 'TemplatesId' => $TemplatesId, 'License' => $this->SysRs['License']))->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
-        $Ret = json_decode($Json, true);
-        return $Ret;
-    } */
+    
+    public function createTable($TablePre, $TableArr, $IsDropTable = false ){ //创建插件数据表
+        $Tables = $this->SysObj->query('SHOW TABLES', array());
+        $HaveTableArr = array_column($Tables, 'Tables_in_redcms');        
+        foreach($TableArr as $k => $v){
+            $TableName = $TablePre.$k;
+            if(in_array($TableName, $HaveTableArr)) throw new PDOException(self::lang(1020));
+            if(count($v['Field']) == 0) throw new PDOException(self::lang(1023));
+            $NameArr = array_column($v['Field'], 'Field');
+            if(!isset($v['PrimaryKey']) || !in_array($v['PrimaryKey'], $NameArr)) throw new PDOException(self::lang(1024));
+            $FieldArr = array();
+            foreach($v['Field'] as $sv){
+                $Default = ($sv['Extra'] == 'auto_increment') ? $sv['Extra'] : 'DEFAULT \''.$sv['Default'].'\'';
+                if($sv['Type'] == 'date') $Default = 'DEFAULT \'1970-01-01\'';
+                if(in_array($sv['Type'], array('blob', 'text', 'geometry', 'json'))) $Default = '';
+                $Comment = 'COMMENT \''.$sv['Comment'].'\'';
+                $IsNotNull = (in_array($sv['Type'], array('text'))) ? '' : 'NOT NULL';
+                $FieldArr[] = '`'.$sv['Field'].'` '.$sv['Type'].' '.$IsNotNull.' '.$sv['Extra'].' '.$Default.' '.$Comment.','.PHP_EOL;
+            }
+            $TableSql = 'CREATE TABLE `'.$TableName.'` ( '.PHP_EOL.implode('', $FieldArr).' PRIMARY KEY (`'.$v['PrimaryKey'].'`)) ENGINE=InnoDB AUTO_INCREMENT=10000 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT=\''.$v['Comment'].'\';';
+            if($IsDropTable) $this->SysObj->exec('DROP TABLE IF EXISTS `'.$TableName.'`;', array()); //删除原有表
+            if ($this->SysObj->exec($TableSql, array()) === false) throw new PDOException(self::lang(1025));
+        }
+    }
+    
+    public function delTable($TablePre, $TableArr){ //删除插件数据表
+        $Tables = $this->SysObj->query('SHOW TABLES', array());
+        $DBConfig = Config::DbConfig();
+        $HaveTableArr = array_column($Tables, 'Tables_in_'.$DBConfig['Name']);
+        foreach($TableArr as $k => $v){
+            $TableName = $TablePre.$k;
+            if(!in_array($TableName, $HaveTableArr)) continue;
+            $TableSql = 'DROP TABLE '.$TableName.';';
+            if($this->SysObj->exec($TableSql, array()) === false) throw new PDOException(self::lang(1029));
+        }
+    }
+    
+    public function lang($LangCode){ //代码转文字
+        return isset($this->LanguageArr[$LangCode]) ? $this->LanguageArr[$LangCode] : $this->LanguageArr[1889];
+    }
 
     private function _getUpdate(){
         $pTime = $this->CookieObj->get('UpdateTs', 'User');

@@ -205,14 +205,15 @@
                 $('#tempViewModal').modal();
             })
             $('.InstallBtn').click(function(){ // 安装
-                if(!confirm("安装模板覆盖数据库，请先备份数据库，再安装")) return;
+                if(!confirm("确定安装此模版？")) return;
                 let Index = $(this).attr('data-index');
                 let NameKey = TemplateArr[Index]['NameKey'];
                 if(typeof TempFolder[NameKey] != 'undefined'){
                     alert('已安装，请先删除，再安装');return;
                 }
+                $('#LoadingModel').find('.Content').html('安装模版中');
                 $('#LoadingModel').modal();
-                $.get('/admin/api/installTemplate', {TemplatesId:TemplateArr[Index]['TemplatesId']}, function(Res){
+                $.get('/admin/api/templateInstall', {TemplatesId:TemplateArr[Index]['TemplatesId'], Version:TemplateArr[Index]['LastVersion']}, function(Res){
                     if(Res.Code != 0){
                         alert(Res.Msg);
                         $('#LoadingModel').modal('hide');

@@ -98,6 +98,12 @@ class QC_Sys_model extends \Db_pdo {
 	    $this->exec($TableSql, array());
 	}
 	
+	public function DeleteTable($KeyName){
+	    $DbConfig = \Config::DbConfig();
+	    $TableSql = 'DROP TABLE IF EXISTS `'.$DbConfig['Prefix'].'table_'.$KeyName.'`;';
+	    $this->exec($TableSql, array());
+	}
+	
 	public function GetField($FieldType){ // 获取字段类型
 	    $FieldType = 'varchar(255)';
 	    $FieldDefault = "DEFAULT ''";

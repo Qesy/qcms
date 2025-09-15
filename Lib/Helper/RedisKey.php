@@ -64,6 +64,10 @@ class RedisKey {
 	    return self::$s_projectKey.'_Label_Cate_String';
 	}
 	
+	public static function Menu_Side_String(){
+	    return self::$s_projectKey.'_Menu_Side_String';
+	}
+	
 	public static function Label_RS_HM($KeyName){
 	    return self::$s_projectKey.'_Label_RS_HM_'.$KeyName;
 	}
