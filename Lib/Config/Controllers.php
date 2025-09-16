@@ -1175,7 +1175,7 @@ class ControllersAdmin extends Controllers {
     public $StateArr = array('1' => '已发布', 2 => '未发布');
     public $SexArr = array('1' => '男', 2 => '女');
     public $EditorArr = array('ckeditor' => 'ckeditor');
-    public $LangArr = array('Cn' => '中文', 'En' => 'Eng');
+    public $LangArr = array('Cn' => '中文');
     public $SiteArr = array();
     public $PermissionArr = array();
     public $HeadHtml = '';
@@ -1401,6 +1401,7 @@ class ControllersAdmin extends Controllers {
             'admin/api/contentAttr' => array('Name' => '批量操作内容属性', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'contentAttr'))),
             'admin/api/contentMove' => array('Name' => '批量移动内容', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'contentMove'))),
             'admin/api/templateInstall' => array('Name' => '安装模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'templateInstall'))),
+            'admin/api/templateUpgrade' => array('Name' => '升级模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'templateUpgrade'))),
             'admin/api/templateInstallData' => array('Name' => '安装模板数据', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'templateInstallData'))),
             'admin/api/templateDelete' => array('Name' => '删除模版', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'templateDelete'))),
             'admin/api/pluginInstall' => array('Name' => '安装插件', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'pluginInstall'))),
@@ -1411,8 +1412,9 @@ class ControllersAdmin extends Controllers {
             'admin/api/payplugin' => array('Name' => '购买插件', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'payplugin'))),
             'admin/api/payStatus' => array('Name' => '获取订单状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'payStatus'))),
             'index/adminLogout' => array('Name' => '安全退出', 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(array('index', 'adminLogout'))),
-
         );
+        
+        // 动态模块
         $ModelArr = $this->Sys_modelObj->getList();
         $RoleMenuArr = array();
         foreach($ModelArr as $v) {
@@ -1424,8 +1426,26 @@ class ControllersAdmin extends Controllers {
                 $this->MenuArr[$Key] = array('Name' => $v['Name'].$this->ModelKeyNameArr[$mv], 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', $mv)), 'Para' => array('ModelId' => $v['ModelId']));
             }
             $RoleMenuArr[] = array('Key' => $KeyArr[$v['ModelId']][0], 'alias' => $KeyArr[$v['ModelId']]);
-
         }
+        
+        // 动态插件
+        $MenuSide = $this->Menu_sideObj->getList();
+        $MenuTree = array();
+        foreach($MenuSide as $k => $v){            
+            if($v['PId'] != 0) continue;
+            $v['Sub'] = array();
+            $MenuTree[$v['MenuSideId']] = $v;     
+            $Key = 'plugin/'.$v['NameKey'];
+            $this->MenuArr[$Key] = array('Name' => $v['Name'], 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(array('admin', 'plugin', $v['NameKey'])), 'Para' => array());
+        }
+        
+        foreach($MenuSide as $k => $v){
+            if($v['PId'] == 0) continue;
+            $MenuTree[$v['PId']]['Sub'][] = $v;
+            $Key = 'plugin/'.$v['NameKey'].'/'.$v['Url'];
+            $this->MenuArr[$Key] = array('Name' => $v['Name'], 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(explode('/', $Key)), 'Para' => array());
+        }
+        
         $this->RoleMenuArr = array(
             array('Key' => 'admin/index/index', 'subCont' => array('index'), 'Icon' => 'home'),
             array('Key' => 'admin/category', 'subCont' => array('category', 'page', 'pageCate', 'labelCate', 'label', 'form', 'formField', 'formData'), 'Icon' => 'ordered-list', 'Sub' => array(
@@ -1478,6 +1498,18 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/develop/plugin', 'alias' => array('admin/develop/plugin')),
             )));
         }
+        
+        foreach($MenuTree as $k => $v){
+            $Key = 'plugin/'.$v['NameKey'];
+            $PluginMenu = array('Key' => $Key, 'subCont' => array('index'), 'Icon' => 'api-app', 'Sub' => array());
+            foreach($v['Sub'] as $sk => $sv){
+                if($sv['IsShow'] != '1') continue;
+                $Key = 'plugin/'.$sv['NameKey'].'/'.$sv['Url'];
+                $PluginMenu['Sub'][] = array('Key' => $Key, 'alias' => array('admin/sys/index'));
+            }
+            array_push($this->RoleMenuArr, $PluginMenu);
+        }
+        
         array_push($this->RoleMenuArr, 
             array('Key' => 'admin/sys', 'subCont' => array('sys', 'admin', 'groupAdmin', 'log', 'site'), 'Icon' => 'setting-two', 'Sub' => array(
                 array('Key' => 'admin/sys/index', 'alias' => array('admin/sys/index')),
@@ -1677,7 +1709,7 @@ class ControllersAdmin extends Controllers {
                 $IsNotNull = (in_array($sv['Type'], array('text'))) ? '' : 'NOT NULL';
                 $FieldArr[] = '`'.$sv['Field'].'` '.$sv['Type'].' '.$IsNotNull.' '.$sv['Extra'].' '.$Default.' '.$Comment.','.PHP_EOL;
             }
-            $TableSql = 'CREATE TABLE `'.$TableName.'` ( '.PHP_EOL.implode('', $FieldArr).' PRIMARY KEY (`'.$v['PrimaryKey'].'`)) ENGINE=InnoDB AUTO_INCREMENT=10000 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT=\''.$v['Comment'].'\';';
+            $TableSql = 'CREATE TABLE IF NOT EXISTS `'.$TableName.'` ( '.PHP_EOL.implode('', $FieldArr).' PRIMARY KEY (`'.$v['PrimaryKey'].'`)) ENGINE=InnoDB AUTO_INCREMENT=10000 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT=\''.$v['Comment'].'\';';
             if($IsDropTable) $this->SysObj->exec('DROP TABLE IF EXISTS `'.$TableName.'`;', array()); //删除原有表
             if ($this->SysObj->exec($TableSql, array()) === false) throw new PDOException(self::lang(1025));
         }
@@ -1688,9 +1720,9 @@ class ControllersAdmin extends Controllers {
         $DBConfig = Config::DbConfig();
         $HaveTableArr = array_column($Tables, 'Tables_in_'.$DBConfig['Name']);
         foreach($TableArr as $k => $v){
-            $TableName = $TablePre.$k;
+            $TableName = strtolower($TablePre.$k);
             if(!in_array($TableName, $HaveTableArr)) continue;
-            $TableSql = 'DROP TABLE '.$TableName.';';
+            $TableSql = 'DROP TABLE IF EXISTS '.$TableName.';';
             if($this->SysObj->exec($TableSql, array()) === false) throw new PDOException(self::lang(1029));
         }
     }

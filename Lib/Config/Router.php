@@ -52,13 +52,22 @@ class Router {
 			$RouterArr ['Method'] = $this->_SiteConfig ['DefaultFunction'];
 		} else {
 			$UrlArr = explode ( $this->_SiteConfig ['Url'], $Url );
+			if($UrlArr[0] == 'Plug'){
+			    self::$s_IsPlug = true;
+			    self::$s_PlusKeyName = $UrlArr[1];
+			    $ControllerPath = PATH_PLUG.$UrlArr[1].'/System/Controller/';
+			    $UrlArr = array_slice($UrlArr, 2);
+			    $Url = implode($this->_SiteConfig ['Url'], $UrlArr);			    
+			}else{
+			    $ControllerPath = PATH_SYS.'Controller/';
+			}
 			$UrlTmp = '';
 			foreach ( $UrlArr as $key => $val ) {
 				$File = $UrlTmp . $val;
 				$UrlTmp .= $val . $this->_SiteConfig ['Url'];
-				if (file_exists ( PATH_SYS . 'Controller/' . $File . EXTEND )) {
+				if (file_exists ( $ControllerPath . $File . EXTEND )) {
 					$RouterArr ['Name'] = $val;
-					$RouterArr ['Url'] = PATH_SYS . 'Controller/' . $File . EXTEND;
+					$RouterArr ['Url'] = $ControllerPath . $File . EXTEND;
 					$FunUrl = substr ( $Url, strlen ( $File ) + 1 );
 					$FunArr = explode ( $this->_SiteConfig ['Url'], $FunUrl );
 					$RouterArr ['Method'] = empty ( $FunArr [0] ) ? 'index' : $FunArr [0];
