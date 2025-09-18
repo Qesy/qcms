@@ -17,6 +17,9 @@ class Router {
 	private static $s_instance;
 	public static $s_Controller;
 	public static $s_Method;
+	public static $s_IsPlug = false;
+	public static $s_PlusKeyName;
+	
 	function __construct() {
 		$this->_SiteConfig = SiteConfig ();
 		self::ViewController ();
@@ -52,7 +55,7 @@ class Router {
 			$RouterArr ['Method'] = $this->_SiteConfig ['DefaultFunction'];
 		} else {
 			$UrlArr = explode ( $this->_SiteConfig ['Url'], $Url );
-			if($UrlArr[0] == 'Plug'){
+			if($UrlArr[0] == 'Plugin'){
 			    self::$s_IsPlug = true;
 			    self::$s_PlusKeyName = $UrlArr[1];
 			    $ControllerPath = PATH_PLUG.$UrlArr[1].'/System/Controller/';
@@ -61,6 +64,7 @@ class Router {
 			}else{
 			    $ControllerPath = PATH_SYS.'Controller/';
 			}
+
 			$UrlTmp = '';
 			foreach ( $UrlArr as $key => $val ) {
 				$File = $UrlTmp . $val;
@@ -110,7 +114,7 @@ class Router {
 	    if(strpos($Url, 'install') === 0) return $Url; //安装文件不处理
 	    $SysObj = QC_Sys::get_instance();
 	    $SysRs = $SysObj->getKv();
-	    //var_dump(($Url == false || strpos($Url, 'index') !== false));exit;
+
 	    if(strpos($Url, 'cate/') !== false){
 	        $ListUrl = 'cate/'.$SysRs['UrlList'];
 	        $ListUrlRep = '/^'.str_replace(array('/', '{CateId}', '{PinYin}', '{PY}'), array('\/', '(\d+)', '([\w]*?)', '([\w]*?)'), $ListUrl).'$/';
@@ -153,7 +157,6 @@ class Router {
 	            foreach($MatchesSort[1] as $k => $v){
 	                $$v = $Matches[$k+1];
 	            }
-	            //var_dump($Id);
 	            return 'index/index/'.$Id;
 	        }
 	    }else if(strpos($Url, 'page/') !== false){

@@ -16,6 +16,7 @@ define ( 'PATH_SYS', PATH_DIRNAME . '/System/' );
 define ( 'PATH_TEMPLATE', PATH_DIRNAME . '/Template/' );
 define ( 'PATH_LIB', PATH_DIRNAME . '/Lib/' );
 define ( 'PATH_STATIC', PATH_DIRNAME . '/Static/' );
+define ( 'PATH_PLUG', PATH_DIRNAME . '/Plugin'.DIRECTORY_SEPARATOR );
 define ( 'EXTEND', '.php' );
 require PATH_LIB . 'Config/Config' . EXTEND;
 define ( 'URL_ROOT', substr($_SERVER['PHP_SELF'], 0, -9) );

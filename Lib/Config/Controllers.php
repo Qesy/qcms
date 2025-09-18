@@ -1435,14 +1435,14 @@ class ControllersAdmin extends Controllers {
             if($v['PId'] != 0) continue;
             $v['Sub'] = array();
             $MenuTree[$v['MenuSideId']] = $v;     
-            $Key = 'plugin/'.$v['NameKey'];
+            $Key = 'Plugin/'.$v['NameKey'];
             $this->MenuArr[$Key] = array('Name' => $v['Name'], 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(array('admin', 'plugin', $v['NameKey'])), 'Para' => array());
         }
         
         foreach($MenuSide as $k => $v){
             if($v['PId'] == 0) continue;
             $MenuTree[$v['PId']]['Sub'][] = $v;
-            $Key = 'plugin/'.$v['NameKey'].'/'.$v['Url'];
+            $Key = 'Plugin/'.$v['NameKey'].'/'.$v['Url'];
             $this->MenuArr[$Key] = array('Name' => $v['Name'], 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(explode('/', $Key)), 'Para' => array());
         }
         
@@ -1500,12 +1500,12 @@ class ControllersAdmin extends Controllers {
         }
         
         foreach($MenuTree as $k => $v){
-            $Key = 'plugin/'.$v['NameKey'];
-            $PluginMenu = array('Key' => $Key, 'subCont' => array('index'), 'Icon' => 'api-app', 'Sub' => array());
+            $Key = 'Plugin/'.$v['NameKey'];
+            $PluginMenu = array('Key' => $Key, 'subCont' => array('Plugin/'.$v['NameKey'].'/index'), 'Icon' => 'api-app', 'Sub' => array());
             foreach($v['Sub'] as $sk => $sv){
                 if($sv['IsShow'] != '1') continue;
-                $Key = 'plugin/'.$sv['NameKey'].'/'.$sv['Url'];
-                $PluginMenu['Sub'][] = array('Key' => $Key, 'alias' => array('admin/sys/index'));
+                $Key = 'Plugin/'.$sv['NameKey'].'/'.$sv['Url'];
+                $PluginMenu['Sub'][] = array('Key' => $Key, 'alias' => array($Key));
             }
             array_push($this->RoleMenuArr, $PluginMenu);
         }
@@ -1524,11 +1524,16 @@ class ControllersAdmin extends Controllers {
             )),
             array('Key' => 'index/adminLogout', 'subCont' => array('signout'), 'Icon' => 'logout')
          );
+        
         $Url = implode('/', array($this->Module, Router::$s_Controller, Router::$s_Method));
+
+        if(Router::$s_IsPlug){
+            $Url = implode('/', array('Plugin', Router::$s_PlusKeyName, Router::$s_Controller, Router::$s_Method));
+        }
         $Key = '';
         foreach($this->MenuArr as $k => $v){
             if(strpos($k, $Url) === 0){
-                if(isset($v['Para'])){
+                if(!empty($v['Para'])){
                     $GetPara = array();
                     foreach($v['Para'] as $pk => $pv) $GetPara[$pk] = $_GET[$pk];
                     $Key = $Url.'?'.http_build_query($GetPara);
@@ -1537,16 +1542,17 @@ class ControllersAdmin extends Controllers {
                 }
             }
         }
-
+        
         if(!isset($this->MenuArr[$Key])) $this->Err(1056);
-
         $MenuRs = $this->MenuArr[$Key];
+        
         if($this->LoginUserRs['GroupAdminId'] != 1 && !in_array($Key, $this->PermissionArr)) $this->Err(1005);
         $this->PageTitle = $MenuRs['Name'];
         $this->PageTitle2 = $this->BuildObj->FormTitle($MenuRs['Name']);
 
         foreach($this->RoleMenuArr as $v){
-            if(in_array(Router::$s_Controller, $v['subCont'])){
+            $subContMatch = Router::$s_IsPlug ? 'Plugin/'.Router::$s_PlusKeyName.'/'.Router::$s_Controller : Router::$s_Controller;
+            if(in_array($subContMatch, $v['subCont'])){
                 $this->MenuArr[$v['Key']]['IsActive'] = 'active';
                 $this->BreadCrumb[] = $this->MenuArr[$v['Key']];
                 if(empty($v['Sub'])) continue;
@@ -1809,6 +1815,14 @@ class ControllersApi extends Base {
         foreach($ModelArr as $v){
             $this->ModelKv[$v['KeyName']] = $v;
         }        
+    }
+}
+
+class ControllersPlug extends ControllersAdmin {
+    
+    public function __construct(){
+        parent::__construct();
+        $this->BuildObj->Module = 'Plugin/'.Router::$s_PlusKeyName;
     }
 }
 

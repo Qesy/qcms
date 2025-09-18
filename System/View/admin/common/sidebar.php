@@ -7,6 +7,7 @@
             $Key2Id = str_replace('/', '_', $Key);
             $CateRs = $this->MenuArr[$Key];
             if(!in_array($this->LoginUserRs['GroupAdminId'], $CateRs['Permission'])) continue;
+            $subContMatch = Router::$s_IsPlug ? 'Plugin/'.Router::$s_PlusKeyName.'/'.Router::$s_Controller : Router::$s_Controller;
         ?>
         <li class="nav-item">
             <a class="nav-link px-3 <?=$CateRs['IsActive']?>"
@@ -17,7 +18,7 @@
                 <?=$CateRs['Name']?>
                 <span class="pull-right <?=empty($val['Sub']) ? 'd-none' : 'd-block'?>"><iconpark-icon size="1.2rem" name="down"></iconpark-icon></span></a>
                 <? if(!empty($val['Sub'])){ ?>
-            <ul id="<?=$Key2Id?>" class="collapse <? if(in_array(Router::$s_Controller, $val['subCont'])) echo 'show';?> collapse-level-1">
+            <ul id="<?=$Key2Id?>" class="collapse <? if(in_array($subContMatch, $val['subCont'])) echo 'show';?> collapse-level-1">
                 <?
                 foreach($val['Sub'] as $sval){
                     if($this->LoginUserRs['GroupAdminId'] != 1 && !in_array($sval['Key'], $this->PermissionArr)) continue;

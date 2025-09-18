@@ -262,6 +262,25 @@ abstract class Base {
 	    require PATH_SYS . 'View/' . $Temp . EXTEND;
 	}
 	
+	public function LoadPlugView($Temp, $Data = array()){
+	    if(!Router::$s_IsPlug) return false;
+	    $Path = PATH_PLUG.Router::$s_PlusKeyName.'/System/View/';
+	    if (! is_file ( $Path . 'common/frame'. EXTEND )) die ( $Path . 'common/frame'. EXTEND . ' not found !' );
+	    $this->TempArr = empty ( $Data ) ? $this->TempArr : array_merge($this->TempArr, $Data);
+	    foreach ( $this->TempArr as $Key => $Val ) $$Key = $Val;
+	    $_defaultTemp = $Temp;
+	    require $Path . 'common/frame'.EXTEND;
+	}
+	
+	public function LoadPlugFullView($Temp, $Data = array()){
+	    if(!Router::$s_IsPlug) return false;
+	    $Path = PATH_PLUG.Router::$s_PlusKeyName.'/System/';
+	    if (! is_file ( $Path . 'View/' . $Temp . EXTEND )) die ( $Path . 'View/' . $Temp . EXTEND . ' not found !' );
+	    $this->TempArr = empty ( $Data ) ? $this->TempArr : array_merge($this->TempArr, $Data);
+	    foreach ( $this->TempArr as $Key => $Val ) $$Key = $Val;
+	    require $Path . 'View/' . $Temp . EXTEND;
+	}
+	
 	public static function InsertFuncArray(array $ControllerArr) { // -- Name : 回调函数 --
 		$ParaArr = isset ( $ControllerArr ['ParaArr'] ) ? $ControllerArr ['ParaArr'] : array ();
 		$Class = new $ControllerArr ['Name'] ();
