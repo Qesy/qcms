@@ -1371,6 +1371,7 @@ class ControllersAdmin extends Controllers {
             'admin/templates/installed' => array('Name' => '已安装模版', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'installed'))),
             'admin/plugin/index' => array('Name' => '插件管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'plugin', 'index'))),
             'admin/plugin/market' => array('Name' => '插件市场', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'plugin', 'market'))),
+            'admin/plugin/config' => array('Name' => '设置管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'plugin', 'config'))),
             'admin/plugin/installed' => array('Name' => '已安装插件', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'plugin', 'installed'))),
             
             'admin/develop/index' => array('Name' => '开发中心', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'develop', 'index'))),
@@ -1488,7 +1489,7 @@ class ControllersAdmin extends Controllers {
             )),
             array('Key' => 'admin/plugin/index', 'subCont' => array('plugin'), 'Icon' => 'components', 'Sub' => array(
                 array('Key' => 'admin/plugin/market', 'alias' => array('admin/plugin/market')),
-                array('Key' => 'admin/plugin/installed', 'alias' => array('admin/plugin/installed')),
+                array('Key' => 'admin/plugin/installed', 'alias' => array('admin/plugin/installed', 'admin/plugin/config')),
             )),
             
         );
@@ -1818,8 +1819,15 @@ class ControllersApi extends Base {
     }
 }
 
-class ControllersPlug extends ControllersAdmin {
+class ControllersPlugAdmin extends ControllersAdmin {
     
+    public function __construct(){
+        parent::__construct();
+        $this->BuildObj->Module = 'Plugin/'.Router::$s_PlusKeyName;
+    }
+}
+
+class ControllersPlug extends Base {    
     public function __construct(){
         parent::__construct();
         $this->BuildObj->Module = 'Plugin/'.Router::$s_PlusKeyName;

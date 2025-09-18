@@ -49,8 +49,16 @@ function BasicArr(){
 function autoload($classname) { // -- 自动加载类 --
     $filename = PATH_LIB . $classname . '.php';
     $filename = str_replace('\\', '/', $filename);
-    if (file_exists ( $filename ))
+    if (file_exists ( $filename )) {
         require $filename;
+        return;
+    }
+    $filename = PATH_PLUG . $classname . '.php';
+    $filename = str_replace('\\', '/', $filename);
+    if (file_exists ( $filename )) {
+        require $filename;
+    }
+        
 }
 
 const WEB_MODE = 'Release'; //Dev ,Release

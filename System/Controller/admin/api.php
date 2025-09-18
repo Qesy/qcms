@@ -572,6 +572,9 @@ class Api extends ControllersAdmin {
         
         // 初始化数据库
         $Database = require_once $PlugPath.'/Lib/Database.php';
+        $ConfigArr = require_once $PlugPath.'/Lib/Config.php';
+        $ConfigMap = array_column($ConfigArr, 'Value', 'Name');
+        $Cron = require_once $PlugPath.'/Lib/Cron.php';
         require_once $PlugPath.'/Lib/Install.php';
         $InstallObj = new Install();
         if(!method_exists($InstallObj, 'init')) $this->ApiErr(1033);
@@ -594,6 +597,11 @@ class Api extends ControllersAdmin {
                 'State' => '1',
                 'TsAdd' => $Ts,
                 'TsUpdate' => $Ts,
+                'Config' => json_encode($ConfigMap),
+                'CronType' => $Cron['CronType'],
+                'Interval' => $Cron['Interval'],
+                'Time' => $Cron['Time'],
+                'TsLastCron' => $Cron['TsLastCron'],
             );
             $this->PluginObj->SetInsert($PluginInsertMap)->ExecInsert(); 
             

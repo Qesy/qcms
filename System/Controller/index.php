@@ -176,12 +176,29 @@ class Index extends Controllers {
 	    $this->CodeObj->CreateVerifyImage(102, 34);
 	    $_SESSION['VeriCode'] = $this->CodeObj->m_verify_code;
 	}
-
-	public function test_Action(){
-	    var_dump($this->CommonObj->GetQuery());
-	    $this->CommonObj->SetQuery('aa', 'bb');
-	    var_dump($this->CommonObj->GetQuery());
-		echo 'test';
+	
+	public function cron_Action(){ // 定时器
+	    if (php_sapi_name () != 'cli') exit('Not in Cli !');
+	    while(true){
+	        $PluginArr = $this->PluginObj->ExecSelect();
+	        foreach($PluginArr as $v){
+	            $Ts = time();
+	            if($v['CronType'] == '-1') continue;
+	            $TsLast = $v['TsLastCron'];
+	            if($v['CronType'] == 1){	                
+	                if($Ts - $TsLast < $v['Interval']) continue;
+	            }else if($v['CronType'] == 2){
+	                $Time = strtotime(date('Y-m-d').' '.$v['Time']);
+	                if($Ts < $Time) continue;
+	            }
+	            require_once './Plugin/'.$v['NameKey'].'/System/Controller/cron.php';
+	            $Class = new Cron();
+	            call_user_func_array ( array (& $Class, 'run'), array($v) );
+	            $Result = $this->PluginObj->SetCond(array('PluginId' => $v['PluginId']))->SetUpdate(array('TsLastCron' => $Ts))->ExecUpdate();
+	            if($Result !== false) $this->PluginObj->clean($v['PluginId']);
+	        }
+	        sleep(1);
+	    }
 	}
 
 	private function _statFlow(){
