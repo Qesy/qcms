@@ -494,8 +494,11 @@ class Common {
 	
 	public function LogWrite($message) {
 	    $logDir = 'Logs'; 
+	    $bt = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+	    $caller = $bt[0];
+	    $location = $caller['file'] . ':' . $caller['line'];
 	    $time = date('Y-m-d H:i:s');
-	    $line = "[{$time}] {$message}\n";
+	    $line = "[{$time}] [{$location}] {$message}\n";
 	    file_put_contents($logDir . '/error_'.date(Ymd).'.log', $line, FILE_APPEND);
 	}
 	

@@ -182,6 +182,7 @@ class Index extends Controllers {
 	    while(true){
 	        $PluginArr = $this->PluginObj->ExecSelect();
 	        foreach($PluginArr as $v){
+	            $this->CommonObj->LogWrite('日志测试');
 	            $Ts = time();
 	            $NameKey = basename($v['NameKey']);
 	            if($v['CronType'] == '-1') continue;
@@ -194,31 +195,30 @@ class Index extends Controllers {
 	            }
 	            $cronFile = './Plugin/'.$NameKey.'/System/Controller/cron.php';
 	            if (!file_exists($cronFile)) {
-	                echo 'file_exists '.$cronFile .' Faild !'.PHP_EOL;
+	                $this->CommonObj->LogWrite('file_exists '.$cronFile .' Faild !');
 	                continue;
 	            }
 	            require_once $cronFile;
 	            $ClassName = $NameKey.'_Cron';
 	            if (!class_exists($ClassName)) {
-	                echo 'class_exists '.$ClassName.' Faild !'.PHP_EOL;
+	                $this->CommonObj->LogWrite('class_exists '.$ClassName.' Faild !');
 	                continue;
 	            }
 	            
 	            $cron = new $ClassName;
 	            if (!method_exists($cron, 'run')) {
-	                echo 'method_exists $cron run Faild !'.PHP_EOL;
+	                $this->CommonObj->LogWrite('method_exists $cron run Faild !');
 	                continue;
 	                
 	            }
 	            try{
 	                $cron->run($v);
+	                $this->PluginObj->SetCond(array('PluginId' => $v['PluginId']))->SetUpdate(array('TsLastCron' => $Ts))->ExecUpdate();
 	            }catch (\Exception $e){
 	                $this->CommonObj->LogWrite($e->getMessage());
 	                continue; // 不中断，继续下一个插件
-	            }
-	            
-	            $Result = $this->PluginObj->SetCond(array('PluginId' => $v['PluginId']))->SetUpdate(array('TsLastCron' => $Ts))->ExecUpdate();
-	            if($Result !== false) $this->PluginObj->clean($v['PluginId']);
+	            }	            
+	            $this->PluginObj->clean($v['PluginId']);
 	        }
 	        sleep(1);
 	    }

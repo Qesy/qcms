@@ -4,7 +4,7 @@
 	RewriteBase /
 
 	# 禁止访问敏感目录
-	RewriteRule ^(System|Lib|Database|Template|\.git) - [F,L]
+	RewriteRule ^(System|Lib|Database|Template|Logs|\.git) - [F,L]
 
 	# 如果请求的文件或目录不存在，就交给 index.php
 	RewriteCond %{REQUEST_FILENAME} !-f
