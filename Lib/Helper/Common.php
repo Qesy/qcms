@@ -492,6 +492,13 @@ class Common {
 	    return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
 	}
 	
+	public function LogWrite($message) {
+	    $logDir = 'Logs'; 
+	    $time = date('Y-m-d H:i:s');
+	    $line = "[{$time}] {$message}\n";
+	    file_put_contents($logDir . '/error_'.date(Ymd).'.log', $line, FILE_APPEND);
+	}
+	
 	public function CleanHtml($html) {
 	    // 1️⃣ 提取 raw-html-embed div
 	    $html = preg_replace_callback(

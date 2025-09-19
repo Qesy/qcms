@@ -571,15 +571,14 @@ class Api extends ControllersAdmin {
         if($CopyRet === false) $this->ApiErr(1019); // Copy静态文件失败
         
         // 初始化数据库
-        $Database = require_once $PlugPath.'/Lib/Database.php';
-        $ConfigArr = require_once $PlugPath.'/Lib/Config.php';
-        $ConfigMap = array_column($ConfigArr, 'Value', 'Name');
-        $Cron = require_once $PlugPath.'/Lib/Cron.php';
+        $ConfigMap = require_once $PlugPath.'/Lib/Config.php';
+        $SettingMap = array_column($ConfigMap['Form'], 'Value', 'Name');
+        $Cron = $ConfigMap['Cron'];
+        if(!isset($Cron['CronType'])) $Cron = array('CronType' => '-1', 'Interval' => 0, 'Time' => '00:00:00', 'TsLastCron' => 0);
         require_once $PlugPath.'/Lib/Install.php';
         $InstallObj = new Install();
         if(!method_exists($InstallObj, 'init')) $this->ApiErr(1033);
         if(!method_exists($InstallObj, 'upgrade')) $this->ApiErr(1033);
-        if(!method_exists($InstallObj, 'menu')) $this->ApiErr(1033);
         $DbConfig = Config::DbConfig();
         $Ts = time();
         try{
@@ -587,7 +586,7 @@ class Api extends ControllersAdmin {
             
             // 创建需要的表
             $TablePre = $DbConfig['Prefix'].'plugin_'.$Ret['Data']['NameKey'].'_';
-            $this->createTable($TablePre, $Database, 1);             
+            $this->createTable($TablePre, $ConfigMap['Data'], 1);             
             
             // 插入插件表
             $PluginInsertMap = array(
@@ -597,30 +596,31 @@ class Api extends ControllersAdmin {
                 'State' => '1',
                 'TsAdd' => $Ts,
                 'TsUpdate' => $Ts,
-                'Config' => json_encode($ConfigMap),
+                'Config' => json_encode($SettingMap),
                 'CronType' => $Cron['CronType'],
-                'Interval' => $Cron['Interval'],
-                'Time' => $Cron['Time'],
+                'IntervalTime' => $Cron['IntervalTime'],
+                'FixedTime' => $Cron['FixedTime'],
                 'TsLastCron' => $Cron['TsLastCron'],
             );
+
             $this->PluginObj->SetInsert($PluginInsertMap)->ExecInsert(); 
             
             // 插入菜单
-            $MenuArr = $InstallObj->menu();
-            if(count($MenuArr['SideBar']) > 0){ //如果没分类就不用插入了
+
+            if(count($ConfigMap['SideBar']) > 0){ //如果没分类就不用插入了
                 $this->Menu_sideObj->SetInsert(array( //插入父分类
                     'PId' => 0,
                     'PluginId' => $Ret['Data']['PluginId'],
                     'NameKey' => $Ret['Data']['NameKey'],
                     'Name' => $Ret['Data']['Name'],
-                    'Icons' => $MenuArr['Icons'],
+                    'Icons' => 'api-app',
                     'Url' => '#', //附件父分类不需要链接
                     'Para' => '{}',
                     'Sort' => '99',
                     'IsShow' => 1,
                 ))->ExecInsert();
                 $InsertId = $this->Menu_sideObj->last_insert_id();
-                foreach($MenuArr['SideBar'] as $k => $v){
+                foreach($ConfigMap['SideBar'] as $k => $v){
                     $this->Menu_sideObj->SetInsert(array(
                         'PId' => $InsertId,
                         'PluginId' => $Ret['Data']['PluginId'],
@@ -638,6 +638,7 @@ class Api extends ControllersAdmin {
             DB::$s_db_obj->commit();
         }catch (PDOException $e){
             DB::$s_db_obj->rollBack();
+            var_dump($e->getMessage());
             $this->ApiErr(1002);
         }
         $this->Menu_sideObj->cleanList();
@@ -676,14 +677,11 @@ class Api extends ControllersAdmin {
         if($CopyRet === false) $this->ApiErr(1019); // Copy静态文件失败
         
         // 执行升级程序
-        $Database = require_once $PlugPath.'/Lib/Database.php';
         require_once $PlugPath.'/Lib/Install.php';
         $InstallObj = new Install();
         if(!method_exists($InstallObj, 'init')) $this->ApiErr(1033);
         if(!method_exists($InstallObj, 'upgrade')) $this->ApiErr(1033);
-        if(!method_exists($InstallObj, 'menu')) $this->ApiErr(1033);
-        $DbConfig = Config::DbConfig();
-        $Ts = time();
+
         try{
             DB::$s_db_obj->beginTransaction();            
             $InstallObj->upgrade(); //执行安装程序
@@ -705,7 +703,7 @@ class Api extends ControllersAdmin {
         
         $PlugPath = './Plugin/'.$LocalPlusRs['NameKey'];
         $StaticPath = './Static/plugin/'.$LocalPlusRs['NameKey'];
-        $Database = require_once $PlugPath.'/Lib/Database.php';
+        $ConfigMap = require_once $PlugPath.'/Lib/Config.php';
         $DbConfig = Config::DbConfig();
 
         //先清空数据库
@@ -717,7 +715,7 @@ class Api extends ControllersAdmin {
             // 删除创建的数据表
             $TablePre = $DbConfig['Prefix'].'plugin_'.$LocalPlusRs['NameKey'].'_';   
             
-            $this->delTable($TablePre, $Database);
+            $this->delTable($TablePre, $ConfigMap['Data']);
             
             // 删除菜单            
             $this->Menu_sideObj->SetCond(array('PluginId' => $LocalPlusRs['PluginId']))->ExecDelete();            

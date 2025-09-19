@@ -183,17 +183,40 @@ class Index extends Controllers {
 	        $PluginArr = $this->PluginObj->ExecSelect();
 	        foreach($PluginArr as $v){
 	            $Ts = time();
+	            $NameKey = basename($v['NameKey']);
 	            if($v['CronType'] == '-1') continue;
 	            $TsLast = $v['TsLastCron'];
 	            if($v['CronType'] == 1){	                
-	                if($Ts - $TsLast < $v['Interval']) continue;
+	                if($Ts - $TsLast < $v['IntervalTime']) continue;
 	            }else if($v['CronType'] == 2){
-	                $Time = strtotime(date('Y-m-d').' '.$v['Time']);
+	                $Time = strtotime(date('Y-m-d').' '.$v['FixedTime']);
 	                if($Ts < $Time) continue;
 	            }
-	            require_once './Plugin/'.$v['NameKey'].'/System/Controller/cron.php';
-	            $Class = new Cron();
-	            call_user_func_array ( array (& $Class, 'run'), array($v) );
+	            $cronFile = './Plugin/'.$NameKey.'/System/Controller/cron.php';
+	            if (!file_exists($cronFile)) {
+	                echo 'file_exists '.$cronFile .' Faild !'.PHP_EOL;
+	                continue;
+	            }
+	            require_once $cronFile;
+	            $ClassName = $NameKey.'_Cron';
+	            if (!class_exists($ClassName)) {
+	                echo 'class_exists '.$ClassName.' Faild !'.PHP_EOL;
+	                continue;
+	            }
+	            
+	            $cron = new $ClassName;
+	            if (!method_exists($cron, 'run')) {
+	                echo 'method_exists $cron run Faild !'.PHP_EOL;
+	                continue;
+	                
+	            }
+	            try{
+	                $cron->run($v);
+	            }catch (\Exception $e){
+	                $this->CommonObj->LogWrite($e->getMessage());
+	                continue; // 不中断，继续下一个插件
+	            }
+	            
 	            $Result = $this->PluginObj->SetCond(array('PluginId' => $v['PluginId']))->SetUpdate(array('TsLastCron' => $Ts))->ExecUpdate();
 	            if($Result !== false) $this->PluginObj->clean($v['PluginId']);
 	        }
