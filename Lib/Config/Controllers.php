@@ -1174,6 +1174,7 @@ class ControllersAdmin extends Controllers {
     public $IsShowArr = array('1' => '显示', 2 => '隐藏');
     public $StateArr = array('1' => '已发布', 2 => '未发布');
     public $SexArr = array('1' => '男', 2 => '女');
+    public $StateDevMap = array(1 => '已审核', 2 => '开发中', 3 => '待审核', 4 => '已拒绝');
     public $EditorArr = array('ckeditor' => 'ckeditor');
     public $LangArr = array('Cn' => '中文');
     public $SiteArr = array();
@@ -1675,6 +1676,13 @@ class ControllersAdmin extends Controllers {
     
     public function getPluginCate(){
         $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/pluginCate.html')->SetPara(array('Domain' => URL_DOMAIN))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Ret = json_decode($Json, true);
+        return $Ret;
+    }
+    
+    public function getDevTemplaites($Page, $PageNum, $CateId = 0, $TemplatesIds = array()){
+        $Para = array('Domain' => URL_DOMAIN, 'P' => $Page, 'PageNum' => $PageNum, 'CateId' => $CateId, 'TemplatesIds' => implode('|', $TemplatesIds));
+        $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/templates.html')->SetDebug(false)->SetPara($Para)->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
     }
