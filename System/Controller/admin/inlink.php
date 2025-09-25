@@ -49,10 +49,10 @@ class Inlink extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name', 'InlinkCateId', 'IsBlank', 'Url'))) $this->Err(1001);
             $Ret = $this->InlinkObj->SetInsert(array(
-                'Name' => $_POST['Name'],
-                'InlinkCateId' => $_POST['InlinkCateId'],
-                'IsBlank' => $_POST['IsBlank'],
-                'Url' => $_POST['Url'],                
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
+                'InlinkCateId' => intval($_POST['InlinkCateId']),
+                'IsBlank' => intval($_POST['IsBlank']),
+                'Url' => $this->CommonObj->SafeInput(trim($_POST['Url'])),                
                 'State' => 1,
                 'Sort' => 99,
             ))->ExecInsert();
@@ -81,10 +81,10 @@ class Inlink extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name', 'InlinkCateId', 'IsBlank', 'Url'))) $this->Err(1001);
             $Ret = $this->InlinkObj->SetCond(array('InlinkId' => $Rs['InlinkId']))->SetUpdate(array(
-                'Name' => $_POST['Name'],
-                'InlinkCateId' => $_POST['InlinkCateId'],
-                'IsBlank' => $_POST['IsBlank'],
-                'Url' => $_POST['Url'],
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
+                'InlinkCateId' => intval($_POST['InlinkCateId']),
+                'IsBlank' => intval($_POST['IsBlank']),
+                'Url' => $this->CommonObj->SafeInput(trim($_POST['Url'])),
             ))->ExecUpdate();
             if($Ret === false) $this->Err(1002);
             $this->InlinkObj->cleanList();

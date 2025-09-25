@@ -113,6 +113,9 @@
         $('#DelBatchBtn').click(function(){
             if(!confirm('将物理删除文件，确定删除?')) return false;
             let Ids = getAllChecked();
+            if(Ids.length == 0) {
+                alert('没有选中任何文件');return false;
+            }
             //console.log('ids', Ids); return;
             $.post('<?=$this->CommonObj->Url(array('admin', 'api', 'fileDel')).'?'.http_build_query($_GET)?>', {'Ids':Ids.join('|')}, function(Res){
                 if(Res.Code){

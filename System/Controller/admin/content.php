@@ -134,17 +134,17 @@ class Content extends ControllersAdmin {
                 $InsertId = $this->TableObj->last_insert_id();
                 $InsetArr = array(
                     'Id' => $InsertId,
-                    'CateId' => intval($_POST['CateId']),
-                    'Title' => trim($_POST['Title']),
-                    'STitle' => trim($_POST['STitle']),
-                    'Tag' => trim($_POST['Tag']),
-                    'Pic' => trim($_POST['Pic']),
-                    'Source' => trim($_POST['Source']),
-                    'Author' => trim($_POST['Author']),
+                    'CateId' => $this->CommonObj->SafeInput(intval($_POST['CateId'])),
+                    'Title' => $this->CommonObj->SafeInput(trim($_POST['Title'])),
+                    'STitle' => $this->CommonObj->SafeInput(trim($_POST['STitle'])),
+                    'Tag' => $this->CommonObj->SafeInput(trim($_POST['Tag'])),
+                    'Pic' => $this->CommonObj->SafeInput(trim($_POST['Pic'])),
+                    'Source' => $this->CommonObj->SafeInput(trim($_POST['Source'])),
+                    'Author' => $this->CommonObj->SafeInput(trim($_POST['Author'])),
                     'Sort' => intval($_POST['Sort']),
-                    'Keywords' => trim($_POST['Keywords']),
-                    'Description' => trim($_POST['Description']),
-                    'Summary' =>trim($_POST['Summary']),
+                    'Keywords' => $this->CommonObj->SafeInput(trim($_POST['Keywords'])),
+                    'Description' => $this->CommonObj->SafeInput(trim($_POST['Description'])),
+                    'Summary' => $this->CommonObj->SafeInput(trim($_POST['Summary'])),
                     'TsAdd' => $Ts,
                     'TsUpdate' => empty($_POST['TsUpdate']) ? $Ts : strtotime($_POST['TsUpdate']),
                     'ReadNum' => intval($_POST['ReadNum']),
@@ -153,13 +153,13 @@ class Content extends ControllersAdmin {
                     'UserLevel' => intval($_POST['UserLevel']),
                     'Good' => intval($_POST['Good']),
                     'Bad' => intval($_POST['Bad']),
-                    'Color' => trim($_POST['Color']),
+                    'Color' => $this->CommonObj->SafeInput(trim($_POST['Color'])),
                     'UserId' => $this->LoginUserRs['UserId'],
                     'State' => $State,
-                    'Content' => trim($_POST['Content']),
+                    'Content' => $this->CommonObj->CleanHtml(trim($_POST['Content'])),
                     'IsPost' => $IsPost,
                     'IsLink' => $IsLink,
-                    'LinkUrl' => trim($_POST['LinkUrl']),
+                    'LinkUrl' => $this->CommonObj->SafeInput(trim($_POST['LinkUrl'])),
                     'IsBold' => $IsBold,
                     'IsPic' => $IsPic,
                     'IsSpuerRec' => $IsSpuerRec,
@@ -178,10 +178,10 @@ class Content extends ControllersAdmin {
                         $_POST[$v['Name']] = trim($_POST[$v['Name']]);
                     }
                     if($v['NotNull'] == 1 && empty($_POST[$v['Name']])) $this->Err(1001);
-                    $InsetArr[$v['Name']] = $_POST[$v['Name']];                                       
+                    $InsetArr[$v['Name']] = $v['Type'] == 'editor' ? $this->CommonObj->CleanHtml(trim($_POST[$v['Name']])) : $this->CommonObj->SafeInput($_POST[$v['Name']]);                                       
                 }                     
                 $this->Sys_modelObj->SetTbName('table_'.$ModelRs['KeyName'])->SetInsert($InsetArr)->ExecInsert();
-                $this->TagObj->RunUpdate($InsetArr['Tag'], '', $InsertId, $ModelRs['ModelId']);
+                $this->TagObj->RunUpdate($InsetArr['Tag'], '', $InsertId, $ModelRs['ModelId']);              
                 if($ModelRs['KeyName'] == 'album'){
                     $this->PhotosObj->SetInsert(array('Id' => $InsertId, 'Photos' => json_encode(array())))->ExecInsert();
                 }
@@ -230,7 +230,7 @@ class Content extends ControllersAdmin {
                 'Title' => '扩展信息',
                 'Form' => array(
                     array('Name' =>'UserLevel', 'Desc' => '浏览权限',  'Type' => 'select', 'Data' => $GroupUserKv, 'Value' => '0', 'Required' => 0, 'Col' => 3),
-                    array('Name' =>'TsUpdate', 'Desc' => '发布时间',  'Type' => 'input', 'Value' => date('Y-m-d H:i:s'), 'Required' => 0, 'Col' => 3),
+                    array('Name' =>'TsUpdate', 'Desc' => '发布时间',  'Type' => 'datetime', 'Value' => date('Y-m-d H:i:s'), 'Required' => 0, 'Col' => 3),
                     array('Name' =>'ReadNum', 'Desc' => '浏览次数',  'Type' => 'input', 'Value' => '0', 'Required' => 0, 'Col' => 3),
                     array('Name' =>'Sort', 'Desc' => '排序',  'Type' => 'input', 'Value' => '99', 'Required' => 0, 'Col' => 3),
 
@@ -293,16 +293,16 @@ class Content extends ControllersAdmin {
 
                 $InsetArr = array(
                     'CateId' => intval($_POST['CateId']),
-                    'Title' => trim($_POST['Title']),
-                    'STitle' => trim($_POST['STitle']),
-                    'Tag' => trim($_POST['Tag']),
-                    'Pic' => trim($_POST['Pic']),
-                    'Source' => trim($_POST['Source']),
-                    'Author' => trim($_POST['Author']),
+                    'Title' => $this->CommonObj->SafeInput(trim($_POST['Title'])),
+                    'STitle' => $this->CommonObj->SafeInput(trim($_POST['STitle'])),
+                    'Tag' => $this->CommonObj->SafeInput(trim($_POST['Tag'])),
+                    'Pic' => $this->CommonObj->SafeInput(trim($_POST['Pic'])),
+                    'Source' => $this->CommonObj->SafeInput(trim($_POST['Source'])),
+                    'Author' => $this->CommonObj->SafeInput(trim($_POST['Author'])),
                     'Sort' => intval($_POST['Sort']),
-                    'Keywords' => trim($_POST['Keywords']),
-                    'Description' => trim($_POST['Description']),
-                    'Summary' => trim($_POST['Summary']),
+                    'Keywords' => $this->CommonObj->SafeInput(trim($_POST['Keywords'])),
+                    'Description' => $this->CommonObj->SafeInput(trim($_POST['Description'])),
+                    'Summary' => $this->CommonObj->SafeInput(trim($_POST['Summary'])),
                     //'TsAdd' => $Ts,
                     'TsUpdate' => empty($_POST['TsUpdate']) ? $Ts : strtotime($_POST['TsUpdate']),
                     'ReadNum' => intval($_POST['ReadNum']),
@@ -311,13 +311,13 @@ class Content extends ControllersAdmin {
                     'UserLevel' => intval($_POST['UserLevel']),
                     'Good' => intval($_POST['Good']),
                     'Bad' => intval($_POST['Bad']),
-                    'Color' => trim($_POST['Color']),
+                    'Color' => $this->CommonObj->SafeInput(trim($_POST['Color'])),
                     'UserId' => $this->LoginUserRs['UserId'],
                     'State' => $State,
-                    'Content' => trim($_POST['Content']),
+                    'Content' => $this->CommonObj->CleanHtml(trim($_POST['Content'])),
                     'IsPost' => $IsPost,
                     'IsLink' => $IsLink,
-                    'LinkUrl' => trim($_POST['LinkUrl']),
+                    'LinkUrl' => $this->CommonObj->SafeInput(trim($_POST['LinkUrl'])),
                     'IsBold' => $IsBold,
                     'IsPic' => $IsPic,
                     'IsSpuerRec' => $IsSpuerRec,
@@ -338,7 +338,7 @@ class Content extends ControllersAdmin {
                     if($v['NotNull'] == 1 && empty($_POST[$v['Name']])) {
                         $this->Err(1001);
                     }                    
-                    $InsetArr[$v['Name']] = $_POST[$v['Name']];
+                    $InsetArr[$v['Name']] = $v['Type'] == 'editor' ? $this->CommonObj->CleanHtml(trim($_POST[$v['Name']])) : $this->CommonObj->SafeInput($_POST[$v['Name']]);
                 }   
                 
                 $this->TableObj->SetTbName('table_'.$ModelRs['KeyName'])->SetCond(array('Id' => $Rs['Id']))->SetUpdate($InsetArr)->ExecUpdate();                
@@ -397,7 +397,7 @@ class Content extends ControllersAdmin {
                 'Title' => '扩展信息',
                 'Form' => array(
                     array('Name' =>'UserLevel', 'Desc' => '浏览权限',  'Type' => 'select', 'Data' => $GroupUserKv, 'Value' => $Rs['UserLevel'], 'Required' => 0, 'Col' => 3),
-                    array('Name' =>'TsUpdate', 'Desc' => '发布时间',  'Type' => 'input', 'Value' => date('Y-m-d H:i:s', $Rs['TsUpdate']), 'Required' => 0, 'Col' => 3),
+                    array('Name' =>'TsUpdate', 'Desc' => '发布时间',  'Type' => 'datetime', 'Value' => date('Y-m-d H:i:s', $Rs['TsUpdate']), 'Required' => 0, 'Col' => 3),
                     array('Name' =>'ReadNum', 'Desc' => '浏览次数',  'Type' => 'input', 'Value' => $Rs['ReadNum'], 'Required' => 0, 'Col' => 3),
                     array('Name' =>'Sort', 'Desc' => '排序',  'Type' => 'input', 'Value' => $Rs['Sort'], 'Required' => 0, 'Col' => 3),
 
@@ -493,9 +493,9 @@ class Content extends ControllersAdmin {
             $Color = empty($v['Color']) ? '' : 'color:'.$v['Color'].';';
             $Arr[$k]['TitleView'] = '<span class="'.($v['IsBold'] == 2 ? '' : 'font-weight-bold').'" style="'.$Color.'">'.$v['Title'].'</span>'.$AttrStr;
             $Arr[$k]['BtnArr'] = array(
-                array('Desc' => '查看', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'view'), array('Id' => $v['Id'])) ),
-                array('Desc' => '还原', 'Color' => 'primary', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'restore'), array('Id' => $v['Id'])) ),
-                //array('Name' => '彻底删除', 'Color' => 'danger', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'view')) ),
+                array('Desc' => '查看', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'view'), array('Id' => $v['Id'], 'ModelId' => $ModelRs['ModelId'])) ),
+                array('Desc' => '还原', 'Color' => 'primary', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'restore'), array('Id' => $v['Id'], 'ModelId' => $ModelRs['ModelId'])) ),
+                //array('Name' => '清空', 'Color' => 'danger', 'Link' => $this->CommonObj->Url(array('admin', 'content', 'view')) ),
             );
         }
         $KeyArr = array(
@@ -519,9 +519,10 @@ class Content extends ControllersAdmin {
         $this->BuildObj->TableFooterBtnArr = array(
             array('Name' => 'ContentbatchDel2Btn', 'Desc' => '批量还原', 'Class' => 'primary'), 
             array('Name' => 'ContentbatchDel3Btn', 'Desc' => '彻底删除', 'Class' => 'primary'),
+            array('Name' => 'ContentbatchDel4Btn', 'Desc' => '清空回收站', 'Class' => 'primary'),
         );
         $tmp['Table'] = $this->BuildObj->Table($Arr, $KeyArr, $PageBar, 'table-sm');
-        $this->LoadView('admin/common/list', $tmp);
+        $this->LoadView('admin/content/list', $tmp);
     }
 
     public function view_Action(){
@@ -574,7 +575,7 @@ class Content extends ControllersAdmin {
                 'Title' => '扩展信息',
                 'Form' => array(
                     array('Name' =>'UserLevel', 'Desc' => '浏览权限',  'Type' => 'select', 'Data' => $GroupUserKv, 'Value' => $Rs['UserLevel'], 'Required' => 0, 'Col' => 3),
-                    array('Name' =>'TsUpdate', 'Desc' => '发布时间',  'Type' => 'input', 'Value' => date('Y-m-d H:i:s', $Rs['TsUpdate']), 'Required' => 0, 'Col' => 3),
+                    array('Name' =>'TsUpdate', 'Desc' => '发布时间',  'Type' => 'datetime', 'Value' => date('Y-m-d H:i:s', $Rs['TsUpdate']), 'Required' => 0, 'Col' => 3),
                     array('Name' =>'ReadNum', 'Desc' => '浏览次数',  'Type' => 'input', 'Value' => $Rs['ReadNum'], 'Required' => 0, 'Col' => 3),
                     array('Name' =>'Sort', 'Desc' => '排序',  'Type' => 'input', 'Value' => $Rs['Sort'], 'Required' => 0, 'Col' => 3),
 
@@ -634,7 +635,7 @@ class Content extends ControllersAdmin {
         $this->Jump(array('admin', 'content', 'recovery'));
     }
 
-    public function tDelete_Action(){
+    public function tDelete_Action(){ // 彻底删除
         if(!$this->VeriObj->VeriPara($_GET, array('Id'))) $this->Err(1001);
         $TableRs = $this->TableObj->getOne($_GET['Id']);
         $ModelRs = $this->Sys_modelObj->getOne($TableRs['ModelId']);
@@ -648,8 +649,7 @@ class Content extends ControllersAdmin {
             if($ModelRs['KeyName'] == 'album'){ //相册表删除
                 $this->PhotosObj->SetCond(array('Id' => $Rs['Id']))->ExecDelete();
             }
-            $this->FileObj->SetCond(array('FType' => 2, 'IndexId' => $Rs['Id']))->SetUpdate(array('IsDel' => 1))->ExecUpdate();
-            
+            $this->FileObj->SetCond(array('FType' => 2, 'IndexId' => $Rs['Id']))->SetUpdate(array('IsDel' => 1))->ExecUpdate();            
             DB::$s_db_obj->commit();
         }catch (PDOException $e){
             DB::$s_db_obj->rollBack();

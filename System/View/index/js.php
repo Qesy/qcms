@@ -1,5 +1,3 @@
-<script src="https://lf6-cdn-tos.bytecdntp.com/cdn/expire-1-M/jquery/3.3.1/jquery.min.js" type="application/javascript"></script>
-<script src="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/4.6.1/js/bootstrap.min.js" type="application/javascript"></script>
-<script src="<?=URL_BOOT?>js/jasny-bootstrap.min.js"></script>
-<script src="<?=URL_BOOT?>js/jquery.slimscroll.js"></script>
-<script src="<?=URL_BOOT?>js/dropdown-bootstrap-extended.js"></script>
+<script src="https://lf1-cdn-tos.bytegoofy.com/obj/iconpark/icons_29154_53.de24e18df46f4ea0c7b75c6e015d3616.js"></script>
+<script src="<?=URL_BOOT?>js/jquery-3.3.1.min.js" type="application/javascript"></script>
+<script src="<?=URL_BOOT?>js/bootstrap.bundle.min.js" type="application/javascript"></script>

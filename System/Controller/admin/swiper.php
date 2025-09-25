@@ -4,9 +4,6 @@ class Swiper extends ControllersAdmin {
     
     public function index_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('SwiperCateId'))) $this->Err(1001);
-        
-        //$CondArr = array('SwiperCateId' => $_GET['SwiperCateId']);
-        //$Arr = $this->SwiperObj->SetCond($CondArr)->SetSort(array('Sort' => 'ASC', 'SwiperId' => 'ASC'))->ExecSelect();
         $Arr = $this->SwiperObj->getList($_GET['SwiperCateId']);
         foreach($Arr as $k => $v){            
             $Arr[$k]['PicView'] = '<a href="'.$v['Pic'].'" target="_blank"><img src="'.$v['Pic'].'" style="width:40px;heihght:40px;"/></a>';
@@ -32,16 +29,29 @@ class Swiper extends ControllersAdmin {
     
     public function add_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('SwiperCateId'))) $this->Err(1001);
+        $FieldArr = empty($this->SysRs['SwiperFieldJson']) ? array() : json_decode($this->SysRs['SwiperFieldJson'], true);
         if(!empty($_POST)){
-            if(!$this->VeriObj->VeriPara($_POST, array('Pic'))) $this->Err(1001);            
-            $Ret = $this->SwiperObj->SetInsert(array(
-                'Pic' => $_POST['Pic'],
-                'Title' => $_POST['Title'],
-                'Summary' => $_POST['Summary'],
-                'Link' => $_POST['Link'],
+            if(!$this->VeriObj->VeriPara($_POST, array('Pic'))) $this->Err(1001);   
+            $InsertMap = array(
+                'Pic' => $this->CommonObj->SafeInput(trim($_POST['Pic'])),
+                'Title' => $this->CommonObj->SafeInput(trim($_POST['Title'])),
+                'Summary' => $this->CommonObj->SafeInput(trim($_POST['Summary'])),
+                'Link' => $this->CommonObj->SafeInput(trim($_POST['Link'])),
                 'SwiperCateId' => intval($_GET['SwiperCateId']),
                 'Sort' => 99,
-            ))->ExecInsert();
+            );
+            foreach($FieldArr as $v){
+                if(is_array($_POST[$v['Name']])){
+                    $_POST[$v['Name']] = implode('|', array_keys($_POST[$v['Name']]));
+                }elseif($v['Type'] == 'datetime'){
+                    $_POST[$v['Name']] = strtotime($_POST[$v['Name']]);
+                }else{
+                    $_POST[$v['Name']] = trim($_POST[$v['Name']]);
+                }
+                if($v['NotNull'] == 1 && empty($_POST[$v['Name']])) $this->Err(1001);
+                $InsertMap[$v['Name']] = ($v['Type'] == 'editor') ? $this->CommonObj->CleanHtml(trim($_POST[$v['Name']])) : $this->CommonObj->SafeInput(trim($_POST[$v['Name']]));
+            }
+            $Ret = $this->SwiperObj->SetInsert($InsertMap)->ExecInsert();
             if($Ret === false) $this->Err(1002);
             $this->SwiperObj->cleanList($_GET['SwiperCateId']);
             $this->Jump(array('admin', 'swiper', 'index'), 1888);
@@ -52,6 +62,15 @@ class Swiper extends ControllersAdmin {
             array('Name' =>'Pic', 'Desc' => '上传图片',  'Type' => 'upload', 'Value' => '', 'Required' => 1, 'Col' => 12), 
             array('Name' =>'Summary', 'Desc' => '摘要',  'Type' => 'textarea', 'Value' => '', 'Col' => 12),
         );
+        foreach($FieldArr as $v){
+            $DataArr = array();
+            if(!empty($v['Data'])){
+                $Data = explode('|', $v['Data']);
+                foreach($Data as $sv) $DataArr[$sv] = $sv;
+            }
+            $Row = in_array($v['Type'], array('editor', 'textarea')) ? 12 : 3;
+            $this->BuildObj->Arr[] =  array('Name' => $v['Name'], 'Desc' => $v['Comment'],  'Type' => $v['Type'], 'Data' => $DataArr, 'Value' => $v['Content'], 'Required' => $v['NotNull'], 'Col' => $Row);
+        }
         $this->BuildObj->FormFooterBtnArr = array(
             array('Name' => 'back', 'Desc' => '返回', 'Type' => 'button', 'Class' => 'default'),
         );
@@ -63,14 +82,27 @@ class Swiper extends ControllersAdmin {
         if(!$this->VeriObj->VeriPara($_GET, array('SwiperId', 'SwiperCateId'))) $this->Err(1001);
         $Rs = $this->SwiperObj->getOneByCateId($_GET['SwiperId'], $_GET['SwiperCateId']);
         if(empty($Rs)) $this->Err(1003);
+        $FieldArr = empty($this->SysRs['SwiperFieldJson']) ? array() : json_decode($this->SysRs['SwiperFieldJson'], true);
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Pic'))) $this->Err(1001);
-            $Ret = $this->SwiperObj->SetCond(array('SwiperId' => $Rs['SwiperId']))->SetUpdate(array(
-                'Pic' => $_POST['Pic'],
-                'Title' => $_POST['Title'],
-                'Summary' => $_POST['Summary'],
-                'Link' => $_POST['Link'],
-            ))->ExecUpdate();
+            $UpdateMap = array(
+                'Pic' => $this->CommonObj->SafeInput(trim($_POST['Pic'])),
+                'Title' => $this->CommonObj->SafeInput(trim($_POST['Title'])),
+                'Summary' => $this->CommonObj->SafeInput(trim($_POST['Summary'])),
+                'Link' => $this->CommonObj->SafeInput(trim($_POST['Link'])),
+            );
+            foreach($FieldArr as $v){
+                if(is_array($_POST[$v['Name']])){
+                    $_POST[$v['Name']] = implode('|', array_keys($_POST[$v['Name']]));
+                }elseif($v['Type'] == 'datetime'){
+                    $_POST[$v['Name']] = strtotime($_POST[$v['Name']]);
+                }else{
+                    $_POST[$v['Name']] = trim($_POST[$v['Name']]);
+                }
+                if($v['NotNull'] == 1 && empty($_POST[$v['Name']])) $this->Err(1001);
+                $UpdateMap[$v['Name']] = ($v['Type'] == 'editor') ? $this->CommonObj->CleanHtml(trim($_POST[$v['Name']])) : $this->CommonObj->SafeInput(trim($_POST[$v['Name']]));
+            }
+            $Ret = $this->SwiperObj->SetCond(array('SwiperId' => $Rs['SwiperId']))->SetUpdate($UpdateMap)->ExecUpdate();
             if($Ret === false) $this->Err(1002);
             $this->SwiperObj->cleanList($_GET['SwiperCateId']);
             $this->Jump(array('admin', 'swiper', 'index'), 1888);
@@ -82,6 +114,15 @@ class Swiper extends ControllersAdmin {
             array('Name' =>'Pic', 'Desc' => '上传图片',  'Type' => 'upload', 'Value' => $Rs['Pic'], 'Required' => 1, 'Col' => 12),
             array('Name' =>'Summary', 'Desc' => '摘要',  'Type' => 'textarea', 'Value' => $Rs['Summary'], 'Col' => 12),
         );
+        foreach($FieldArr as $v){
+            $DataArr = array();
+            if(!empty($v['Data'])){
+                $Data = explode('|', $v['Data']);
+                foreach($Data as $sv) $DataArr[$sv] = $sv;
+            }
+            $Row = in_array($v['Type'], array('editor', 'textarea')) ? 12 : 3;
+            $this->BuildObj->Arr[] =  array('Name' => $v['Name'], 'Desc' => $v['Comment'],  'Type' => $v['Type'], 'Data' => $DataArr, 'Value' => $Rs[$v['Name']], 'Required' => $v['NotNull'], 'Col' => $Row);
+        }
         $this->BuildObj->FormFooterBtnArr = array(
             array('Name' => 'back', 'Desc' => '返回', 'Type' => 'button', 'Class' => 'default'),
         );

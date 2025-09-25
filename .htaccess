@@ -1,12 +1,13 @@
 <IfModule mod_rewrite.c>
-	RewriteEngine on
-	
-	# 拒绝访问根目录下的指定文件夹
-    RewriteCond %{REQUEST_URI} ^/(System|Lib|Database|Template|\.git) [NC]
-    RewriteRule ^ - [F,L]
+	# 启用 Rewrite
+	RewriteEngine On
+	RewriteBase /
 
-    # 如果请求的文件不存在，则重写到 index.php
-    RewriteCond %{REQUEST_FILENAME} !-f
-    RewriteCond %{REQUEST_FILENAME} !-d
-    RewriteRule ^.*$ /index.php [L]
+	# 禁止访问敏感目录
+	RewriteRule ^(System|Lib|Database|Template|Logs|\.git) - [F,L]
+
+	# 如果请求的文件或目录不存在，就交给 index.php
+	RewriteCond %{REQUEST_FILENAME} !-f
+	RewriteCond %{REQUEST_FILENAME} !-d
+	RewriteRule ^ index.php [QSA,L]
 </IfModule>

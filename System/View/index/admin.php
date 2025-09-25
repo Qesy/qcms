@@ -7,8 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title><?=$this->SysRs['WebName']?> - 网站后台</title>
     <!-- vector map CSS -->
-    <link href="https://lf26-cdn-tos.bytecdntp.com/cdn/expire-1-M/bootstrap/4.6.1/css/bootstrap.min.css" type="text/css" rel="stylesheet" />
-    <link href="<?=URL_BOOT?>css/style-init.css" rel="stylesheet" type="text/css">
+    <? $this->LoadView('index/meta'); ?>
     <style type="text/css">
         body{background-color:#1572e8!important;touch-action:none}
         .login{max-width:400px}
@@ -28,13 +27,13 @@
                 <div class="input-group mb-2">
                     <input type="text" class="form-control" name="Phone" id="inputPhone" placeholder="输入手机号码" required>
                     <div class="input-group-append">
-                        <span class="input-group-text bg-white rounded-0 form-control" id="basic-addon2"><i class="bi bi-phone"></i></span>
+                        <span class="input-group-text bg-white rounded-0 form-control" id="basic-addon2"><iconpark-icon class="text-secondary" size="1.6rem" name="iphone"></iconpark-icon></span>
                     </div>
                 </div>
                 <div class="input-group mb-2">
                     <input type="password" name="Password" class="form-control" placeholder="输入你的密码" required>
                     <div class="input-group-append">
-                        <span class="input-group-text bg-white rounded-0 form-control" id="basic-addon2"><i class="bi bi-lock"></i></span>
+                        <span class="input-group-text bg-white rounded-0 form-control" id="basic-addon2"><iconpark-icon class="text-secondary" size="1.6rem" name="protect"></iconpark-icon></span>
                     </div>
                 </div>
                 <div class="input-group mb-4">

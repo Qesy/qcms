@@ -24,7 +24,7 @@ class LabelCate extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name'))) $this->Err(1001);            
             $Ret = $this->Label_cateObj->SetInsert(array(
-                'Name' => $_POST['Name'],
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
                 'Sort' => 99,
             ))->ExecInsert();
             if($Ret === false) $this->Err(1002);
@@ -45,7 +45,7 @@ class LabelCate extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name'))) $this->Err(1001);
             $Ret = $this->Label_cateObj->SetCond(array('LabelCateId' => $Rs['LabelCateId']))->SetUpdate(array(
-                'Name' => $_POST['Name'],
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
             ))->ExecUpdate();
             if($Ret === false) $this->Err(1002);
             $this->Label_cateObj->cleanList();

@@ -20,8 +20,10 @@ use Model\QC_Link;
 use Model\QC_Link_cate;
 use Model\QC_Log_login;
 use Model\QC_Log_operate;
+use Model\QC_Menu_side;
 use Model\QC_Page;
 use Model\QC_Page_cate;
+use Model\QC_Plugin;
 use Model\QC_Photos;
 use Model\QC_Site;
 use Model\QC_Stat_flow;
@@ -37,6 +39,7 @@ use Model\QC_Table_down;
 use Model\QC_Table_product;
 use Model\QC_Tag;
 use Model\QC_Tag_map;
+use Model\QC_Templates;
 use Model\QC_Token;
 use Model\QC_User;
 use Helper\Pinyin;
@@ -79,8 +82,10 @@ abstract class Base {
 	public $Label_cateObj;
 	public $Log_loginObj;
 	public $Log_operateObj;
+	public $Menu_sideObj;
 	public $PageObj;
 	public $Page_cateObj;
+	public $PluginObj;
 	public $PhotosObj;
 	public $SiteObj;
 	public $Stat_flowObj;
@@ -96,6 +101,7 @@ abstract class Base {
 	public $Table_productObj;
 	public $TagObj;
 	public $Tag_mapObj;
+	public $TemplatesObj;
 	public $TokenObj;
 	public $UserObj;
 	
@@ -172,8 +178,10 @@ abstract class Base {
 		$this->Label_cateObj = QC_Label_cate::get_instance();
 		$this->Log_loginObj = QC_Log_login::get_instance();
 		$this->Log_operateObj = QC_Log_operate::get_instance();
+		$this->Menu_sideObj = QC_Menu_side::get_instance();
 		$this->PageObj = QC_Page::get_instance();
 		$this->Page_cateObj = QC_Page_cate::get_instance();
+		$this->PluginObj = QC_Plugin::get_instance();
 		$this->PhotosObj = QC_Photos::get_instance();
 		$this->SiteObj = QC_Site::get_instance();
 		$this->Stat_flowObj = QC_Stat_flow::get_instance();
@@ -189,6 +197,7 @@ abstract class Base {
 		$this->Table_productObj = QC_Table_product::get_instance();
 		$this->TagObj = QC_Tag::get_instance();
 		$this->Tag_mapObj = QC_Tag_map::get_instance();
+		$this->TemplatesObj = QC_Templates::get_instance();
 		$this->TokenObj = QC_Token::get_instance();
 		$this->UserObj = QC_User::get_instance();
 		
@@ -251,6 +260,25 @@ abstract class Base {
 	    $this->TempArr = empty ( $Data ) ? $this->TempArr : array_merge($this->TempArr, $Data);
 	    foreach ( $this->TempArr as $Key => $Val ) $$Key = $Val;
 	    require PATH_SYS . 'View/' . $Temp . EXTEND;
+	}
+	
+	public function LoadPlugView($Temp, $Data = array()){
+	    if(!Router::$s_IsPlug) return false;
+	    $Path = PATH_PLUG.Router::$s_PlusKeyName.'/System/View/';
+	    if (! is_file ( $Path . 'common/frame'. EXTEND )) die ( $Path . 'common/frame'. EXTEND . ' not found !' );
+	    $this->TempArr = empty ( $Data ) ? $this->TempArr : array_merge($this->TempArr, $Data);
+	    foreach ( $this->TempArr as $Key => $Val ) $$Key = $Val;
+	    $_defaultTemp = $Temp;
+	    require $Path . 'common/frame'.EXTEND;
+	}
+	
+	public function LoadPlugFullView($Temp, $Data = array()){
+	    if(!Router::$s_IsPlug) return false;
+	    $Path = PATH_PLUG.Router::$s_PlusKeyName.'/System/';
+	    if (! is_file ( $Path . 'View/' . $Temp . EXTEND )) die ( $Path . 'View/' . $Temp . EXTEND . ' not found !' );
+	    $this->TempArr = empty ( $Data ) ? $this->TempArr : array_merge($this->TempArr, $Data);
+	    foreach ( $this->TempArr as $Key => $Val ) $$Key = $Val;
+	    require $Path . 'View/' . $Temp . EXTEND;
 	}
 	
 	public static function InsertFuncArray(array $ControllerArr) { // -- Name : 回调函数 --

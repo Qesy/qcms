@@ -24,7 +24,7 @@ class LinkCate extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name'))) $this->Err(1001);            
             $Ret = $this->Link_cateObj->SetInsert(array(
-                'Name' => $_POST['Name'],
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
                 'Sort' => 99,
             ))->ExecInsert();
             if($Ret === false) $this->Err(1002);
@@ -45,7 +45,7 @@ class LinkCate extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name'))) $this->Err(1001);
             $Ret = $this->Link_cateObj->SetCond(array('LinkCateId' => $Rs['LinkCateId']))->SetUpdate(array(
-                'Name' => $_POST['Name'],
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
             ))->ExecUpdate();
             if($Ret === false) $this->Err(1002);
             $this->Link_cateObj->cleanList();

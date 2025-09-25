@@ -13,7 +13,7 @@ class Install extends ControllersInstall {
             if(trim($_POST['RegPassword']) != trim($_POST['RegPassword2'])) $this->Err(1048);
             try{
                 $ConnRet   = new PDO ( 'mysql:dbname=' . $_POST['Name'] . ';host=' . $_POST['Host'] . ';port='.$_POST['Port'], $_POST['Accounts'], $_POST['Password'],
-                    array (PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION));
+                    array (PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION)); 
             }catch (PDOException $e){
                 $Msg = iconv('gbk', 'utf-8', $e->getMessage());
                 $this->Err(1000, $Msg);

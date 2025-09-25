@@ -22,7 +22,7 @@ class SysField extends ControllersAdmin {
             'SortView' => array('Name' => '排序', 'Td' => 'th', 'Style' => 'width:100px;'),
             
         );
-        $this->BuildObj->IsEdit = false;
+        //$this->BuildObj->IsEdit = false;
         $this->BuildObj->PrimaryKey = 'Name';
         $tmp['Table'] = $this->BuildObj->Table($FieldArr, $KeyArr, '', 'table-sm');
         $this->LoadView('admin/common/list', $tmp);
@@ -35,10 +35,10 @@ class SysField extends ControllersAdmin {
             $SysKv = $this->SysObj->getKv();
             if(isset($SysKv[$_POST['Name']])) $this->Err(1004);
             $Ret = $this->SysObj->SetInsert(array(
-                'Name' => $_POST['Name'], 
-                'Info' => $_POST['Info'], 
-                'AttrType' => $_POST['AttrType'],
-                'AttrValue' => $_POST['AttrValue'],
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])), 
+                'Info' => $this->CommonObj->SafeInput(trim($_POST['Info'])), 
+                'AttrType' => $this->CommonObj->SafeInput(trim($_POST['AttrType'])),
+                'AttrValue' => $this->CommonObj->SafeInput(trim($_POST['AttrValue'])),
                 'GroupId' => 10,
                 'Sort' => '99',
                 'IsSys' => 2,
@@ -52,6 +52,30 @@ class SysField extends ControllersAdmin {
             array('Name' =>'Name', 'Desc' => '变量字段名(只能英文和数字)',  'Type' => 'input', 'Value' => '', 'Required' => 1, 'Col' => 6),
             array('Name' =>'AttrType', 'Desc' => '变量类型',  'Type' => 'select', 'Data' => $this->FieldArr, 'Value' => 'input', 'Required' => 1, 'Col' => 6),
             array('Name' =>'AttrValue', 'Desc' => '默认值',  'Type' => 'input', 'Value' => '', 'Required' => 0, 'Col' => 6),            
+        );
+        
+        $this->BuildObj->Form('post', 'form-row');
+        $this->LoadView('admin/common/edit');
+    }
+    
+    public function edit_Action(){
+        if(!$this->VeriObj->VeriPara($_GET, array('Name'))) $this->Err(1001);
+        $Rs = $this->SysObj->getOne(trim($_GET['Name']));
+        if(!empty($_POST)){
+            if(!$this->VeriObj->VeriPara($_POST, array('Info'))) $this->Err(1001);
+            $Ret = $this->SysObj->SetCond(array('Name' => $Rs['Name']))->SetUpdate(array(
+                'Info' => $this->CommonObj->SafeInput(trim($_POST['Info'])),
+                'AttrValue' => $this->CommonObj->SafeInput(trim($_POST['AttrValue'])),
+            ))->ExecUpdate();
+            if($Ret === false) $this->Err(1002);
+            $this->SysObj->cleanList();
+            $this->Jump(array('admin', 'sysField', 'index'));
+        }
+        $this->BuildObj->Arr = array(
+            array('Name' =>'Info', 'Desc' => '变量说明',  'Type' => 'input', 'Value' => $Rs['Info'], 'Required' => 1, 'Col' => 6),
+            array('Name' =>'Name', 'Desc' => '变量字段名(只能英文和数字)',  'Type' => 'input', 'Value' => $Rs['Name'], 'Disabled' => 1, 'Col' => 6),
+            array('Name' =>'AttrType', 'Desc' => '变量类型',  'Type' => 'select', 'Data' => $this->FieldArr, 'Value' => $Rs['AttrType'], 'Disabled' => 1, 'Col' => 6),
+            array('Name' =>'AttrValue', 'Desc' => '默认值',  'Type' => 'input', 'Value' => $Rs['AttrValue'], 'Required' => 0, 'Col' => 6),
         );
         
         $this->BuildObj->Form('post', 'form-row');

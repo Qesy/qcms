@@ -9,7 +9,7 @@ class FormField extends ControllersAdmin {
         $Arr = empty($Rs['FieldJson']) ? array() : json_decode($Rs['FieldJson'], true);
         foreach($Arr as $k => $v){
             $Arr[$k]['Index'] = $k;
-            $Arr[$k]['NotNullView'] = ($v['NotNull'] == 1) ? '<i class="bi bi-check-lg text-success h5"></i>' : '<i class="bi bi-x-lg text-danger h5"></i>';
+            $Arr[$k]['NotNullView'] = ($v['NotNull'] == 1) ? '<iconpark-icon size="1.2rem" name="check" class="text-success"></iconpark-icon>' : '<iconpark-icon size="1.2rem" name="close" class="text-danger"></iconpark-icon>';
         }
         $this->PageTitle2 = $this->BuildObj->FormTitle($Rs['Name'].'字段管理');
         $KeyArr = array(
@@ -39,7 +39,14 @@ class FormField extends ControllersAdmin {
             $NameArr = array_column($Arr, 'Name');
             if(in_array(trim($_POST['Name']), $NameArr)) $this->Err(1004);
             $DbConfig = Config::DbConfig();
-            $AddField = array('Name' => trim($_POST['Name']), 'Comment' => trim($_POST['Comment']), 'Type' => trim($_POST['Type']), 'Content' => trim($_POST['Content']), 'NotNull' => $_POST['NotNull'], 'Data' => trim($_POST['Data']));
+            $AddField = array(
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])), 
+                'Comment' => $this->CommonObj->SafeInput(trim($_POST['Comment'])), 
+                'Type' => $this->CommonObj->SafeInput(trim($_POST['Type'])), 
+                'Content' => $this->CommonObj->SafeInput(trim($_POST['Content'])), 
+                'NotNull' => intval($_POST['NotNull']), 
+                'Data' => $this->CommonObj->SafeInput(trim($_POST['Data']))            
+            );
             $Arr[] = $AddField;
             $FieldType = 'varchar(255)';
             $FieldDefault = "DEFAULT ''";
@@ -96,7 +103,14 @@ class FormField extends ControllersAdmin {
         $DbConfig = Config::DbConfig();
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Comment', 'Type'))) $this->Err(1001);
-            $AddField = array('Name' => trim($FieldRs['Name']), 'Comment' => trim($_POST['Comment']), 'Type' => trim($_POST['Type']), 'Content' => trim($_POST['Content']), 'NotNull' => $_POST['NotNull'], 'Data' => trim($_POST['Data']));
+            $AddField = array(
+                'Name' => $this->CommonObj->SafeInput(trim($FieldRs['Name'])), 
+                'Comment' => $this->CommonObj->SafeInput(trim($_POST['Comment'])), 
+                'Type' => $this->CommonObj->SafeInput(trim($_POST['Type'])), 
+                'Content' => $this->CommonObj->SafeInput(trim($_POST['Content'])), 
+                'NotNull' => intval($_POST['NotNull']), 
+                'Data' => $this->CommonObj->SafeInput(trim($_POST['Data']))                
+            );
             $Arr[$Index] = $AddField;
             $FieldType = 'varchar(255)';
             $FieldDefault = "DEFAULT ''";

@@ -49,7 +49,7 @@ abstract class Db {
 		    self::$s_db_obj  = new PDO ('mysql:dbname=' . $this->p_dbConfig ['Name'] . ';host=' . $this->p_dbConfig ['Host'] . '', $this->p_dbConfig ['Accounts'], $this->p_dbConfig ['Password'], array (
 		        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
 		    ));
-		    self::$s_db_obj ->exec ( "SET NAMES utf8" );
+		    self::$s_db_obj ->exec ( "SET NAMES utf8mb4" );
 		} catch ( PDOException $e ) {
 			echo 'Connection failed: ' . $e->getMessage ();
 			exit ();

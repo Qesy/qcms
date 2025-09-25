@@ -17,6 +17,9 @@ class Router {
 	private static $s_instance;
 	public static $s_Controller;
 	public static $s_Method;
+	public static $s_IsPlug = false;
+	public static $s_PlusKeyName;
+	
 	function __construct() {
 		$this->_SiteConfig = SiteConfig ();
 		self::ViewController ();
@@ -52,13 +55,23 @@ class Router {
 			$RouterArr ['Method'] = $this->_SiteConfig ['DefaultFunction'];
 		} else {
 			$UrlArr = explode ( $this->_SiteConfig ['Url'], $Url );
+			if($UrlArr[0] == 'Plugin'){
+			    self::$s_IsPlug = true;
+			    self::$s_PlusKeyName = $UrlArr[1];
+			    $ControllerPath = PATH_PLUG.$UrlArr[1].'/System/Controller/';
+			    $UrlArr = array_slice($UrlArr, 2);
+			    $Url = implode($this->_SiteConfig ['Url'], $UrlArr);			    
+			}else{
+			    $ControllerPath = PATH_SYS.'Controller/';
+			}
+
 			$UrlTmp = '';
 			foreach ( $UrlArr as $key => $val ) {
 				$File = $UrlTmp . $val;
 				$UrlTmp .= $val . $this->_SiteConfig ['Url'];
-				if (file_exists ( PATH_SYS . 'Controller/' . $File . EXTEND )) {
+				if (file_exists ( $ControllerPath . $File . EXTEND )) {
 					$RouterArr ['Name'] = $val;
-					$RouterArr ['Url'] = PATH_SYS . 'Controller/' . $File . EXTEND;
+					$RouterArr ['Url'] = $ControllerPath . $File . EXTEND;
 					$FunUrl = substr ( $Url, strlen ( $File ) + 1 );
 					$FunArr = explode ( $this->_SiteConfig ['Url'], $FunUrl );
 					$RouterArr ['Method'] = empty ( $FunArr [0] ) ? 'index' : $FunArr [0];
@@ -101,6 +114,7 @@ class Router {
 	    if(strpos($Url, 'install') === 0) return $Url; //安装文件不处理
 	    $SysObj = QC_Sys::get_instance();
 	    $SysRs = $SysObj->getKv();
+
 	    if(strpos($Url, 'cate/') !== false){
 	        $ListUrl = 'cate/'.$SysRs['UrlList'];
 	        $ListUrlRep = '/^'.str_replace(array('/', '{CateId}', '{PinYin}', '{PY}'), array('\/', '(\d+)', '([\w]*?)', '([\w]*?)'), $ListUrl).'$/';
@@ -123,9 +137,7 @@ class Router {
                 }
                 return 'index/cate/'.$CateId.'/'.$Page;
             }
-	    }
-	    
-	    if(strpos($Url, 'detail/') !== false){	       
+	    }else if(strpos($Url, 'detail/') !== false){	       
 	        $UrlDetail = 'detail/'.$SysRs['UrlDetail'];
 	        $UrlDetailRep = '/^'.str_replace(array('/', '{Y}', '{M}', '{D}', '{Id}', '{PinYin}', '{PY}'), array('\/', '(\d+)', '(\d+)', '(\d+)', '(\d+)','([\w]*?)', '([\w]*?)'), $UrlDetail).'$/';
 	        if(preg_match($UrlDetailRep, $Url.$this->_SiteConfig['Extend'], $Matches)){ //匹配详情	            
@@ -136,9 +148,18 @@ class Router {
 	            }
 	            return 'index/detail/'.$Id;
 	        }
-	    }
-	    
-	    if(strpos($Url, 'page/') !== false){
+	    }else if($Url == false || strpos($Url, 'index') !== false){
+	        $UrlDetail = 'index_'.$SysRs['UrlDetail'];
+	        $UrlDetailRep = '/^'.str_replace(array('/', '{Id}'), array('\/', '(\d+)'), $UrlDetail).'$/';
+	        if(preg_match($UrlDetailRep, $Url.$this->_SiteConfig['Extend'], $Matches)){ //匹配详情
+	            preg_match_all("/\{([a-zA-Z0-9]+)\}/",$UrlDetail, $MatchesSort);
+	            $Id = 0;
+	            foreach($MatchesSort[1] as $k => $v){
+	                $$v = $Matches[$k+1];
+	            }
+	            return 'index/index/'.$Id;
+	        }
+	    }else if(strpos($Url, 'page/') !== false){
 	        $UrlPage = 'page/'.$SysRs['UrlPage'];
 	        $UrlPageRep = '/^'.str_replace(array('/', '{PageId}', '{PinYin}', '{PY}'), array('\/', '(\d+)','([\w]*?)', '([\w]*?)'), $UrlPage).'$/';
 	        if(preg_match($UrlPageRep, $Url.$this->_SiteConfig['Extend'], $Matches)){ //匹配详情
@@ -149,9 +170,7 @@ class Router {
 	            }
 	            return 'index/page/'.$PageId;
 	        }
-	    }
-	    
-	    if(strpos($Url, 'form/') !== false){
+	    }else if(strpos($Url, 'form/') !== false){
 	        $UrlPage = 'form/'.$SysRs['UrlForm'];	        
 	        $UrlPageRep = '/^'.str_replace(array('/', '{KeyName}'), array('\/', '([\w\W]*?)'), $UrlPage).'$/';
 	        if(preg_match($UrlPageRep, $Url.$this->_SiteConfig['Extend'], $Matches)){ //匹配详情

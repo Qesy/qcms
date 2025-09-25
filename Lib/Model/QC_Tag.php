@@ -39,7 +39,7 @@ class QC_Tag extends \Db_pdo {
 	        }
 	        $this->SetTbName('tag_map')->SetInsert(array('TagId' => $TagId, 'TableId' => $TableId, 'ModelId' => $ModelId))->ExecInsert();
 	    }
-	    foreach($Del as $v){
+	    foreach($Del as $v){ //删除的
 	        $Rs = $this->SetCond(array('Name' => $v))->ExecSelectOne();
 	        if($Rs['Total'] == 1){
 	            $this->SetCond(array('TagId' => $Rs['TagId']))->ExecDelete();

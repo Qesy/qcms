@@ -54,13 +54,13 @@ class Link extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name', 'LinkCateId', 'Link', 'IsIndex'))) $this->Err(1001);            
             $Ret = $this->LinkObj->SetInsert(array(
-                'Name' => $_POST['Name'],
-                'LinkCateId' => $_POST['LinkCateId'],
-                'Mail' => $_POST['Mail'],
-                'Link' => $_POST['Link'],
-                'Logo' => $_POST['Logo'],
-                'Info' => $_POST['Info'],
-                'IsIndex' => $_POST['IsIndex'],
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
+                'LinkCateId' => intval($_POST['LinkCateId']),
+                'Mail' => $this->CommonObj->SafeInput(trim($_POST['Mail'])),
+                'Link' => $this->CommonObj->SafeInput(trim($_POST['Link'])),
+                'Logo' => $this->CommonObj->SafeInput(trim($_POST['Logo'])),
+                'Info' => $this->CommonObj->SafeInput(trim($_POST['Info'])),
+                'IsIndex' => intval($_POST['IsIndex']),
                 'State' => 1,
                 'TsAdd' =>time(),
                 'Sort' => 99,
@@ -93,13 +93,13 @@ class Link extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name', 'LinkCateId', 'Link', 'IsIndex'))) $this->Err(1001);
             $Ret = $this->LinkObj->SetCond(array('LinkId' => $Rs['LinkId']))->SetUpdate(array(
-                'Name' => $_POST['Name'],
-                'LinkCateId' => $_POST['LinkCateId'],
-                'Mail' => $_POST['Mail'],
-                'Link' => $_POST['Link'],
-                'Logo' => $_POST['Logo'],
-                'Info' => $_POST['Info'],
-                'IsIndex' => $_POST['IsIndex'],               
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
+                'LinkCateId' => $this->CommonObj->SafeInput(trim($_POST['LinkCateId'])),
+                'Mail' => $this->CommonObj->SafeInput(trim($_POST['Mail'])),
+                'Link' => $this->CommonObj->SafeInput(trim($_POST['Link'])),
+                'Logo' => $this->CommonObj->SafeInput(trim($_POST['Logo'])),
+                'Info' => $this->CommonObj->SafeInput(trim($_POST['Info'])),
+                'IsIndex' => intval($_POST['IsIndex']),               
             ))->ExecUpdate();
             if($Ret === false) $this->Err(1002);
             $this->LinkObj->clean($Rs['LinkId']);

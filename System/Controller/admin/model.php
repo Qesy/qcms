@@ -7,7 +7,7 @@ class Model extends ControllersAdmin {
         foreach($Arr as $k => $v){
             $GET = $_GET;
             $GET['ModelId'] = $v['ModelId'];
-            $Arr[$k]['IsSysView'] = ($v['IsSys'] == 1) ? '<i class="bi bi-check-lg text-success h5"></i>' : '<i class="bi bi-x-lg text-danger h5"></i>';
+            $Arr[$k]['IsSysView'] = ($v['IsSys'] == 1) ? '<iconpark-icon size="1.2rem" name="check" class="text-success"></iconpark-icon>' : '<iconpark-icon size="1.2rem" name="close" class="text-danger"></iconpark-icon>';
             $Arr[$k]['BtnArr'] = array(
                 array('Desc' => '字段管理', 'Color' => 'success', 'Link' => $this->CommonObj->Url(array('admin', 'modelField', 'index')), 'Para' => $GET),
             );
@@ -34,9 +34,13 @@ class Model extends ControllersAdmin {
             if(!$this->VeriObj->VeriPara($_POST, array('Name', 'KeyName'))) $this->Err(1001);
             try{
                 DB::$s_db_obj->beginTransaction();
-                $this->Sys_modelObj->SetInsert(array('Name' => trim($_POST['Name']), 'KeyName' => trim($_POST['KeyName'])))->ExecInsert();
+                $InsertMap = array(
+                    'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])), 
+                    'KeyName' => $this->CommonObj->SafeInput(trim($_POST['KeyName']))                    
+                );
+                $this->Sys_modelObj->SetInsert($InsertMap)->ExecInsert();
                 $this->Sys_modelObj->CreateTable(trim($_POST['KeyName']));
-                
+
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
                 DB::$s_db_obj->rollBack();
@@ -65,7 +69,7 @@ class Model extends ControllersAdmin {
             if(!$this->VeriObj->VeriPara($_POST, array('Name'))) $this->Err(1001);
             try{
                 DB::$s_db_obj->beginTransaction();
-                $this->Sys_modelObj->SetCond(array('ModelId' => $Rs['ModelId']))->SetUpdate(array('Name' => trim($_POST['Name'])))->ExecUpdate();
+                $this->Sys_modelObj->SetCond(array('ModelId' => $Rs['ModelId']))->SetUpdate(array('Name' => $this->CommonObj->SafeInput(trim($_POST['Name']))))->ExecUpdate();
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
                 DB::$s_db_obj->rollBack();

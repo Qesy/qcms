@@ -27,7 +27,7 @@ class GroupAdmin extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name'))) $this->Err(1001);
             $Permission = empty($_POST['Permission']) ? '' : implode('|', array_keys($_POST['Permission']));
-            $Ret = $this->Group_adminObj->SetInsert(array('Name' => $_POST['Name'], 'IsSys' => 2, 'Permission' => $Permission))->ExecInsert();
+            $Ret = $this->Group_adminObj->SetInsert(array('Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])), 'IsSys' => 2, 'Permission' => $Permission))->ExecInsert();
             if($Ret === false) $this->Err(1002);
             $this->Group_adminObj->cleanList();
             $this->Jump(array('admin', 'groupAdmin', 'index'), 1888);
@@ -51,7 +51,7 @@ class GroupAdmin extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name'))) $this->Err(1001);
             $Permission = empty($_POST['Permission']) ? '' : implode('|', array_keys($_POST['Permission']));
-            $Ret = $this->Group_adminObj->SetCond(array('GroupAdminId' => $Rs['GroupAdminId']))->SetUpdate(array('Name' => $_POST['Name'], 'Permission' => $Permission))->ExecUpdate();
+            $Ret = $this->Group_adminObj->SetCond(array('GroupAdminId' => $Rs['GroupAdminId']))->SetUpdate(array('Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])), 'Permission' => $Permission))->ExecUpdate();
             if($Ret === false) $this->Err(1002);
             $this->Group_adminObj->clean($Rs['GroupAdminId']);
             $this->Jump(array('admin', 'groupAdmin', 'edit'), 1888);

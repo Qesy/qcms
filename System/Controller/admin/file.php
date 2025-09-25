@@ -10,7 +10,8 @@ class File extends ControllersAdmin {
         $Limit = array(($Page-1)*$this->PageNum, $this->PageNum);
         $CondArr = array();
         $SizeTotal = $this->FileObj->SetField('SUM(Size) AS s')->ExecSelectOne();
-        $tmp['SizeTotal'] = $SizeTotal['s'];
+        $tmp['SizeTotal'] = intval($SizeTotal['s']); 
+        
         $tmp['Arr'] = $this->FileObj->SetCond($CondArr)->SetLimit($Limit)->SetSort(array('FileId' => 'DESC'))->ExecSelectAll($Count);
         $tmp['PageBar'] = $this->CommonObj->PageBar($Count, $this->PageNum);
         $this->LoadView('admin/file/index', $tmp);

@@ -24,7 +24,7 @@ class inlinkCate extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name'))) $this->Err(1001);
             $Ret = $this->Inlink_cateObj->SetInsert(array(
-                'Name' => $_POST['Name'],
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
                 'Sort' => 99,
             ))->ExecInsert();
             if($Ret === false) $this->Err(1002);
@@ -45,7 +45,7 @@ class inlinkCate extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('Name'))) $this->Err(1001);
             $Ret = $this->Inlink_cateObj->SetCond(array('InlinkCateId' => $Rs['InlinkCateId']))->SetUpdate(array(
-                'Name' => $_POST['Name'],
+                'Name' => $this->CommonObj->SafeInput(trim($_POST['Name'])),
             ))->ExecUpdate();
             if($Ret === false) $this->Err(1002);
             $this->Inlink_cateObj->cleanList();

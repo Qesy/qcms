@@ -10,10 +10,10 @@
         options.count = options.count || 1;       // 总数量
         options.limit = options.limit || 10;      // 每页数量
         options.groups = options.groups || 5;     // 连续出现几个页码按钮
-        options.prev = options.prev || '<i class="bi bi-chevron-left"></i>';   // 自定义上一页按钮
-        options.next = options.next || '<i class="bi bi-chevron-right"></i>';   // 自定义下一页按钮
-        options.first = options.first || '<i class="bi bi-chevron-bar-left"></i>';   // 自定义首页按钮
-        options.last = options.last || '<i class="bi bi-chevron-bar-right"></i>';     // 自定义尾页按钮
+        options.prev = options.prev || '<iconpark-icon name="left" size="1rem"></iconpark-icon>';   // 自定义上一页按钮
+        options.next = options.next || '<iconpark-icon name="right" size="1rem"></iconpark-icon>';   // 自定义下一页按钮
+        options.first = options.first || '<iconpark-icon name="go-start" size="1rem"></iconpark-icon>';   // 自定义首页按钮
+        options.last = options.last || '<iconpark-icon name="go-end" size="1rem"></iconpark-icon>';     // 自定义尾页按钮
         options.onPageChange = options.onPageChange || function (page) {console.log(page)};
 
         let PageFloat = Math.floor(options.groups / 2), // 页码浮动量    10/2 = 5

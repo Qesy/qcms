@@ -32,12 +32,14 @@ class Controllers extends Base {
     public $PageTmp = 1;
     public $CountTmp = 0; //分页用
     public $CateFieldArr = array();
+    public $SwiperFieldArr = array();
 
     protected $p_RemoteKey = 'qcms$GHK346';
     function __construct(){
         parent::__construct();
         $this->SysRs = $this->SysObj->getKv();
         $this->CateFieldArr = empty($this->SysRs['CategoryFieldJson']) ? array() : json_decode($this->SysRs['CategoryFieldJson'], true);
+        $this->SwiperFieldArr = empty($this->SysRs['SwiperFieldJson']) ? array() : json_decode($this->SysRs['SwiperFieldJson'], true);
         if($this->CommonObj->isMobile() && !empty($this->SysRs['TmpPathMobile'])){
             $TmpName = $this->SysRs['TmpPathMobile'];
         }else{
@@ -52,6 +54,7 @@ class Controllers extends Base {
             $this->ModelKv[$v['KeyName']] = $v;
         }
         $this->PageTmp = (intval($_GET['Page']) < 1) ? 1 : intval($_GET['Page']);
+        
     }
 
     public function tempRun($Type, $Index = '0', $Page = 1){
@@ -63,9 +66,9 @@ class Controllers extends Base {
     }
 
     public function tempRunTest($Type, $Index = '0', $Html = ''){
+        Router::$s_Method = $Type;
         $this->initTmp($Type, $Index);
-        $this->Tmp['Compile'] = $this->Tmp['Html'] = $Html;
-        //var_dump($this->Tmp['Compile']);exit;
+        $this->Tmp['Compile'] = $this->Tmp['Html'] = $Html;        
         $this->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->get_Tmp()->photo_Tmp()->menu_Tmp();
         $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->link_Tmp()->tag_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
         $this->substr_Tmp()->math_Tmp()->replace_Tmp()->thumb_Tmp();
@@ -227,7 +230,7 @@ class Controllers extends Base {
 
     public function global_Tmp(){ // 全局标签
         $Search = array('{{qcms:Domain}}', '{{qcms:Static}}', '{{qcms:PathImg}}', '{{qcms:PathJs}}', '{{qcms:PathCss}}', '{{qcms:Scheme}}', '{{qcms:PathTemplate}}', '{{qcms:Method}}');
-        $Replace = array(URL_DOMAIN, URL_STATIC, URL_IMG, URL_JS, URL_CSS, $_SERVER['REQUEST_SCHEME'], URL_STATIC.$this->TmpName.'/', Router::$s_Method);
+        $Replace = array(URL_DOMAIN, URL_STATIC, URL_IMG, URL_JS, URL_CSS, $_SERVER['REQUEST_SCHEME'], URL_STATIC.'templates/'.$this->TmpName.'/', Router::$s_Method);
         foreach($this->SysRs as $k => $v){
             $Search[] = '{{qcms:'.$k.'}}';
             $Replace[] = $v;
@@ -348,14 +351,19 @@ class Controllers extends Base {
                 }
                 $PreRs = $this->Sys_modelObj->SetTbName('table_'.$this->Tmp['ModelRs']['KeyName'])->SetCond(' WHERE Id < '.$this->Tmp['Index'])->SetLimit(' ORDER BY Id DESC LIMIT 0, 1')->ExecSelectOne();
                 $NextRs = $this->Sys_modelObj->SetTbName('table_'.$this->Tmp['ModelRs']['KeyName'])->SetCond(' WHERE Id > '.$this->Tmp['Index'])->SetLimit(' ORDER BY Id ASC LIMIT 0, 1')->ExecSelectOne();
+                $Search[] = '{{qcms:Detail_TimeAdd}}';
+                $Search[] = '{{qcms:Detail_TimeUpdate}}';
                 $Search[] = '{{qcms:Detail_Prev}}';
                 $Search[] = '{{qcms:Detail_Next}}';
-                $Search[] = '{{qcms:Detail_DownAddress}}';
+                $Search[] = '{{qcms:Detail_DownAddress}}';                
                 $Search[] = '{{qcms:Detail_Url}}';
                 $Search[] = '{{qcms:Cate_Url}}';
                 $Search[] = '{{qcms:TopCate_Url}}';
+                
 
                 //$Search[] = '{{qcms:Cate_HasSub}}';
+                $Replace[] = date('Y-m-d H:i:s', $this->Tmp['TableRs']['TsAdd']);
+                $Replace[] = date('Y-m-d H:i:s', $this->Tmp['TableRs']['TsUpdate']);
                 $Replace[] = empty($PreRs) ? '没有了' : '<a href="'.$this->createUrl('detail', $PreRs['Id'], $PreRs['PinYin'], $PreRs['PY']).'">'.$PreRs['Title'].'</a>';
                 $Replace[] = empty($NextRs) ? '没有了' : '<a href="'.$this->createUrl('detail', $NextRs['Id'], $NextRs['PinYin'], $NextRs['PY']).'">'.$NextRs['Title'].'</a>';
                 $Replace[] = $this->CommonObj->Url(array('index', 'down', $this->Tmp['Index']));
@@ -505,7 +513,7 @@ class Controllers extends Base {
                 $Arr = self::_getKv2If($v, '<=');
                 $ok = ($Arr[0] <= $Arr[1]) ? true : false;
             }elseif(strpos($v, '==') !== false){
-                $Arr = self::_getKv2If($v, '==');
+                $Arr = self::_getKv2If($v, '==');                
                 $ok = ($Arr[0] == $Arr[1]) ? true : false;
             }elseif(strpos($v, '>') !== false){
                 $Arr = self::_getKv2If($v, '>');
@@ -642,7 +650,7 @@ class Controllers extends Base {
             $Ret['Attr'] = !isset($Para['Attr']) ? '' : $Para['Attr'];
             $Ret['IsPage'] = !isset($Para['IsPage']) ? '-1' : intval($Para['IsPage']); //是否开启分页
             $Search[] = $Matches[0][$k];
-            $Replace[] = self::_replaceList($Ret, $Matches[2][$k], 'List_');
+            $Replace[] = self::_replaceList($Ret, $Matches[2][$k], 'List_');            
             if($this->Tmp['Type'] == 'cate' && $Ret['IsPage'] == 1){
                 $Search[] = '{{qcms:List_PageBar}}';
                 $UrlArr = array('Default' => $this->SysRs['UrlList'], 'Page' => $this->SysRs['UrlListPage']);
@@ -650,7 +658,11 @@ class Controllers extends Base {
              } elseif ($this->Tmp['Type'] == 'search' && $Ret['IsPage'] == 1) {
                 $Search[] = '{{qcms:List_PageBar}}';
                 $Replace[] = $this->CommonObj->PageBar($this->CountTmp, $Ret['Row'], $this->CommonObj->isMobile());
-            }
+             } elseif ($this->Tmp['Type'] == 'index' && $Ret['IsPage'] == 1) {
+                 $Search[] = '{{qcms:List_PageBar}}';
+                 $UrlArr = array('Default' => '/', 'Page' => 'index_{Page}');
+                 $Replace[] = $this->CommonObj->PageBarTemplate($this->CountTmp, $Ret['Row'], $this->PageTmp, array(), $UrlArr, $this->CommonObj->isMobile());
+             }
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
         return $this;
@@ -685,7 +697,6 @@ class Controllers extends Base {
             $Replace[] = self::_replaceSlide($Ret['SwiperCateId'], $Matches[2][$k], 'Slide_');
         }
         $this->Tmp['Compile'] = str_replace($Search, $Replace, $this->Tmp['Compile']);
-        //var_dump($Matches);exit;
         return $this;
     }
 
@@ -749,6 +760,9 @@ class Controllers extends Base {
             '{{qcms:'.$Pre.'n}}',
             '{{qcms:'.$Pre.'m}}',
         );
+        foreach($this->SwiperFieldArr as $v){
+            $Search[] = '{{qcms:'.$Pre.$v['Name'].'}}';
+        }
         foreach($Arr as $k => $v){
             $Replace = array(
                 $v['SwiperId'],
@@ -761,13 +775,15 @@ class Controllers extends Base {
                 $k,
                 $k%2,
             );
+            foreach($this->SwiperFieldArr as $FieldRs){
+                $Replace[] = $v[$FieldRs['Name']];
+            }
             $Compile .= str_replace($Search, $Replace, $Html);
         }
         return $Compile;
     }
 
     private function _replaceLoop($Sql, $Html, $Pre){
-        //var_dump($Html);exit;
         $Arr = $this->Sys_modelObj->query($Sql, array());
         $Compile = '';
         if(empty($Arr)) return $Compile;
@@ -864,7 +880,6 @@ class Controllers extends Base {
         }
 
         $Limit = ($Ret['IsPage'] != 1) ? array($Ret['Start'], $Ret['Row']) : array(($this->PageTmp-1)*$Ret['Row'], $Ret['Row']);
-
         $Count = 0;
         $Sort = array('Sort' => 'ASC', 'Id' => 'DESC');
         if($Ret['Sort'] == 'ReadNum'){
@@ -901,6 +916,10 @@ class Controllers extends Base {
         $Search[] =  '{{qcms:'.$Pre.'CatePic}}';
         $Search[] =  '{{qcms:'.$Pre.'CateUrl}}';
         $Search[] =  '{{qcms:'.$Pre.'Url}}';
+        $Search[] =  '{{qcms:'.$Pre.'TimeAdd}}';
+        $Search[] =  '{{qcms:'.$Pre.'TimeUpdate}}';
+        $Search[] =  '{{qcms:'.$Pre.'DateAdd}}';
+        $Search[] =  '{{qcms:'.$Pre.'DateUpdate}}';
         foreach($Arr as $k => $v){
             $CateRs = $this->CateKv[$v['CateId']];
             $UrlCate = self::createUrl('cate', $CateRs['CateId'], $CateRs['PinYin'], $CateRs['PY']);//$Url,
@@ -929,6 +948,10 @@ class Controllers extends Base {
             $Replace[] = $CateRs['Pic'];
             $Replace[] = ($CateRs['IsLink'] == 1) ? $CateRs['LinkUrl'] : $UrlCate; // 分类地址
             $Replace[] = ($v['IsLink'] == '1') ? $v['LinkUrl'] : $UrlDetail;
+            $Replace[] = date('Y-m-d H:i:s', $v['TsAdd']);
+            $Replace[] = date('Y-m-d H:i:s', $v['TsUpdate']);
+            $Replace[] = date('Y-m-d', $v['TsAdd']);
+            $Replace[] = date('Y-m-d', $v['TsUpdate']);
             $Compile .= str_replace($Search, $Replace, $Html);
         }
         return $Compile;
@@ -1031,6 +1054,10 @@ class Controllers extends Base {
             $Search[] = '{{qcms:'.$Pre.$k.'}}';
             $Replace[] = $v;
         }
+        $Search[] = '{{qcms:'.$Pre.'TimeAdd}}';
+        $Search[] = '{{qcms:'.$Pre.'TimeUpdate}}';
+        $Replace[] = date('Y-m-d H:i:s', $Rs['TsAdd']);
+        $Replace[] = date('Y-m-d H:i:s', $Rs['TsUpdate']);
         switch($Type){
             case 'cate':
                 $Search[] = '{{qcms:'.$Pre.'Url}}';
@@ -1131,16 +1158,30 @@ class ControllersAdmin extends Controllers {
         'PY',
         'NameEn'
     );
+    
+    public $SwiperFieldArr = array(
+        'SwiperId',
+        'SwiperCateId',
+        'Pic',
+        'Title',
+        'Link',
+        'Sort',
+        'Summary'
+    );
 
     public $IsArr = array('1' => '是', 2 => '否');
     public $OpenArr = array('1' => '开启', 2 => '关闭');
     public $IsShowArr = array('1' => '显示', 2 => '隐藏');
     public $StateArr = array('1' => '已发布', 2 => '未发布');
     public $SexArr = array('1' => '男', 2 => '女');
+    public $StateDevMap = array(1 => '已审核', 2 => '开发中', 3 => '待审核', 4 => '已拒绝');
+    public $StateDevColorMap = array(1 => 'success', 2 => 'warning', 3 => 'info', 4 => 'danger');
     public $EditorArr = array('ckeditor' => 'ckeditor');
+    public $LangArr = array('Cn' => '中文');
     public $SiteArr = array();
     public $PermissionArr = array();
     public $HeadHtml = '';
+    public $DevRs = array();
     function __construct(){
         parent::__construct();
         self::_postKey();
@@ -1156,6 +1197,10 @@ class ControllersAdmin extends Controllers {
         $this->PermissionArr = empty($GroupAdminRs['Permission']) ? array() : explode('|', $GroupAdminRs['Permission']);
         $this->BuildObj->UploadUrl = $this->CommonObj->Url(array('admin', 'api', 'ajaxUpload'));
         $this->UploadObj->set(explode('|', $this->SysRs['AllowUploadType']), 2048);
+        if(!empty($this->SysRs['BindPhone'])){ // 绑定平台账号
+            $DevRs = $this->apiRemotePlatform('apiRemote/devInfo', array());
+            if($DevRs['Code'] == 0) $this->DevRs = $DevRs['Data'];
+        }
         $this->MenuArr = array(
             /***一级***/
             'admin/sys' => array('Name' => '系统管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sys'))),
@@ -1163,7 +1208,8 @@ class ControllersAdmin extends Controllers {
             'admin/content' => array('Name' => '内容管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content'))),
             'admin/user' => array('Name' => '会员中心', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'user'))),
             'admin/data' => array('Name' => '数据维护', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'data'))),
-            'admin/assist' => array('Name' => '辅助插件', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'assist'))),
+            'admin/assist' => array('Name' => '辅助管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'assist'))),
+            'admin/front' => array('Name' => '页面设计', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'front'))),
             'admin/templates' => array('Name' => '模板管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates'))),
             // 用户首页
             'admin/index/index' => array('Name' => '用户首页', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'index', 'index'))),
@@ -1190,12 +1236,18 @@ class ControllersAdmin extends Controllers {
             'admin/site/del' => array('Name' => '删除站点', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'site', 'del'))),
             'admin/sysField/index' => array('Name' => '系统变量管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sysField', 'index'))),
             'admin/sysField/add' => array('Name' => '添加系统变量', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sysField', 'add'))),
+            'admin/sysField/edit' => array('Name' => '修改系统变量', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sysField', 'edit'))),
             'admin/sysField/del' => array('Name' => '删除系统变量', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'sysField', 'del'))),
 
             'admin/categoryField/index' => array('Name' => '分类字段管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'categoryField', 'index'))),
             'admin/categoryField/add' => array('Name' => '添加分类字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'categoryField', 'add'))),
             'admin/categoryField/edit' => array('Name' => '修改分类字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'categoryField', 'edit'))),
             'admin/categoryField/del' => array('Name' => '删除分类字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'categoryField', 'del'))),
+            
+            'admin/swiperField/index' => array('Name' => '幻灯片字段管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiperField', 'index'))),
+            'admin/swiperField/add' => array('Name' => '添加幻灯片字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiperField', 'add'))),
+            'admin/swiperField/edit' => array('Name' => '修改幻灯片字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiperField', 'edit'))),
+            'admin/swiperField/del' => array('Name' => '删除幻灯片字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiperField', 'del'))),
 
             // 分类管理
             'admin/category/index' => array('Name' => '分类管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'index'))),
@@ -1203,6 +1255,7 @@ class ControllersAdmin extends Controllers {
             'admin/category/edit' => array('Name' => '修改分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'edit'))),
             'admin/category/del' => array('Name' => '删除分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'del'))),
             'admin/category/move' => array('Name' => '移动分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'move'))),
+            'admin/category/empty' => array('Name' => '清空分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'category', 'empty'))),
             // 单页管理
             'admin/pageCate/index' => array('Name' => '单页分类管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'pageCate', 'index'))),
             'admin/pageCate/add' => array('Name' => '添加单页分类', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'pageCate', 'add'))),
@@ -1222,13 +1275,13 @@ class ControllersAdmin extends Controllers {
             'admin/label/edit' => array('Name' => '修改标签', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'label', 'edit'))),
             'admin/label/del' => array('Name' => '删除标签', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'label', 'del'))),
             // 内容管理
-            'admin/content/recovery' => array('Name' => '回收站', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'recovery'))),
-            'admin/content/view' => array('Name' => '查看文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'view'))),
-            'admin/content/restore' => array('Name' => '恢复文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'restore'))),
-            'admin/content/tDelete' => array('Name' => '彻底删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'tDelete'))),
-            'admin/content/photos' => array('Name' => '照片管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'photos'))),
-            'admin/content/photoDel' => array('Name' => '照片删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'photoDel'))),
-            'admin/content/photoSort' => array('Name' => '照片排序', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'photoSort'))),
+            //'admin/content/recovery' => array('Name' => '回收站', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'recovery'))),
+            //'admin/content/view' => array('Name' => '查看文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'view'))),
+            //'admin/content/restore' => array('Name' => '恢复文章', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'restore'))),
+            //'admin/content/tDelete' => array('Name' => '彻底删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'tDelete'))),
+            //'admin/content/photos' => array('Name' => '照片管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'photos'))),
+            //'admin/content/photoDel' => array('Name' => '照片删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'photoDel'))),
+            //'admin/content/photoSort' => array('Name' => '照片排序', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', 'photoSort'))),
 
             // 会员管理
             'admin/user/index' => array('Name' => '会员管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'user', 'index'))),
@@ -1309,14 +1362,23 @@ class ControllersAdmin extends Controllers {
             'admin/data/highReplace' => array('Name' => '高级替换', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'data', 'highReplace'))),
 
             //模板管理
-            'admin/templates/index' => array('Name' => '模板管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'index'))),
-            'admin/templates/add' => array('Name' => '添加模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'add'))),
-            'admin/templates/edit' => array('Name' => '修改模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'edit'))),
-            'admin/templates/del' => array('Name' => '删除模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'del'))),
-            'admin/templates/builder' => array('Name' => '代码生成器', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'builder'))),
-            'admin/templates/test' => array('Name' => '模板标签测试', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'test'))),
-            'admin/templates/api' => array('Name' => 'API接口调试', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'api'))),
+            'admin/front/index' => array('Name' => '页面管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'front', 'index'))),
+            'admin/front/add' => array('Name' => '添加模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'front', 'add'))),
+            'admin/front/edit' => array('Name' => '修改模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'front', 'edit'))),
+            'admin/front/del' => array('Name' => '删除模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'front', 'del'))),
+            'admin/front/builder' => array('Name' => '代码生成器', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'front', 'builder'))),
+            'admin/front/test' => array('Name' => '模板标签测试', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'front', 'test'))),
+            'admin/front/api' => array('Name' => 'API接口调试', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'front', 'api'))),
             'admin/templates/market' => array('Name' => '模板市场', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'market'))),
+            'admin/templates/installed' => array('Name' => '已安装模版', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'templates', 'installed'))),
+            'admin/plugin/index' => array('Name' => '插件管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'plugin', 'index'))),
+            'admin/plugin/market' => array('Name' => '插件市场', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'plugin', 'market'))),
+            'admin/plugin/config' => array('Name' => '设置管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'plugin', 'config'))),
+            'admin/plugin/installed' => array('Name' => '已安装插件', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'plugin', 'installed'))),
+            
+            'admin/develop/index' => array('Name' => '开发中心', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'develop', 'index'))),
+            'admin/develop/templates' => array('Name' => '模版开发', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'develop', 'templates'))),
+            'admin/develop/plugin' => array('Name' => '插件开发', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'develop', 'plugin'))),
             // API
             'admin/api/ajaxUpload' => array('Name' => 'AJAX上传', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'ajaxUpload'))),
             'admin/api/ajaxBind' => array('Name' => 'AJAX绑定账号', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'ajaxBind'))),
@@ -1335,84 +1397,148 @@ class ControllersAdmin extends Controllers {
             'admin/api/contentStateOne' => array('Name' => '文章操作', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'contentStateOne'))),
             'admin/api/contentState' => array('Name' => '文章批量操作', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'contentState'))),
             'admin/api/deleteRec' => array('Name' => '彻底删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'deleteRec'))),
+            'admin/api/emptyRec' => array('Name' => '清空回收站', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'emptyRec'))),
             'admin/api/fileDel' => array('Name' => '附件删除', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'fileDel'))),
             'admin/api/fileClean' => array('Name' => '清除无效附件', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'fileClean'))),
             'admin/api/fileBrowse' => array('Name' => '浏览上传目录', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'fileBrowse'))),
             'admin/api/contentAttr' => array('Name' => '批量操作内容属性', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'contentAttr'))),
             'admin/api/contentMove' => array('Name' => '批量移动内容', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'contentMove'))),
-            'admin/api/installTemplate' => array('Name' => '安装模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'installTemplate'))),
+            'admin/api/templateInstall' => array('Name' => '安装模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'templateInstall'))),
+            'admin/api/templateUpgrade' => array('Name' => '升级模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'templateUpgrade'))),
+            'admin/api/templateInstallData' => array('Name' => '安装模板数据', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'templateInstallData'))),
+            'admin/api/templateDelete' => array('Name' => '删除模版', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'templateDelete'))),
+            'admin/api/pluginInstall' => array('Name' => '安装插件', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'pluginInstall'))),
+            'admin/api/pluginUpgrade' => array('Name' => '升级插件', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'pluginUpgrade'))),
+            'admin/api/pluginUnInstall' => array('Name' => '卸载插件', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'pluginUnInstall'))),
+            'admin/api/pluginState' => array('Name' => '设置插件状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'pluginState'))),
             'admin/api/paytp' => array('Name' => '购买模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'paytp'))),
+            'admin/api/payplugin' => array('Name' => '购买插件', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'payplugin'))),
             'admin/api/payStatus' => array('Name' => '获取订单状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'payStatus'))),
+            'admin/api/templatesGetVerion' => array('Name' => '获取模版版本', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'templatesGetVerion'))),
+            'admin/api/pluginGetVerion' => array('Name' => '获取插件版本', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'pluginGetVerion'))),
             'index/adminLogout' => array('Name' => '安全退出', 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(array('index', 'adminLogout'))),
-
         );
+        
+        // 动态模块
         $ModelArr = $this->Sys_modelObj->getList();
         $RoleMenuArr = array();
         foreach($ModelArr as $v) {
             $Para = array('ModelId' => $v['ModelId']);
-            foreach(array('index', 'add', 'edit', 'del') as $mv){
+            $KeyArr = array();
+            foreach(array('index', 'add', 'edit', 'del', 'recovery', 'view', 'restore', 'tDelete', 'photos', 'photoDel', 'photoSort') as $mv){
                 $Key = 'admin/content/'.$mv.'?'.http_build_query($Para);
-                if($mv == 'index') $RoleMenuArr[] = array('Key' => $Key);
+                $KeyArr[$v['ModelId']][] = $Key;
                 $this->MenuArr[$Key] = array('Name' => $v['Name'].$this->ModelKeyNameArr[$mv], 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'content', $mv)), 'Para' => array('ModelId' => $v['ModelId']));
             }
+            $RoleMenuArr[] = array('Key' => $KeyArr[$v['ModelId']][0], 'alias' => $KeyArr[$v['ModelId']]);
         }
+        
+        // 动态插件
+        $MenuSide = $this->Menu_sideObj->getList();
+        $MenuTree = array();
+        foreach($MenuSide as $k => $v){            
+            if($v['PId'] != 0) continue;
+            $v['Sub'] = array();
+            $MenuTree[$v['MenuSideId']] = $v;     
+            $Key = 'Plugin/'.$v['NameKey'];
+            $this->MenuArr[$Key] = array('Name' => $v['Name'], 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(array('admin', 'plugin', $v['NameKey'])), 'Para' => array());
+        }
+        
+        foreach($MenuSide as $k => $v){
+            if($v['PId'] == 0) continue;
+            $MenuTree[$v['PId']]['Sub'][] = $v;
+            $Key = 'Plugin/'.$v['NameKey'].'/'.$v['Url'];
+            $this->MenuArr[$Key] = array('Name' => $v['Name'], 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(explode('/', $Key)), 'Para' => array());
+        }
+        
         $this->RoleMenuArr = array(
-            array('Key' => 'admin/index/index', 'subCont' => array('index'), 'Icon' => 'bi bi-house'),
-
-            array('Key' => 'admin/category', 'subCont' => array('category', 'page', 'pageCate', 'labelCate', 'label', 'form', 'formField', 'formData'), 'Icon' => 'bi bi-list-ol', 'Sub' => array(
-                array('Key' => 'admin/category/index'),
-                array('Key' => 'admin/page/index'),
-                array('Key' => 'admin/form/index'),
-                array('Key' => 'admin/label/index'),
+            array('Key' => 'admin/index/index', 'subCont' => array('index'), 'Icon' => 'home'),
+            array('Key' => 'admin/category', 'subCont' => array('category', 'page', 'pageCate', 'labelCate', 'label', 'form', 'formField', 'formData'), 'Icon' => 'ordered-list', 'Sub' => array(
+                array('Key' => 'admin/category/index', 'alias' => array('admin/category/index', 'admin/category/add', 'admin/category/edit', 'admin/category/move')),
+                array('Key' => 'admin/page/index', 'alias' => array('admin/page/index', 'admin/page/add', 'admin/page/edit', 'admin/pageCate/index', 'admin/pageCate/add', 'admin/pageCate/edit')),
+                array('Key' => 'admin/form/index', 'alias' => array('admin/form/index', 'admin/form/add', 'admin/form/edit', 'admin/form/code', 'admin/formField/index', 'admin/formField/add', 'admin/formField/edit', 'admin/formData/index')),
+                array('Key' => 'admin/label/index', 'alias' => array('admin/label/index', 'admin/label/add', 'admin/label/edit', 'admin/labelCate/index', 'admin/labelCate/add', 'admin/labelCate/edit')),
             )),
-            array('Key' => 'admin/content', 'subCont' => array('content'), 'Icon' => 'bi bi-layout-text-sidebar-reverse', 'Sub' => $RoleMenuArr),
-            array('Key' => 'admin/user', 'subCont' => array('user', 'groupUser'), 'Icon' => 'bi bi-person', 'Sub' => array(
-                array('Key' => 'admin/user/index'),
-                array('Key' => 'admin/groupUser/index'),
+            array('Key' => 'admin/content', 'subCont' => array('content'), 'Icon' => 'log', 'Sub' => $RoleMenuArr),
+            array('Key' => 'admin/user', 'subCont' => array('user', 'groupUser'), 'Icon' => 'peoples', 'Sub' => array(
+                array('Key' => 'admin/user/index', 'alias' => array('admin/user/index', 'admin/user/add', 'admin/user/edit')),
+                array('Key' => 'admin/groupUser/index', 'alias' => array('admin/groupUser/index', 'admin/groupUser/add', 'admin/groupUser/edit')),
             )),
-            array('Key' => 'admin/data', 'subCont' => array('data', 'model', 'modelField', 'database', 'redisManage', 'sysField', 'categoryField'), 'Icon' => 'bi bi-tools', 'Sub' => array(
-                array('Key' => 'admin/model/index'),
-                array('Key' => 'admin/sysField/index'),
-                array('Key' => 'admin/categoryField/index'),
-                array('Key' => 'admin/database/index'),
-                array('Key' => 'admin/redisManage/index'),
-                array('Key' => 'admin/data/replace'),
-                array('Key' => 'admin/data/highReplace'),
+            array('Key' => 'admin/data', 'subCont' => array('data', 'model', 'modelField', 'database', 'redisManage', 'sysField', 'categoryField', 'swiperField'), 'Icon' => 'tool', 'Sub' => array(
+                array('Key' => 'admin/model/index', 'alias' => array('admin/model/index', 'admin/model/add', 'admin/model/edit', 'admin/modelField/index', 'admin/modelField/add', 'admin/modelField/edit')),
+                array('Key' => 'admin/sysField/index', 'alias' => array('admin/sysField/index', 'admin/sysField/add', 'admin/sysField/edit')),
+                array('Key' => 'admin/categoryField/index', 'alias' => array('admin/categoryField/index', 'admin/categoryField/add', 'admin/categoryField/edit')),
+                array('Key' => 'admin/swiperField/index', 'alias' => array('admin/swiperField/index', 'admin/swiperField/add', 'admin/swiperField/edit')),
+                array('Key' => 'admin/database/index', 'alias' => array('admin/database/index')),
+                array('Key' => 'admin/redisManage/index', 'alias' => array('admin/redisManage/index')),
+                array('Key' => 'admin/data/replace', 'alias' => array('admin/data/replace')),
+                array('Key' => 'admin/data/highReplace', 'alias' => array('admin/data/highReplace')),
             )),
-            array('Key' => 'admin/assist', 'subCont' => array('linkCate', 'link', 'inlinkCate', 'inlink', 'file', 'swiper', 'swiperCate', 'tag'), 'Icon' => 'bi bi-columns-gap', 'Sub' => array(
-                //array('Key' => 'admin/linkCate/index'),
-                array('Key' => 'admin/link/index'),
-                array('Key' => 'admin/inlink/index'),
-                array('Key' => 'admin/swiperCate/index'),
-                array('Key' => 'admin/tag/index'),
-                array('Key' => 'admin/file/index'),
+            array('Key' => 'admin/assist', 'subCont' => array('linkCate', 'link', 'inlinkCate', 'inlink', 'file', 'swiper', 'swiperCate', 'tag'), 'Icon' => 'page-template', 'Sub' => array(
+                array('Key' => 'admin/link/index', 'alias' => array('admin/link/index', 'admin/link/add', 'admin/link/edit', 'admin/linkCate/index', 'admin/linkCate/add', 'admin/linkCate/edit')),
+                array('Key' => 'admin/inlink/index', 'alias' => array('admin/inlink/index', 'admin/inlink/add', 'admin/inlink/edit', 'admin/inlinkCate/index', 'admin/inlinkCate/add', 'admin/inlinkCate/edit')),
+                array('Key' => 'admin/swiperCate/index', 'alias' => array('admin/swiperCate/index', 'admin/swiperCate/add', 'admin/swiperCate/edit', 'admin/swiper/index', 'admin/swiper/add', 'admin/swiper/edit')),
+                array('Key' => 'admin/tag/index', 'alias' => array('admin/tag/index', 'admin/tag/list')),
+                array('Key' => 'admin/file/index', 'alias' => array('admin/file/index')),
             )),
-            array('Key' => 'admin/templates', 'subCont' => array('templates'), 'Icon' => 'bi bi-code-slash', 'Sub' => array(
-                array('Key' => 'admin/templates/market'),
-                array('Key' => 'admin/templates/index'),
-                array('Key' => 'admin/templates/builder'),
-                array('Key' => 'admin/templates/test'),
-                array('Key' => 'admin/templates/api'),
+            array('Key' => 'admin/front', 'subCont' => array('front'), 'Icon' => 'bydesign', 'Sub' => array(                
+                array('Key' => 'admin/front/index', 'alias' => array('admin/front/index', 'admin/front/add', 'admin/front/edit')),
+                array('Key' => 'admin/front/builder', 'alias' => array('admin/front/builder')),
+                array('Key' => 'admin/front/test', 'alias' => array('admin/front/test')),
+                array('Key' => 'admin/front/api', 'alias' => array('admin/front/api')),
             )),
-            array('Key' => 'admin/sys', 'subCont' => array('sys', 'admin', 'groupAdmin', 'log', 'site'), 'Icon' => 'bi bi-gear', 'Sub' => array(
-                array('Key' => 'admin/sys/index'),
-                array('Key' => 'admin/sys/license'),
-                array('Key' => 'admin/sys/check'),
-                array('Key' => 'admin/sys/redis'),
-                array('Key' => 'admin/site/index'),
-                array('Key' => 'admin/admin/index'),
-                array('Key' => 'admin/groupAdmin/index'),
-                array('Key' => 'admin/log/operate'),
-                array('Key' => 'admin/log/login'),
+            array('Key' => 'admin/templates', 'subCont' => array('templates'), 'Icon' => 'web-page', 'Sub' => array(
+                array('Key' => 'admin/templates/market', 'alias' => array('admin/templates/market')),
+                array('Key' => 'admin/templates/installed', 'alias' => array('admin/templates/installed')),
             )),
-            array('Key' => 'index/adminLogout', 'subCont' => array('signout'), 'Icon' => 'bi bi-box-arrow-right'),
+            array('Key' => 'admin/plugin/index', 'subCont' => array('plugin'), 'Icon' => 'components', 'Sub' => array(
+                array('Key' => 'admin/plugin/market', 'alias' => array('admin/plugin/market')),
+                array('Key' => 'admin/plugin/installed', 'alias' => array('admin/plugin/installed', 'admin/plugin/config')),
+            )),
+            
         );
+        if(!empty($this->DevRs)){
+            array_push($this->RoleMenuArr, array('Key' => 'admin/develop/index', 'subCont' => array('develop'), 'Icon' => 'code', 'Sub' => array(
+                array('Key' => 'admin/develop/templates', 'alias' => array('admin/develop/templates')),
+                array('Key' => 'admin/develop/plugin', 'alias' => array('admin/develop/plugin')),
+            )));
+        }
+        
+        foreach($MenuTree as $k => $v){
+            $Key = 'Plugin/'.$v['NameKey'];
+            $PluginMenu = array('Key' => $Key, 'subCont' => array('Plugin/'.$v['NameKey'].'/index'), 'Icon' => 'api-app', 'Sub' => array());
+            foreach($v['Sub'] as $sk => $sv){
+                if($sv['IsShow'] != '1') continue;
+                $Key = 'Plugin/'.$sv['NameKey'].'/'.$sv['Url'];
+                $PluginMenu['Sub'][] = array('Key' => $Key, 'alias' => array($Key));
+            }
+            array_push($this->RoleMenuArr, $PluginMenu);
+        }
+        
+        array_push($this->RoleMenuArr, 
+            array('Key' => 'admin/sys', 'subCont' => array('sys', 'admin', 'groupAdmin', 'log', 'site'), 'Icon' => 'setting-two', 'Sub' => array(
+                array('Key' => 'admin/sys/index', 'alias' => array('admin/sys/index')),
+                array('Key' => 'admin/sys/license', 'alias' => array('admin/sys/license')),
+                array('Key' => 'admin/sys/check', 'alias' => array('admin/sys/check')),
+                array('Key' => 'admin/sys/redis', 'alias' => array('admin/sys/redis')),
+                array('Key' => 'admin/site/index', 'alias' => array('admin/site/index', 'admin/site/add', 'admin/site/edit')),
+                array('Key' => 'admin/admin/index', 'alias' => array('admin/admin/index', 'admin/admin/add', 'admin/admin/edit')),
+                array('Key' => 'admin/groupAdmin/index', 'alias' => array('admin/groupAdmin/index', 'admin/groupAdmin/add', 'admin/groupAdmin/edit')),
+                array('Key' => 'admin/log/operate', 'alias' => array('admin/log/operate')),
+                array('Key' => 'admin/log/login', 'alias' => array('admin/log/login')),
+            )),
+            array('Key' => 'index/adminLogout', 'subCont' => array('signout'), 'Icon' => 'logout')
+         );
+        
         $Url = implode('/', array($this->Module, Router::$s_Controller, Router::$s_Method));
+
+        if(Router::$s_IsPlug){
+            $Url = implode('/', array('Plugin', Router::$s_PlusKeyName, Router::$s_Controller, Router::$s_Method));
+        }
         $Key = '';
         foreach($this->MenuArr as $k => $v){
-
             if(strpos($k, $Url) === 0){
-                if(isset($v['Para'])){
+                if(!empty($v['Para'])){
                     $GetPara = array();
                     foreach($v['Para'] as $pk => $pv) $GetPara[$pk] = $_GET[$pk];
                     $Key = $Url.'?'.http_build_query($GetPara);
@@ -1421,21 +1547,28 @@ class ControllersAdmin extends Controllers {
                 }
             }
         }
-        //var_dump($Key);exit;
+        
         if(!isset($this->MenuArr[$Key])) $this->Err(1056);
-
         $MenuRs = $this->MenuArr[$Key];
+        
         if($this->LoginUserRs['GroupAdminId'] != 1 && !in_array($Key, $this->PermissionArr)) $this->Err(1005);
         $this->PageTitle = $MenuRs['Name'];
         $this->PageTitle2 = $this->BuildObj->FormTitle($MenuRs['Name']);
 
         foreach($this->RoleMenuArr as $v){
-            if(in_array(Router::$s_Controller, $v['subCont'])){
-                $this->MenuArr[$v['Key']]['IsActive'] = true;
+            $subContMatch = Router::$s_IsPlug ? 'Plugin/'.Router::$s_PlusKeyName.'/'.Router::$s_Controller : Router::$s_Controller;
+            if(in_array($subContMatch, $v['subCont'])){
+                $this->MenuArr[$v['Key']]['IsActive'] = 'active';
                 $this->BreadCrumb[] = $this->MenuArr[$v['Key']];
-                if(!empty($v['Sub'])){
-                    $this->BreadCrumb[] = $this->MenuArr[$Key];
+                if(empty($v['Sub'])) continue;
+                foreach($v['Sub'] as $sv){                    
+                    if(in_array($Key, $sv['alias'])){
+                        $this->MenuArr[$sv['Key']]['IsActive'] = 'active';                        
+                        $this->BreadCrumb[] = $this->MenuArr[$Url];
+                        break;
+                    }
                 }
+                //$this->BreadCrumb[] = $this->MenuArr[$Key];
                 break;
             }
         }
@@ -1536,9 +1669,35 @@ class ControllersAdmin extends Controllers {
         $Ret = json_decode($Json, true);
         return $Ret;
     }
+    
+    public function getPlugin($Page, $PageNum, $CateId = 0, $PluginIds = array(), $State = 1){
+        $Para = array('Domain' => URL_DOMAIN, 'Page' => $Page, 'PageNum' => $PageNum, 'CateId' => $CateId, 'PluginIds' => implode('|', $PluginIds));
+        if($State == 1){
+            $Para['State'] = 1;
+        }
+        $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/plugin.html')->SetDebug(false)->SetPara($Para)->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Ret = json_decode($Json, true);
+        return $Ret;
+    }
+    
+    public function getPluginCate(){
+        $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/pluginCate.html')->SetPara(array('Domain' => URL_DOMAIN))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Ret = json_decode($Json, true);
+        return $Ret;
+    }
+    
+    public function getDevTemplaites($Page, $PageNum, $CateId = 0, $TemplatesIds = array()){
+        $Para = array('Domain' => URL_DOMAIN, 'P' => $Page, 'PageNum' => $PageNum, 'CateId' => $CateId, 'TemplatesIds' => implode('|', $TemplatesIds));
+        $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/templates.html')->SetDebug(false)->SetPara($Para)->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Ret = json_decode($Json, true);
+        return $Ret;
+    }
 
-    public function getTemplaites($Page, $PageNum, $CateId = 0){
-        $Para = array('Domain' => URL_DOMAIN, 'Page' => $Page, 'PageNum' => $PageNum, 'CateId' => $CateId);
+    public function getTemplaites($Page, $PageNum, $CateId = 0, $TemplatesIds = array(), $State = 1){
+        $Para = array('Domain' => URL_DOMAIN, 'P' => $Page, 'PageNum' => $PageNum, 'CateId' => $CateId, 'TemplatesIds' => implode('|', $TemplatesIds));
+        if($State == 1){
+            $Para['State'] = 1;
+        }
         $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/templates.html')->SetDebug(false)->SetPara($Para)->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
@@ -1555,12 +1714,46 @@ class ControllersAdmin extends Controllers {
         $Ret = json_decode($Json, true);
         return $Ret;
     }
-
-    /* public function getTemplateInfo($TemplatesId){ // 废弃
-        $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/getTemplate.html')->SetPara(array('Domain' => URL_DOMAIN, 'TemplatesId' => $TemplatesId, 'License' => $this->SysRs['License']))->SetIsPost(true)->SetIsHttps(true)->SetIsJson(true)->Execute();
-        $Ret = json_decode($Json, true);
-        return $Ret;
-    } */
+    
+    public function createTable($TablePre, $TableArr, $IsDropTable = false ){ //创建插件数据表
+        $Tables = $this->SysObj->query('SHOW TABLES', array());
+        $HaveTableArr = array_column($Tables, 'Tables_in_redcms');        
+        foreach($TableArr as $k => $v){
+            $TableName = $TablePre.$k;
+            if(in_array($TableName, $HaveTableArr)) throw new PDOException(self::lang(1020));
+            if(count($v['Field']) == 0) throw new PDOException(self::lang(1023));
+            $NameArr = array_column($v['Field'], 'Field');
+            if(!isset($v['PrimaryKey']) || !in_array($v['PrimaryKey'], $NameArr)) throw new PDOException(self::lang(1024));
+            $FieldArr = array();
+            foreach($v['Field'] as $sv){
+                $Default = ($sv['Extra'] == 'auto_increment') ? $sv['Extra'] : 'DEFAULT \''.$sv['Default'].'\'';
+                if($sv['Type'] == 'date') $Default = 'DEFAULT \'1970-01-01\'';
+                if(in_array($sv['Type'], array('blob', 'text', 'geometry', 'json'))) $Default = '';
+                $Comment = 'COMMENT \''.$sv['Comment'].'\'';
+                $IsNotNull = (in_array($sv['Type'], array('text'))) ? '' : 'NOT NULL';
+                $FieldArr[] = '`'.$sv['Field'].'` '.$sv['Type'].' '.$IsNotNull.' '.$sv['Extra'].' '.$Default.' '.$Comment.','.PHP_EOL;
+            }
+            $TableSql = 'CREATE TABLE IF NOT EXISTS `'.$TableName.'` ( '.PHP_EOL.implode('', $FieldArr).' PRIMARY KEY (`'.$v['PrimaryKey'].'`)) ENGINE=InnoDB AUTO_INCREMENT=10000 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci COMMENT=\''.$v['Comment'].'\';';
+            if($IsDropTable) $this->SysObj->exec('DROP TABLE IF EXISTS `'.$TableName.'`;', array()); //删除原有表
+            if ($this->SysObj->exec($TableSql, array()) === false) throw new PDOException(self::lang(1025));
+        }
+    }
+    
+    public function delTable($TablePre, $TableArr){ //删除插件数据表
+        $Tables = $this->SysObj->query('SHOW TABLES', array());
+        $DBConfig = Config::DbConfig();
+        $HaveTableArr = array_column($Tables, 'Tables_in_'.$DBConfig['Name']);
+        foreach($TableArr as $k => $v){
+            $TableName = strtolower($TablePre.$k);
+            if(!in_array($TableName, $HaveTableArr)) continue;
+            $TableSql = 'DROP TABLE IF EXISTS '.$TableName.';';
+            if($this->SysObj->exec($TableSql, array()) === false) throw new PDOException(self::lang(1029));
+        }
+    }
+    
+    public function lang($LangCode){ //代码转文字
+        return isset($this->LanguageArr[$LangCode]) ? $this->LanguageArr[$LangCode] : $this->LanguageArr[1889];
+    }
 
     private function _getUpdate(){
         $pTime = $this->CookieObj->get('UpdateTs', 'User');
@@ -1639,7 +1832,22 @@ class ControllersApi extends Base {
         $ModelArr = $this->Sys_modelObj->getList();
         foreach($ModelArr as $v){
             $this->ModelKv[$v['KeyName']] = $v;
-        }
+        }        
+    }
+}
+
+class ControllersPlugAdmin extends ControllersAdmin {
+    
+    public function __construct(){
+        parent::__construct();
+        $this->BuildObj->Module = 'Plugin/'.Router::$s_PlusKeyName;
+    }
+}
+
+class ControllersPlug extends Base {    
+    public function __construct(){
+        parent::__construct();
+        $this->BuildObj->Module = 'Plugin/'.Router::$s_PlusKeyName;
     }
 }
 

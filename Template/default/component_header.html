@@ -15,7 +15,7 @@
                 {{menu PCateId='0'}}
                 {{if '{{qcms:Menu_HasSub}}' == '1'}}
                 <li class="nav-item dropdown active">
-                    <a class="nav-link" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false" href="{{qcms:Menu_Url}}">{{qcms:Menu_Name}} <i class="bi bi-chevron-down"></i></a>
+                    <a class="nav-link" id="navbarDropdown" role="button" data-toggle="dropdown" aria-expanded="false" href="{{qcms:Menu_Url}}">{{qcms:Menu_Name}} <iconpark-icon name="down" size="1.2rem" class="d-inline-flex"></iconpark-icon></a>
                     <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                         {{smenu PCateId='{{qcms:Menu_CateId}}'}}
                         <a class="dropdown-item" href="{{qcms:sMenu_Url}}">{{qcms:sMenu_Name}} </a>

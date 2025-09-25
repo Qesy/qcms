@@ -4,8 +4,8 @@ class Index extends Controllers {
 
     const CurrentClient = 'Web';
 
-    public function index_Action(){
-        echo $this->tempRun('index');
+    public function index_Action($Page = 1){
+        echo $this->tempRun('index', 0, $Page);
         self::_statFlow();
     }
 
@@ -76,7 +76,7 @@ class Index extends Controllers {
         }
         foreach($OldTokenArr as $OldToken) $this->TokenObj->clean($OldToken);
         $this->UserObj->clean($Rs['UserId']);
-        $this->CookieObj->set(array('Token' => $Token, 'Key' => $Key), 'User', 24*14);
+        $this->CookieObj->set(array('Token' => $Token), 'User', 24*14);
         /* if(isset($_GET['Refer'])){ //后台用户不需要
          $this->CommonObj->ExecScript('window.location.href="'.urldecode($_GET['Refer']).'"');
          } */
@@ -152,7 +152,7 @@ class Index extends Controllers {
             }
             foreach($OldTokenArr as $OldToken) $this->TokenObj->clean($OldToken);
             $this->UserObj->clean($Rs['UserId']);
-            $this->CookieObj->set(array('Token' => $Token, 'Key' => $Key), 'User', 24*14);
+            $this->CookieObj->set(array('Token' => $Token), 'User', 24*14);
 	        /* if(isset($_GET['Refer'])){ //后台用户不需要
 	            $this->CommonObj->ExecScript('window.location.href="'.urldecode($_GET['Refer']).'"');
 	        } */
@@ -176,12 +176,52 @@ class Index extends Controllers {
 	    $this->CodeObj->CreateVerifyImage(102, 34);
 	    $_SESSION['VeriCode'] = $this->CodeObj->m_verify_code;
 	}
-
-	public function test_Action(){
-	    var_dump($this->CommonObj->GetQuery());
-	    $this->CommonObj->SetQuery('aa', 'bb');
-	    var_dump($this->CommonObj->GetQuery());
-		echo 'test';
+	
+	public function cron_Action(){ // 定时器
+	    if (php_sapi_name () != 'cli') exit('Not in Cli !');
+	    while(true){
+	        $PluginArr = $this->PluginObj->ExecSelect();
+	        foreach($PluginArr as $v){
+	            $this->CommonObj->LogWrite('日志测试');
+	            $Ts = time();
+	            $NameKey = basename($v['NameKey']);
+	            if($v['CronType'] == '-1') continue;
+	            $TsLast = $v['TsLastCron'];
+	            if($v['CronType'] == 1){	                
+	                if($Ts - $TsLast < $v['IntervalTime']) continue;
+	            }else if($v['CronType'] == 2){
+	                $Time = strtotime(date('Y-m-d').' '.$v['FixedTime']);
+	                if($Ts < $Time) continue;
+	            }
+	            $cronFile = './Plugin/'.$NameKey.'/System/Controller/cron.php';
+	            if (!file_exists($cronFile)) {
+	                $this->CommonObj->LogWrite('file_exists '.$cronFile .' Faild !');
+	                continue;
+	            }
+	            require_once $cronFile;
+	            $ClassName = $NameKey.'_Cron';
+	            if (!class_exists($ClassName)) {
+	                $this->CommonObj->LogWrite('class_exists '.$ClassName.' Faild !');
+	                continue;
+	            }
+	            
+	            $cron = new $ClassName;
+	            if (!method_exists($cron, 'run')) {
+	                $this->CommonObj->LogWrite('method_exists $cron run Faild !');
+	                continue;
+	                
+	            }
+	            try{
+	                $cron->run($v);
+	                $this->PluginObj->SetCond(array('PluginId' => $v['PluginId']))->SetUpdate(array('TsLastCron' => $Ts))->ExecUpdate();
+	            }catch (\Exception $e){
+	                $this->CommonObj->LogWrite($e->getMessage());
+	                continue; // 不中断，继续下一个插件
+	            }	            
+	            $this->PluginObj->clean($v['PluginId']);
+	        }
+	        sleep(1);
+	    }
 	}
 
 	private function _statFlow(){

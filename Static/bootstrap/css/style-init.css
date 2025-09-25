@@ -2121,7 +2121,7 @@ button.fancy-button.btn-warning.btn-0.fc-agendaWeek-button:hover, .fancy-button.
   transition: 0.3s ease;
 }
 .side-nav > li > a {
-  padding: 15px;
+  padding: 10px;
 }
 .side-nav > li > a:hover {
   background: #ebebeb;

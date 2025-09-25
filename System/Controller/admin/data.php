@@ -9,14 +9,14 @@ class Data extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('ModelId', 'Search', 'Replace', 'Field'))) $this->Err(1001);
             $ModelKeyKv = array_column($ModelArr, 'NameKey', 'ModelId');
-
+            $UpdateStr = '`'.$this->CommonObj->SafeInput($_POST['Field']).'` = replace (`'.$this->CommonObj->SafeInput($_POST['Field']).'`, \''.$this->CommonObj->SafeInput($_POST['Search']).'\', \''.$this->CommonObj->SafeInput($_POST['Replace']).'\')';
             try{
                 DB::$s_db_obj->beginTransaction();
                 if($_POST['ModelId'] != -1){
-                    $this->Table_articleObj->SetTbName('table_'.$ModelKeyKv[$_POST['ModelId']])->SetUpdate('`'.$_POST['Field'].'` = replace (`'.$_POST['Field'].'`, \''.$_POST['Search'].'\', \''.$_POST['Replace'].'\')')->ExecUpdate();
+                    $this->Table_articleObj->SetTbName('table_'.$ModelKeyKv[$_POST['ModelId']])->SetUpdate($UpdateStr)->ExecUpdate();
                 }else{
                     foreach($ModelKeyKv as $k => $v){
-                        $this->Table_articleObj->SetTbName('table_'.$v)->SetUpdate('`'.$_POST['Field'].'` = replace (`'.$_POST['Field'].'`, \''.$_POST['Search'].'\', \''.$_POST['Replace'].'\')')->ExecUpdate();
+                        $this->Table_articleObj->SetTbName('table_'.$v)->SetUpdate($UpdateStr)->ExecUpdate();
                     }
                 }          
                 DB::$s_db_obj->commit();
@@ -45,7 +45,8 @@ class Data extends ControllersAdmin {
         if(!empty($_POST)){
             if(!$this->VeriObj->VeriPara($_POST, array('TableName', 'Field', 'Search', 'Replace'))) $this->Err(1001); 
             if(in_array($_POST['TableName'], array('qc_user', 'qc_token'))) $this->Err(1048); 
-            $Ret = $this->Table_articleObj->SetTbName(substr(trim($_POST['TableName']), strlen($DbConfig['Prefix'])))->SetUpdate('`'.$_POST['Field'].'` = replace (`'.$_POST['Field'].'`, \''.$_POST['Search'].'\', \''.$_POST['Replace'].'\')')->ExecUpdate();
+            $UpdateStr = '`'.$this->CommonObj->SafeInput($_POST['Field']).'` = replace (`'.$this->CommonObj->SafeInput($_POST['Field']).'`, \''.$this->CommonObj->SafeInput($_POST['Search']).'\', \''.$this->CommonObj->SafeInput($_POST['Replace']).'\')';
+            $Ret = $this->Table_articleObj->SetTbName(substr(trim($_POST['TableName']), strlen($DbConfig['Prefix'])))->SetUpdate($UpdateStr)->ExecUpdate();
             if($Ret === false) $this->Err(1002);
             $this->Jump(array('admin', 'data', 'highReplace'), 1888);
         }

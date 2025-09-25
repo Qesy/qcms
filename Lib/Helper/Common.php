@@ -230,7 +230,7 @@ class Common {
 	    } else if (! empty ( $_SERVER ["REMOTE_ADDR"] )) {
 	        $cip = $_SERVER ["REMOTE_ADDR"];
 	    }
-	    return htmlentities($cip);
+	    return $this->SafeInput($cip);
 	}
 
 	public function Html2Js($Str){
@@ -258,7 +258,7 @@ class Common {
 	}
 	public function loadScripts(array $jsArr, $IsBoot = false) { // -- Name : 加载JS --
 	    $Path = $IsBoot ? URL_BOOT.'js/' : URL_JS;
-	    foreach ( $jsArr as $key => $val ) echo "<script type=\"text/javascript\" src=\"" . $Path . $val .".js?v=" . VERSION . "\" charset=\"utf-8\"></script>";
+	    foreach ( $jsArr as $key => $val ) echo "<script type=\"text/javascript\" charset=\"utf-8\" src=\"" . $Path . $val .".js?v=" . VERSION . "\" ></script>\n";
 	}
 
 	public function ExecScript($Str) { // -- 运行JS --
@@ -379,7 +379,6 @@ class Common {
 	    $SearchDefault = array('{CateId}', '{PinYin}', '{PY}', '{Page}');
 	    $FirstUrl = str_replace($SearchDefault, array($CateRs['CateId'], $CateRs['PinYin'], $CateRs['PY'], '1'), $UrlArr['Default']);
 	    $FirstPage = '<li class="page-item '.(($PageNum == 1) ? 'disabled' : '').'"><a href="'.$FirstUrl.'" class="page-link">首页</a></li>';
-	    
 	    $PreNum = ($PageNum <= 1) ? 1 : $PageNum-1;
 	    $PreUrlStr = ($PreNum == 1) ? $UrlArr['Default'] : $UrlArr['Page'];	    
 	    $PreUrl = str_replace($SearchDefault, array($CateRs['CateId'], $CateRs['PinYin'], $CateRs['PY'], $PreNum), $PreUrlStr);    
@@ -488,6 +487,226 @@ class Common {
 	    }
 	    return true;
 	}
+	
+	public function SafeInput($data) {
+	    return htmlspecialchars($data, ENT_QUOTES, 'UTF-8');
+	}
+	
+	public function LogWrite($message) {
+	    $logDir = 'Logs'; 
+	    $bt = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 1);
+	    $caller = $bt[0];
+	    $location = $caller['file'] . ':' . $caller['line'];
+	    $time = date('Y-m-d H:i:s');
+	    $line = "[{$time}] [{$location}] {$message}\n";
+	    file_put_contents($logDir . '/error_'.date(Ymd).'.log', $line, FILE_APPEND);
+	}
+	
+	public function CleanHtml($html) {
+	    // 1️⃣ 提取 raw-html-embed div
+	    $html = preg_replace_callback(
+	        '#<div\s+class=["\']raw-html-embed["\']?[^>]*>(.*?)</div>#is',
+	        function($m) {
+	            // 对内部内容做 htmlspecialchars
+	            $inner = htmlspecialchars($m[1], ENT_QUOTES, 'UTF-8');
+	            return '<div class="raw-html-embed">' . $inner . '</div>';
+	        },
+	        $html
+	        );
+	    // 允许的标签
+	    $allowed_tags = [
+	        'p' => [],
+	        'br' => [],
+	        'strong' => [],
+	        'b' => [],
+	        'em' => [],
+	        'i' => [],
+	        'u' => [],
+	        'h1' => [], 'h2' => [], 'h3' => [], 'h4' => [], 'h5' => [], 'h6' => [],
+	        'ul' => [], 'ol' => [], 'li' => [],
+	        'blockquote' => [],
+	        'code' => [], 'pre' => [],
+	        'table' => [], 'thead' => [], 'tbody' => [], 'tfoot' => [],
+	        'tr' => [], 'th' => [], 'td' => [],
+	        'a' => ['href'],
+	        'img' => ['src', 'alt'],
+	        'figure' => ['class'],
+	        'div' => ['data-oembed-url'],   // ✅ 新增 div 支持
+	        'oembed' => ['url'],
+	        'video' => ['controls', 'style'],   // ✅ 新增 video
+	        'source' => ['src', 'type'],        // ✅ 新增 source
+	        'audio' => ['controls', 'style'],
+	        'span' => ['style', 'lang', 'dir', 'class'],  // ✅ 新增 span
+	        'mark' => ['class'],                           // ✅ 新增 mark 标签
+	        'meta' => ['name', 'content'],
+	        'link' => ['href', 'type', 'rel'],
+	        'iframe' => ['src', 'frameborder', 'allow', 'allowfullscreen', 'style'],
+	        'hr' => [],
+	        'sup' => [], // 上标
+	        'sub' => [], // 下标
+	    ];
+	    
+	    // 用 strip_tags 去掉不允许标签
+	    $html = strip_tags($html, '<' . implode('><', array_keys($allowed_tags)) . '>');
+	    
+	    // 清理 <a> href
+	    $html = preg_replace_callback(
+	        '#<a\s+[^>]*href=["\']?([^"\'>\s]+)["\']?[^>]*>#i',
+	        function($m) {
+	            $url = $m[1];
+	            if (!preg_match('#^https?://#i', $url)) {
+	                return '<a>';
+	            }
+	            return '<a href="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '" target="_blank" rel="nofollow noopener">';
+	        },
+	        $html
+	        );
+	    
+	    // 清理 <img src>
+	    $html = preg_replace_callback(
+	        '#<img\s+[^>]*src=["\']?([^"\'>\s]+)["\']?[^>]*>#i',
+	        function($m) {
+	            $src = $m[1];
+	            if (!preg_match('#^(https?://|/).+#i', $src)) {
+	                return '';
+	            }
+	            return '<img src="' . htmlspecialchars($src, ENT_QUOTES, 'UTF-8') . '" alt="">';
+	        },
+	        $html
+	        );
+	    
+	    // 清理 <figure class="">
+	    $html = preg_replace_callback(
+	        '#<figure\s+[^>]*class=["\']?([^"\'>]+)["\']?[^>]*>#i',
+	        function($m) {
+	            $class = $m[1];
+	            return '<figure class="' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '">';
+	        },
+	        $html
+	        );
+	    
+	    // 处理 <div data-oembed-url=""> 和 <div class="">
+	    $html = preg_replace_callback(
+	        '#<div\s+([^>]*)>#i',
+	        function($m) {
+	            $attrs = $m[1];
+	            $out = '<div';
+	            
+	            // ✅ 保留 data-oembed-url
+	            if (preg_match('#data-oembed-url=["\']([^"\']+)["\']#i', $attrs, $url)) {
+	                $out .= ' data-oembed-url="' . htmlspecialchars($url[1], ENT_QUOTES, 'UTF-8') . '"';
+	            }
+	            
+	            // ✅ 保留 class
+	            if (preg_match('#class=["\']([^"\']+)["\']#i', $attrs, $class)) {
+	                $out .= ' class="' . htmlspecialchars($class[1], ENT_QUOTES, 'UTF-8') . '"';
+	            }
+	            
+	            // ✅ 保留 style（简单过滤危险 CSS）
+	            if (preg_match('#style=["\']([^"\']+)["\']#i', $attrs, $style)) {
+	                $clean_style = preg_replace('/(expression|javascript)/i', '', $style[1]);
+	                $out .= ' style="' . htmlspecialchars($clean_style, ENT_QUOTES, 'UTF-8') . '"';
+	            }
+	            
+	            $out .= '>';
+	            return $out;
+	        },
+	        $html
+	        );
+	    
+	    // <oembed url="">
+	    $html = preg_replace_callback(
+	        '#<oembed\s+[^>]*url=["\']?([^"\'>]+)["\']?[^>]*>#i',
+	        function($m) {
+	            $url = $m[1];
+	            // ✅ 限制为 YouTube 或 Vimeo 等可信来源
+	            /*if (!preg_match('#^(https://(www\.)?(youtube\.com|youtu\.be|vimeo\.com))#i', $url)) {
+	                return '';
+	            }*/
+	            return '<oembed url="' . htmlspecialchars($url, ENT_QUOTES, 'UTF-8') . '">';
+	        },
+	        $html
+	        );
+	    
+	    // <code class="">
+	    $html = preg_replace_callback(
+	        '#<code\s+[^>]*class=["\']?([^"\'>]+)["\']?[^>]*>#i',
+	        function($m) {
+	            return '<code class="' . htmlspecialchars($m[1], ENT_QUOTES, 'UTF-8') . '">';
+	        },
+	        $html
+	        );
+	    
+	    $html = preg_replace_callback(
+	        '#<span\s+([^>]*)>#i',
+	        function($m) {
+	            $attrs = $m[1];
+	            $out = '<span';
+	            if (preg_match('#style=["\']([^"\']+)["\']#i', $attrs, $style)) {
+	                // 简单过滤危险 CSS
+	                $clean_style = preg_replace('/(expression|javascript|position\s*:\s*absolute)/i', '', $style[1]);
+	                $out .= ' style="' . htmlspecialchars($clean_style, ENT_QUOTES, 'UTF-8') . '"';
+	            }
+	            if (preg_match('#lang=["\']([^"\']+)["\']#i', $attrs, $lang)) {
+	                $out .= ' lang="' . htmlspecialchars($lang[1], ENT_QUOTES, 'UTF-8') . '"';
+	            }
+	            if (preg_match('#dir=["\']([^"\']+)["\']#i', $attrs, $dir)) {
+	                $out .= ' dir="' . htmlspecialchars($dir[1], ENT_QUOTES, 'UTF-8') . '"';
+	            }
+	            if (preg_match('#class=["\']([^"\']+)["\']#i', $attrs, $class)) {
+	                // ✅ 只允许 text-huge，其它 class 会丢弃
+	                //if (in_array($class[1], ['text-huge'])) {
+	                    $out .= ' class="' . htmlspecialchars($class[1], ENT_QUOTES, 'UTF-8') . '"';
+	                //}
+	            }
+	            $out .= '>';
+	            return $out;
+	        },
+	        $html
+	        );
+	    
+	    $html = preg_replace_callback(
+	        '#<mark\s+([^>]*)>#i',
+	        function($m) {
+	            $attrs = $m[1];
+	            $out = '<mark';
+	            if (preg_match('#class=["\']([^"\']+)["\']#i', $attrs, $class)) {
+	                // ✅ 保留 class
+	                $out .= ' class="' . htmlspecialchars($class[1], ENT_QUOTES, 'UTF-8') . '"';
+	            }
+	            $out .= '>';
+	            return $out;
+	        },
+	        $html
+	        );
+	    
+	    $html = preg_replace_callback(
+	        '#<video\s+([^>]*)>#i',
+	        function($m) {
+	            $attrs = $m[1];
+	            $out = '<video';
+	            
+	            // 允许 controls 和 style
+	            if (preg_match('#controls#i', $attrs)) {
+	                $out .= ' controls';
+	            }
+	            if (preg_match('#style=["\']([^"\']+)["\']#i', $attrs, $style)) {
+	                $out .= ' style="' . htmlspecialchars($style[1], ENT_QUOTES, 'UTF-8') . '"';
+	            }
+	            
+	            $out .= '>';
+	            return $out;
+	        },
+	        $html
+	        );
+	    
+	    // 去掉所有事件属性 onclick, onerror 等
+	    $html = preg_replace('#\s*on\w+="[^"]*"#i', '', $html);
+	    $html = preg_replace("#\s*on\w+='[^']*'#i", '', $html);
+	    
+	    return $html;
+	}
+	
 
 	/**
 	 * 生成缩略图
