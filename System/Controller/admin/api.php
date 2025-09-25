@@ -312,13 +312,15 @@ class Api extends ControllersAdmin {
     public function templateInstall_Action(){ // 安装模版、只能安装不能升级(从模版市场安装)
         if(!$this->VeriObj->VeriPara($_GET, array('TemplatesId', 'Version'))) $this->ApiErr(1001);
         
-        // 获取模版信息
-        $Params = array('TemplatesId' => trim($_GET['TemplatesId']));
-        $IsInstalled = $this->TemplatesObj->SetCond($Params)->ExecSelectOne();
+        // 判断模版是否已安装
+        $IsInstalled = $this->TemplatesObj->SetCond(array('TemplatesId' => trim($_GET['TemplatesId'])))->ExecSelectOne();
         if(!empty($IsInstalled)){ // 模版已安装过
             $this->ApiErr(1057);
         }
-        $Params['Version'] = trim($_GET['Version']); // 默认安装最新版本
+        
+        // 获取模版信息
+        $IsDev = empty($_GET['IsDev']) ? 2 : trim($_GET['IsDev']);
+        $Params = array('TemplatesId' => trim($_GET['TemplatesId']), 'Version' => trim($_GET['Version']), 'IsDev' => $IsDev); // 默认安装最新版本
         $Ret = $this->apiRemotePlatform('apiRemote/templateInfo', $Params);
         if($Ret['Code'] != 0) $this->ApiErr(1000, $Ret['Msg']); // 获取模版信息错误       
         
@@ -551,7 +553,8 @@ class Api extends ControllersAdmin {
         }
         
         // 获取插件信息
-        $Params = array('PluginId' => trim($_GET['PluginId']), 'Version' => trim($_GET['Version']));
+        $IsDev = empty($_GET['IsDev']) ? 2 : trim($_GET['IsDev']);
+        $Params = array('PluginId' => trim($_GET['PluginId']), 'Version' => trim($_GET['Version']), 'IsDev' => $IsDev);
         $Ret = $this->apiRemotePlatform('apiRemote/pluginInfo', $Params);
         if($Ret['Code'] != 0) $this->ApiErr(1000, $Ret['Msg']);
         
@@ -853,7 +856,47 @@ class Api extends ControllersAdmin {
         }
 
     }
+    
+    public function templatesGetVerion_Action(){
+        if(!$this->VeriObj->VeriPara($_GET, array('TemplatesId'))) $this->ApiErr(1001);
+        $Ret = $this->apiRemotePlatform('apiRemote/devTemplatesVersion', array('TemplatesId' => $_GET['TemplatesId']));
+        if($Ret['Code'] != 0){
+            $this->CommonObj->LogWrite('Code:'.$Ret['Code'].';'.$Ret['Msg']);
+            $this->ApiErr(1000, $Ret['Msg']);
+        }
+        $this->ApiSuccess($Ret['Data']);
+    }
+    
+    public function templatesGetInfo_Action(){
+        if(!$this->VeriObj->VeriPara($_GET, array('TemplatesId'))) $this->ApiErr(1001);
+        $Ret = $this->apiRemotePlatform('apiRemote/devTemplatesInfo', array('TemplatesId' => $_GET['TemplatesId']));
+        if($Ret['Code'] != 0){
+            $this->CommonObj->LogWrite('Code:'.$Ret['Code'].';'.$Ret['Msg']);
+            $this->ApiErr(1000, $Ret['Msg']);
+        }
+        $this->ApiSuccess($Ret['Data']);
+    }
+    
+    
+    
+    public function pluginGetVerion_Action(){
+        if(!$this->VeriObj->VeriPara($_GET, array('PluginId'))) $this->ApiErr(1001);
+        $Ret = $this->apiRemotePlatform('apiRemote/devPluginVersion', array('PluginId' => $_GET['PluginId']));
+        if($Ret['Code'] != 0){
+            $this->CommonObj->LogWrite('Code:'.$Ret['Code'].';'.$Ret['Msg']);
+            $this->ApiErr(1000, $Ret['Msg']);
+        }
+        $this->ApiSuccess($Ret['Data']);
+    }
 
-
+    public function pluginGetInfo_Action(){
+        if(!$this->VeriObj->VeriPara($_GET, array('PluginId'))) $this->ApiErr(1001);
+        $Ret = $this->apiRemotePlatform('apiRemote/devPluginInfo', array());
+        if($Ret['Code'] != 0){
+            $this->CommonObj->LogWrite('Code:'.$Ret['Code'].';'.$Ret['Msg']);
+            $this->ApiErr(1000, $Ret['Msg']);
+        }
+        $this->ApiSuccess($Ret['Data']);
+    }
 
 }

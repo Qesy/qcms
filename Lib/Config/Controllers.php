@@ -1175,6 +1175,7 @@ class ControllersAdmin extends Controllers {
     public $StateArr = array('1' => '已发布', 2 => '未发布');
     public $SexArr = array('1' => '男', 2 => '女');
     public $StateDevMap = array(1 => '已审核', 2 => '开发中', 3 => '待审核', 4 => '已拒绝');
+    public $StateDevColorMap = array(1 => 'success', 2 => 'warning', 3 => 'info', 4 => 'danger');
     public $EditorArr = array('ckeditor' => 'ckeditor');
     public $LangArr = array('Cn' => '中文');
     public $SiteArr = array();
@@ -1413,6 +1414,8 @@ class ControllersAdmin extends Controllers {
             'admin/api/paytp' => array('Name' => '购买模板', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'paytp'))),
             'admin/api/payplugin' => array('Name' => '购买插件', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'payplugin'))),
             'admin/api/payStatus' => array('Name' => '获取订单状态', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'payStatus'))),
+            'admin/api/templatesGetVerion' => array('Name' => '获取模版版本', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'templatesGetVerion'))),
+            'admin/api/pluginGetVerion' => array('Name' => '获取插件版本', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'pluginGetVerion'))),
             'index/adminLogout' => array('Name' => '安全退出', 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(array('index', 'adminLogout'))),
         );
         
@@ -1667,8 +1670,8 @@ class ControllersAdmin extends Controllers {
         return $Ret;
     }
     
-    public function getPlugin($Page, $PageNum, $CateId = 0){
-        $Para = array('Domain' => URL_DOMAIN, 'Page' => $Page, 'PageNum' => $PageNum, 'CateId' => $CateId);
+    public function getPlugin($Page, $PageNum, $CateId = 0, $PluginIds = array()){
+        $Para = array('Domain' => URL_DOMAIN, 'Page' => $Page, 'PageNum' => $PageNum, 'CateId' => $CateId, 'PluginIds' => implode('|', $PluginIds));
         $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/plugin.html')->SetDebug(false)->SetPara($Para)->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
