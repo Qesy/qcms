@@ -865,19 +865,7 @@ class Api extends ControllersAdmin {
             $this->ApiErr(1000, $Ret['Msg']);
         }
         $this->ApiSuccess($Ret['Data']);
-    }
-    
-    public function templatesGetInfo_Action(){
-        if(!$this->VeriObj->VeriPara($_GET, array('TemplatesId'))) $this->ApiErr(1001);
-        $Ret = $this->apiRemotePlatform('apiRemote/devTemplatesInfo', array('TemplatesId' => $_GET['TemplatesId']));
-        if($Ret['Code'] != 0){
-            $this->CommonObj->LogWrite('Code:'.$Ret['Code'].';'.$Ret['Msg']);
-            $this->ApiErr(1000, $Ret['Msg']);
-        }
-        $this->ApiSuccess($Ret['Data']);
-    }
-    
-    
+    }    
     
     public function pluginGetVerion_Action(){
         if(!$this->VeriObj->VeriPara($_GET, array('PluginId'))) $this->ApiErr(1001);
@@ -888,15 +876,4 @@ class Api extends ControllersAdmin {
         }
         $this->ApiSuccess($Ret['Data']);
     }
-
-    public function pluginGetInfo_Action(){
-        if(!$this->VeriObj->VeriPara($_GET, array('PluginId'))) $this->ApiErr(1001);
-        $Ret = $this->apiRemotePlatform('apiRemote/devPluginInfo', array());
-        if($Ret['Code'] != 0){
-            $this->CommonObj->LogWrite('Code:'.$Ret['Code'].';'.$Ret['Msg']);
-            $this->ApiErr(1000, $Ret['Msg']);
-        }
-        $this->ApiSuccess($Ret['Data']);
-    }
-
 }

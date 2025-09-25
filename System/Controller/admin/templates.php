@@ -33,7 +33,7 @@ class Templates extends ControllersAdmin {
         $CondArr = array();
         $Arr = $this->TemplatesObj->SetCond($CondArr)->SetLimit($Limit)->SetSort(array('TemplatesId' => 'ASC'))->ExecSelectAll($Count);
         $TemplatesIds = array_column($Arr, 'TemplatesId');
-        $Ret = $this->getTemplaites($Page, count($TemplatesIds), 0, $TemplatesIds);
+        $Ret = $this->getTemplaites($Page, count($TemplatesIds), 0, $TemplatesIds, 0);
         if($Ret['Code'] != 0) $this->ApiErr(1002);
         $OnlineTempMap = array();
         foreach($Ret['Data']['List'] as $v){

@@ -1670,8 +1670,11 @@ class ControllersAdmin extends Controllers {
         return $Ret;
     }
     
-    public function getPlugin($Page, $PageNum, $CateId = 0, $PluginIds = array()){
+    public function getPlugin($Page, $PageNum, $CateId = 0, $PluginIds = array(), $State = 1){
         $Para = array('Domain' => URL_DOMAIN, 'Page' => $Page, 'PageNum' => $PageNum, 'CateId' => $CateId, 'PluginIds' => implode('|', $PluginIds));
+        if($State == 1){
+            $Para['State'] = 1;
+        }
         $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/plugin.html')->SetDebug(false)->SetPara($Para)->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
@@ -1690,8 +1693,11 @@ class ControllersAdmin extends Controllers {
         return $Ret;
     }
 
-    public function getTemplaites($Page, $PageNum, $CateId = 0, $TemplatesIds = array()){
+    public function getTemplaites($Page, $PageNum, $CateId = 0, $TemplatesIds = array(), $State = 1){
         $Para = array('Domain' => URL_DOMAIN, 'P' => $Page, 'PageNum' => $PageNum, 'CateId' => $CateId, 'TemplatesIds' => implode('|', $TemplatesIds));
+        if($State == 1){
+            $Para['State'] = 1;
+        }
         $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/templates.html')->SetDebug(false)->SetPara($Para)->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
