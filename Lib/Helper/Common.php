@@ -502,6 +502,28 @@ class Common {
 	    file_put_contents($logDir . '/error_'.date(Ymd).'.log', $line, FILE_APPEND);
 	}
 	
+	function compare_versions($version1, $version2) {
+	    // 分割版本号并转为整数数组
+	    $v1_parts = array_map('intval', explode('.', $version1));
+	    $v2_parts = array_map('intval', explode('.', $version2));
+	    
+	    // 补零对齐长度（处理1.0 vs 1.0.0）
+	    $max_len = max(count($v1_parts), count($v2_parts));
+	    $v1_parts = array_pad($v1_parts, $max_len, 0);
+	    $v2_parts = array_pad($v2_parts, $max_len, 0);
+	    
+	    // 逐位比较版本号
+	    for ($i = 0; $i < $max_len; $i++) {
+	        if ($v2_parts[$i] > $v1_parts[$i]) {
+	            return true;  // version2更新
+	        } elseif ($v2_parts[$i] < $v1_parts[$i]) {
+	            return false; // version2更旧
+	        }
+	    }
+	    
+	    return false; // 完全相等
+	}
+	
 	public function CleanHtml($html) {
 	    // 1️⃣ 提取 raw-html-embed div
 	    $html = preg_replace_callback(

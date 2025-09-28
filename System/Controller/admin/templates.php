@@ -52,7 +52,8 @@ class Templates extends ControllersAdmin {
             $Desc = empty($OnlineRs['Content']) ? '暂无介绍' : $OnlineRs['Content'];
             $Arr[$k]['Name'] = '<div class="d-flex"><img class="mr-2" src="'.$OnlineRs['Pic'].'" style="height:60px;"><div><span class="font-weight-bold">'.$OnlineRs['Name'].'</span><br>'.$Desc.'</div></div>';
             $Arr[$k]['TsView'] = '安装时间:'.date('Y-m-d', $v['TsAdd']).'<br>更新时间:'.date('Y-m-d', $v['TsUpdate']);
-            $Arr[$k]['VersionView'] = '当前版本:'.$v['Version'].'<br>最新版本:'.$OnlineRs['LastVersion'];
+            $LastVersion = ($OnlineRs['State'] != '1') ? '未上线' : $OnlineRs['LastVersion'];
+            $Arr[$k]['VersionView'] = '当前版本:'.$v['Version'].'<br>最新版本:'.$LastVersion;
             $IsDisabledUpdate = ($v['Version'] == $OnlineRs['LastVersion']) ? 1 : 0;
             $IsDisabledInstallData = ($this->SysRs['TmpPath'] != $v['NameKey']) ? 1 : 0;
             $IsDisabledDel = ($this->SysRs['TmpPath'] == $v['NameKey']) ? 1 : 0;

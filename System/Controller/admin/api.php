@@ -414,10 +414,13 @@ class Api extends ControllersAdmin {
         if(!$this->VeriObj->VeriPara($_GET, array('TemplatesId', 'Version'))) $this->ApiErr(1001);
         
         // 获取模版信息
-        $Params = array('TemplatesId' => trim($_GET['TemplatesId']), 'Version' => trim($_GET['Version']));
+        $Params = array('TemplatesId' => trim($_GET['TemplatesId']));
         $IsInstalled = $this->TemplatesObj->SetCond($Params)->ExecSelectOne();
         if(!empty($IsInstalled)){ // 模版已安装过
             $this->ApiErr(1057);
+        }
+        if(!$this->CommonObj->compare_versions($IsInstalled['Version'], trim($_GET['Version']))){
+            $this->ApiErr(1058);
         }
         $Params['Version'] = trim($_GET['Version']); // 默认安装最新版本
         $Ret = $this->apiRemotePlatform('apiRemote/templateInfo', $Params);
@@ -657,6 +660,11 @@ class Api extends ControllersAdmin {
             $this->ApiErr(1026);
         }elseif($IsInstalled['Version'] == trim($_GET['Version'])){ // 判断版本
             $this->ApiErr(1037);
+        }
+        
+        // 版本比较
+        if(!$this->CommonObj->compare_versions($IsInstalled['Version'], trim($_GET['Version']))){
+            $this->ApiErr(1058);
         }
         
         // 获取插件信息
