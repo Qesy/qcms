@@ -51,10 +51,12 @@ class Plugin extends ControllersAdmin {
  
         foreach($Arr as $k => $v){
             $OnlineRs = $OnlinePluginMap[$v['PluginId']];
+            var_dump($OnlineRs);
             $Desc = empty($OnlineRs['Content']) ? '暂无介绍' : $OnlineRs['Content'];
             $Arr[$k]['NameView'] = '<div class="d-flex"><img class="mr-2" src="'.$OnlineRs['Pic'].'" style="height:60px;"><div><span class="font-weight-bold">'.$OnlineRs['Name'].'</span><br>'.$Desc.'</div></div>';
             $Arr[$k]['TsView'] = '安装时间:'.date('Y-m-d', $v['TsAdd']).'<br>更新时间:'.date('Y-m-d', $v['TsUpdate']);
-            $Arr[$k]['VersionView'] = '当前版本:'.$v['Version'].'<br>最新版本:'.$OnlineRs['LastVersion'];
+            $LastVersion = ($OnlineRs['State'] != '1') ? '未上线' : $OnlineRs['LastVersion'];
+            $Arr[$k]['VersionView'] = '当前版本:'.$v['Version'].'<br>最新版本:'.$LastVersion;
             $IsDisabledUpdate = ($v['Version'] == $OnlineRs['LastVersion']) ? 1 : 0;
             $IsDisabledUninstall = ($v['State'] == '1') ? 1 : 0;
             $Config = json_decode($v['Config'], true);
