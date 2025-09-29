@@ -56,7 +56,7 @@ class ModelField extends ControllersAdmin {
             list($FieldType, $FieldDefault) = $this->Sys_modelObj->GetField($AddField['Type']);
             try{
                 DB::$s_db_obj->beginTransaction();
-                $this->Sys_modelObj->SetCond(array('ModelId' => $Rs['ModelId']))->SetUpdate(array('FieldJson' => json_encode($Arr)))->ExecUpdate();
+                $this->Sys_modelObj->SetCond(array('ModelId' => $Rs['ModelId']))->SetUpdate(array('FieldJson' => json_encode($Arr, JSON_UNESCAPED_UNICODE)))->ExecUpdate();
                 $this->Sys_modelObj->exec('alter table `'.$DbConfig['Prefix'].'table_'.$Rs['KeyName'].'` add '.$AddField['Name'].' '.$FieldType.' not null '.$FieldDefault.' COMMENT "'.$AddField['Comment'].'";', array());
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
@@ -110,7 +110,7 @@ class ModelField extends ControllersAdmin {
 
             try{
                 DB::$s_db_obj->beginTransaction();
-                $this->Sys_modelObj->SetCond(array('ModelId' => $Rs['ModelId']))->SetUpdate(array('FieldJson' => json_encode($Arr)))->ExecUpdate();
+                $this->Sys_modelObj->SetCond(array('ModelId' => $Rs['ModelId']))->SetUpdate(array('FieldJson' => json_encode($Arr, JSON_UNESCAPED_UNICODE)))->ExecUpdate();
                 $this->Sys_modelObj->exec('ALTER TABLE `'.$DbConfig['Prefix'].'table_'.$Rs['KeyName'].'` MODIFY COLUMN '.$FieldRs['Name'].' '.$FieldType.' not null '.$FieldDefault.' COMMENT "'.$AddField['Comment'].'";', array());
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
@@ -153,7 +153,7 @@ class ModelField extends ControllersAdmin {
         $FieldNameArr = array_column($FieldArr, 'Field');
         try{
             DB::$s_db_obj->beginTransaction();
-            $this->Sys_modelObj->SetCond(array('ModelId' => $Rs['ModelId']))->SetUpdate(array('FieldJson' => json_encode($Arr)))->ExecUpdate();
+            $this->Sys_modelObj->SetCond(array('ModelId' => $Rs['ModelId']))->SetUpdate(array('FieldJson' => json_encode($Arr, JSON_UNESCAPED_UNICODE)))->ExecUpdate();
             if(in_array($FieldRs['Name'], $FieldNameArr)){
                 $this->Sys_modelObj->exec('ALTER TABLE `'.$DbConfig['Prefix'].'table_'.$Rs['KeyName'].'` DROP '.$FieldRs['Name'].';', array());
             }

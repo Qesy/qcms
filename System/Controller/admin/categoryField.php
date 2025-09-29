@@ -75,7 +75,7 @@ class CategoryField extends ControllersAdmin {
             }
             try{
                 DB::$s_db_obj->beginTransaction();
-                $this->SysObj->SetCond(array('Name' => 'CategoryFieldJson'))->SetUpdate(array('AttrValue' => json_encode($Arr)))->ExecUpdate();
+                $this->SysObj->SetCond(array('Name' => 'CategoryFieldJson'))->SetUpdate(array('AttrValue' => json_encode($Arr, JSON_UNESCAPED_UNICODE)))->ExecUpdate();
                 $this->Sys_modelObj->exec('alter table `'.$DbConfig['Prefix'].'category` add '.$AddField['Name'].' '.$FieldType.' not null '.$FieldDefault.' COMMENT "'.$AddField['Comment'].'";', array());
                 DB::$s_db_obj->commit();
             }catch (PDOException $e){
@@ -114,7 +114,7 @@ class CategoryField extends ControllersAdmin {
             $Arr[$Index]['Data'] = $this->CommonObj->SafeInput(trim($_POST['Data']));
             $Arr[$Index]['Content'] = $this->CommonObj->SafeInput(trim($_POST['Content']));
             $Arr[$Index]['NotNull'] = $this->CommonObj->SafeInput(trim($_POST['NotNull']));
-            $Ret = $this->SysObj->SetCond(array('Name' => 'CategoryFieldJson'))->SetUpdate(array('AttrValue' => json_encode($Arr)))->ExecUpdate();
+            $Ret = $this->SysObj->SetCond(array('Name' => 'CategoryFieldJson'))->SetUpdate(array('AttrValue' => json_encode($Arr, JSON_UNESCAPED_UNICODE)))->ExecUpdate();
             if($Ret === false) $this->Err(1002);
             $this->SysObj->cleanList();
             $this->Jump(array('admin', 'categoryField', 'index'), 1888);
@@ -144,7 +144,7 @@ class CategoryField extends ControllersAdmin {
         $FieldNameArr = array_column($FieldArr, 'Field');
         try{
             DB::$s_db_obj->beginTransaction();
-            $this->SysObj->SetCond(array('Name' => 'CategoryFieldJson'))->SetUpdate(array('AttrValue' => json_encode($Arr)))->ExecUpdate();
+            $this->SysObj->SetCond(array('Name' => 'CategoryFieldJson'))->SetUpdate(array('AttrValue' => json_encode($Arr, JSON_UNESCAPED_UNICODE)))->ExecUpdate();
             if(in_array($FieldRs['Name'], $FieldNameArr)){
                 $this->Sys_modelObj->exec('ALTER TABLE `'.$DbConfig['Prefix'].'category` DROP '.$FieldRs['Name'].';', array());
             }
