@@ -22,6 +22,13 @@ class Debug extends Controllers {
         var_dump($Ret);
     }
     
+    public function test_Action(){
+        $DbConfig = Config::DbConfig();	   
+        $TableArr = $this->CategoryObj->query("SHOW TABLES;", array());
+        $TableNames = array_column($TableArr, 'Tables_in_'.$DbConfig['Name']);
+        var_dump($TableNames);
+    }
+    
     public function t_Action(){
         $Ret = $this->Sys_modelObj->ExportSql();
         exit;

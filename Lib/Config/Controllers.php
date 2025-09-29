@@ -54,7 +54,7 @@ class Controllers extends Base {
             $this->ModelKv[$v['KeyName']] = $v;
         }
         $this->PageTmp = (intval($_GET['Page']) < 1) ? 1 : intval($_GET['Page']);
-        
+
     }
 
     public function tempRun($Type, $Index = '0', $Page = 1){
@@ -68,7 +68,7 @@ class Controllers extends Base {
     public function tempRunTest($Type, $Index = '0', $Html = ''){
         Router::$s_Method = $Type;
         $this->initTmp($Type, $Index);
-        $this->Tmp['Compile'] = $this->Tmp['Html'] = $Html;        
+        $this->Tmp['Compile'] = $this->Tmp['Html'] = $Html;
         $this->include_Tmp()->label_Tmp()->global_Tmp()->self_Tmp()->get_Tmp()->photo_Tmp()->menu_Tmp();
         $this->smenu_Tmp()->ssmenu_Tmp()->list_Tmp()->link_Tmp()->tag_Tmp()->loop_Tmp()->slide_Tmp()->if_Tmp()->date_Tmp();
         $this->substr_Tmp()->math_Tmp()->replace_Tmp()->thumb_Tmp();
@@ -355,11 +355,11 @@ class Controllers extends Base {
                 $Search[] = '{{qcms:Detail_TimeUpdate}}';
                 $Search[] = '{{qcms:Detail_Prev}}';
                 $Search[] = '{{qcms:Detail_Next}}';
-                $Search[] = '{{qcms:Detail_DownAddress}}';                
+                $Search[] = '{{qcms:Detail_DownAddress}}';
                 $Search[] = '{{qcms:Detail_Url}}';
                 $Search[] = '{{qcms:Cate_Url}}';
                 $Search[] = '{{qcms:TopCate_Url}}';
-                
+
 
                 //$Search[] = '{{qcms:Cate_HasSub}}';
                 $Replace[] = date('Y-m-d H:i:s', $this->Tmp['TableRs']['TsAdd']);
@@ -513,7 +513,7 @@ class Controllers extends Base {
                 $Arr = self::_getKv2If($v, '<=');
                 $ok = ($Arr[0] <= $Arr[1]) ? true : false;
             }elseif(strpos($v, '==') !== false){
-                $Arr = self::_getKv2If($v, '==');                
+                $Arr = self::_getKv2If($v, '==');
                 $ok = ($Arr[0] == $Arr[1]) ? true : false;
             }elseif(strpos($v, '>') !== false){
                 $Arr = self::_getKv2If($v, '>');
@@ -650,7 +650,7 @@ class Controllers extends Base {
             $Ret['Attr'] = !isset($Para['Attr']) ? '' : $Para['Attr'];
             $Ret['IsPage'] = !isset($Para['IsPage']) ? '-1' : intval($Para['IsPage']); //是否开启分页
             $Search[] = $Matches[0][$k];
-            $Replace[] = self::_replaceList($Ret, $Matches[2][$k], 'List_');            
+            $Replace[] = self::_replaceList($Ret, $Matches[2][$k], 'List_');
             if($this->Tmp['Type'] == 'cate' && $Ret['IsPage'] == 1){
                 $Search[] = '{{qcms:List_PageBar}}';
                 $UrlArr = array('Default' => $this->SysRs['UrlList'], 'Page' => $this->SysRs['UrlListPage']);
@@ -1158,7 +1158,7 @@ class ControllersAdmin extends Controllers {
         'PY',
         'NameEn'
     );
-    
+
     public $SwiperFieldArr = array(
         'SwiperId',
         'SwiperCateId',
@@ -1243,7 +1243,7 @@ class ControllersAdmin extends Controllers {
             'admin/categoryField/add' => array('Name' => '添加分类字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'categoryField', 'add'))),
             'admin/categoryField/edit' => array('Name' => '修改分类字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'categoryField', 'edit'))),
             'admin/categoryField/del' => array('Name' => '删除分类字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'categoryField', 'del'))),
-            
+
             'admin/swiperField/index' => array('Name' => '幻灯片字段管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiperField', 'index'))),
             'admin/swiperField/add' => array('Name' => '添加幻灯片字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiperField', 'add'))),
             'admin/swiperField/edit' => array('Name' => '修改幻灯片字段', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'swiperField', 'edit'))),
@@ -1375,7 +1375,7 @@ class ControllersAdmin extends Controllers {
             'admin/plugin/market' => array('Name' => '插件市场', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'plugin', 'market'))),
             'admin/plugin/config' => array('Name' => '设置管理', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'plugin', 'config'))),
             'admin/plugin/installed' => array('Name' => '已安装插件', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'plugin', 'installed'))),
-            
+
             'admin/develop/index' => array('Name' => '开发中心', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'develop', 'index'))),
             'admin/develop/templates' => array('Name' => '模版开发', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'develop', 'templates'))),
             'admin/develop/plugin' => array('Name' => '插件开发', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'develop', 'plugin'))),
@@ -1418,7 +1418,7 @@ class ControllersAdmin extends Controllers {
             'admin/api/pluginGetVerion' => array('Name' => '获取插件版本', 'Permission' => array('1', '2', '3'),'Url' => $this->CommonObj->url(array('admin', 'api', 'pluginGetVerion'))),
             'index/adminLogout' => array('Name' => '安全退出', 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(array('index', 'adminLogout'))),
         );
-        
+
         // 动态模块
         $ModelArr = $this->Sys_modelObj->getList();
         $RoleMenuArr = array();
@@ -1432,25 +1432,28 @@ class ControllersAdmin extends Controllers {
             }
             $RoleMenuArr[] = array('Key' => $KeyArr[$v['ModelId']][0], 'alias' => $KeyArr[$v['ModelId']]);
         }
-        
-        // 动态插件
-        $MenuSide = $this->Menu_sideObj->getList();
+
+        // 动态插件 (6.0.5版本才支持)
+        $MenuSide = array();
+        if($this->CommonObj->compare_versions('6.0.5', $this->SysRs['Version'])){ 
+            $MenuSide = $this->Menu_sideObj->getList();
+        }
         $MenuTree = array();
-        foreach($MenuSide as $k => $v){            
+        foreach($MenuSide as $k => $v){
             if($v['PId'] != 0) continue;
             $v['Sub'] = array();
-            $MenuTree[$v['MenuSideId']] = $v;     
+            $MenuTree[$v['MenuSideId']] = $v;
             $Key = 'Plugin/'.$v['NameKey'];
             $this->MenuArr[$Key] = array('Name' => $v['Name'], 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(array('admin', 'plugin', $v['NameKey'])), 'Para' => array());
         }
-        
+
         foreach($MenuSide as $k => $v){
             if($v['PId'] == 0) continue;
             $MenuTree[$v['PId']]['Sub'][] = $v;
             $Key = 'Plugin/'.$v['NameKey'].'/'.$v['Url'];
             $this->MenuArr[$Key] = array('Name' => $v['Name'], 'Permission' => array('1', '2', '3'), 'Url' => $this->CommonObj->url(explode('/', $Key)), 'Para' => array());
         }
-        
+
         $this->RoleMenuArr = array(
             array('Key' => 'admin/index/index', 'subCont' => array('index'), 'Icon' => 'home'),
             array('Key' => 'admin/category', 'subCont' => array('category', 'page', 'pageCate', 'labelCate', 'label', 'form', 'formField', 'formData'), 'Icon' => 'ordered-list', 'Sub' => array(
@@ -1481,7 +1484,7 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/tag/index', 'alias' => array('admin/tag/index', 'admin/tag/list')),
                 array('Key' => 'admin/file/index', 'alias' => array('admin/file/index')),
             )),
-            array('Key' => 'admin/front', 'subCont' => array('front'), 'Icon' => 'bydesign', 'Sub' => array(                
+            array('Key' => 'admin/front', 'subCont' => array('front'), 'Icon' => 'bydesign', 'Sub' => array(
                 array('Key' => 'admin/front/index', 'alias' => array('admin/front/index', 'admin/front/add', 'admin/front/edit')),
                 array('Key' => 'admin/front/builder', 'alias' => array('admin/front/builder')),
                 array('Key' => 'admin/front/test', 'alias' => array('admin/front/test')),
@@ -1495,7 +1498,7 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/plugin/market', 'alias' => array('admin/plugin/market')),
                 array('Key' => 'admin/plugin/installed', 'alias' => array('admin/plugin/installed', 'admin/plugin/config')),
             )),
-            
+
         );
         if(!empty($this->DevRs)){
             array_push($this->RoleMenuArr, array('Key' => 'admin/develop/index', 'subCont' => array('develop'), 'Icon' => 'code', 'Sub' => array(
@@ -1503,7 +1506,7 @@ class ControllersAdmin extends Controllers {
                 array('Key' => 'admin/develop/plugin', 'alias' => array('admin/develop/plugin')),
             )));
         }
-        
+
         foreach($MenuTree as $k => $v){
             $Key = 'Plugin/'.$v['NameKey'];
             $PluginMenu = array('Key' => $Key, 'subCont' => array('Plugin/'.$v['NameKey'].'/index'), 'Icon' => 'api-app', 'Sub' => array());
@@ -1514,8 +1517,8 @@ class ControllersAdmin extends Controllers {
             }
             array_push($this->RoleMenuArr, $PluginMenu);
         }
-        
-        array_push($this->RoleMenuArr, 
+
+        array_push($this->RoleMenuArr,
             array('Key' => 'admin/sys', 'subCont' => array('sys', 'admin', 'groupAdmin', 'log', 'site'), 'Icon' => 'setting-two', 'Sub' => array(
                 array('Key' => 'admin/sys/index', 'alias' => array('admin/sys/index')),
                 array('Key' => 'admin/sys/license', 'alias' => array('admin/sys/license')),
@@ -1529,7 +1532,7 @@ class ControllersAdmin extends Controllers {
             )),
             array('Key' => 'index/adminLogout', 'subCont' => array('signout'), 'Icon' => 'logout')
          );
-        
+
         $Url = implode('/', array($this->Module, Router::$s_Controller, Router::$s_Method));
 
         if(Router::$s_IsPlug){
@@ -1547,10 +1550,10 @@ class ControllersAdmin extends Controllers {
                 }
             }
         }
-        
+
         if(!isset($this->MenuArr[$Key])) $this->Err(1056);
         $MenuRs = $this->MenuArr[$Key];
-        
+
         if($this->LoginUserRs['GroupAdminId'] != 1 && !in_array($Key, $this->PermissionArr)) $this->Err(1005);
         $this->PageTitle = $MenuRs['Name'];
         $this->PageTitle2 = $this->BuildObj->FormTitle($MenuRs['Name']);
@@ -1561,9 +1564,9 @@ class ControllersAdmin extends Controllers {
                 $this->MenuArr[$v['Key']]['IsActive'] = 'active';
                 $this->BreadCrumb[] = $this->MenuArr[$v['Key']];
                 if(empty($v['Sub'])) continue;
-                foreach($v['Sub'] as $sv){                    
+                foreach($v['Sub'] as $sv){
                     if(in_array($Key, $sv['alias'])){
-                        $this->MenuArr[$sv['Key']]['IsActive'] = 'active';                        
+                        $this->MenuArr[$sv['Key']]['IsActive'] = 'active';
                         $this->BreadCrumb[] = $this->MenuArr[$Url];
                         break;
                     }
@@ -1669,7 +1672,7 @@ class ControllersAdmin extends Controllers {
         $Ret = json_decode($Json, true);
         return $Ret;
     }
-    
+
     public function getPlugin($Page, $PageNum, $CateId = 0, $PluginIds = array(), $State = 1){
         $Para = array('Domain' => URL_DOMAIN, 'Page' => $Page, 'PageNum' => $PageNum, 'CateId' => $CateId, 'PluginIds' => implode('|', $PluginIds));
         if($State == 1){
@@ -1679,13 +1682,13 @@ class ControllersAdmin extends Controllers {
         $Ret = json_decode($Json, true);
         return $Ret;
     }
-    
+
     public function getPluginCate(){
         $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/pluginCate.html')->SetPara(array('Domain' => URL_DOMAIN))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
     }
-    
+
     public function getDevTemplaites($Page, $PageNum, $CateId = 0, $TemplatesIds = array()){
         $Para = array('Domain' => URL_DOMAIN, 'P' => $Page, 'PageNum' => $PageNum, 'CateId' => $CateId, 'TemplatesIds' => implode('|', $TemplatesIds));
         $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/templates.html')->SetDebug(false)->SetPara($Para)->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
@@ -1710,14 +1713,16 @@ class ControllersAdmin extends Controllers {
     }
 
     public function getVerUpdate(){
-        $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/getUpdate.html')->SetPara(array('Domain' => URL_DOMAIN, 'Version' => $this->SysRs['Version']))->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
+        $Params = array('Domain' => URL_DOMAIN, 'Version' => $this->SysRs['Version']);
+        //$Params['IsDev'] = '1';
+        $Json = $this->CurlObj->SetUrl($this->PlatformUrl.'client/getUpdate.html')->SetPara($Params)->SetIsPost(false)->SetIsHttps(true)->SetIsJson(true)->Execute();
         $Ret = json_decode($Json, true);
         return $Ret;
     }
-    
+
     public function createTable($TablePre, $TableArr, $IsDropTable = false ){ //创建插件数据表
         $Tables = $this->SysObj->query('SHOW TABLES', array());
-        $HaveTableArr = array_column($Tables, 'Tables_in_redcms');        
+        $HaveTableArr = array_column($Tables, 'Tables_in_redcms');
         foreach($TableArr as $k => $v){
             $TableName = $TablePre.$k;
             if(in_array($TableName, $HaveTableArr)) throw new PDOException(self::lang(1020));
@@ -1738,7 +1743,7 @@ class ControllersAdmin extends Controllers {
             if ($this->SysObj->exec($TableSql, array()) === false) throw new PDOException(self::lang(1025));
         }
     }
-    
+
     public function delTable($TablePre, $TableArr){ //删除插件数据表
         $Tables = $this->SysObj->query('SHOW TABLES', array());
         $DBConfig = Config::DbConfig();
@@ -1750,7 +1755,7 @@ class ControllersAdmin extends Controllers {
             if($this->SysObj->exec($TableSql, array()) === false) throw new PDOException(self::lang(1029));
         }
     }
-    
+
     public function lang($LangCode){ //代码转文字
         return isset($this->LanguageArr[$LangCode]) ? $this->LanguageArr[$LangCode] : $this->LanguageArr[1889];
     }
@@ -1832,19 +1837,19 @@ class ControllersApi extends Base {
         $ModelArr = $this->Sys_modelObj->getList();
         foreach($ModelArr as $v){
             $this->ModelKv[$v['KeyName']] = $v;
-        }        
+        }
     }
 }
 
 class ControllersPlugAdmin extends ControllersAdmin {
-    
+
     public function __construct(){
         parent::__construct();
         $this->BuildObj->Module = 'Plugin/'.Router::$s_PlusKeyName;
     }
 }
 
-class ControllersPlug extends Base {    
+class ControllersPlug extends Base {
     public function __construct(){
         parent::__construct();
         $this->BuildObj->Module = 'Plugin/'.Router::$s_PlusKeyName;

@@ -190,7 +190,7 @@ class Content extends ControllersAdmin {
                     $this->FileObj->SetCond(array('Img' => $FilePathArr))->SetUpdate(array('FType' => 2, 'IndexId' => $InsertId))->ExecUpdate();
                 }
                 DB::$s_db_obj->commit();
-            }catch (PDOException $e){
+            }catch (PDOException $e){                
                 DB::$s_db_obj->rollBack();                
                 $this->Err(1002);
             }
